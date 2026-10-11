@@ -2,6 +2,7 @@
 
 import json
 import math
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -18,16 +19,19 @@ REL_TOL = 1e-12
 ABS_TOL = 1e-12
 
 
+# Any: parsed JSON of any shape.
 def load_json(path: Path) -> Any:
     with path.open(encoding="utf-8") as f:
         return json.load(f)
 
 
+# Any: the parts are rows (a list), the final state (a nested dict) and mins (a dict), as in the goldens.
 def as_golden(result: RunResult) -> dict[str, Any]:
     rows, final_state, mins = result
     return {"rows": rows, "final_state": final_state, "mins": mins}
 
 
+# Any: both are nested structures of dicts, lists and numbers, walked by iter_numeric_pairs.
 def assert_matches_golden(fresh: Any, golden: Any) -> None:
     """Every numeric leaf is close; keys, lengths and non-numeric leaves are equal. Reports the worst miss."""
     misses = [
@@ -44,6 +48,7 @@ def assert_matches_golden(fresh: Any, golden: Any) -> None:
         )
 
 
+# Any: prototype rows, whose values are floats parsed from JSON or computed by the prototype.
 def annual(rows: list[dict[str, Any]]) -> dict[int, dict[str, Any]]:
     return {round(r["year"]): r for r in rows if abs(r["year"] - round(r["year"])) < 1e-6}
 
@@ -53,6 +58,31 @@ def test_reference_tree_unchanged() -> None:
     tree = hash_tree(PROTOTYPE).tree
     assert tree == manifest["prototype"]["tree_sha256"]
     assert tree == PROTOTYPE_TREE_SHA256
+
+
+def test_hash_tree_skips_planted_bytecode(tmp_path: Path) -> None:
+    tree = tmp_path / "prototype"
+    shutil.copytree(PROTOTYPE, tree, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    before = hash_tree(tree)
+    assert before.tree == PROTOTYPE_TREE_SHA256
+    planted = tree / "code" / "__pycache__" / "x.pyc"
+    planted.parent.mkdir()
+    planted.write_bytes(b"planted")
+    (tree / "code" / "stray.pyc").write_bytes(b"planted")
+    after = hash_tree(tree)
+    assert after.tree == before.tree
+    assert after.files == before.files
+
+
+def test_hash_tree_sees_a_planted_file(tmp_path: Path) -> None:
+    """Positive control: a planted normal file changes the tree hash."""
+    tree = tmp_path / "prototype"
+    shutil.copytree(PROTOTYPE, tree, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    before = hash_tree(tree)
+    (tree / "code" / "x.txt").write_bytes(b"planted")
+    after = hash_tree(tree)
+    assert after.tree != before.tree
+    assert len(after.files) == len(before.files) + 1
 
 
 def compare_run_with_golden(ai_on: bool, golden_file: str) -> None:
