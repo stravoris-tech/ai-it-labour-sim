@@ -56,10 +56,12 @@ jobs:
         if: always()
         run: |
           set +e
-          list=$(uv run --frozen python -c "import importlib; m = importlib.import_module('numpy._core._multiarray_umath'); print(' '.join(f for f in m.__cpu_dispatch__ if f.startswith('AVX512')))")
+          # Operator amendment to 03b: every dispatched x86 target at the AVX-512 level (numpy 2.5 names), not X86_V3.
+          list="X86_V4 AVX512_ICL AVX512_SPR"
           echo "list=$list" >> "$GITHUB_OUTPUT"
-          if [ -z "$list" ]; then echo "nothing to disable"; else echo "disabling: $list"; fi
-          NPY_DISABLE_CPU_FEATURES="$list" uv run --frozen python -W always -c "import importlib; m = importlib.import_module('numpy._core._multiarray_umath'); print('AVX512 features on:', sorted(k for k, v in m.__cpu_features__.items() if v and k.startswith('AVX512')))" 2> temp/probe/import.err
+          echo "disabling: $list"
+          echo "dispatch: $(uv run --frozen python -c "import importlib; print(importlib.import_module('numpy._core._multiarray_umath').__cpu_dispatch__)")"
+          NPY_DISABLE_CPU_FEATURES="$list" uv run --frozen python -W always -c "import importlib; m = importlib.import_module('numpy._core._multiarray_umath'); f = m.__cpu_features__; print('AVX512 features on:', sorted(k for k, v in f.items() if v and k.startswith('AVX512'))); print('targets:', {k: f.get(k) for k in ('X86_V3', 'X86_V4', 'AVX512_ICL', 'AVX512_SPR')})" 2> temp/probe/import.err
           code=$?
           echo "import exit code: $code"
           echo "import stderr:"
@@ -117,6 +119,8 @@ jobs:
               "cpu": env.get("cpu"),
               "avx512f": env.get("avx512f"),
               "avx512_features_on": env.get("avx512_features_on"),
+              "targets_default": env.get("dispatch_features"),
+              "targets_disabled": None if disabled is None else disabled["environment"].get("dispatch_features"),
               "disabled": os.environ["DISABLED"] or "nothing to disable",
               "import_code": os.environ["IMPORT_CODE"],
               "import_stderr": err.read_text(encoding="utf-8", errors="replace").strip() if err.exists() else None,

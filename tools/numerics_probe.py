@@ -251,6 +251,7 @@ def environment() -> dict[str, Any]:
         "cpu_baseline": list(m.__cpu_baseline__),
         "cpu_dispatch": list(m.__cpu_dispatch__),
         "avx512_features_on": sorted(k for k, v in m.__cpu_features__.items() if v and k.startswith("AVX512")),
+        "dispatch_features": {k: m.__cpu_features__.get(k) for k in m.__cpu_dispatch__},
         "NPY_DISABLE_CPU_FEATURES": os.environ.get("NPY_DISABLE_CPU_FEATURES"),
     }
 
