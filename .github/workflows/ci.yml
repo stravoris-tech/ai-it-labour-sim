@@ -21,6 +21,9 @@ jobs:
       - name: Sync dependencies
         run: uv sync --locked
 
+      - name: Numerics probe
+        run: uv run --frozen python tools/numerics_probe.py || true
+
       - name: Gate
         run: uv run python scripts/gate.py
 
