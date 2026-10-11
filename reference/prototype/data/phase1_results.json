@@ -1,0 +1,1034 @@
+{
+ "T1_ai_off": {
+  "checkpoints": {
+   "2024": {
+    "Headcount": 100000.0,
+    "Backlog": 50000.0,
+    "Desired": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05,
+    "a": 0.2,
+    "Hiring": 20000.0,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2026": {
+    "Headcount": 100000.0,
+    "Backlog": 50000.0,
+    "Desired": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05,
+    "a": 0.276,
+    "Hiring": 20000.0,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2030": {
+    "Headcount": 100000.0,
+    "Backlog": 50000.0,
+    "Desired": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05,
+    "a": 0.387,
+    "Hiring": 20000.0,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2035": {
+    "Headcount": 100000.0,
+    "Backlog": 50000.0,
+    "Desired": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05,
+    "a": 0.474,
+    "Hiring": 20000.0,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2040": {
+    "Headcount": 100000.0,
+    "Backlog": 50000.0,
+    "Desired": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05,
+    "a": 0.526,
+    "Hiring": 20000.0,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   }
+  },
+  "min_stocks": {
+   "Backlog": 50000.0,
+   "Headcount": 100000.0
+  },
+  "series": [
+   {
+    "year": 2024.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2025.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2026.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2027.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2028.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2029.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2030.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2031.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2032.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2033.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2034.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2035.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2036.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2037.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2038.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2039.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2040.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   }
+  ]
+ },
+ "T2_step_ai_off": {
+  "checkpoints": {
+   "2024": {
+    "Headcount": 100000.0,
+    "Backlog": 50000.0,
+    "Desired": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05,
+    "a": 0.2,
+    "Hiring": 20000.0,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2026": {
+    "Headcount": 100000.0,
+    "Backlog": 50000.0,
+    "Desired": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05,
+    "a": 0.276,
+    "Hiring": 20000.0,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2030": {
+    "Headcount": 123237.475,
+    "Backlog": 60910.612,
+    "Desired": 121821.223,
+    "P_eff": 1.0,
+    "A": 0.05,
+    "a": 0.387,
+    "Hiring": 18982.487,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 120000.0
+   },
+   "2035": {
+    "Headcount": 119998.919,
+    "Backlog": 60000.424,
+    "Desired": 120000.848,
+    "P_eff": 1.0,
+    "A": 0.05,
+    "a": 0.474,
+    "Hiring": 24003.642,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 120000.0
+   },
+   "2040": {
+    "Headcount": 120000.0,
+    "Backlog": 60000.0,
+    "Desired": 119999.999,
+    "P_eff": 1.0,
+    "A": 0.05,
+    "a": 0.526,
+    "Hiring": 23999.996,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 120000.0
+   }
+  },
+  "min_stocks": {
+   "Backlog": 50000.0,
+   "Headcount": 100000.0
+  },
+  "series": [
+   {
+    "year": 2024.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2025.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2026.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2027.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2028.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2029.0,
+    "Headcount": 117693.7,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2030.0,
+    "Headcount": 123237.5,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2031.0,
+    "Headcount": 119753.7,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2032.0,
+    "Headcount": 119945.3,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2033.0,
+    "Headcount": 120049.4,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2034.0,
+    "Headcount": 119997.4,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2035.0,
+    "Headcount": 119998.9,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2036.0,
+    "Headcount": 120000.7,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2037.0,
+    "Headcount": 120000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2038.0,
+    "Headcount": 120000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2039.0,
+    "Headcount": 120000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   },
+   {
+    "year": 2040.0,
+    "Headcount": 120000.0,
+    "P_eff": 1.0,
+    "A": 0.05
+   }
+  ]
+ },
+ "T3_ai_on_base": {
+  "checkpoints": {
+   "2024": {
+    "Headcount": 100000.0,
+    "Backlog": 50000.0,
+    "Desired": 100000.0,
+    "P_eff": 1.009,
+    "A": 0.05,
+    "a": 0.2,
+    "Hiring": 20000.0,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2026": {
+    "Headcount": 95972.94,
+    "Backlog": 48933.897,
+    "Desired": 95354.689,
+    "P_eff": 1.047,
+    "A": 0.179,
+    "a": 0.276,
+    "Hiring": 16721.584,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2030": {
+    "Headcount": 80298.418,
+    "Backlog": 47071.771,
+    "Desired": 79217.525,
+    "P_eff": 1.248,
+    "A": 0.604,
+    "a": 0.387,
+    "Hiring": 11736.112,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2035": {
+    "Headcount": 65776.534,
+    "Backlog": 48106.91,
+    "Desired": 65379.275,
+    "P_eff": 1.515,
+    "A": 0.933,
+    "a": 0.474,
+    "Hiring": 11566.273,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2040": {
+    "Headcount": 60679.469,
+    "Backlog": 49178.305,
+    "Desired": 60517.207,
+    "P_eff": 1.646,
+    "A": 0.992,
+    "a": 0.526,
+    "Hiring": 11486.848,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   }
+  },
+  "min_stocks": {
+   "Backlog": 47000.9408290359,
+   "Headcount": 60679.46896750921
+  },
+  "series": [
+   {
+    "year": 2024.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0088,
+    "A": 0.05
+   },
+   {
+    "year": 2025.0,
+    "Headcount": 98079.0,
+    "P_eff": 1.0231,
+    "A": 0.1052
+   },
+   {
+    "year": 2026.0,
+    "Headcount": 95972.9,
+    "P_eff": 1.0466,
+    "A": 0.1785
+   },
+   {
+    "year": 2027.0,
+    "Headcount": 93000.4,
+    "P_eff": 1.0813,
+    "A": 0.2703
+   },
+   {
+    "year": 2028.0,
+    "Headcount": 89139.6,
+    "P_eff": 1.1279,
+    "A": 0.3773
+   },
+   {
+    "year": 2029.0,
+    "Headcount": 84752.7,
+    "P_eff": 1.1846,
+    "A": 0.492
+   },
+   {
+    "year": 2030.0,
+    "Headcount": 80298.4,
+    "P_eff": 1.2476,
+    "A": 0.6044
+   },
+   {
+    "year": 2031.0,
+    "Headcount": 76197.7,
+    "P_eff": 1.3117,
+    "A": 0.7051
+   },
+   {
+    "year": 2032.0,
+    "Headcount": 72694.2,
+    "P_eff": 1.3725,
+    "A": 0.7884
+   },
+   {
+    "year": 2033.0,
+    "Headcount": 69841.9,
+    "P_eff": 1.4272,
+    "A": 0.8527
+   },
+   {
+    "year": 2034.0,
+    "Headcount": 67573.6,
+    "P_eff": 1.4747,
+    "A": 0.8997
+   },
+   {
+    "year": 2035.0,
+    "Headcount": 65776.5,
+    "P_eff": 1.5154,
+    "A": 0.9329
+   },
+   {
+    "year": 2036.0,
+    "Headcount": 64338.9,
+    "P_eff": 1.5499,
+    "A": 0.9556
+   },
+   {
+    "year": 2037.0,
+    "Headcount": 63169.4,
+    "P_eff": 1.5794,
+    "A": 0.9709
+   },
+   {
+    "year": 2038.0,
+    "Headcount": 62199.7,
+    "P_eff": 1.6047,
+    "A": 0.981
+   },
+   {
+    "year": 2039.0,
+    "Headcount": 61381.1,
+    "P_eff": 1.6267,
+    "A": 0.9876
+   },
+   {
+    "year": 2040.0,
+    "Headcount": 60679.5,
+    "P_eff": 1.646,
+    "A": 0.992
+   }
+  ]
+ },
+ "T4_ai_on_jevons": {
+  "checkpoints": {
+   "2024": {
+    "Headcount": 100000.0,
+    "Backlog": 50000.0,
+    "Desired": 100000.0,
+    "P_eff": 1.009,
+    "A": 0.05,
+    "a": 0.2,
+    "Hiring": 20000.0,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100440.208
+   },
+   "2026": {
+    "Headcount": 97581.776,
+    "Backlog": 49895.459,
+    "Desired": 97228.43,
+    "P_eff": 1.047,
+    "A": 0.179,
+    "a": 0.276,
+    "Hiring": 18102.969,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 102303.401
+   },
+   "2030": {
+    "Headcount": 88594.285,
+    "Backlog": 52277.444,
+    "Desired": 87978.2,
+    "P_eff": 1.248,
+    "A": 0.604,
+    "a": 0.387,
+    "Hiring": 15254.52,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 111693.897
+   },
+   "2035": {
+    "Headcount": 80474.631,
+    "Backlog": 59054.607,
+    "Desired": 80257.648,
+    "P_eff": 1.515,
+    "A": 0.933,
+    "a": 0.474,
+    "Hiring": 15226.993,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 123100.742
+   },
+   "2040": {
+    "Headcount": 77634.568,
+    "Backlog": 63011.883,
+    "Desired": 77540.355,
+    "P_eff": 1.646,
+    "A": 0.992,
+    "a": 0.526,
+    "Hiring": 15150.059,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 128298.077
+   }
+  },
+  "min_stocks": {
+   "Backlog": 49744.147324990176,
+   "Headcount": 77634.5682461386
+  },
+  "series": [
+   {
+    "year": 2024.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0088,
+    "A": 0.05
+   },
+   {
+    "year": 2025.0,
+    "Headcount": 98788.1,
+    "P_eff": 1.0231,
+    "A": 0.1052
+   },
+   {
+    "year": 2026.0,
+    "Headcount": 97581.8,
+    "P_eff": 1.0466,
+    "A": 0.1785
+   },
+   {
+    "year": 2027.0,
+    "Headcount": 95873.7,
+    "P_eff": 1.0813,
+    "A": 0.2703
+   },
+   {
+    "year": 2028.0,
+    "Headcount": 93654.8,
+    "P_eff": 1.1279,
+    "A": 0.3773
+   },
+   {
+    "year": 2029.0,
+    "Headcount": 91139.7,
+    "P_eff": 1.1846,
+    "A": 0.492
+   },
+   {
+    "year": 2030.0,
+    "Headcount": 88594.3,
+    "P_eff": 1.2476,
+    "A": 0.6044
+   },
+   {
+    "year": 2031.0,
+    "Headcount": 86264.6,
+    "P_eff": 1.3117,
+    "A": 0.7051
+   },
+   {
+    "year": 2032.0,
+    "Headcount": 84292.5,
+    "P_eff": 1.3725,
+    "A": 0.7884
+   },
+   {
+    "year": 2033.0,
+    "Headcount": 82705.5,
+    "P_eff": 1.4272,
+    "A": 0.8527
+   },
+   {
+    "year": 2034.0,
+    "Headcount": 81457.2,
+    "P_eff": 1.4747,
+    "A": 0.8997
+   },
+   {
+    "year": 2035.0,
+    "Headcount": 80474.6,
+    "P_eff": 1.5154,
+    "A": 0.9329
+   },
+   {
+    "year": 2036.0,
+    "Headcount": 79688.3,
+    "P_eff": 1.5499,
+    "A": 0.9556
+   },
+   {
+    "year": 2037.0,
+    "Headcount": 79043.8,
+    "P_eff": 1.5794,
+    "A": 0.9709
+   },
+   {
+    "year": 2038.0,
+    "Headcount": 78502.6,
+    "P_eff": 1.6047,
+    "A": 0.981
+   },
+   {
+    "year": 2039.0,
+    "Headcount": 78038.6,
+    "P_eff": 1.6267,
+    "A": 0.9876
+   },
+   {
+    "year": 2040.0,
+    "Headcount": 77634.6,
+    "P_eff": 1.646,
+    "A": 0.992
+   }
+  ]
+ },
+ "T5_ai_on_dt32": {
+  "checkpoints": {
+   "2024": {
+    "Headcount": 100000.0,
+    "Backlog": 50000.0,
+    "Desired": 100000.0,
+    "P_eff": 1.009,
+    "A": 0.05,
+    "a": 0.2,
+    "Hiring": 20000.0,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2026": {
+    "Headcount": 95951.595,
+    "Backlog": 48930.684,
+    "Desired": 95331.336,
+    "P_eff": 1.047,
+    "A": 0.179,
+    "a": 0.276,
+    "Hiring": 16709.283,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2030": {
+    "Headcount": 80262.841,
+    "Backlog": 47078.578,
+    "Desired": 79183.28,
+    "P_eff": 1.248,
+    "A": 0.606,
+    "a": 0.387,
+    "Hiring": 11734.325,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2035": {
+    "Headcount": 65783.503,
+    "Backlog": 48106.753,
+    "Desired": 65385.069,
+    "P_eff": 1.515,
+    "A": 0.933,
+    "a": 0.474,
+    "Hiring": 11562.966,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2040": {
+    "Headcount": 60682.429,
+    "Backlog": 49175.165,
+    "Desired": 60519.59,
+    "P_eff": 1.646,
+    "A": 0.992,
+    "a": 0.526,
+    "Hiring": 11485.131,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   }
+  },
+  "min_stocks": {
+   "Backlog": 47009.2951565621,
+   "Headcount": 60682.42879121301
+  },
+  "series": [
+   {
+    "year": 2024.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.0088,
+    "A": 0.05
+   },
+   {
+    "year": 2025.0,
+    "Headcount": 98094.3,
+    "P_eff": 1.0232,
+    "A": 0.1055
+   },
+   {
+    "year": 2026.0,
+    "Headcount": 95951.6,
+    "P_eff": 1.0468,
+    "A": 0.1792
+   },
+   {
+    "year": 2027.0,
+    "Headcount": 92967.7,
+    "P_eff": 1.0817,
+    "A": 0.2715
+   },
+   {
+    "year": 2028.0,
+    "Headcount": 89098.4,
+    "P_eff": 1.1284,
+    "A": 0.3788
+   },
+   {
+    "year": 2029.0,
+    "Headcount": 84709.5,
+    "P_eff": 1.1852,
+    "A": 0.4936
+   },
+   {
+    "year": 2030.0,
+    "Headcount": 80262.8,
+    "P_eff": 1.2481,
+    "A": 0.6058
+   },
+   {
+    "year": 2031.0,
+    "Headcount": 76175.1,
+    "P_eff": 1.3121,
+    "A": 0.7061
+   },
+   {
+    "year": 2032.0,
+    "Headcount": 72684.4,
+    "P_eff": 1.3727,
+    "A": 0.7889
+   },
+   {
+    "year": 2033.0,
+    "Headcount": 69841.5,
+    "P_eff": 1.4272,
+    "A": 0.8528
+   },
+   {
+    "year": 2034.0,
+    "Headcount": 67578.5,
+    "P_eff": 1.4747,
+    "A": 0.8996
+   },
+   {
+    "year": 2035.0,
+    "Headcount": 65783.5,
+    "P_eff": 1.5152,
+    "A": 0.9327
+   },
+   {
+    "year": 2036.0,
+    "Headcount": 64346.0,
+    "P_eff": 1.5498,
+    "A": 0.9553
+   },
+   {
+    "year": 2037.0,
+    "Headcount": 63175.6,
+    "P_eff": 1.5792,
+    "A": 0.9706
+   },
+   {
+    "year": 2038.0,
+    "Headcount": 62204.7,
+    "P_eff": 1.6046,
+    "A": 0.9807
+   },
+   {
+    "year": 2039.0,
+    "Headcount": 61385.1,
+    "P_eff": 1.6266,
+    "A": 0.9874
+   },
+   {
+    "year": 2040.0,
+    "Headcount": 60682.4,
+    "P_eff": 1.6459,
+    "A": 0.9918
+   }
+  ]
+ },
+ "T6_extreme": {
+  "checkpoints": {
+   "2024": {
+    "Headcount": 100000.0,
+    "Backlog": 50000.0,
+    "Desired": 100000.0,
+    "P_eff": 1.048,
+    "A": 0.05,
+    "a": 0.5,
+    "Hiring": 20000.0,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2026": {
+    "Headcount": 20595.572,
+    "Backlog": 25020.166,
+    "Desired": 16793.015,
+    "P_eff": 5.062,
+    "A": 0.887,
+    "a": 0.837,
+    "Hiring": 0.0,
+    "Layoffs": 11091.115,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2030": {
+    "Headcount": 7349.164,
+    "Backlog": 42774.352,
+    "Desired": 7253.649,
+    "P_eff": 13.174,
+    "A": 1.0,
+    "a": 0.943,
+    "Hiring": 1087.773,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2035": {
+    "Headcount": 6902.834,
+    "Backlog": 49571.829,
+    "Desired": 6902.026,
+    "P_eff": 14.448,
+    "A": 1.0,
+    "a": 0.95,
+    "Hiring": 1377.334,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   },
+   "2040": {
+    "Headcount": 6899.975,
+    "Backlog": 49984.935,
+    "Desired": 6899.979,
+    "P_eff": 14.491,
+    "A": 1.0,
+    "a": 0.95,
+    "Hiring": 1380.002,
+    "Layoffs": 0.0,
+    "Abandonment": 0.0,
+    "Demand": 100000.0
+   }
+  },
+  "min_stocks": {
+   "Backlog": 25006.380719467605,
+   "Headcount": 6899.973279171499
+  },
+  "series": [
+   {
+    "year": 2024.0,
+    "Headcount": 100000.0,
+    "P_eff": 1.048,
+    "A": 0.05
+   },
+   {
+    "year": 2025.0,
+    "Headcount": 52633.5,
+    "P_eff": 2.4349,
+    "A": 0.5847
+   },
+   {
+    "year": 2026.0,
+    "Headcount": 20595.6,
+    "P_eff": 5.0625,
+    "A": 0.8872
+   },
+   {
+    "year": 2027.0,
+    "Headcount": 11788.6,
+    "P_eff": 7.8801,
+    "A": 0.975
+   },
+   {
+    "year": 2028.0,
+    "Headcount": 9259.5,
+    "P_eff": 10.3069,
+    "A": 0.9948
+   },
+   {
+    "year": 2029.0,
+    "Headcount": 7941.9,
+    "P_eff": 12.068,
+    "A": 0.9989
+   },
+   {
+    "year": 2030.0,
+    "Headcount": 7349.2,
+    "P_eff": 13.1741,
+    "A": 0.9998
+   },
+   {
+    "year": 2031.0,
+    "Headcount": 7082.4,
+    "P_eff": 13.8029,
+    "A": 1.0
+   },
+   {
+    "year": 2032.0,
+    "Headcount": 6970.2,
+    "P_eff": 14.1396,
+    "A": 1.0
+   },
+   {
+    "year": 2033.0,
+    "Headcount": 6925.6,
+    "P_eff": 14.314,
+    "A": 1.0
+   },
+   {
+    "year": 2034.0,
+    "Headcount": 6908.8,
+    "P_eff": 14.4029,
+    "A": 1.0
+   },
+   {
+    "year": 2035.0,
+    "Headcount": 6902.8,
+    "P_eff": 14.4477,
+    "A": 1.0
+   },
+   {
+    "year": 2036.0,
+    "Headcount": 6900.8,
+    "P_eff": 14.4702,
+    "A": 1.0
+   },
+   {
+    "year": 2037.0,
+    "Headcount": 6900.2,
+    "P_eff": 14.4815,
+    "A": 1.0
+   },
+   {
+    "year": 2038.0,
+    "Headcount": 6900.0,
+    "P_eff": 14.4871,
+    "A": 1.0
+   },
+   {
+    "year": 2039.0,
+    "Headcount": 6900.0,
+    "P_eff": 14.4899,
+    "A": 1.0
+   },
+   {
+    "year": 2040.0,
+    "Headcount": 6900.0,
+    "P_eff": 14.4913,
+    "A": 1.0
+   }
+  ]
+ }
+}

@@ -1,0 +1,62 @@
+# ai-it-labour-sim
+
+A System Dynamics model of AI's impact on IT employment, contract mix and vendor viability, for India and onshore (North America and Europe), 2024-2040. It is a port of a Python prototype of an AnyLogic design. The goal is a tool for asking questions: run many simulations under chosen scenario levers and uncertainty, then chart the answer over any window.
+
+Status: under construction. The model is not yet ported; the frozen prototype is in `reference/prototype/`.
+
+## Layout
+
+| Path | What it holds |
+| --- | --- |
+| `src/aisim/` | The model package |
+| `tests/` | pytest. Marker `slow` is skipped by default; run with `uv run pytest -m slow` |
+| `tools/` | Repo tooling: `hash_tree.py`, `reference_runner.py` (runs the prototype), `generate_goldens.py` |
+| `scripts/` | `gate.py` (the gate) and `check_dashes.py` |
+| `reference/prototype/` | The frozen prototype: `code/`, `data/`, `spec/`. Read-only: never edit, reformat, lint or type-check it |
+| `reference/goldens/` | Outputs generated from the prototype. Regenerate only when a slice prompt says so |
+| `temp/` | Gitignored scratch: `prompts/` (slice prompts), `outputs/` (reports), `scratch/`, `analysis/` |
+| `.claude/commands/` | `/recon`, `/build-slice`, `/verify-slice`, `/analyze` |
+
+The model specification is `reference/prototype/spec/00_model_spec.md`, with the calibration, scenarios and Q1-Q3 answers in `spec/07_phase7_build_guide.md`.
+
+## Commands
+
+- Run all Python through uv: `uv run ...`. Run `uv sync` after pulling.
+- Gate: `uv run python scripts/gate.py`. Its verdict is its exit code.
+
+## The gate
+
+Every slice exits through it:
+
+1. `ruff check .`
+2. `ruff format --check .`
+3. `mypy` (strict, over `src`, `tests`, `tools`, `scripts`)
+4. `pytest` (default markers), with the test count reported
+5. Dash check with its positive control: no U+2014 or U+2013 in any text file (`LICENSE-DOCS` excepted)
+
+CI runs the same gate on every push and pull request (job `gate`).
+
+## Conventions
+
+- Hyphens, never em or en dashes, in code, docs, commit messages and reports.
+- Canadian/British spelling, as in the spec (labour, modelling).
+- Model names mirror the spec (`BaseDemand`, `GCCAppealEnd`); ruff's naming rules are off for this reason.
+- Time is in years, Euler integration, dt = 1/16, Year = 2024 + t. 2024-2026 is the calibration window.
+- Parameters are passed in explicitly. No module-level mutable parameter state.
+- Randomness only through an explicitly seeded generator passed in, never global RNG. Deterministic tests run with noise off.
+- Commits are conventional commits, with the subject under 72 characters.
+
+## Workflow
+
+- Never commit on `main`. One feature branch per slice.
+- Each slice follows recon, build, verify. Prompts are written outside the repo and saved to `temp/prompts/`.
+- The command sequence per slice:
+  - `/branch <name>`
+  - `/recon <prompt>`
+  - `/build-slice <prompt>`
+  - `/verify-slice <prompt> <branch>` in a fresh session
+  - then `/ship`, `/merge --squash`, `/cleanup`
+- The global `/run-slice` and `/check-slice` carry a .NET gate. Use this repo's `/build-slice` and `/verify-slice` instead.
+- Minor decisions a prompt did not anticipate: take them and log them as D-rulings. Anything above minor: stop and ask.
+- Every ship report has a friction log.
+- Questions about the model's results go through `/analyze`, never into a feature branch.

@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+title: "ai-it-labour-sim: a System Dynamics model of AI's impact on IT employment"
+message: "If you use this software, please cite it using the metadata from this file."
+type: software
+authors:
+  - given-names: Krishna
+    family-names: Gandhi Mohan
+    affiliation: Stravoris
+version: 0.1.0
+license: MIT
+repository-code: "https://github.com/stravoris-tech/ai-it-labour-sim"

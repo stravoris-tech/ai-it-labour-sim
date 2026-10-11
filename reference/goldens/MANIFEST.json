@@ -1,0 +1,69 @@
+{
+ "prototype": {
+  "path": "reference/prototype",
+  "tree_sha256": "c1f5173e211a599d7a9a040b6adfc61cdc6bb93074bb2cffcdf7651f4442bf90",
+  "files": {
+   "README.md": "802f1c16cd7bd74928b21d88ac689a3d4d38748f3b9fef67f2b7b35c3197099b",
+   "code/calibrate2.py": "a2510e8a2643b805def4019af82d261a455d48779755ccd22a90bbbb98c4358c",
+   "code/calibrate3.py": "b9b01801e5d7964f2656ecefcacdecbb5a415b0d96a921b2b0c22cb0620e185b",
+   "code/calibrate4.py": "9da00d27e2042785cfe8aba54be940fcf7cd6ece35c72cc035b99630b6ac3de8",
+   "code/calibrate5.py": "3786d805665a5129908d93075c62973807173bf0f10174cbf3325dd79362dcfc",
+   "code/calibrate6a.py": "e013daaf41be33f4da8f4d3b201529b78b17a84bb93a8807da1a2e62428d6b0a",
+   "code/calibrate6b.py": "43d1527a3bb6a797787bc78d57dbe5b03a6f9287b45d826bc9a92ae6684d3bce",
+   "code/calibrate7.py": "cb3a0ebe8d8c4e646e615b08ba6688d6801e93daac3bf2cdb7aee40895da8469",
+   "code/calibrate7_ss.py": "4472d6697fe4cb93f76913bb2d8cd9b00b318112aeb86c108b524be7f885d3bf",
+   "code/phase1_sim.py": "59ec7a67973bec562421a41b1f0241700c5d0a67172df9d08572c7a00e6e6ea7",
+   "code/phase2_sim.py": "ae8eeab612d54e2183cff199a62d94558b412b143c97836b473414e4c50362a2",
+   "code/phase2_tests.py": "1f5e7dc418259d83e796f0960794f75bf217fff3745bd8a1b95ef6df0c301f3b",
+   "code/phase3_sim.py": "fc4762922107251e9b334fe3e49da88c14b76428b6e755f7df52f6de63f39e35",
+   "code/phase3_tests.py": "7514816237320a237bd4d6f52fa72e743d9dde3eba41742c7c1fd445280dbd36",
+   "code/phase4_sim.py": "0439216db6044ca18303ae12e2c1f022e7f3ad94e0582b93f98c482aafaaa54f",
+   "code/phase4_tests.py": "6f443fb7154a81f88cfc118831669a8d86c12b3c7f58b20dabc344dc8d2a4483",
+   "code/phase5_sim.py": "32448bfc5069e4284570409589c86d741f7abc87bc7c552dd08e7f8050d0a2bc",
+   "code/phase5_tests.py": "5a2bae141e394ad03c0337e4996ad90160ddd2998b515250d77fd4130a846d23",
+   "code/phase6a_sim.py": "b93245db1a800b7b2fd8a4405d52a929a6518bbcd2b86891f17b29edfb3e43eb",
+   "code/phase6a_tests.py": "cb0c8bff43fcb5deda3338d45cbafddcc3ccae56662ce728850cfb04d435389d",
+   "code/phase6b_sim.py": "9982c0d99a33da1bd2bd907f6de58dbc9e203b233153ecd187c4054b65fc3332",
+   "code/phase6b_tests.py": "8e837afc9b7f5a3cc295c9431a729187d2451fc91d73d7b13ad01d284a9e1f32",
+   "code/phase7_runs.py": "029dac539e0ec3ad7f32c7b606307bf8d7b72c07f6925ac059ead49d6a18f51c",
+   "code/phase7_sim.py": "a8ff9a2243154387763d017ecd91f4739fce31bf7249520b5fc1328c4b8bb366",
+   "code/run_tests2.py": "1f5e7dc418259d83e796f0960794f75bf217fff3745bd8a1b95ef6df0c301f3b",
+   "code/scan4.py": "0e6bc89d634d5e35bbac2b024b77a028bb4b1e917ff371e982db26fe24224c2e",
+   "code/scan5.py": "c35304e3b3cca0a05dadc9f3dffc1a9f85992c1e56cec7da46ee5c8f01321d9a",
+   "data/calib7.json": "0bf58d7f8a8d175b6fea1c1ee6d8fdfdbd6012bcccbbb7674c7500eef9be0322",
+   "data/phase1_results.json": "a6f4f92fff8e1da4fa581a5f9f57c02dbce24041ace59e715b3cba146aca9fbc",
+   "data/phase2_eq.json": "69255c1eda1d21f334b7da24764f658ea34be922b8e8c14a51fd9b5f1f8e668f",
+   "data/phase7_init.csv": "64c1fc85e4e7ffecf385e858e360338c4311638dd3ffc7ce62d2c564a55ad2eb",
+   "data/phase7_params.csv": "ad099e124f98b77eb87c27df644d9ed5200a753ceecd57761146f7445289db03",
+   "spec/00_model_spec.md": "1239501d979458524fb5c6dee30875187e872095cf4a8cf1c6452bb910f0415d",
+   "spec/01_phase1_build_guide.md": "ee568b6eb93ea281379280f966abe98a0a3959d16524a409a66786692654db39",
+   "spec/02_phase2_build_guide.md": "621db23062b27ad7178472970d73f0194715c217183260aa5263dbd0cee416ce",
+   "spec/03_phase3_build_guide.md": "80bd94d343bf7fe173af3a39e53b0668b146030a7dbb611b76c346ada7e5fe80",
+   "spec/04_phase4_build_guide.md": "64208bcdf047a680f4daf0e8446b7632d6a1b61fa7e154a398264f88397d7890",
+   "spec/05_phase5_build_guide.md": "bea562c99d3f3419476f72603a66f4a191550b205b60de54ef251879208c868c",
+   "spec/06a_phase6a_build_guide.md": "aa910983e8bfbced0521f73bc15812a351a009ffe048d9104618ac50603999f3",
+   "spec/06b_phase6b_build_guide.md": "c541cd7d14c18b46558eeec438729915d5d4fcdd8d67cf8dbdb5aa46f03c5500",
+   "spec/07_phase7_build_guide.md": "8266823b95120d3fd6ab71e354857b129a3a8073a2f3a8df0530b3ae9e16a0e8",
+   "spec/08_sources.md": "11e89924ff3d9f9fe70506bc1f4f9a45d3726a7d0368436395c530bcae730073"
+  }
+ },
+ "goldens": {
+  "base.json": "4d35e341efd1d426e39fcf7eca47caa0090b4c21e93e3640f4c1788c06f5d9e9",
+  "ai_off.json": "1c0381a7cccd38d7f4936ca0602fdc762a4eacd2d6d4d9e25db253c061614ba6",
+  "phase7_results.json": "b685a12158f4b34f0badd5addcd0ebb45f57574c78a465a63863b221bac178f3"
+ },
+ "environment": {
+  "python_version": "3.12.10",
+  "python_implementation": "CPython",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "machine": "ARM64",
+  "uv_version": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-pc-windows-msvc)"
+ },
+ "generated_utc": "2026-10-11T13:11:55+00:00",
+ "command": "uv run python tools/generate_goldens.py",
+ "wall_time_s": {
+  "base": 0.273,
+  "ai_off": 0.258,
+  "full_suite": 74.617
+ }
+}
