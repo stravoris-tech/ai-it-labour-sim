@@ -40,6 +40,18 @@ SEED = 0
 N = 1_000_000
 MAX_SAVED = 20
 
+ROOT = Path(__file__).resolve().parent.parent
+
+DISABLE = "X86_V4 AVX512_ICL AVX512_SPR"
+"""The ``NPY_DISABLE_CPU_FEATURES`` list that makes numpy's kernels match libm on x86-64: every dispatched target at
+the AVX-512 level, in numpy 2.5's names (slice 03b). For x86-64 numpy builds only; not for ARM64 or macOS."""
+
+GUARD_N = 4096
+"""Random operands per form in the test guard, which also checks the regression points."""
+
+REGRESSION = ROOT / "tests" / "data" / "numerics_regression.json"
+"""Inputs on which numpy's AVX-512 kernels differed from libm on GitHub's runners, by form name (slice 03b)."""
+
 Q1_KEYS = ("HeadTotal", "Q1_ConsOnshore", "Q1_ConsIndia", "Q1_VendOnshore", "Q1_VendIndia")
 """The keys whose 2040 values ``--end-to-end`` reports separately."""
 
@@ -254,6 +266,48 @@ def environment() -> dict[str, Any]:
         "dispatch_features": {k: m.__cpu_features__.get(k) for k in m.__cpu_dispatch__},
         "NPY_DISABLE_CPU_FEATURES": os.environ.get("NPY_DISABLE_CPU_FEATURES"),
     }
+
+
+# ---- test guard ------------------------------------------------------------------------------------------------------
+
+
+def load_regression(path: Path = REGRESSION) -> dict[str, list[list[float]]]:
+    """The regression points by form name: ``[a, b]`` operand pairs on which AVX-512 kernels differed from libm."""
+    with path.open(encoding="utf-8") as f:
+        forms: dict[str, list[list[float]]] = json.load(f)["forms"]
+    return forms
+
+
+def guard(n: int = GUARD_N) -> list[FormResult]:
+    """The engine forms on ``n`` random operands each plus the regression points: the test guard's check."""
+    return run_forms(n, extra=load_regression(), engine_only=True)
+
+
+def guard_line(results: Sequence[FormResult]) -> str:
+    """One line for the test report: the verdict, the sample, the CPU and the variable in use."""
+    bad = [r for r in results if r.mismatches]
+    points = sum(len(p) for p in load_regression().values())
+    verdict = f"kernels DIFFER from libm in {len(bad)} form(s)" if bad else "kernels match libm"
+    return (
+        f"numerics guard: {verdict} ({len(results)} engine forms, n={GUARD_N} random per form + {points} regression "
+        f"points; CPU {cpu_model()}, avx512f={has_avx512f()}, "
+        f"NPY_DISABLE_CPU_FEATURES={os.environ.get('NPY_DISABLE_CPU_FEATURES')!r})"
+    )
+
+
+def guard_message(results: Sequence[FormResult]) -> str:
+    """The failure message: the cause, the forms that differ, the variable to set and numpy's current targets."""
+    bad = [r for r in results if r.mismatches]
+    forms = "; ".join(f"{r.name}: {r.mismatches} of {r.n}, max {r.max_ulp} ulp" for r in bad)
+    return (
+        f"numpy's float64 maths kernels differ from Python's (libm) on this CPU ({cpu_model()}): {forms}. "
+        "Batch-scalar parity at 1e-12 assumes they match, so the parity tests cannot pass here. "
+        "Cause: numpy dispatches np.power and np.log to AVX-512 SIMD kernels (slice 03b). "
+        f'Fix: set NPY_DISABLE_CPU_FEATURES="{DISABLE}" (x86-64 numpy builds only; do not set it on ARM64 or macOS). '
+        f"In use: NPY_DISABLE_CPU_FEATURES={os.environ.get('NPY_DISABLE_CPU_FEATURES')!r}. "
+        f"numpy {np.__version__} __cpu_dispatch__: {list(umath().__cpu_dispatch__)}; if numpy has renamed its "
+        "targets, disable every dispatched target at the AVX-512 level. See README, Reproducibility."
+    )
 
 
 # ---- end to end ------------------------------------------------------------------------------------------------------

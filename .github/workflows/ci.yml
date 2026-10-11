@@ -10,6 +10,9 @@ jobs:
     name: gate
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      # numpy's AVX-512 kernels differ from libm by 1 ulp and break batch parity; see README "Reproducibility".
+      NPY_DISABLE_CPU_FEATURES: "X86_V4 AVX512_ICL AVX512_SPR"
     steps:
       - uses: actions/checkout@v7
 
