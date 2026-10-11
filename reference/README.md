@@ -23,8 +23,9 @@ from it.
 - `base.json` and `ai_off.json`: one in-process base run each, 2024-2040, dt = 1/16, rows recorded every 0.25
   years, with AI on and off. Each run loads a fresh copy of `code/phase7_sim.py` (its parameter dict `P` is
   module-level and mutable), copies the calibrated parameters from `data/calib7.json` into `P` exactly as
-  `code/phase7_runs.py` lines 6-11 do, and calls the prototype `run()`. Each file holds `rows`, `final_state` and
-  `mins`.
+  `code/phase7_runs.py` lines 6-10 do, and calls the prototype `run()`. Each file holds `rows`, `final_state` and
+  `mins`. `BASE = dict(S.P)` (line 11) is deliberately not reproduced, because it only snapshots `P` for the tornado
+  ranges.
 - `phase7_results.json`: a byte copy of the output of the unmodified `code/phase7_runs.py` (tests, scenarios,
   tornado and a 300-run Monte Carlo seeded with `random.Random(7)`), run as a subprocess in a fresh working
   directory holding a copy of `calib7.json`.

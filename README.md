@@ -14,7 +14,7 @@ Under construction and not yet usable. The model has not been ported yet; the fr
 - Code is under the MIT licence ([`LICENSE`](LICENSE)): `src/`, `tests/`, `tools/`, `scripts/`, `.claude/` and
   `reference/prototype/code/`.
 - Documentation and data are under CC BY 4.0 ([`LICENSE-DOCS`](LICENSE-DOCS)): `docs/`, `reference/prototype/spec/`,
-  `reference/prototype/data/`, `reference/goldens/` and the text of this README.
+  `reference/prototype/data/`, `reference/goldens/`, `src/aisim/data/` and the text of this README.
 
 ## How to cite
 
