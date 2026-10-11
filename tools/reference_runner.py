@@ -56,7 +56,10 @@ def load_prototype_sim() -> ModuleType:
 
 
 def apply_calibration(sim: ModuleType) -> dict[str, Any]:
-    """Copy the calibrated parameters into ``sim.P`` as ``phase7_runs.py`` lines 6-11 do, and return the init state."""
+    """Copy the calibrated parameters into ``sim.P`` as ``phase7_runs.py`` lines 6-10 do, and return the init state.
+
+    ``BASE = dict(S.P)`` (line 11) is deliberately not reproduced: it only snapshots ``P`` for the tornado ranges.
+    """
     with CALIB_PATH.open() as f:
         cal = json.load(f)
     for k, v in cal["params"].items():

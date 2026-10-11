@@ -14,8 +14,8 @@ from tools.reference_runner import PROTOTYPE, ROOT, RunResult, iter_numeric_pair
 PROTOTYPE_TREE_SHA256 = "c1f5173e211a599d7a9a040b6adfc61cdc6bb93074bb2cffcdf7651f4442bf90"
 
 GOLDENS = ROOT / "reference" / "goldens"
-REL_TOL = 1e-9
-ABS_TOL = 1e-9
+REL_TOL = 1e-12
+ABS_TOL = 1e-12
 
 
 def load_json(path: Path) -> Any:
