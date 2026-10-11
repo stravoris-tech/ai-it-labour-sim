@@ -37,6 +37,9 @@ from tests.helpers import init_state, load_coverage_cases
 from tests.test_parity import CASES
 from tools.reference_runner import InitEdit
 
+pytestmark = pytest.mark.usefixtures("numpy_kernels_match_libm")
+"""Every test here needs numpy's kernels to match libm (``tests/conftest.py``)."""
+
 REL_TOL = 1e-12
 ABS_TOL = 1e-12
 
