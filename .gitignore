@@ -218,3 +218,24 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# IDE and OS artifacts
+.vscode/
+*.suo
+*.user
+*.swp
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
+
+# Virtual environments and caches
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+dist/
+*.egg-info/
