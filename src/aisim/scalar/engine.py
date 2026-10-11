@@ -4,6 +4,13 @@ Prototype: ``phase7_sim.py`` ``run()``, lines 150-636: S0 (lines 151-159, before
 preamble), the sections S2-S13 (lines 164-496), the recording block (497-545) and the integration block (546-635).
 Euler integration with ``Year = 2024 + t``; the last step is recorded but not integrated past.
 
+Spec modules, by section: S0 is 10 Sourcing choice; S2 is 7 AI capability, 6 Delivery AI and 1 IT work demand; S3 is 1c
+Work queues, 3 Workforce and 1 IT work demand; S4, S5 and S7 are 3 Workforce, 9 Visa policy and 3b Hiring pipeline; S6
+and S8 are 4 Labour market, 3b Hiring pipeline, 3 Workforce and 9 Visa policy; S9-S11 are 8 Finance, 7 AI capability,
+2 Contracts, 4 Labour market and 10 Sourcing choice; S12 is 6 Delivery AI; S13 is 5 Consumer AI, 1b Applications and
+seats, 7 AI capability, 8 Finance, 1 IT work demand, 9 GCCs and 10 Sourcing choice. The integration block updates the
+stocks of every module.
+
 This engine is the reference statement of the model and the oracle for faster engines. It reproduces the prototype bit
 for bit: same expressions, same operand order, built-in ``sum()`` over the same sequences (CPython 3.12 compensated
 summation), and the same stock update order.

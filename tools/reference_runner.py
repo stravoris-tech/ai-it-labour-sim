@@ -18,7 +18,7 @@ import os
 import shutil
 import subprocess
 import sys
-from collections.abc import Iterator
+from collections.abc import Iterator, MutableMapping, Sequence
 from pathlib import Path
 from types import ModuleType
 from typing import Any
@@ -69,10 +69,46 @@ def apply_calibration(sim: ModuleType) -> dict[str, Any]:
     return init
 
 
-def run_base(ai_on: bool = True, dt: float = 1 / 16, record_every: float = 0.25, **overrides: Any) -> RunResult:
-    """Run the calibrated prototype once on a fresh module and return its ``(rows, final_state, mins)``."""
+InitEdit = Sequence[str | float]
+"""One state edit: a key path (``"*"`` matches every key at its level) followed by the value to set."""
+
+
+def apply_init_edits(state: MutableMapping[str, Any], edits: Sequence[InitEdit]) -> None:
+    """Apply ``edits`` to a state dict in place, in order.
+
+    Each edit is ``[key, ..., value]``: the keys walk down the nested dicts and the last key names the leaf. ``"*"``
+    stands for every key at its level. ``Any``: the state is a nested dict of floats (a ``State`` or a prototype init).
+    """
+    for edit in edits:
+        *keys, value = edit
+        if not keys or not all(isinstance(k, str) for k in keys) or isinstance(value, str):
+            raise ValueError(f"bad init edit: {edit!r}")
+        nodes: list[MutableMapping[str, Any]] = [state]
+        for key in keys[:-1]:
+            nodes = [child for node in nodes for child in (node.values() if key == "*" else [node[str(key)]])]
+        last = str(keys[-1])
+        for node in nodes:
+            for k in list(node) if last == "*" else [last]:
+                if k not in node:
+                    raise KeyError(f"init edit {edit!r}: no key {k!r}")
+                node[k] = float(value)
+
+
+def run_base(
+    ai_on: bool = True,
+    dt: float = 1 / 16,
+    record_every: float = 0.25,
+    init_edits: Sequence[InitEdit] | None = None,
+    **overrides: Any,
+) -> RunResult:
+    """Run the calibrated prototype once on a fresh module and return its ``(rows, final_state, mins)``.
+
+    ``init_edits``, when given, are applied to the calibrated init state with ``apply_init_edits`` before the run.
+    """
     sim = load_prototype_sim()
     init = apply_calibration(sim)
+    if init_edits:
+        apply_init_edits(init, init_edits)
     result: RunResult = sim.run(init, ai_on=ai_on, dt=dt, record_every=record_every, **overrides)
     return result
 

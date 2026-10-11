@@ -2,6 +2,7 @@
 
 Each file contributes one line, ``<sha256 hex>  <relative POSIX path>\\n``, in sorted path order. The tree hash is the
 SHA-256 of all lines concatenated and encoded as UTF-8. Used to pin the frozen prototype in ``reference/prototype/``.
+Bytecode (``__pycache__`` directories and ``*.pyc`` files) is skipped, so running the prototype cannot change the hash.
 
 Usage: ``python tools/hash_tree.py <directory>``
 """
@@ -27,9 +28,17 @@ def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def is_ignored(rel: Path) -> bool:
+    """True for bytecode: any path with a ``__pycache__`` component, and any ``*.pyc`` file."""
+    return "__pycache__" in rel.parts or rel.suffix == ".pyc"
+
+
 def hash_tree(root: Path) -> TreeHash:
-    """Hash every file under ``root``, sorted by POSIX path relative to it."""
-    paths = sorted((p for p in root.rglob("*") if p.is_file()), key=lambda p: p.relative_to(root).as_posix())
+    """Hash every file under ``root``, sorted by POSIX path relative to it, skipping bytecode (``is_ignored``)."""
+    paths = sorted(
+        (p for p in root.rglob("*") if p.is_file() and not is_ignored(p.relative_to(root))),
+        key=lambda p: p.relative_to(root).as_posix(),
+    )
     files = {p.relative_to(root).as_posix(): sha256_file(p) for p in paths}
     lines = "".join(f"{digest}  {rel}\n" for rel, digest in files.items())
     return TreeHash(files=files, tree=hashlib.sha256(lines.encode("utf-8")).hexdigest())

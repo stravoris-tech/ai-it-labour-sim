@@ -41,6 +41,7 @@ TABLE_KEYS: dict[str, tuple[str, ...]] = {
 }
 
 
+# Any: the path is a Path or an importlib resource, and the result is parsed JSON of any shape.
 def load_json(path: Any) -> Any:
     with open(path, encoding="utf-8") as f:
         return json.load(f)

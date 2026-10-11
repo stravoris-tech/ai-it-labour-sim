@@ -1,0 +1,11 @@
+{
+ "zero_start": {"__init__": [["BL", "*", "*", 0.0],
+                 ["H", "BQ", "*", 0.0], ["O", "BQ", "*", 0.0], ["V", "BQ", "*", 0.0],
+                 ["Leg", "BQ", "*", 0.0], ["NewV", "BQ", "*", 0.0], ["NewD", "BQ", "*", 0.0], ["NewP", "BQ", "*", 0.0],
+                 ["ShareRef", "BQ", 0.0], ["SrcPerc", "*", "BQ", 0.0], ["PUS", "IN", 0.0]]},
+ "ai_regress": {"g": -0.3, "VerifDecline": -0.2, "RegScenario": 3.0, "BuildRate": 10.0, "A0": 0.5},
+ "lever_extremes": {"JuniorCut": 5.0, "VTEnd": 1.0, "OffshoreShiftSens": 3.0, "VisaMixSens": 3.0,
+                    "BaseLeaveFrac_J": 1.0, "BargainW0": 0.9, "MaxDisc": 0.01, "WagesEndogenous": 0.0,
+                    "MinAdoptionTime": 5.0, "GCCRampStart": 2026.0, "GCCMomentum": 0.0, "PriceShock_OIT": 1.5},
+ "ramp_step": {"VTRampStart": 2028.0, "VTRampEnd": 2028.0}
+}

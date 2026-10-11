@@ -2,6 +2,13 @@
 
 The engine builds one ``Step`` per time step from the section results, in section order. It is the port's stand-in
 for the local variables that the prototype's ``run()`` keeps in scope between its sections.
+
+Prototype sections (``phase7_sim.py`` ``run()``): S1 step preamble (lines 160-163), S2 capability (164-173), S3 work
+allocation (174-193), S4 level mix (194-200), S5 visa lever and desired headcount (201-209), S6 unemployment (210-218),
+S7 vacancies and promotions (219-231), S8 labour market flows (232-317), S9 delivery and labour cost (318-324), S10
+vendor contracts and finance (325-361), S11 sourcing flows, vendor books, wage targets and spend (362-414), S12 delivery
+AI adoption (415-423) and S13 consumer side, demand and sourcing targets (424-496). The recording block (497-545) and
+the integration block (546-635) read this object.
 """
 
 from __future__ import annotations
