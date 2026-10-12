@@ -32,6 +32,7 @@ def test_domains_cover_every_scalar_and_table_entry_in_order() -> None:
         "evidence",
         "notes",
         "read",
+        "level_2024",
     ]
     assert list(df["name"]) == expect
     assert len(df) == 436

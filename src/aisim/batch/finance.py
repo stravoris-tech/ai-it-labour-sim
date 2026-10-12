@@ -8,6 +8,7 @@ three vectorised passes (S10, S11a in ``sourcing``, S11b), as recon 03 C3 confir
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 import numpy as np
@@ -30,6 +31,7 @@ from aisim.batch.params import BatchParams
 from aisim.batch.state import BatchState
 from aisim.batch.util import B, F, clamp, csum, csum_axis, group_sum, pw, softmax
 from aisim.dims import EFFORT, LEVELS, REGIONS, TYPES, UNITS, VENDORS
+from aisim.params import Reanchor
 
 
 @dataclass(frozen=True, slots=True)
@@ -131,7 +133,17 @@ class Spend:
     ServicesSpend: F
 
 
-def costs(pr: BatchParams, st: BatchState, y: float, W: F, CompE: F, EffStaffE: F) -> Costs:
+def costs(
+    pr: BatchParams,
+    st: BatchState,
+    y: float,
+    W: F,
+    CompE: F,
+    EffStaffE: F,
+    *,
+    reanchor: Reanchor | None = None,
+    nz: Mapping[str, F] | None = None,
+) -> Costs:
     """S9: delivery, wages and labour cost (see ``aisim.scalar.finance.costs``)."""
     H, O, WI = st.H, st.O, st.WI
     capu = csum_axis(W[:, None, :] * (H + pr["OnboardProductivity"][:, None, None] * O), 2)
@@ -141,6 +153,12 @@ def costs(pr: BatchParams, st: BatchState, y: float, W: F, CompE: F, EffStaffE: 
     in_window = (pr["AIShockStart"] <= y) & (y < pr["AIShockEnd"])
     AIShockNow = np.where(in_window, pr["AIShockMult"], 1.0)
     AICostPerUnit = pr["AICost2024"] * pw(1 - pr["AICostDecline"], y - 2024) * AIShockNow
+    if reanchor is not None:
+        decline_Y = reanchor.cost_decay * pw(1 - pr["AICostDecline"], y - reanchor.Y)
+        cost_Y = pr["AICost2024"] * decline_Y * AIShockNow
+        AICostPerUnit = np.where(pr["AICostDecline"] != reanchor.AICostDecline, cost_Y, AICostPerUnit)
+    if nz is not None and "aicost" in nz:
+        AICostPerUnit = AICostPerUnit * nz["aicost"]
     return Costs(
         capu=capu,
         Delivered=Delivered,
@@ -151,7 +169,17 @@ def costs(pr: BatchParams, st: BatchState, y: float, W: F, CompE: F, EffStaffE: 
     )
 
 
-def contracts(pr: BatchParams, st: BatchState, y: float, Pe: F, UnitIn: F, hires: F, cost: Costs) -> Contracts:
+def contracts(
+    pr: BatchParams,
+    st: BatchState,
+    y: float,
+    Pe: F,
+    UnitIn: F,
+    hires: F,
+    cost: Costs,
+    *,
+    nz: Mapping[str, F] | None = None,
+) -> Contracts:
     """S10: per-vendor contracts and finance (see ``aisim.scalar.finance.contracts``)."""
     H = st.H
     Delivered, LabourCost, AICostPerUnit = cost.Delivered, cost.LabourCost, cost.AICostPerUnit
@@ -162,6 +190,8 @@ def contracts(pr: BatchParams, st: BatchState, y: float, Pe: F, UnitIn: F, hires
     CPRef = st.ClientPRef[:, VENDOR_EMP_IX]
     PU = np.maximum(0.0, (CP - CPRef) / (CPRef * pr["TrendTime"][:, None]))
     Anchor = pw(1 / (CP * (1 + pr["PriceHorizon"][:, None] * PU)), pr["PassThrough"][:, None])
+    if nz is not None and "anchor" in nz:
+        Anchor = Anchor * nz["anchor"][:, None]
     Vi = st.Viab.copy()
     nm = pr.fam("NormalMargin_", VENDORS)
     dev = Vi - nm

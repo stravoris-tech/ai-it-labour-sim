@@ -19,11 +19,11 @@ summation), and the same stock update order.
 from __future__ import annotations
 
 import math
-from collections.abc import Callable
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 
 from aisim.dims import EMPLOYERS, LEVELS, SECTORS
-from aisim.params import Params
+from aisim.params import Params, Reanchor
 from aisim.scalar.adoption import adoption
 from aisim.scalar.capability import capability
 from aisim.scalar.consumer import consumer, drivers
@@ -109,6 +109,10 @@ def run(
     record_every: float = 0.25,
     trace: Trace | None = None,
     extras: bool = False,
+    start_step: int = 0,
+    tilt: bool = True,
+    reanchor: Reanchor | None = None,
+    noise: Mapping[str, Sequence[float]] | None = None,
     **overrides: float,
 ) -> RunResult:
     """Run the model from 2024 for ``stop`` years and return its rows, final state and stock minimums.
@@ -119,6 +123,16 @@ def run(
     steps). ``trace``, when given, is called after every section of every step with the step number, the year, the
     section ID (``SECTION_IDS``) and the section's intermediates; it does not change the results. ``extras=True`` also
     records the extras into ``RunResult.extras``; the rows are the same either way.
+
+    Restarts (phase 2 of a two-phase run, ``aisim.perturb``); every default reproduces a plain run bit for bit:
+
+    - ``start_step``: the step, counted from 2024, to start at (``t = start_step * dt``); ``init`` is the state at that
+      step. ``stop`` still ends the run at ``2024 + stop``, and rows are recorded on the global step, so a restarted
+      run's rows line up with an uninterrupted run's.
+    - ``tilt=False`` skips S0 (the restarted state already carries the GCC momentum tilt).
+    - ``reanchor``: re-anchor the five 2024-anchored paths at ``reanchor.Y`` where this run's rates differ from the base
+      (``aisim.params.Reanchor``).
+    - ``noise``: noise factors by channel (``aisim.noise.CHANNELS``), each indexed by the global step.
     """
     p = Params.baseline() if params is None else params
     if overrides:
@@ -129,18 +143,20 @@ def run(
     st = copy_state(load_initial_state() if init is None else init)
 
     # ---- S0 ----
-    tilt_sourcing_perception(st, pr["GCCMomentum"])
+    if tilt:
+        tilt_sourcing_perception(st, pr["GCCMomentum"])
     rows: list[dict[str, float]] = []
     extra_rows: list[dict[str, float]] = []
     n = round(stop / dt)
     rk = max(1, round(record_every / dt))
     mins: dict[str, float] = {}
-    t = 0.0
-    for step in range(n + 1):
+    t = start_step * dt
+    for step in range(start_step, n + 1):
         # ---- S1 ----
         y = 2024 + t
+        nz = {ch: float(path[step]) for ch, path in noise.items()} if noise else None
         W = {l: pr["W_" + l] for l in LEVELS}
-        cap = capability(pr, tb, st, y, ai_on, demand_growth_late)
+        cap = capability(pr, tb, st, y, ai_on, demand_growth_late, reanchor=reanchor, nz=nz)
         if trace is not None:
             trace(step, y, "S2", cap)
         wk = work(pr, tb, st, W, cap.Pew)
@@ -176,10 +192,10 @@ def run(
         pl = pools(pr, st, cap.G, unemp, ttf.TTFr)
         if trace is not None:
             trace(step, y, "S8f", pl)
-        cst = costs(pr, st, y, W, wk.CompE, wk.EffStaffE)
+        cst = costs(pr, st, y, W, wk.CompE, wk.EffStaffE, reanchor=reanchor, nz=nz)
         if trace is not None:
             trace(step, y, "S9", cst)
-        con = contracts(pr, st, y, wk.Pe, stf.UnitIn, hi.hires, cst)
+        con = contracts(pr, st, y, wk.Pe, stf.UnitIn, hi.hires, cst, nz=nz)
         if trace is not None:
             trace(step, y, "S10", con)
         flo = sourcing_flows(pr, st, con.VF)
@@ -197,13 +213,25 @@ def run(
         ado = adoption(pr, st, ai_on, wk.EffStaffE, cst.LabourCost, cst.AICostPerUnit, bks.VB)
         if trace is not None:
             trace(step, y, "S12", ado)
-        drv = drivers(pr, st, y, ai_on, cap.G, wk.Completion, wk.P_all, cst.AIShockNow, spd.ServicesSpend)
+        drv = drivers(
+            pr,
+            st,
+            y,
+            ai_on,
+            cap.G,
+            wk.Completion,
+            wk.P_all,
+            cst.AIShockNow,
+            spd.ServicesSpend,
+            reanchor=reanchor,
+            nz=nz,
+        )
         if trace is not None:
             trace(step, y, "S13a", drv)
         opt = option_costs(pr, st, W, mix.ShareL, cst.AICostPerUnit, con.VF)
         if trace is not None:
             trace(step, y, "S13b", opt)
-        csm = consumer(pr, tb, st, y, ai_on, cap.G, wk.CS, wk.CompS, spd.ServicesSpend, drv)
+        csm = consumer(pr, tb, st, y, ai_on, cap.G, wk.CS, wk.CompS, spd.ServicesSpend, drv, nz=nz)
         if trace is not None:
             trace(step, y, "S13c", csm)
         RegDrag = {x: c.RegDrag for x, c in csm.cons.items()}

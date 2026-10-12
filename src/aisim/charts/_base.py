@@ -7,7 +7,7 @@ or figure registry is touched, and a figure is freed when nothing refers to it.
 from __future__ import annotations
 
 import importlib
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any, Final
 
 import numpy as np
@@ -85,9 +85,25 @@ def year_axis(ax: Axes, window: tuple[float, float]) -> None:
     ax.set_xticks(np.arange(np.ceil(lo), np.floor(hi) + 1, step))
 
 
-def shade_calibration(ax: Axes) -> None:
-    """Shade 2024-2026 (gid ``shade:calibration``), labelled ``"calibration period 2024-2026"``."""
-    ax.axvspan(*CALIBRATION, color=GREY, alpha=SHADE_ALPHA, lw=0, gid="shade:calibration", label=CALIBRATION_LABEL)
+def perturb_year(meta: Mapping[str, Any]) -> float | None:
+    """A result's perturb year (``meta["perturb_from"]``), or None when its levers act from 2024."""
+    y = meta.get("perturb_from")
+    return None if y is None else float(y)
+
+
+def shade_of(perturb_from: float | None) -> tuple[tuple[float, float], str]:
+    """The shaded span and its label: 2024-2026, ``"calibration period 2024-2026"``, or, with a perturb year Y, 2024 to
+    Y, ``"calibrated baseline until <Y>"`` (the runs agree until Y)."""
+    if perturb_from is None:
+        return CALIBRATION, CALIBRATION_LABEL
+    return (2024.0, float(perturb_from)), f"calibrated baseline until {perturb_from:g}"
+
+
+def shade_calibration(ax: Axes, perturb_from: float | None = None) -> None:
+    """Shade 2024-2026 (gid ``shade:calibration``), labelled ``"calibration period 2024-2026"``; with a perturb year
+    Y, shade 2024 to Y, labelled ``"calibrated baseline until <Y>"`` (``shade_of``)."""
+    span, label = shade_of(perturb_from)
+    ax.axvspan(*span, color=GREY, alpha=SHADE_ALPHA, lw=0, gid="shade:calibration", label=label)
 
 
 def ylabel_for(keys: Sequence[str], ratio_to: float | None = None) -> str | None:
@@ -120,7 +136,9 @@ def end_label(ax: Axes, x: float, y: float, text: str, colour: str, gid: str) ->
     )
 
 
-def style_legend(ax: Axes, entries: Sequence[tuple[str, dict[str, Any]]], *, shade: bool) -> None:
+def style_legend(
+    ax: Axes, entries: Sequence[tuple[str, dict[str, Any]]], *, shade: bool, perturb_from: float | None = None
+) -> None:
     """A legend of line and patch styles (not series): ``(label, kwargs)``, line kwargs or ``{"patch": alpha}``."""
     from matplotlib.lines import Line2D
     from matplotlib.patches import Patch
@@ -132,5 +150,5 @@ def style_legend(ax: Axes, entries: Sequence[tuple[str, dict[str, Any]]], *, sha
         else:
             handles.append(Line2D([], [], color=INK, label=label, **kw))
     if shade:
-        handles.append(Patch(color=GREY, alpha=SHADE_ALPHA, label=CALIBRATION_LABEL))
+        handles.append(Patch(color=GREY, alpha=SHADE_ALPHA, label=shade_of(perturb_from)[1]))
     ax.legend(handles=handles, loc="upper left", bbox_to_anchor=(1.08, 1.0), frameon=False, fontsize=FONT_SIZE)

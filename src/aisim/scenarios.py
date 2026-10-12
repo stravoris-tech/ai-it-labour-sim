@@ -4,6 +4,8 @@
 - ``TORNADO``: the 14 one-at-a-time sensitivity ranges of ``TORNADO`` (lines 32-47), as ``(name, low, high, label)``.
   The ``Verif`` and ``JuniorCut`` ranges are relative to their baseline values, as in the prototype.
 - ``EXTREME``: the overrides of integrity test T4 in ``tests()`` (lines 98-99), which exercise abandonment and layoffs.
+- ``tornado_levers(perturb_from)``: the tornado ranges as ``Uniform`` distributions for a Monte Carlo; with a perturb
+  year it drops the levers that are 2024 levels (``Verif``), which cannot act from a later year.
 
 Spec: 07 (scenarios and the tornado).
 """
@@ -12,9 +14,12 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from types import MappingProxyType
-from typing import Final
+from typing import TYPE_CHECKING, Final
 
 from aisim.params import Params
+
+if TYPE_CHECKING:
+    from aisim.experiment.sampling import Uniform
 
 
 def _frozen(d: dict[str, float]) -> Mapping[str, float]:
@@ -66,6 +71,23 @@ def _tornado() -> tuple[tuple[str, float, float, str], ...]:
 
 TORNADO: Final = _tornado()
 """The 14 tornado parameters: ``(name, low, high, label)``."""
+
+
+def tornado_levers(perturb_from: float | None = None) -> dict[str, Uniform]:
+    """The ``TORNADO`` ranges as ``{name: Uniform(low, high)}``, in ``TORNADO`` order.
+
+    With ``perturb_from`` set, the levers marked ``level_2024`` in ``domains()`` are dropped: they describe 2024
+    itself and cannot act from a later year, so ``Verif`` drops out and 13 of the 14 remain.
+    """
+    from aisim.experiment.metadata import domains
+    from aisim.experiment.sampling import Uniform
+
+    levels: set[str] = set()
+    if perturb_from is not None:
+        df = domains()
+        levels = set(df.loc[df["level_2024"], "name"])
+    return {name: Uniform(lo, hi) for name, lo, hi, _ in TORNADO if name not in levels}
+
 
 EXTREME: Final[Mapping[str, float]] = MappingProxyType(
     {

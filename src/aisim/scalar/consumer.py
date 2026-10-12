@@ -13,6 +13,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 
 from aisim.dims import LEVELS, SECTORS, WTYPES
+from aisim.params import Reanchor
 from aisim.state import Mat, State, Vec
 from aisim.util import clamp, ramp
 
@@ -78,6 +79,9 @@ def drivers(
     P_all: float,
     AIShockNow: float,
     ServicesSpend: float,
+    *,
+    reanchor: Reanchor | None = None,
+    nz: Mapping[str, float] | None = None,
 ) -> ConsumerDrivers:
     """S13a: exogenous consumer drivers and aggregates.
 
@@ -90,10 +94,21 @@ def drivers(
     - ``BudgetGrowth`` grows budgets with ``G`` and ``ITBudgetGrowth``, less any budget shock. Cloud spend per unit of
       work rises with AI productivity. ``GCCAppeal`` ramps to ``GCCAppealEnd`` by ``GCCRampEnd``, then fades to
       ``GCCAppealKeep`` of it by ``GCCFadeEnd``.
+
+    Two-phase runs (``aisim.perturb``): with ``reanchor``, ``LOBAuto`` (when ``aL_max`` or ``g`` differs from the base)
+    and ``CreditCostPB`` (when ``AICostDecline`` differs) continue from their base values at ``reanchor.Y``. The noise
+    factor ``nz["budget"]`` multiplies ``BudgetGrowth``.
     """
     H = st["H"]
-    LOBAuto = max(0.0, pr["aL_max"] - (pr["aL_max"] - pr["aL_2024"]) * (1 - pr["g"]) ** (y - 2024))
-    CreditCostPB = pr["CreditCost2024"] * (1 - pr["AICostDecline"]) ** (y - 2024) * AIShockNow
+    if reanchor is not None and (pr["aL_max"] != reanchor.aL_max or pr["g"] != reanchor.g):
+        LOBAuto = max(0.0, pr["aL_max"] - (pr["aL_max"] - reanchor.lob_Y) * (1 - pr["g"]) ** (y - reanchor.Y))
+    else:
+        LOBAuto = max(0.0, pr["aL_max"] - (pr["aL_max"] - pr["aL_2024"]) * (1 - pr["g"]) ** (y - 2024))
+    if reanchor is not None and pr["AICostDecline"] != reanchor.AICostDecline:
+        decline = reanchor.cost_decay * (1 - pr["AICostDecline"]) ** (y - reanchor.Y)
+        CreditCostPB = pr["CreditCost2024"] * decline * AIShockNow
+    else:
+        CreditCostPB = pr["CreditCost2024"] * (1 - pr["AICostDecline"]) ** (y - 2024) * AIShockNow
     CEc = clamp((pr["CreditCost2024"] / CreditCostPB) ** pr["CostAdoptElast"], pr["CEMin"], pr["CEMax"])
     RegRamp = ramp(y, pr["RegStart"], pr["RegEnd"], 0.0, 1.0)
     CyberMult = ramp(y, pr["CyberStart"], pr["CyberRampEnd"], 1.0, pr["CyberEnd"])
@@ -107,6 +122,8 @@ def drivers(
         * (1 + pr["ITBudgetGrowth"]) ** (y - 2024)
         * (1 - (pr["BudgetShock"] if pr["BudgetShockStart"] <= y < pr["BudgetShockEnd"] else 0.0))
     )
+    if nz is not None and "budget" in nz:
+        BudgetGrowth = BudgetGrowth * nz["budget"]
     CloudPB = pr["CloudPerBFY"] * (1 + pr["CloudAISens"] * (1 - 1 / P_all))
     GCCAppeal = (
         ramp(y, pr["GCCRampStart"], pr["GCCRampEnd"], 0.0, pr["GCCAppealEnd"])
@@ -141,6 +158,8 @@ def consumer(
     CompS: Vec,
     ServicesSpend: float,
     drv: ConsumerDrivers,
+    *,
+    nz: Mapping[str, float] | None = None,
 ) -> Consumer:
     """S13c: the consumer side of each sector, and IT work demand.
 
@@ -155,6 +174,8 @@ def consumer(
     - Demand by work type is base demand (``BaseDemand x G x SectorShare``, plus any ``DemandStep``) times a mix that
       follows the portfolio, seats, cyber and governance, with Jevons and approval on app and data work, plus AI build
       demand from consumer adoption: loop R2 (AI begets IT work).
+
+    The noise factor ``nz["adoption"]`` (two-phase runs, ``aisim.perturb``) multiplies the ``AdoptC`` flow.
     """
     SectorShare, LOBWage, RegDragLevel = tb["SectorShare"], tb["LOBWage"], tb["RegDragLevel"]
     WTMix, BuildMix = tb["WTMix"], tb["BuildMix"]
@@ -174,6 +195,8 @@ def consumer(
         ReinvEff = 1 + pr["ReinvestAdoptSens"] * clamp(pr["ReinvestFrac"] * NetSavings / pr["Budget0_" + x], 0.0, 1.0)
         kC = CEc * (1 - RegDrag) * ReinvEff
         AdoptC = min((pr["pC"] + pr["qC"] * AC) * kC * (1 - AC), (1 - AC) / pr["MinAdoptionTime"]) if ai_on else 0.0
+        if nz is not None and "adoption" in nz:
+            AdoptC = AdoptC * nz["adoption"]
         Port0 = pr["Port0_" + x]
         NewApps0 = Port0 / pr["AppLife"]
         NewApps = NewApps0 * (1 - pr["AppDisplacement"] * AIexp)

@@ -34,6 +34,18 @@ raises one ``ValidationError`` listing every violation. Rules (recon 04 B1-B3; a
    raised together with every check that does not depend on drawn values (rules 1-6 on the fixed values, and rules 2
    and 3 on the sampled names), and the error notes that the per-run checks were skipped. Otherwise rules 1-6 run on
    every run's realised values.
+8. **Perturb from year Y** (slice 6; only with ``perturb_from`` set):
+
+   - ``level_2024``: for Y after 2024, a parameter that describes 2024 itself (``domains()`` column ``level_2024``)
+     may not differ from the baseline, through the scenario, overrides, tables or samples: a 2024 level cannot change
+     "from Y". So ``Verif`` stays at its baseline and ``PAI0`` needs no pin;
+   - ``window``: a time window or ramp that starts before Y may not change the run before Y (the baseline runs
+     unchanged until Y; Visa crackdown's ramp from 2025.7, say, conflicts with Y = 2026.5);
+   - ``perturb``: Y within the ``year`` domain bounds, ``2024 <= Y < 2024 + stop``, on the dt grid exactly, and AI on
+     (the AI-off counterfactual runs from 2024).
+
+9. **Noise** (slice 6): known channels, ``sigma`` in [0, 0.5], ``tau`` positive and ``>= dt``; with any ``sigma > 0``
+   a ``perturb_from`` (no noise in the calibration period) and a ``noise_seed``.
 """
 
 from __future__ import annotations
@@ -50,10 +62,12 @@ import pandas as pd
 from aisim.batch.engine import run_batch
 from aisim.batch.state import BatchState, pack
 from aisim.batch.util import B, F
+from aisim.batch.util import ramp as batch_ramp
 from aisim.dims import EMPLOYERS, LEVELS, REGIONS, SECTORS, VENDORS, WTYPES
 from aisim.experiment.inputs import DGL, batch_arrays, make_batch_params
 from aisim.experiment.metadata import domains
 from aisim.experiment.sampling import Distribution, support_violations
+from aisim.noise import CHANNELS, Noise
 from aisim.params import Params
 from aisim.state import State, load_initial_state
 
@@ -147,6 +161,10 @@ FAMILIES: Final = (
     "calibration",
     "dt",
     "support",
+    "level_2024",
+    "window",
+    "perturb",
+    "noise",
 )
 """The rule families, in report order."""
 
@@ -234,6 +252,7 @@ class _DomainRow:
     upper_inc: bool
     evidence: str
     read: bool
+    level_2024: bool
 
 
 @cache
@@ -253,6 +272,7 @@ def _domain_rows() -> tuple[_DomainRow, ...]:
                 upper_inc=True if pd.isna(ui) else bool(ui),
                 evidence=str(rec["evidence"]),
                 read=bool(rec["read"]),
+                level_2024=bool(rec["level_2024"]),
             )
         )
     return tuple(out)
@@ -309,6 +329,11 @@ def validate(
     tables: Mapping[str, Mapping[str, Any]] | None = None,
     sampled: Mapping[str, F] | None = None,
     sample: Mapping[str, Distribution] | None = None,
+    perturb_from: float | None = None,
+    stop: float = 16.0,
+    ai_on: bool = True,
+    noise: Mapping[str, Noise] | None = None,
+    noise_seed: int | None = None,
 ) -> None:
     """Check ``params`` (the fixed parameters, overrides and tables applied) and the sampled values. Raises
     ``ValidationError`` listing every violation.
@@ -320,6 +345,8 @@ def validate(
       ``DemandGrowthLate``).
     - ``sample``: the sampled levers' distributions, for the support check (rule 7). If a support is invalid,
       ``sampled`` is ignored and only the checks that do not depend on drawn values run; all are raised together.
+    - ``perturb_from``, ``stop``, ``ai_on``: the perturb year, the run length and the AI switch, for rule 8.
+    - ``noise`` and ``noise_seed``: the noise spec and its seed, for rule 9.
 
     ``Any``: a table override is one- or two-dimensional.
     """
@@ -338,6 +365,9 @@ def validate(
     out += _joint_violations(v, st)
     out += _calibration_violations(v, st, dt)
     out += _dt_violations(v, dt)
+    if perturb_from is not None:
+        out += _perturb_violations(v, perturb_from, stop, dt, ai_on)
+    out += _noise_violations(noise or {}, noise_seed, perturb_from, dt)
     if out:
         out.sort(key=lambda x: FAMILIES.index(x.family))
         raise ValidationError(out, note)
@@ -670,4 +700,215 @@ def _dt_violations(v: _Values, dt: float) -> list[Violation]:
     check(FLOORS, lambda x: ~(x >= dt), f"'no faster than' floor >= dt = {dt:g}", "recon 04 B3 F")
     check(OUTFLOW_RATES, lambda x: ~(x * dt < 1), f"outflow rate x dt < 1 (dt = {dt:g})", "recon 04 B3 F")
     check(OUTFLOW_TIMES, lambda x: ~(dt / x < 1), f"outflow rate 1 / time x dt < 1 (dt = {dt:g})", "recon 04 B3 F")
+    return out
+
+
+# ---- 8. perturb from year Y ------------------------------------------------------------------------------------------
+
+Getter = Callable[[str], F]
+WindowValue = Callable[[Getter, float, F], F]
+
+
+def _late_growth(get: Getter, y: float, dg: F) -> F:
+    """The ``LateYear`` window of ``G`` at the run's ``DemandGrowth`` (capability.py:57); a NaN ``DemandGrowthLate``
+    means "same as ``DemandGrowth``"."""
+    late, dgl = get("LateYear"), get(DGL)
+    dgl = np.where(np.isnan(dgl), dg, dgl)
+    out: F = np.power(1 + dg, np.minimum(y, late) - 2024) * np.power(1 + dgl, np.maximum(0.0, y - late))
+    return out
+
+
+def _gcc_appeal(get: Getter, y: float, dg: F) -> F:
+    end = get("GCCAppealEnd")
+    up = batch_ramp(y, get("GCCRampStart"), get("GCCRampEnd"), 0.0, end)
+    down = batch_ramp(y, get("GCCRampEnd"), get("GCCFadeEnd"), end, end * get("GCCAppealKeep"))
+    out: F = np.where(y < get("GCCRampEnd"), up, down)
+    return out
+
+
+def _visa(get: Getter, y: float, dg: F) -> F:
+    return batch_ramp(y, get("VTRampStart"), get("VTRampEnd"), get("VTBase"), get("VTEnd"))
+
+
+def _regulation(get: Getter, y: float, dg: F) -> F:
+    out: F = get("RegScenario") * batch_ramp(y, get("RegStart"), get("RegEnd"), 0.0, 1.0)
+    return out
+
+
+def _cyber(get: Getter, y: float, dg: F) -> F:
+    return batch_ramp(y, get("CyberStart"), get("CyberRampEnd"), 1.0, get("CyberEnd"))
+
+
+def _ai_shock(get: Getter, y: float, dg: F) -> F:
+    out: F = np.where((get("AIShockStart") <= y) & (y < get("AIShockEnd")), get("AIShockMult"), 1.0)
+    return out
+
+
+def _budget_shock(get: Getter, y: float, dg: F) -> F:
+    out: F = np.where((get("BudgetShockStart") <= y) & (y < get("BudgetShockEnd")), get("BudgetShock"), 0.0)
+    return out
+
+
+def _demand_step(get: Getter, y: float, dg: F) -> F:
+    out: F = np.where(y >= get("StepYear"), get("DemandStep"), 0.0)
+    return out
+
+
+def _price_shock(vendor: str) -> WindowValue:
+    def value(get: Getter, y: float, dg: F) -> F:
+        out: F = np.where(y >= get("PriceShockYear"), get(f"PriceShock_{vendor}"), 0.0)
+        return out
+
+    return value
+
+
+@dataclass(frozen=True, slots=True)
+class Window:
+    """A time window or ramp of an exogenous driver: its start parameter, the parameters that shape it, its value at a
+    year and the evidence."""
+
+    label: str
+    start: str
+    names: tuple[str, ...]
+    value: WindowValue
+    evidence: str
+
+
+WINDOWS: Final = (
+    Window(
+        "visa tightness ramp", "VTRampStart", ("VTRampStart", "VTRampEnd", "VTBase", "VTEnd"), _visa, "workforce.py:79"
+    ),
+    Window("regulation ramp", "RegStart", ("RegStart", "RegEnd", "RegScenario"), _regulation, "consumer.py:98, 167"),
+    Window("cyber demand ramp", "CyberStart", ("CyberStart", "CyberRampEnd", "CyberEnd"), _cyber, "consumer.py:99"),
+    Window(
+        "GCC appeal ramp",
+        "GCCRampStart",
+        ("GCCRampStart", "GCCRampEnd", "GCCFadeEnd", "GCCAppealEnd", "GCCAppealKeep"),
+        _gcc_appeal,
+        "consumer.py:111-115",
+    ),
+    Window("AI cost shock", "AIShockStart", ("AIShockStart", "AIShockEnd", "AIShockMult"), _ai_shock, "finance.py:132"),
+    Window(
+        "budget shock",
+        "BudgetShockStart",
+        ("BudgetShockStart", "BudgetShockEnd", "BudgetShock"),
+        _budget_shock,
+        "consumer.py:108",
+    ),
+    Window("demand step", "StepYear", ("StepYear", "DemandStep"), _demand_step, "consumer.py:187"),
+    *(
+        Window(
+            f"price shock {v}",
+            "PriceShockYear",
+            ("PriceShockYear", f"PriceShock_{v}"),
+            _price_shock(v),
+            "finance.py:166",
+        )
+        for v in VENDORS
+    ),
+    Window("late demand growth", "LateYear", ("LateYear", DGL), _late_growth, "capability.py:57"),
+)
+"""The time windows and ramps of the exogenous drivers (recon 06 B1). The value of ``G``'s window is taken at the run's
+``DemandGrowth`` (``dg``), so only its ``LateYear`` part is checked."""
+
+LEVEL_RULE: Final = (
+    "a 2024 level: it describes 2024 itself, so it cannot act from perturb_from; keep it at its baseline value, or use "
+    "perturb_from=None"
+)
+
+
+def _perturb_violations(v: _Values, Y: float, stop: float, dt: float, ai_on: bool) -> list[Violation]:
+    out: list[Violation] = []
+    year = next(row for row in _domain_rows() if row.domain == "year")
+    finite = math.isfinite(Y)
+    in_run = finite and 2024 <= Y < 2024 + stop
+    on_grid = finite and round((Y - 2024) / dt) * dt == Y - 2024
+    if not (finite and year.lower <= Y <= year.upper):
+        rule = _bounds_text(year.domain, year.lower, year.lower_inc, year.upper, year.upper_inc)
+        out.append(Violation("perturb", "perturb_from", f"{Y!r}", rule, "domain class year (domains.csv)"))
+    if not in_run:
+        rule = f"in the run: 2024 <= perturb_from < 2024 + stop = {2024 + stop:g}"
+        out.append(Violation("perturb", "perturb_from", f"{Y!r}", rule, "recon 06 B2"))
+    if not on_grid:
+        rule = f"on the dt grid: round((perturb_from - 2024) / dt) * dt == perturb_from - 2024 (dt = {dt:g})"
+        out.append(Violation("perturb", "perturb_from", f"{Y!r}", rule, "recon 06 B2 (off the grid every path shifts)"))
+    if not ai_on:
+        out.append(
+            Violation(
+                "perturb",
+                "ai_on",
+                "False with perturb_from set",
+                "the AI-off counterfactual runs from 2024: use perturb_from=None",
+                "slice 6 operator ruling",
+            )
+        )
+    base = _Values(Params.baseline(), {})
+    for row in _domain_rows():
+        # At Y = 2024 everything acts from 2024, as without perturb_from, so a 2024 level may change there.
+        if not row.level_2024 or not (finite and Y > 2024):
+            continue
+        if "[" in row.name:
+            x, b = _table_entry(v.params, row.name), _table_entry(base.params, row.name)
+            if x != b:
+                out.append(
+                    Violation("level_2024", row.name, f"{row.name}={x!r} vs baseline {b!r}", LEVEL_RULE, row.evidence)
+                )
+            continue
+        bad = v[row.name] != base[row.name]
+        if bad.any():
+            value = v.describe([row.name], bad) + f" vs baseline {float(base[row.name][0])!r}"
+            out.append(Violation("level_2024", row.name, value, LEVEL_RULE, row.evidence))
+    if in_run and on_grid:
+        out += _window_violations(v, base, Y, dt)
+    return out
+
+
+def _window_violations(v: _Values, base: _Values, Y: float, dt: float) -> list[Violation]:
+    """Each window's value at every step before Y, run against baseline (both at the run's ``DemandGrowth``)."""
+    out = []
+    dg = v["DemandGrowth"]
+    for w in WINDOWS:
+        bad = np.zeros(v.n, dtype=np.bool_)
+        with np.errstate(invalid="ignore", divide="ignore", over="ignore"):
+            for k in range(round((Y - 2024) / dt)):
+                y = 2024 + k * dt
+                a, b = w.value(v.__getitem__, y, dg), w.value(base.__getitem__, y, dg)
+                bad |= ~((a == b) | (np.isnan(a) & np.isnan(b)))
+        if bad.any():
+            at = float(v[w.start][int(np.flatnonzero(bad)[0])])
+            rule = (
+                f"starts at {at:g}, before perturb_from = {Y:g}, and changes the run before it (the baseline runs "
+                f"unchanged until perturb_from); use perturb_from <= {at:g}, or perturb_from=None"
+            )
+            out.append(Violation("window", f"{w.label} ({w.start})", v.describe(w.names, bad), rule, w.evidence))
+    return out
+
+
+# ---- 9. noise --------------------------------------------------------------------------------------------------------
+
+SIGMA_MAX: Final = 0.5
+
+
+def _noise_violations(
+    noise: Mapping[str, Noise], noise_seed: int | None, perturb_from: float | None, dt: float
+) -> list[Violation]:
+    out = []
+    cite = "slice 6 decision 9"
+    for name in sorted(set(noise) - set(CHANNELS)):
+        out.append(
+            Violation("noise", name, "unknown channel", f"a channel in {list(CHANNELS)}", "aisim.noise.CHANNELS")
+        )
+    for name, spec in noise.items():
+        sigma, tau = float(spec.sigma), float(spec.tau)
+        if not (math.isfinite(sigma) and 0 <= sigma <= SIGMA_MAX):
+            out.append(Violation("noise", f"{name} sigma", f"{sigma!r}", f"in [0, {SIGMA_MAX:g}]", cite))
+        if not (math.isfinite(tau) and tau > 0 and tau >= dt):
+            out.append(Violation("noise", f"{name} tau", f"{tau!r}", f"positive and >= dt = {dt:g}", cite))
+    on = ", ".join(sorted(name for name, spec in noise.items() if spec.sigma > 0))
+    if on and perturb_from is None:
+        rule = "noise needs perturb_from: noise in the calibration period contradicts history"
+        out.append(Violation("noise", on, "sigma > 0 without perturb_from", rule, cite))
+    if on and noise_seed is None:
+        rule = "noise_seed is required when any sigma > 0 (no hidden randomness)"
+        out.append(Violation("noise", on, "sigma > 0 without noise_seed", rule, cite))
     return out

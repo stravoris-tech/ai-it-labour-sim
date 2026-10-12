@@ -11,8 +11,9 @@ Every plotted artist carries a ``gid`` naming what it shows, so tests (and reade
 
 Shading. The 2024-2026 calibration period is shaded by default (``shade=False`` turns it off). The runs are fitted to
 2024-2026 data but do not agree there: levers act from 2024 (11 of the 23 scenario and tornado levers move 2025-2026),
-so a band in that period reflects lever uncertainty applied from 2024. Slice 6's "perturb from year Y" will collapse
-it.
+so a band in that period reflects lever uncertainty applied from 2024. A result run with ``perturb_from = Y`` is the
+calibrated baseline until Y: ``bands``, ``scenarios`` and ``lines`` (of a result) then shade 2024 to Y, labelled
+"calibrated baseline until <Y>", and the bands there have zero width.
 """
 
 from __future__ import annotations
@@ -31,7 +32,9 @@ from aisim.charts._base import (
     end_label,
     figure_of,
     new_figure,
+    perturb_year,
     shade_calibration,
+    shade_of,
     style_axes,
     style_legend,
     year_axis,
@@ -112,8 +115,9 @@ def bands(
             keep = _in_window(baseline.years, window)
             ax.plot(baseline.years[keep], y[keep], color=c, lw=1.4, ls="--", gid=f"baseline:{name}")
         end_label(ax, float(x[-1]), float(median[-1]), label, c, f"label:{name}")
+    y0 = perturb_year(result.meta)
     if shade:
-        shade_calibration(ax)
+        shade_calibration(ax, y0)
     year_axis(ax, window)
     key_names = [src for _, _, src in entries if isinstance(src, str)]
     style_axes(ax, ylabel if ylabel is not None else ylabel_for(key_names, ratio_to), "Year")
@@ -123,7 +127,7 @@ def bands(
     ]
     if baseline is not None:
         legend.append(("baseline run", {"lw": 1.4, "ls": "--"}))
-    style_legend(ax, legend, shade=shade)
+    style_legend(ax, legend, shade=shade, perturb_from=y0)
     if title is not None:
         ax.set_title(title)
     return fig
@@ -190,38 +194,44 @@ def scenarios(
             ax.set_title(lab.get(k, k), fontsize=FONT_SIZE + 1)
         handles = [(scenario_label(s), scenario_colour(scenario_label(s), i)) for i, s in enumerate(scen_result)]
     label = ylabel if ylabel is not None else ylabel_for(names, ratio_to)
+    y0 = perturb_year(scen_result.meta)
     for i, ax in enumerate(axes):
         if i >= len(panels):
             ax.set_visible(False)
             continue
         if shade:
-            shade_calibration(ax)
+            shade_calibration(ax, y0)
         year_axis(ax, window)
         if share:
             panel_label = label if i % ncols == 0 else None
         else:
             panel_label = ylabel if ylabel is not None else ylabel_for([panels[i]], ratio_to)
         style_axes(ax, panel_label, "Year" if i >= len(panels) - ncols else None)
-    _figure_legend(fig, handles, scen_result, q, shade)
+    _figure_legend(fig, handles, scen_result, q, shade, y0)
     if title is not None:
         fig.suptitle(title)
     return fig
 
 
 def _figure_legend(
-    fig: Figure, handles: Sequence[tuple[str, str]], scen_result: ScenarioResult, q: tuple[float, float], shade: bool
+    fig: Figure,
+    handles: Sequence[tuple[str, str]],
+    scen_result: ScenarioResult,
+    q: tuple[float, float],
+    shade: bool,
+    perturb_from: float | None,
 ) -> None:
     from matplotlib.lines import Line2D
     from matplotlib.patches import Patch
 
-    from aisim.charts._base import CALIBRATION_LABEL, SHADE_ALPHA
+    from aisim.charts._base import SHADE_ALPHA
 
     items: list[Any] = [Line2D([], [], color=c, lw=2, label=text) for text, c in handles]
     first = scen_result[scen_result.scenarios[0]]
     if first.n > 1:
         items.append(Patch(color=INK, alpha=BAND_ALPHA, label=_band_label(q, first.n) + " per scenario"))
     if shade:
-        items.append(Patch(color=GREY, alpha=SHADE_ALPHA, label=CALIBRATION_LABEL))
+        items.append(Patch(color=GREY, alpha=SHADE_ALPHA, label=shade_of(perturb_from)[1]))
     fig.legend(handles=items, loc="outside right upper", frameon=False, fontsize=FONT_SIZE)
 
 
@@ -241,9 +251,12 @@ def lines(
 ) -> Figure:
     """Plain lines: a one-run result (its ``keys``, all if None) or ``{label: (T,) array}`` over ``years``.
 
-    With ``x=`` (a sweep, say) the x-axis is that array, labelled ``xlabel``: no window and no shading.
+    With ``x=`` (a sweep, say) the x-axis is that array, labelled ``xlabel``: no window and no shading. A result's
+    shading follows its ``perturb_from``, as in ``bands``; a mapping has no meta, so it shades the calibration period.
     """
+    y0 = None
     if isinstance(series, ExperimentResult):
+        y0 = perturb_year(series.meta)
         names = list(series.series) if keys is None else ([keys] if isinstance(keys, str) else list(keys))
         data = {k: series.single(k) for k in names}
         xs = series.years if x is None else np.asarray(x, dtype=np.float64)
@@ -270,11 +283,11 @@ def lines(
         end_label(ax, float(xs[keep][-1]), float(y[keep][-1]), lab.get(k, k), colours[k], f"label:{k}")
     if x is None:
         if shade:
-            shade_calibration(ax)
+            shade_calibration(ax, y0)
         year_axis(ax, window)
         style_axes(ax, ylabel if ylabel is not None else default_ylabel, xlabel or "Year")
         if shade:
-            style_legend(ax, [], shade=True)
+            style_legend(ax, [], shade=True, perturb_from=y0)
     else:
         style_axes(ax, ylabel if ylabel is not None else default_ylabel, xlabel)
     if title is not None:

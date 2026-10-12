@@ -180,6 +180,12 @@ def test_lines(base: ExperimentResult) -> None:
         xy = line_y(fig, f"line:{k}")
         assert np.array_equal(xy[:, 1], base.single(k)[:7]) and np.array_equal(xy[:, 0], base.years[:7])
     assert ax.get_xlim() == (2024.0, 2030.0) and has(fig, "shade:calibration")
+    cat = catalogue().set_index("key")
+    units = "; ".join(dict.fromkeys(str(cat.at[k, "unit"]) for k in EFFORT))
+    inferred = any(bool(cat.at[k, "unit_inferred"]) for k in EFFORT)
+    assert ax.get_ylabel() == units + (" (unit inferred)" if inferred else "")
+    (ax,) = axes_of(charts.lines(base, keys=INFERRED))
+    assert ax.get_ylabel() == f"{cat.at[INFERRED, 'unit']} (unit inferred)"
     sweep = np.array([0.0, 2.0, 4.0, 8.0])
     fig = charts.lines({"FP share": np.array([0.4, 0.38, 0.35, 0.3])}, x=sweep, xlabel="PriceHorizon (years)")
     (ax,) = axes_of(fig)
@@ -233,6 +239,10 @@ def test_save_formats_and_stable_svg(mc: ExperimentResult, tmp_path: Path) -> No
     first = (tmp_path / "c.svg").read_bytes()
     charts.save(fig, tmp_path / "c.svg")
     assert (tmp_path / "c.svg").read_bytes() == first and b"dc:date" not in first
+    for suffix in ("png", "pdf"):
+        once = (tmp_path / f"c.{suffix}").read_bytes()
+        charts.save(fig, tmp_path / f"c.{suffix}")
+        assert (tmp_path / f"c.{suffix}").read_bytes() == once, suffix
     with pytest.raises(ValueError, match="png"):
         charts.save(fig, tmp_path / "c.jpg")
 
@@ -246,3 +256,71 @@ def test_missing_matplotlib_names_the_extra(mc: ExperimentResult, monkeypatch: p
     monkeypatch.setitem(sys.modules, "matplotlib", None)
     with pytest.raises(ImportError, match=r"ai-it-labour-sim\[charts\]"):
         charts.bands(mc, "HeadTotal")
+
+
+# ---- perturb from year Y (slice 6) -----------------------------------------------------------------------------------
+
+PERTURB = 2026.5
+
+
+@pytest.fixture(scope="module")
+def mc_y() -> ExperimentResult:
+    exp = Experiment(sample=SAMPLE, n=20, method="lhs", seed=3, perturb_from=PERTURB)
+    return run_experiment(exp, outputs=OUTPUTS)
+
+
+@pytest.fixture(scope="module")
+def scen_y() -> ScenarioResult:
+    exp = Experiment(sample=SAMPLE, n=6, method="lhs", seed=4, perturb_from=PERTURB)
+    return run_scenarios(exp, [None, "Fast AI"], outputs=["Mix_OIT_FP", "HeadTotal"])
+
+
+def shade_span(where: Figure | Axes) -> tuple[float, float, str]:
+    patch = find(where, "shade:calibration")
+    assert isinstance(patch, Rectangle)
+    return float(patch.get_x()), float(patch.get_x() + patch.get_width()), str(patch.get_label())
+
+
+def legend_texts(fig: Figure) -> list[str]:
+    return [t.get_text() for t in fig.findobj(Text)]
+
+
+def test_shading_follows_perturb_from(mc: ExperimentResult, mc_y: ExperimentResult) -> None:
+    """With ``perturb_from`` the shade spans 2024 to Y, labelled "calibrated baseline until 2026.5"; without it,
+    2024-2026 and "calibration period 2024-2026"."""
+    label = "calibrated baseline until 2026.5"
+    fig = charts.bands(mc_y, "HeadTotal")
+    assert shade_span(fig) == (2024.0, PERTURB, label)
+    assert label in legend_texts(fig) and "calibration period 2024-2026" not in legend_texts(fig)
+    assert shade_span(charts.bands(mc, "HeadTotal")) == (2024.0, 2026.0, "calibration period 2024-2026")
+    b = mc_y.bands("HeadTotal", q=(0.1, 0.9))
+    assert (b.loc[b.index < PERTURB, 0.9] - b.loc[b.index < PERTURB, 0.1]).eq(0).all()
+
+
+def test_scenarios_shading_follows_perturb_from(scen_y: ScenarioResult) -> None:
+    for layout in ("small_multiples", "overlay"):
+        fig = charts.scenarios(scen_y, ["Mix_OIT_FP"], layout=layout)
+        for ax in axes_of(fig):
+            assert shade_span(ax) == (2024.0, PERTURB, "calibrated baseline until 2026.5")
+        assert "calibrated baseline until 2026.5" in legend_texts(fig)
+
+
+def test_lines_shading_follows_perturb_from(mc_y: ExperimentResult, base: ExperimentResult) -> None:
+    """``lines`` of a result reads its meta; a mapping has none and keeps the calibration period."""
+    one = run_experiment(Experiment(perturb_from=PERTURB), outputs=OUTPUTS)
+    assert shade_span(charts.lines(one, keys="HeadTotal")) == (2024.0, PERTURB, "calibrated baseline until 2026.5")
+    assert shade_span(charts.lines(base, keys="HeadTotal"))[2] == "calibration period 2024-2026"
+    fig = charts.lines({"x": base.single("HeadTotal")}, years=base.years)
+    assert shade_span(fig) == (2024.0, 2026.0, "calibration period 2024-2026")
+
+
+def test_report_settings_show_perturb_from_and_noise(mc: ExperimentResult) -> None:
+    from aisim import Noise
+    from aisim.report import settings_rows
+
+    exp = Experiment(n=2, perturb_from=PERTURB, noise={"demand": Noise(0.009), "cap": Noise(0.0)}, noise_seed=7)
+    rows = dict(settings_rows(run_experiment(exp, outputs=["HeadTotal"])))
+    assert rows["perturb_from"] == "2026.5 (calibrated baseline until then)"
+    assert rows["noise"] == "demand: sigma 0.009, tau 1 (noise_seed 7)"
+    rows = dict(settings_rows(mc))
+    assert rows["perturb_from"] == "none (levers act from 2024)" and rows["noise"] == "off"

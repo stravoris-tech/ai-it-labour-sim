@@ -6,7 +6,7 @@ simulations under chosen scenario levers and uncertainty.
 
 ## Status
 
-Charts and reports built; noise and perturb-from-year next. The frozen Python prototype is in
+Noise and perturb-from-year built; docs and public release next. The frozen Python prototype is in
 [`reference/`](reference/README.md).
 
 ## Asking a question
@@ -59,7 +59,85 @@ if __name__ == "__main__":
 - **Levers act from 2024.** As in the prototype, a lever changes the model from the first step, so 11 of the 23
   scenario and tornado levers also move the 2024-2026 calibration window: `g`, `Verif`, `VerifDecline`, `JevonsEps`,
   `JuniorCut`, `TMBrake`, `PriceHorizon`, `aL_max`, `SrcCostSens`, `AICostDecline` and `EnrolSensitivity`. The other
-  12 act from their own start years. A later slice adds an option to apply levers from a chosen year.
+  12 act from their own start years. `perturb_from` applies them from a chosen year instead (below).
+
+## Perturb from year Y
+
+`perturb_from=Y` runs the calibrated baseline unchanged until Y and applies everything that differs from it (the
+scenario, overrides, tables, sampled levers and noise) from Y on. Before Y every run is the baseline, so the bands
+there have zero width. This example samples the tornado levers from mid-2026:
+
+```python
+from aisim import Experiment, run_experiment
+from aisim.scenarios import tornado_levers
+
+
+def main() -> None:
+    exp = Experiment(
+        sample=tornado_levers(perturb_from=2026.5), n=1000, method="lhs", seed=20261012, perturb_from=2026.5
+    )
+    res = run_experiment(exp, outputs=["HeadTotal"])
+    print(res.bands("HeadTotal", q=(0.1, 0.5, 0.9), years=(2024, 2032)))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+- **How it runs.** A two-phase run: the baseline runs once from 2024 to Y, and every run restarts from its state at Y
+  with its own parameters. Y must lie on the step grid (a whole number of 1/16-year steps from 2024) and inside the
+  run. There is one Y per experiment, and `run_scenarios` uses it for every scenario. `perturb_from=2024` is the same
+  as leaving it unset.
+- **Paths stay continuous.** Five exogenous paths are written in closed form from 2024: the automatable share of work
+  (rate `g`), the verification overhead (`VerifDecline`), line-of-business automation (`aL_max`, `g`) and the two AI
+  cost paths (`AICostDecline`). A run whose rate differs from the baseline continues each path from its baseline
+  value at Y at its own rate, so nothing jumps at Y. Levers whose own effect is immediate still step at Y:
+  `SrcCostSens`, `JuniorCut`, `PriceHorizon` and `JevonsEps`.
+- **2024 levels cannot act from Y.** Some parameters describe 2024 itself: the 2024 verification overhead `Verif`,
+  `AICost2024`, `GCCMomentum`, the 2024 adoption and workforce levels, and the stored calibration constants (the
+  `level_2024` column of `aisim.domains()`). Changing one "from 2026.5" has no meaning, so with a perturb year after
+  2024 it is a validation error. That is why `Verif` drops out of a Monte Carlo with a perturb year:
+  `tornado_levers(perturb_from=...)` returns 13 of the 14 tornado levers. It is also why `PAI0`, the 2024 productivity
+  that `Verif` calibrates, needs no pin: `Verif` cannot change.
+- **Windows that start before Y.** A time window or ramp that starts before Y and would change the run before Y is a
+  validation error. Visa crackdown's ramp starts at 2025.7, so with `perturb_from=2026.5` it raises and suggests a
+  perturb year at or before 2025.7. The scenarios themselves are unchanged.
+- **AI off.** `ai_on=False` with a perturb year is an error: the AI-off counterfactual runs from 2024.
+
+## Process noise
+
+`noise` adds seeded process noise from Y, off by default. It needs `perturb_from` (noise in the calibration period
+would contradict history) and a `noise_seed`:
+
+```python
+from aisim import Experiment, Noise, run_experiment
+
+
+def main() -> None:
+    exp = Experiment(n=500, perturb_from=2026.5, noise={"demand": Noise(sigma=0.009, tau=1.0)}, noise_seed=7)
+    res = run_experiment(exp, outputs=["HeadTotal"])
+    print(res.bands("HeadTotal", q=(0.1, 0.5, 0.9), years=(2026, 2034)))
+
+
+if __name__ == "__main__":
+    main()
+```
+
+- **Channels.** Six, each a factor at one point of the model: `cap` (the productivity of AI-assisted work), `demand`
+  (the underlying demand index, which also drives budgets, enrolment, the visa cap and seats), `budget` (IT budget
+  growth), `aicost` (AI cost per automated unit), `adoption` (the consumer AI adoption flow) and `anchor` (the client
+  price anchor on new contracts).
+- **Process.** Each factor is `exp(x)`, with `x` an exact Ornstein-Uhlenbeck process: stationary sd `sigma`, one-year
+  autocorrelation `exp(-1 / tau)` at any step size. `x` starts at 0 at Y, so the noise is exactly 0 up to and
+  including Y, and the factor is always positive. `sigma` must be in [0, 0.5] and `tau` at least one step.
+- **Streams.** Run i draws from its own stream, `SeedSequence(noise_seed, spawn_key=(i,))`, so its noise does not
+  depend on the worker count, the chunking or the other channels, and never touches the lever samples. In
+  `run_scenarios` run i has the same noise in every scenario.
+- **Amplitudes.** None is built in: choose `sigma` and `tau` per channel and justify them. The only year-to-year
+  series in the model's sources is Gartner's IT services growth (+5.6%, +3.8% and +5.3% for 2024-2026), with a
+  year-to-year sd of about 1 point. The sd of the one-year change in a factor is `sigma sqrt(2 (1 - exp(-1 / tau)))`,
+  so with `tau` = 1 year that point corresponds to a `demand` `sigma` of about 0.009. `sigma = 0.05` is about 5 times
+  that. Nothing in the repo sets the other channels.
 
 ## Charts and reports
 
@@ -101,7 +179,8 @@ if __name__ == "__main__":
   per vendor, contract type, scenario and so on. `charts.save(fig, "chart.svg")` writes PNG, SVG or PDF.
 - **The calibration period.** The years 2024-2026 are shaded as the calibration period: the model is fitted to data
   for those years, but the runs already disagree there, because levers act from 2024. The bands in that period show
-  the lever uncertainty applied from 2024. `shade=False` turns the shading off.
+  the lever uncertainty applied from 2024. A result run with `perturb_from` shades 2024 to Y instead, labelled
+  "calibrated baseline until 2026.5" (say), where its bands have zero width. `shade=False` turns the shading off.
 - **Reports.** `Report.to_html(path)` writes one file with the charts as inline SVG and nothing loaded from outside;
   `to_markdown(dir)` writes `report.md` and PNG files. `aisim.report.to_markdown_table(df)` formats a table for
   markdown notes. [`examples/q01_contract_mix.py`](examples/q01_contract_mix.py) rebuilds the Q01 analysis in about
