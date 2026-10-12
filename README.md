@@ -94,14 +94,19 @@ if __name__ == "__main__":
   value at Y at its own rate, so nothing jumps at Y. Levers whose own effect is immediate still step at Y:
   `SrcCostSens`, `JuniorCut`, `PriceHorizon` and `JevonsEps`.
 - **2024 levels cannot act from Y.** Some parameters describe 2024 itself: the 2024 verification overhead `Verif`,
-  `AICost2024`, `GCCMomentum`, the 2024 adoption and workforce levels, and the stored calibration constants (the
-  `level_2024` column of `aisim.domains()`). Changing one "from 2026.5" has no meaning, so with a perturb year after
-  2024 it is a validation error. That is why `Verif` drops out of a Monte Carlo with a perturb year:
-  `tornado_levers(perturb_from=...)` returns 13 of the 14 tornado levers. It is also why `PAI0`, the 2024 productivity
+  `AICost2024`, `GCCMomentum`, the 2024 adoption levels, the 2024 level split of the workforce (`Share0_*`), and the
+  stored calibration constants (the `level_2024` column of `aisim.domains()`). Changing one "from 2026.5" has no
+  meaning, so with a perturb year after 2024 it is a validation error. It is also why `PAI0`, the 2024 productivity
   that `Verif` calibrates, needs no pin: `Verif` cannot change.
+- **Rates anchored at 2024.** `DemandGrowth`, `ITBudgetGrowth` and the `amax` table drive paths written in closed form
+  from 2024 that are not re-anchored at Y, so changing one with a perturb year after 2024 would make its path jump at
+  Y. That is a validation error too, until re-anchoring them is built.
 - **Windows that start before Y.** A time window or ramp that starts before Y and would change the run before Y is a
   validation error. Visa crackdown's ramp starts at 2025.7, so with `perturb_from=2026.5` it raises and suggests a
   perturb year at or before 2025.7. The scenarios themselves are unchanged.
+- **The tornado levers depend on Y.** `tornado_levers(perturb_from=...)` drops every lever whose range fails these
+  checks at that Y: all 14 without a perturb year, 13 at 2026.5 (`Verif` is a 2024 level) and 12 at 2027
+  (`DemandGrowthLate` too: its window opens at 2026.5, before Y).
 - **AI off.** `ai_on=False` with a perturb year is an error: the AI-off counterfactual runs from 2024.
 
 ## Process noise

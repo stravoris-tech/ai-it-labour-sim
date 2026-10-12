@@ -4,8 +4,9 @@
 - ``TORNADO``: the 14 one-at-a-time sensitivity ranges of ``TORNADO`` (lines 32-47), as ``(name, low, high, label)``.
   The ``Verif`` and ``JuniorCut`` ranges are relative to their baseline values, as in the prototype.
 - ``EXTREME``: the overrides of integrity test T4 in ``tests()`` (lines 98-99), which exercise abandonment and layoffs.
-- ``tornado_levers(perturb_from)``: the tornado ranges as ``Uniform`` distributions for a Monte Carlo; with a perturb
-  year it drops the levers that are 2024 levels (``Verif``), which cannot act from a later year.
+- ``tornado_levers(perturb_from)``: the tornado ranges as ``Uniform`` distributions for a Monte Carlo. The set
+  depends on the perturb year: it drops every lever whose range cannot act from that year (``Verif`` from 2026.5;
+  also ``DemandGrowthLate`` from 2027).
 
 Spec: 07 (scenarios and the tornado).
 """
@@ -76,17 +77,26 @@ TORNADO: Final = _tornado()
 def tornado_levers(perturb_from: float | None = None) -> dict[str, Uniform]:
     """The ``TORNADO`` ranges as ``{name: Uniform(low, high)}``, in ``TORNADO`` order.
 
-    With ``perturb_from`` set, the levers marked ``level_2024`` in ``domains()`` are dropped: they describe 2024
-    itself and cannot act from a later year, so ``Verif`` drops out and 13 of the 14 remain.
+    **The lever set depends on the perturb year.** With ``perturb_from`` set, a lever is dropped when its lower or upper
+    bound, applied as an override with that perturb year, fails validation (``aisim.experiment.validate``, at dt = 1/16
+    and stop = 16): a 2024 level such as ``Verif`` cannot act from a later year, and a lever whose window starts
+    before Y, such as ``DemandGrowthLate`` (after ``LateYear``, 2026.5), would change the run before Y. All 14 remain
+    with None, 13 at 2026.5 (``Verif`` out) and 12 at 2027.0 (``Verif`` and ``DemandGrowthLate`` out).
     """
-    from aisim.experiment.metadata import domains
     from aisim.experiment.sampling import Uniform
+    from aisim.experiment.validate import ValidationError, validate
 
-    levels: set[str] = set()
-    if perturb_from is not None:
-        df = domains()
-        levels = set(df.loc[df["level_2024"], "name"])
-    return {name: Uniform(lo, hi) for name, lo, hi, _ in TORNADO if name not in levels}
+    out: dict[str, Uniform] = {}
+    base = Params.baseline()
+    for name, lo, hi, _ in TORNADO:
+        if perturb_from is not None:
+            try:
+                for v in (lo, hi):
+                    validate(base.with_overrides(**{name: v}), overrides={name: v}, perturb_from=perturb_from)
+            except ValidationError:
+                continue
+        out[name] = Uniform(lo, hi)
+    return out
 
 
 EXTREME: Final[Mapping[str, float]] = MappingProxyType(

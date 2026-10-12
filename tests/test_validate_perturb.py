@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from dataclasses import replace
 
 import pytest
 
@@ -25,19 +26,20 @@ def runs(exp: Experiment, stop: float = 3.0) -> ExperimentResult:
 
 
 def test_level_2024_column() -> None:
-    """The flag is boolean; it marks the 2024 levels and the stored 2024 calibration constants (recon 06 B4)."""
+    """The flag is boolean; it marks the 2024 levels (with the 2024 level split ``Share0_*``, Addendum A) and the
+    stored 2024 calibration constants (recon 06 B4)."""
     df = domains()
     assert df["level_2024"].dtype == bool
     marked = set(df.loc[df["level_2024"], "name"])
     explicit = {"Verif", "AICost2024", "GCCMomentum", "A0", "AC0", "CreditCost2024", "OnsiteShare0", "VisaMix0"}
-    explicit |= {"VTBase", "aL_2024", "CostPerBFY0", "CostRef"}
+    explicit |= {"VTBase", "aL_2024", "CostPerBFY0", "CostRef", "Share0_J", "Share0_M", "Share0_S"}
     families = (
         *("LabourCostPB0_", "TypeASC_", "SrcASC_", "NormalMargin_", "PriceMult_", "NormalUnempRate_"),
         *("NormalTTF_", "Budget0_", "LOB0_", "Port0_", "Seats0_", "a2024["),
     )
     expected = explicit | {n for n in df["name"] if n.startswith(families)}
     assert marked == expected
-    assert len(marked) == 113
+    assert len(marked) == 116
     assert not marked & {"g", "VerifDecline", "JuniorCut", "PriceHorizon", "SrcCostSens", "AdoptC0", "amax[APP]"}
 
 
@@ -157,11 +159,36 @@ def test_unvalidated_noise_still_needs_seed_and_perturb_from() -> None:
 
 
 def test_tornado_levers() -> None:
-    """All 14 tornado ranges as ``Uniform``; with a perturb year, ``Verif`` (a 2024 level) drops out."""
+    """All 14 tornado ranges as ``Uniform``; the set depends on the perturb year: 13 at 2026.5 (``Verif``, a 2024
+    level, out) and 12 at 2027.0 (``DemandGrowthLate`` out too: its window opens at ``LateYear``, 2026.5)."""
     full = tornado_levers()
     assert list(full) == [name for name, *_ in TORNADO]
     assert all(
         isinstance(d, Uniform) and (d.lo, d.hi) == (lo, hi)
         for (_, lo, hi, _), d in zip(TORNADO, full.values(), strict=True)
     )
+    assert len(full) == 14
     assert list(tornado_levers(2026.5)) == [name for name in full if name != "Verif"]
+    assert list(tornado_levers(2027.0)) == [name for name in full if name not in ("Verif", "DemandGrowthLate")]
+
+
+def test_anchored_rates_raise() -> None:
+    """``DemandGrowth``, ``ITBudgetGrowth`` and the ``amax`` table drive paths anchored at 2024 that are not
+    re-anchored: changed with a perturb year after 2024 they raise, naming the parameter (Addendum A)."""
+    amax = Params.baseline().table("amax")
+    exp = Experiment(
+        overrides={"DemandGrowth": 0.04, "ITBudgetGrowth": 0.01},
+        tables={"amax": {**amax, "APP": amax["APP"] + 0.05}},
+        perturb_from=2026.5,
+    )
+    with pytest.raises(ValidationError) as info:
+        runs(exp)
+    found = info.value.violations
+    assert [(v.family, v.target) for v in found] == [
+        ("anchored_rate", "DemandGrowth"),
+        ("anchored_rate", "ITBudgetGrowth"),
+        ("anchored_rate", "amax[APP]"),
+    ]
+    assert all("anchored at 2024 and is not re-anchored" in v.rule and "perturb_from=None" in v.rule for v in found)
+    assert runs(replace(exp, perturb_from=None)).valid.all()
+    assert runs(replace(exp, perturb_from=2024.0)).valid.all()

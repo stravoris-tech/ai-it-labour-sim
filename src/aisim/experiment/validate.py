@@ -42,7 +42,10 @@ raises one ``ValidationError`` listing every violation. Rules (recon 04 B1-B3; a
    - ``window``: a time window or ramp that starts before Y may not change the run before Y (the baseline runs
      unchanged until Y; Visa crackdown's ramp from 2025.7, say, conflicts with Y = 2026.5);
    - ``perturb``: Y within the ``year`` domain bounds, ``2024 <= Y < 2024 + stop``, on the dt grid exactly, and AI on
-     (the AI-off counterfactual runs from 2024).
+     (the AI-off counterfactual runs from 2024);
+   - ``anchored_rate``: for Y after 2024, the inputs of paths anchored at 2024 that are not re-anchored at Y
+     (``ANCHORED_RATES``: ``DemandGrowth``, ``ITBudgetGrowth``, the ``amax`` table) may not differ from the baseline:
+     the path would jump at Y (recon 06 addition (b); re-anchoring them is deferred to slice 8).
 
 9. **Noise** (slice 6): known channels, ``sigma`` in [0, 0.5], ``tau`` positive and ``>= dt``; with any ``sigma > 0``
    a ``perturb_from`` (no noise in the calibration period) and a ``noise_seed``.
@@ -165,6 +168,7 @@ FAMILIES: Final = (
     "window",
     "perturb",
     "noise",
+    "anchored_rate",
 )
 """The rule families, in report order."""
 
@@ -811,6 +815,16 @@ WINDOWS: Final = (
 """The time windows and ramps of the exogenous drivers (recon 06 B1). The value of ``G``'s window is taken at the run's
 ``DemandGrowth`` (``dg``), so only its ``LateYear`` part is checked."""
 
+ANCHORED_RATES: Final = ("DemandGrowth", "ITBudgetGrowth", *(f"amax[{w}]" for w in WTYPES))
+"""Inputs of exogenous paths written in closed form from 2024 that ``aisim.params.Reanchor`` does not re-anchor:
+``G`` (``DemandGrowth``), ``BudgetGrowth`` (``ITBudgetGrowth``) and ``aW`` (``amax``). Changed with a perturb year
+after 2024, the path would jump at Y to where the new value would have taken it since 2024."""
+
+ANCHORED_RULE: Final = (
+    "its path is anchored at 2024 and is not re-anchored at perturb_from, so changing it would make the path jump at "
+    "perturb_from; keep it at its baseline value, or use perturb_from=None (re-anchoring is deferred to slice 8)"
+)
+
 LEVEL_RULE: Final = (
     "a 2024 level: it describes 2024 itself, so it cannot act from perturb_from; keep it at its baseline value, or use "
     "perturb_from=None"
@@ -858,8 +872,27 @@ def _perturb_violations(v: _Values, Y: float, stop: float, dt: float, ai_on: boo
         if bad.any():
             value = v.describe([row.name], bad) + f" vs baseline {float(base[row.name][0])!r}"
             out.append(Violation("level_2024", row.name, value, LEVEL_RULE, row.evidence))
+    if finite and Y > 2024:
+        out += _anchored_violations(v, base)
     if in_run and on_grid:
         out += _window_violations(v, base, Y, dt)
+    return out
+
+
+def _anchored_violations(v: _Values, base: _Values) -> list[Violation]:
+    """``ANCHORED_RATES`` that differ from the baseline (the caller checks that Y is after 2024)."""
+    out = []
+    for name in ANCHORED_RATES:
+        cite = domain_of(name).evidence
+        if "[" in name:
+            x, b = _table_entry(v.params, name), _table_entry(base.params, name)
+            if x != b:
+                out.append(Violation("anchored_rate", name, f"{name}={x!r} vs baseline {b!r}", ANCHORED_RULE, cite))
+            continue
+        bad = v[name] != base[name]
+        if bad.any():
+            value = v.describe([name], bad) + f" vs baseline {float(base[name][0])!r}"
+            out.append(Violation("anchored_rate", name, value, ANCHORED_RULE, cite))
     return out
 
 
