@@ -17,7 +17,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 from types import MappingProxyType
-from typing import Any
+from typing import Any, Literal, overload
 
 from aisim.state import baseline_data
 
@@ -29,6 +29,14 @@ NULLABLE = frozenset({"DemandGrowthLate"})
 """The only scalar that may be ``None``."""
 
 ADOPTC0_INPUTS = frozenset({"pC", "qC", "AC0"})
+
+Table1DName = Literal[
+    "SectorShare", "LOBWage", "RegDragLevel", "WTMix", "a2024", "amax", "SpeedUp", "BuildMix", "OffExp"
+]
+"""The one-dimensional tables of the baseline."""
+
+Table2DName = Literal["Mix0", "Src0"]
+"""The two-dimensional tables of the baseline (vendor x type, vendor x location)."""
 
 
 def _freeze_table(values: Mapping[str, Any]) -> Table:
@@ -114,14 +122,24 @@ class Params:
         tables[name] = _freeze_table(ordered)
         return Params(scalars=self.scalars, tables=tables)
 
-    def table(self, name: str) -> dict[str, float]:
-        """Return a copy of a one-dimensional table. Raises ``TypeError`` for a two-dimensional one."""
-        out: dict[str, float] = {}
-        for k, v in self.tables[name].items():
-            if isinstance(v, Mapping):
-                raise TypeError(f"table {name!r} is two-dimensional")
-            out[k] = v
-        return out
+    @overload
+    def table(self, name: Table1DName) -> dict[str, float]: ...
+
+    @overload
+    def table(self, name: Table2DName) -> dict[str, dict[str, float]]: ...
+
+    @overload
+    def table(self, name: str) -> dict[str, Any]: ...
+
+    def table(self, name: str) -> dict[str, Any]:
+        """Return a plain copy of a table: ``dict[str, float]`` for a one-dimensional table, ``dict[str, dict[str,
+        float]]`` for a two-dimensional one (``Mix0``, ``Src0``).
+
+        Any: a name that is not a literal may be either shape. mypy rejects a ``str`` overload returning
+        ``dict[str, float]`` beside the two-dimensional literal one (overlapping overloads), so the literal names carry
+        the precise types.
+        """
+        return {k: (dict(v) if isinstance(v, Mapping) else v) for k, v in self.tables[name].items()}
 
     @staticmethod
     def float_of(scalars: Mapping[str, float | None], name: str) -> float:

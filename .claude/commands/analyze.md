@@ -9,10 +9,10 @@ Rules:
 
 - **Workspace.** All code, data and charts go in `temp/analysis/<name>/`, which is gitignored. Use the public functions of the `aisim` package and do not copy model code into the analysis. If the package does not yet offer what the question needs, say so, and use `tools/reference_runner.py` instead.
 - **Running the model.** Ask the question through the experiment API:
-  1. Find the outputs in `aisim.catalogue()` (row keys, extras and derived outputs, with units) or `aisim.keys(family=...)`, and the valid parameter ranges in `aisim.domains()`.
-  2. Build an `aisim.Experiment`: a scenario from `aisim.SCENARIOS`, fixed `overrides`, sampled levers (`Uniform`, `Triangular`, `TruncNormal`, `Choice`, `Fixed`) with a `seed`, or an explicit `samples` design.
-  3. Run it with `aisim.run_experiment(exp, outputs=[...])`, keeping validation on. Put the call under `if __name__ == "__main__":` (Windows starts workers by re-importing the script).
-  4. Read the answer from `ExperimentResult`: `bands(key, ratio_to=2024, years=(start, end))` for percentile bands, `frame`, `long`, `ratio`, `q3` and `q3_counts`. Report `n_invalid` from `meta`.
+  1. Find the outputs in `aisim.catalogue()` (row keys, extras and derived outputs, with units) or `aisim.keys(family=..., vendor=..., type=...)` (`aisim.experiment.dims(key)` parses a key's dimensions), and the valid parameter ranges in `aisim.domains()`.
+  2. Build an `aisim.Experiment`: a scenario from `aisim.SCENARIOS`, fixed `overrides`, sampled levers (`Uniform`, `Triangular`, `TruncNormal`, `Choice`, `Fixed`) with a `seed`, or an explicit `samples` design. A scenario plus a sampled lever it sets is an error.
+  3. Run it with `aisim.run_experiment(exp, outputs=[...])`, keeping validation on and the default (auto) chunking. To compare scenarios, use `aisim.run_scenarios(exp, [None, "Slow AI", ...], outputs=[...])`: one batch, the same draws for every scenario, with the levers a scenario sets pinned per block (`ScenarioResult.pinned`; say so in the findings). Put the call under `if __name__ == "__main__":` (Windows starts workers by re-importing the script).
+  4. Read the answer from `ExperimentResult`: `bands(key or (N, T) array, ratio_to=2024, years=(start, end))` for percentile bands, `single(key)` for a one-run result, `frame`, `long`, `ratio`, `q3` and `q3_counts`. Use `aisim.experiment.drivers(result, targets, year)` for lever drivers and `shift_share` for a weighted average's change. Report `n_invalid` from `meta`.
 - **Model changes.** If the question needs a change to the model itself:
   1. Create a local branch `analysis/<name>` from the current branch.
   2. Make the change and commit it there, so the analysis is reproducible.
@@ -20,16 +20,17 @@ Rules:
   4. Return to the original branch at the end, and name the branch in the findings.
 
   If the change looks worth keeping, say so as a recommendation. Do not apply it to a feature branch.
-- **Reproducibility.** Fix and record every seed, the number of runs, the scenario and lever settings, and the commit and branch the runs used. `ExperimentResult.meta` holds the experiment, seed, outputs, package versions and `NPY_DISABLE_CPU_FEATURES`: save it with the results.
-- **Charts.**
-  - Years on the x-axis, over the window the prompt asks for (default 2024-2040), with the history years 2024-2026 shaded.
-  - For multi-run results, a median line with a 10th-90th percentile band.
-  - Units on the y-axis.
+- **Reproducibility.** Fix and record every seed, the number of runs, the scenario and lever settings, and the commit and branch the runs used. `ExperimentResult.meta` is JSON-safe and holds the experiment, seed, outputs, package versions, `NPY_DISABLE_CPU_FEATURES`, `git_commit`, `git_dirty` and the platform: save it with the results (`json.dumps(result.meta)`, or `result.save(path)`).
+- **Charts.** Use `aisim.charts`, not hand-written matplotlib:
+  - `charts.bands` (median and p10-p90 band, `baseline=` for the dashed one-run line), `charts.scenarios` (small multiples or `layout="overlay"`), `charts.lines` (one-run results or a sweep with `x=`) and `charts.drivers`; save with `charts.save`.
+  - Years on the x-axis, over the window the prompt asks for (`window=`, default 2024-2040), with 2024-2026 shaded as the "calibration period 2024-2026" (never "history": levers act from 2024, so the runs already disagree there).
+  - Units on the y-axis come from the catalogue; colours are fixed per dimension value and scenario.
   - Save each chart as PNG, with the data behind it as CSV.
+- **Report.** Build the charts, tables (`add_table`) and settings (`add_settings(result)`) into an `aisim.report.Report` and write `report.html` next to the findings. Use `aisim.report.to_markdown_table(df)` for tables in `findings.md`.
 - **Honesty.** State what the model cannot answer and which assumptions drive the result. Write "the model shows", never "will happen".
 - **Hyphens only.** Never U+2014 or U+2013.
 
-Deliver `temp/analysis/<name>/findings.md` with:
+Deliver `temp/analysis/<name>/findings.md`, plus `temp/analysis/<name>/report.html`, with:
 
 - the question and a short answer
 - the evidence, with charts and tables referenced by file name
