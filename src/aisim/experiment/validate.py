@@ -29,8 +29,11 @@ raises one ``ValidationError`` listing every violation. Rules (recon 04 B1-B3; a
    (``AdoptC0``) is rule 3.
 6. **Time constants against dt** (B3 F): smoothing times and "no faster than" floors >= dt; each outflow rate (a
    rate a year, or 1 / an outflow time) times dt < 1. This rule rejects ``TargetClearanceTime = 1e-6`` (B2).
-7. **Sampled levers.** ``support_violations`` checks each distribution's support against the lever's domain before
-   drawing (``check_support``); rules 1-6 then run on every run's realised values.
+7. **Sampled levers.** Before drawing, each distribution's support is checked against its lever's domain
+   (``validate(..., sample=...)``). If a support is invalid the values cannot be drawn: the support violations are
+   raised together with every check that does not depend on drawn values (rules 1-6 on the fixed values, and rules 2
+   and 3 on the sampled names), and the error notes that the per-run checks were skipped. Otherwise rules 1-6 run on
+   every run's realised values.
 """
 
 from __future__ import annotations
@@ -163,12 +166,15 @@ class Violation:
 
 
 class ValidationError(ValueError):
-    """The experiment's inputs break one or more rules. ``violations`` lists every one."""
+    """The experiment's inputs break one or more rules. ``violations`` lists every one; ``note`` says which checks
+    were skipped, if any."""
 
-    def __init__(self, violations: Iterable[Violation]) -> None:
+    def __init__(self, violations: Iterable[Violation], note: str | None = None) -> None:
         self.violations = list(violations)
+        self.note = note
         lines = "\n".join(f"  {v}" for v in self.violations)
-        super().__init__(f"{len(self.violations)} validation violation(s):\n{lines}")
+        tail = f"\n  {note}" if note else ""
+        super().__init__(f"{len(self.violations)} validation violation(s):\n{lines}{tail}")
 
 
 class _Values:
@@ -271,10 +277,14 @@ def _table_entry(params: Params, name: str) -> float:
     return float(node)
 
 
-def check_support(sample: Mapping[str, Distribution]) -> None:
-    """Rule 7, before drawing: each distribution's support lies in its lever's domain. Raises ``ValidationError``."""
+def support_errors(sample: Mapping[str, Distribution]) -> list[Violation]:
+    """Rule 7, before drawing: the levers whose distribution's support leaves their domain (unknown names are left to
+    the caller)."""
     out = []
+    known = {row.name for row in _domain_rows()}
     for name, dist in sample.items():
+        if name not in known:
+            continue
         row = domain_of(name)
         why = support_violations(dist, row.lower, row.lower_inc, row.upper, row.upper_inc)
         if why is not None:
@@ -287,8 +297,7 @@ def check_support(sample: Mapping[str, Distribution]) -> None:
                     row.evidence,
                 )
             )
-    if out:
-        raise ValidationError(out)
+    return out
 
 
 def validate(
@@ -299,6 +308,7 @@ def validate(
     overrides: Mapping[str, float | None] | None = None,
     tables: Mapping[str, Mapping[str, Any]] | None = None,
     sampled: Mapping[str, F] | None = None,
+    sample: Mapping[str, Distribution] | None = None,
 ) -> None:
     """Check ``params`` (the fixed parameters, overrides and tables applied) and the sampled values. Raises
     ``ValidationError`` listing every violation.
@@ -308,20 +318,29 @@ def validate(
     - ``tables``: the table overrides (name to values), for rule 2.
     - ``sampled``: the realised value of each sampled lever per run, as ``(N,)`` arrays (NaN for a None
       ``DemandGrowthLate``).
+    - ``sample``: the sampled levers' distributions, for the support check (rule 7). If a support is invalid,
+      ``sampled`` is ignored and only the checks that do not depend on drawn values run; all are raised together.
 
     ``Any``: a table override is one- or two-dimensional.
     """
     st = load_initial_state() if init is None else init
-    v = _Values(params, sampled or {})
-    out: list[Violation] = []
+    support = support_errors(sample or {})
+    note = None
+    if support:
+        note = "per-run checks skipped: invalid support for " + ", ".join(x.target for x in support)
+        v = _Values(params, {})
+    else:
+        v = _Values(params, sampled or {})
+    sampled_names = [*(sample or {}), *(n for n in v.sampled if n not in (sample or {}))]
+    out: list[Violation] = list(support)
     out += _domain_violations(v)
-    out += _no_effect_violations(v, overrides or {}, tables or {})
+    out += _no_effect_violations(v, overrides or {}, tables or {}, sampled_names)
     out += _joint_violations(v, st)
     out += _calibration_violations(v, st, dt)
     out += _dt_violations(v, dt)
     if out:
         out.sort(key=lambda x: FAMILIES.index(x.family))
-        raise ValidationError(out)
+        raise ValidationError(out, note)
 
 
 # ---- 1. domains ------------------------------------------------------------------------------------------------------
@@ -351,13 +370,17 @@ def _domain_violations(v: _Values) -> list[Violation]:
 
 
 def _no_effect_violations(
-    v: _Values, overrides: Mapping[str, float | None], tables: Mapping[str, Mapping[str, Any]]
+    v: _Values,
+    overrides: Mapping[str, float | None],
+    tables: Mapping[str, Mapping[str, Any]],
+    sampled_names: Iterable[str],
 ) -> list[Violation]:
     out = []
     unread = {row.name: row for row in _domain_rows() if not row.read and "[" not in row.name}
-    for name in [*overrides, *v.sampled]:
+    sampled_set = set(sampled_names)
+    for name in [*overrides, *(n for n in sampled_names if n not in overrides)]:
         if name in unread:
-            how = "sampled" if name in v.sampled else f"overridden to {overrides[name]!r}"
+            how = "sampled" if name in sampled_set else f"overridden to {overrides[name]!r}"
             out.append(
                 Violation(
                     "no-effect",
@@ -368,7 +391,7 @@ def _no_effect_violations(
                 )
             )
         if name == "AdoptC0":
-            how = "sampled" if name in v.sampled else f"overridden to {overrides[name]!r}"
+            how = "sampled" if name in sampled_set else f"overridden to {overrides[name]!r}"
             out.append(
                 Violation(
                     "derived",

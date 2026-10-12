@@ -39,7 +39,7 @@ from aisim.experiment.derived import DERIVED
 from aisim.experiment.inputs import batch_arrays, make_batch_params
 from aisim.experiment.results import ExperimentResult
 from aisim.experiment.sampling import Distribution, Method, draw
-from aisim.experiment.validate import check_support, validate
+from aisim.experiment.validate import support_errors, validate
 from aisim.params import Params, Table
 from aisim.scenarios import SCENARIOS
 from aisim.state import load_initial_state
@@ -164,11 +164,8 @@ def fixed_params(exp: Experiment) -> tuple[Params, dict[str, float | None]]:
     return p, set_on_top
 
 
-def design(exp: Experiment, *, check: bool = True) -> pd.DataFrame:
-    """The per-run values of the varying parameters: the explicit ``samples`` or a draw of ``sample``.
-
-    ``check`` runs the support check on the distributions before drawing.
-    """
+def design(exp: Experiment) -> pd.DataFrame:
+    """The per-run values of the varying parameters: the explicit ``samples`` or a draw of ``sample``."""
     base = Params.baseline().scalars
     if exp.samples is not None:
         df = exp.samples
@@ -193,8 +190,6 @@ def design(exp: Experiment, *, check: bool = True) -> pd.DataFrame:
         raise KeyError(f"unknown parameter(s) in sample: {unknown}")
     if exp.seed is None:
         raise ValueError("a seed is required when levers are sampled (no hidden randomness)")
-    if check:
-        check_support(exp.sample)
     method: Method = exp.method
     return draw(exp.sample, exp.n, seed=exp.seed, method=method, correlation=exp.correlation)
 
@@ -234,7 +229,10 @@ def run_experiment(
     if conflict:
         raise ValueError(f"parameter(s) both fixed and sampled: {conflict}")
     params, set_on_top = fixed_params(exp)
-    samples = design(exp, check=validate)
+    if validate and exp.samples is None and support_errors(exp.sample):
+        # The values cannot be drawn: raise the support errors with every check on the fixed values.
+        _validate(params, set_on_top, exp, {}, dt)
+    samples = design(exp)
     n = len(samples)
     sampled = {str(c): samples[c].to_numpy(dtype=np.float64) for c in samples.columns}
     if validate:
@@ -327,4 +325,7 @@ def _validate(
 ) -> None:
     # Any: a table override is one- or two-dimensional.
     tables: Mapping[str, Any] = exp.tables
-    validate(params, init=load_initial_state(), dt=dt, overrides=set_on_top, tables=tables, sampled=sampled)
+    sample = exp.sample if exp.samples is None else None
+    validate(
+        params, init=load_initial_state(), dt=dt, overrides=set_on_top, tables=tables, sampled=sampled, sample=sample
+    )

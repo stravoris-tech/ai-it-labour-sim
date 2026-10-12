@@ -190,6 +190,22 @@ def test_sampled_support_checked_before_drawing() -> None:
     assert [(v.family, v.target) for v in e.value.violations] == [("support", "SrcCostSens")]
 
 
+def test_support_errors_reported_with_the_fixed_checks() -> None:
+    """An invalid support is raised together with the checks on fixed values; the per-run checks are skipped."""
+    exp = Experiment(
+        overrides={"g": 1.5, "VTRampStart": 2031.0, "VTRampEnd": 2030.0},
+        sample={"SrcCostSens": Uniform(-0.1, 1.0)},
+        n=10,
+        seed=1,
+    )
+    with pytest.raises(ValidationError) as e:
+        run_experiment(exp, outputs=["HeadTotal"])
+    found = {(v.family, v.target) for v in e.value.violations}
+    assert {("support", "SrcCostSens"), ("domain", "g"), ("ordered", "VTRampStart <= VTRampEnd")} <= found
+    assert e.value.note == "per-run checks skipped: invalid support for SrcCostSens"
+    assert "per-run checks skipped: invalid support for SrcCostSens" in str(e.value)
+
+
 def test_several_violations_reported_together() -> None:
     vs = violations({"TargetClearanceTime": 1e-6, "A0": 0.4, "Leakage": 3.0, "g": 1.5, "AdoptC0": 0.1})
     families = {v.family for v in vs}
