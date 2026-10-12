@@ -23,7 +23,7 @@ from aisim.batch.finance import contracts, costs, spend, vendor_books, wage_targ
 from aisim.batch.integrate import Mins, integrate
 from aisim.batch.labour_market import exits, hiring, pools, switching, time_to_fill, unemployment, visa_flows
 from aisim.batch.params import BatchParams, param_denominator_faults
-from aisim.batch.record import ROW_KEYS, record
+from aisim.batch.record import EXTRA_KEYS, ROW_KEYS, record, record_extras
 from aisim.batch.sourcing import option_costs, sourcing_flows, sourcing_targets
 from aisim.batch.state import BatchState
 from aisim.batch.step import Step
@@ -44,10 +44,12 @@ class BatchResult:
     """The output of a batch of N runs.
 
     - ``years``: ``(T,)``, the recorded years.
-    - ``series``: row key to ``(N, T)`` array, for the recorded keys, in row order.
+    - ``series``: key to ``(N, T)`` array, for the recorded keys: row keys in row order, then any extras
+      (``EXTRA_KEYS``) in their order.
     - ``final_state``: the state of every run after the last step.
     - ``mins``: tracked-stock key to ``(N,)`` array of running minimums (as the scalar engine's ``mins``).
-    - ``finite``: ``(N,)``; see ``run_batch``.
+    - ``finite``: ``(N,)``, True for a valid run: its state stayed finite and it reached no site where the scalar
+      engine raises (a crash-site fault); see ``run_batch``.
     """
 
     years: F
@@ -93,12 +95,13 @@ def run_batch(
     - ``ai_on`` is one switch for every run or one per run.
     - A row is recorded every ``record_every`` years (rounded to whole steps). The default is 1.0, not the scalar
       engine's 0.25, because recorded rows dominate memory: at N = 10,000 all 317 keys take about 0.4 GiB at 1.0,
-      1.5 GiB at 0.25 and 6.1 GiB at 1/16 (recon 03 F3). ``outputs`` limits the recorded keys (default: all 317).
+      1.5 GiB at 0.25 and 6.1 GiB at 1/16 (recon 03 F3). ``outputs`` limits the recorded keys (default: all 317 row
+      keys). It may also name extras (``EXTRA_KEYS``), which are recorded only when asked for.
     - ``trace``, when given, is called after every section of every step with the step number, the year, the section
       ID (``aisim.scalar.engine.SECTION_IDS``) and the section's intermediates (arrays with a leading run axis).
 
-    A numerical failure in one run never raises and never changes another run. ``finite[i]`` is False when any of
-    these holds for run ``i``:
+    A numerical failure in one run never raises and never changes another run. ``finite[i]`` marks a valid run: a
+    finite state and no crash-site fault. It is False when any of these holds for run ``i``:
 
     1. its state became non-finite at some step (or was non-finite at the start);
     2. it reached a site where the scalar engine raises (recon 03 B2): ``AICostPerUnit`` or ``CreditCostPB`` equal to
@@ -141,6 +144,7 @@ def simulate(
     for name, mask in param_denominator_faults(pr).items():
         faults.flag(PARAM_SITE_PREFIX + name, mask)
     keys = _output_keys(outputs)
+    want_extras = any(k in EXTRA_KEYS for k in keys)
     ok = _finite_state(st)
 
     with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
@@ -161,6 +165,8 @@ def simulate(
             # ---- REC ----
             if step % rk == 0:
                 row = record(st, s, pr.table("SectorShare"))
+                if want_extras:
+                    row |= record_extras(st, s)
                 j = step // rk
                 if j == 0:
                     series = {k: np.empty((n, n_rec)) for k in keys}
@@ -264,14 +270,17 @@ def _sections(
 
 
 def _output_keys(outputs: Sequence[str] | None) -> list[str]:
-    """The row keys to record, in row order: ``outputs`` (all keys if None). Raises ``ValueError`` for unknown keys."""
+    """The keys to record, row keys in row order then extras: ``outputs`` (every row key if None).
+
+    Raises ``ValueError`` for unknown keys.
+    """
     if outputs is None:
         return list(ROW_KEYS)
-    unknown = sorted(set(outputs) - set(ROW_KEYS))
+    unknown = sorted(set(outputs) - set(ROW_KEYS) - set(EXTRA_KEYS))
     if unknown:
         raise ValueError(f"unknown output key(s): {unknown}")
     wanted = set(outputs)
-    return [k for k in ROW_KEYS if k in wanted]
+    return [k for k in (*ROW_KEYS, *EXTRA_KEYS) if k in wanted]
 
 
 def _finite_state(st: BatchState) -> B:

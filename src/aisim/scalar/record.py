@@ -6,11 +6,27 @@ unit; ``Head_``, ``A_``, ``P_``, ``Cost_``, ``CompE_``, ``LabPB_``, ``WorkShare_
 ``AvgNewDur_`` and ``Overhead_``; ``Mix_`` and ``Sign_`` by vendor and type; ``Dem_`` by sector and by work type;
 ``AC_``, ``LOB_``, ``Committed_``, ``Budget_``, ``CompS_``, ``WorkCheck_`` by sector; ``Src_`` and ``SrcT_`` by sector
 and employer; ``Unemp_``, ``HeadLoc_`` and ``TTF_`` by region; and the four ``Q1_`` lines.
+
+``record_extras`` records the extras (``EXTRA_KEYS``): outputs the prototype does not record but the step already holds,
+kept apart from the rows so that the rows stay the prototype's. Each is a value read from the state or an intermediate,
+never a new calculation:
+
+- ``Book_{v}_{k}``: the contract book by vendor and type, ``Leg + NewV`` (finance.py:180-181, the numerator of
+  ``Mix_``). Spec 00:89 names these stocks contract value in USD; the calibrated state normalises each vendor's 2024
+  book to 1, so the unit is book volume (vendor 2024 book = 1), not USD.
+- ``SignVol_{v}_{k}``: new signings by vendor and type, S11b ``Sign[k]`` (finance.py:293), book volume per year.
+- ``Dnew_{v}_{k}``: the new-contract duration by vendor and type, S10 ``Dnew[k]`` (finance.py:183-186), years.
+- ``LeftField_{r}``: people who left the IT field, by region (state ``LeftField``), model-unit persons.
+- ``SeatSpend_{x}``, ``CreditSpend_{x}``, ``CloudSpend_{x}``: the seat, credit and cloud parts of consumer spend by
+  sector, S13c (consumer.py:172, 182, 183), USD per year.
+- ``WI_{u}``: the wage index by unit (state ``WI``), 2024 = 1.
+- ``CapE_{e}``: delivery capacity by employer, S3 ``CapE`` (work.py:70), BFY per year.
 """
 
 from __future__ import annotations
 
 from collections.abc import Mapping
+from typing import Final
 
 from aisim.dims import EMP_OF, EMPLOYERS, LEVELS, LOC, POOL, REGIONS, SECTORS, TYPES, UNITS, VENDORS, WTYPES
 from aisim.scalar.step import Step
@@ -122,3 +138,49 @@ def record(st: State, s: Step, SectorShare: Mapping[str, float]) -> dict[str, fl
     row["Budget"] = sum(cons[x].Budget for x in SECTORS)
     row["WorkCheckMax"] = max(abs(row["WorkCheck_" + x] - 1) for x in SECTORS)
     return row
+
+
+def record_extras(st: State, s: Step) -> dict[str, float]:
+    """Return the extras (``EXTRA_KEYS``) for the step whose intermediates are ``s``, from the same state as the row."""
+    VF, VB = s.contracts.VF, s.books.VB
+    out: dict[str, float] = {}
+    for v in VENDORS:
+        for k in TYPES:
+            out[f"Book_{v}_{k}"] = st["Leg"][v][k] + st["NewV"][v][k]
+    for v in VENDORS:
+        for k in TYPES:
+            out[f"SignVol_{v}_{k}"] = VB[v].Sign[k]
+    for v in VENDORS:
+        for k in TYPES:
+            out[f"Dnew_{v}_{k}"] = VF[v].Dnew[k]
+    for r in REGIONS:
+        out["LeftField_" + r] = st["LeftField"][r]
+    cons = s.consumer.cons
+    for x in SECTORS:
+        out["SeatSpend_" + x] = cons[x].SeatSpend
+    for x in SECTORS:
+        out["CreditSpend_" + x] = cons[x].CreditSpend
+    for x in SECTORS:
+        out["CloudSpend_" + x] = cons[x].CloudSpend
+    for u in UNITS:
+        out["WI_" + u] = st["WI"][u]
+    for e in EMPLOYERS:
+        out["CapE_" + e] = s.work.CapE[e]
+    return out
+
+
+def _extra_keys() -> tuple[str, ...]:
+    """The extras keys in the order ``record_extras`` builds them."""
+    keys: list[str] = []
+    for prefix in ("Book_", "SignVol_", "Dnew_"):
+        keys += [f"{prefix}{v}_{k}" for v in VENDORS for k in TYPES]
+    keys += ["LeftField_" + r for r in REGIONS]
+    for prefix in ("SeatSpend_", "CreditSpend_", "CloudSpend_"):
+        keys += [prefix + x for x in SECTORS]
+    keys += ["WI_" + u for u in UNITS]
+    keys += ["CapE_" + e for e in EMPLOYERS]
+    return tuple(keys)
+
+
+EXTRA_KEYS: Final = _extra_keys()
+"""The 81 extras keys, in ``record_extras`` order."""

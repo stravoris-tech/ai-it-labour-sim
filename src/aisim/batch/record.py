@@ -2,6 +2,9 @@
 
 Built from the state before the step's integration and the step's intermediates, as the scalar row is. Sums are naive,
 in the scalar engine's term order.
+
+``record_extras`` records the 81 extras of ``aisim.scalar.record.EXTRA_KEYS`` (see its module docstring for each
+family, its source and its unit), each an ``(N,)`` array read from the state or an intermediate.
 """
 
 from __future__ import annotations
@@ -15,6 +18,7 @@ from aisim.batch.state import BatchState
 from aisim.batch.step import Step
 from aisim.batch.util import F, csum, csum_axis
 from aisim.dims import EMPLOYERS, LEVELS, REGIONS, SECTORS, TYPES, UNITS, VENDORS, WTYPES
+from aisim.scalar.record import EXTRA_KEYS as scalar_extra_keys
 
 
 def record(st: BatchState, s: Step, SectorShare: F) -> dict[str, F]:
@@ -165,3 +169,39 @@ def _row_keys() -> tuple[str, ...]:
 
 ROW_KEYS: Final = _row_keys()
 """The 317 row keys, in row order."""
+
+
+def record_extras(st: BatchState, s: Step) -> dict[str, F]:
+    """Return the extras of every run (``EXTRA_KEYS``) for the step whose intermediates are ``s``."""
+    f, b = s.contracts.VF, s.books.VB
+    out: dict[str, F] = {}
+    for v in VENDORS:
+        j = VEND_IX[v]
+        for k, kk in enumerate(TYPES):
+            out[f"Book_{v}_{kk}"] = st.Leg[:, j, k] + st.NewV[:, j, k]
+    for v in VENDORS:
+        j = VEND_IX[v]
+        for k, kk in enumerate(TYPES):
+            out[f"SignVol_{v}_{kk}"] = b.Sign[:, j, k]
+    for v in VENDORS:
+        j = VEND_IX[v]
+        for k, kk in enumerate(TYPES):
+            out[f"Dnew_{v}_{kk}"] = f.Dnew[:, j, k]
+    for i, r in enumerate(REGIONS):
+        out["LeftField_" + r] = st.LeftField[:, i]
+    cons = s.consumer.cons
+    for i, x in enumerate(SECTORS):
+        out["SeatSpend_" + x] = cons.SeatSpend[:, i]
+    for i, x in enumerate(SECTORS):
+        out["CreditSpend_" + x] = cons.CreditSpend[:, i]
+    for i, x in enumerate(SECTORS):
+        out["CloudSpend_" + x] = cons.CloudSpend[:, i]
+    for i, u in enumerate(UNITS):
+        out["WI_" + u] = st.WI[:, i]
+    for e in EMPLOYERS:
+        out["CapE_" + e] = s.work.CapE[:, EMP_IX[e]]
+    return out
+
+
+EXTRA_KEYS: Final = scalar_extra_keys
+"""The 81 extras keys, in ``record_extras`` order (the scalar engine's ``EXTRA_KEYS``)."""

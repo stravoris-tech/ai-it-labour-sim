@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import math
+import platform
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, NamedTuple, cast
 
@@ -16,6 +18,10 @@ from tools.reference_runner import InitEdit, apply_init_edits, iter_numeric_pair
 from tools.reference_runner import RunResult as ProtoResult
 
 TOL = 1e-12
+
+PHASE7 = pytest.StashKey[dict[str, str]]()
+"""Parts of the Phase 7 acceptance summary line (``tests/conftest.py``), set by ``tests/test_experiment_phase7.py`` as
+its checks pass: ``mode``, ``golden`` (checks passed), ``api`` (checks passed) and ``q3``."""
 
 COVERAGE_CASES = Path(__file__).parent / "data" / "coverage_cases.json"
 
@@ -109,3 +115,38 @@ def people(s: State) -> float:
         + sum(s["LeftField"].values())
         + sum(s["Retired"].values())
     )
+
+
+PLATFORM_FIELDS = ("os", "machine", "python_implementation", "python_version")
+"""What makes two platforms give the same doubles for the goldens: the OS (its C library), the CPU architecture and
+the Python build."""
+
+
+def platform_signature(env: Mapping[str, str] | None = None) -> dict[str, str]:
+    """``PLATFORM_FIELDS`` of a golden manifest's ``environment`` (``tools/generate_goldens.py``), or of this machine.
+
+    The OS is the first token of the manifest's ``platform`` string (``Windows-11-10.0.26200-SP0`` gives
+    ``Windows``), compared with ``platform.system()``; the OS build number is not part of the match.
+    """
+    if env is None:
+        return {
+            "os": platform.system(),
+            "machine": platform.machine(),
+            "python_implementation": platform.python_implementation(),
+            "python_version": platform.python_version(),
+        }
+    return {
+        "os": env["platform"].split("-")[0],
+        "machine": env["machine"],
+        "python_implementation": env["python_implementation"],
+        "python_version": env["python_version"],
+    }
+
+
+def golden_platform_matches(env: Mapping[str, str], here: Mapping[str, str] | None = None) -> bool:
+    """True if this machine (or ``here``, a ``platform_signature``) is the platform the goldens were generated on.
+
+    Goldens are bit-equal only there; elsewhere they are compared at ``TOL``.
+    """
+    mine = platform_signature() if here is None else dict(here)
+    return platform_signature(env) == {k: mine[k] for k in PLATFORM_FIELDS}
