@@ -14,8 +14,13 @@ scenario's value. To compare scenarios on the same samples, use ``aisim.experime
 - **Validation.** With ``validate=True`` (the default) every rule of ``aisim.experiment.validate`` is checked before
   any run starts; ``validate=False`` skips them, and ``valid`` (``BatchResult.finite``) still marks each run.
 
-Levers act from 2024, as in the prototype (and the goldens): 11 of the 23 scenario and tornado levers change the
-2024-2026 calibration window (recon 04 H). Windows spawns worker processes by importing the caller's script, so a
+**Perturb from year Y.** By default levers act from 2024, as in the prototype (and the goldens): 11 of the 23 scenario
+and tornado levers change the 2024-2026 calibration window (recon 04 H). With ``perturb_from = Y`` the calibrated
+baseline runs unchanged until Y and everything that differs (scenario, overrides, tables, samples, noise) acts from Y
+(``aisim.perturb``): phase 1 runs once in the parent and every chunk restarts from its state. ``noise`` adds seeded
+process noise from Y (``aisim.noise``); each run's stream is keyed by its index in the design, generated in its chunk.
+
+Windows spawns worker processes by importing the caller's script, so a
 script that calls ``run_experiment`` with more than one worker must guard its entry point with
 ``if __name__ == "__main__":``.
 """
@@ -40,11 +45,13 @@ from aisim.batch.state import BatchState
 from aisim.batch.util import B, F
 from aisim.experiment.derived import DERIVED
 from aisim.experiment.inputs import batch_arrays, make_batch_params
-from aisim.experiment.meta import experiment_dict, provenance
+from aisim.experiment.meta import experiment_dict, noise_dict, provenance
 from aisim.experiment.results import ExperimentResult
 from aisim.experiment.sampling import Distribution, Method, draw
 from aisim.experiment.validate import support_errors, validate
+from aisim.noise import Noise, Runs, active, ou_factors
 from aisim.params import Params, Table
+from aisim.perturb import Phase1, phase1, run_batch_from
 from aisim.scenarios import SCENARIOS
 from aisim.state import load_initial_state
 
@@ -86,6 +93,11 @@ class Experiment:
       ``correlation`` and ``n`` (which may be left at 1 or set to its length). In a ``DemandGrowthLate`` column, NaN
       means None ("same as ``DemandGrowth``").
     - ``ai_on``: one switch for every run.
+    - ``perturb_from``: the year Y from which everything that differs from the calibrated baseline acts (None: from
+      2024). One Y per experiment, on the dt grid. Parameters that describe 2024 itself (``domains()`` column
+      ``level_2024``, ``Verif`` among them) must stay at their baseline values.
+    - ``noise``: process noise by channel (``aisim.noise.CHANNELS``), off by default; it needs ``perturb_from`` and a
+      ``noise_seed``. No amplitude is built in.
     """
 
     scenario: str | None = None
@@ -98,6 +110,9 @@ class Experiment:
     seed: int | None = None
     samples: pd.DataFrame | None = None
     ai_on: bool = True
+    perturb_from: float | None = None
+    noise: Mapping[str, Noise] = field(default_factory=dict)
+    noise_seed: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -114,6 +129,10 @@ class _Chunk:
     record_every: float
     keys: tuple[str, ...]
     keep_state: bool
+    first: Phase1 | None = None
+    runs: Runs | None = None
+    noise: dict[str, Noise] = field(default_factory=dict)
+    noise_seed: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -131,9 +150,29 @@ class _ChunkResult:
 def _run_chunk(chunk: _Chunk) -> _ChunkResult:
     """Run one chunk with ``run_batch`` (top level, so spawned workers can import it)."""
     params = make_batch_params(chunk.scalars, chunk.tables, chunk.dgl_is_none)
-    res = run_batch(
-        params, ai_on=chunk.ai_on, dt=chunk.dt, stop=chunk.stop, record_every=chunk.record_every, outputs=chunk.keys
-    )
+    if chunk.first is None:
+        res = run_batch(
+            params, ai_on=chunk.ai_on, dt=chunk.dt, stop=chunk.stop, record_every=chunk.record_every, outputs=chunk.keys
+        )
+    else:
+        factors = None
+        if active(chunk.noise):
+            assert chunk.noise_seed is not None and chunk.runs is not None
+            steps = round(chunk.stop / chunk.dt)
+            factors = ou_factors(
+                chunk.noise, chunk.noise_seed, chunk.runs, start_step=chunk.first.start_step, steps=steps, dt=chunk.dt
+            )
+        res = run_batch_from(
+            params,
+            Y=chunk.first.Y,
+            dt=chunk.dt,
+            stop=chunk.stop,
+            record_every=chunk.record_every,
+            outputs=chunk.keys,
+            ai_on=chunk.ai_on,
+            noise=factors,
+            first=chunk.first,
+        )
     return _ChunkResult(
         index=chunk.index,
         years=res.years,
@@ -250,6 +289,34 @@ def run_experiment(
     for an inconsistent experiment, including a parameter that ``overrides`` or the scenario fixes and ``sample`` or
     ``samples`` also varies. Warns when the recorded series would need more than ``MEMORY_WARN_BYTES``.
     """
+    return execute(
+        exp,
+        outputs=outputs,
+        record_every=record_every,
+        dt=dt,
+        stop=stop,
+        workers=workers,
+        chunk_size=chunk_size,
+        validate=validate,
+        keep_state=keep_state,
+    )
+
+
+def execute(
+    exp: Experiment,
+    *,
+    outputs: Sequence[str] | Literal["all"],
+    record_every: float = 1.0,
+    dt: float = 1 / 16,
+    stop: float = 16.0,
+    workers: int | None = None,
+    chunk_size: int | None = None,
+    validate: bool = True,
+    keep_state: bool = False,
+    noise_index: Runs | None = None,
+) -> ExperimentResult:
+    """``run_experiment``, with ``noise_index``: each run's index for its noise stream (default: its row in the
+    design). ``run_scenarios`` passes the index within each block, so run i has the same noise in every scenario."""
     record, derived = resolve_outputs(outputs, record_every)
     varied = set(exp.sample) | _columns(exp.samples)
     conflict = sorted(set(exp.overrides) & varied)
@@ -267,12 +334,20 @@ def run_experiment(
     params, set_on_top = fixed_params(exp)
     if validate and exp.samples is None and support_errors(exp.sample):
         # The values cannot be drawn: raise the support errors with every check on the fixed values.
-        _validate(params, set_on_top, exp, {}, dt)
+        _validate(params, set_on_top, exp, {}, dt, stop)
     samples = design(exp)
     n = len(samples)
     sampled = {str(c): samples[c].to_numpy(dtype=np.float64) for c in samples.columns}
     if validate:
-        _validate(params, set_on_top, exp, sampled, dt)
+        _validate(params, set_on_top, exp, sampled, dt, stop)
+    noisy = active(exp.noise)
+    if noisy and exp.perturb_from is None:
+        raise ValueError(f"noise on {noisy} needs perturb_from (no noise in the calibration period)")
+    if noisy and exp.noise_seed is None:
+        raise ValueError("a noise_seed is required when any noise sigma > 0 (no hidden randomness)")
+    runs = np.arange(n) if noise_index is None else np.asarray(noise_index, dtype=np.int64)
+    if runs.shape != (n,):
+        raise ValueError(f"noise_index has {runs.size} values for {n} runs")
 
     steps = round(stop / dt)
     rk = max(1, round(record_every / dt))
@@ -287,6 +362,9 @@ def run_experiment(
         )
 
     scalars, tables, dgl = batch_arrays(params, sampled, n)
+    first = None
+    if exp.perturb_from is not None:
+        first = phase1(exp.perturb_from, dt=dt, record_every=record_every, outputs=record)
     asked = _default_workers() if workers is None else workers
     size = auto_chunk_size(n, asked) if chunk_size is None else max(1, chunk_size)
     bounds = [(a, min(a + size, n)) for a in range(0, n, size)]
@@ -302,6 +380,10 @@ def run_experiment(
             record_every=record_every,
             keys=tuple(record),
             keep_state=keep_state,
+            first=first,
+            runs=runs[lo:hi],
+            noise=dict(exp.noise),
+            noise_seed=exp.noise_seed,
         )
         for i, (lo, hi) in enumerate(bounds)
     ]
@@ -346,6 +428,9 @@ def run_experiment(
         "versions": {pkg: version(pkg) for pkg in ("ai-it-labour-sim", "numpy", "pandas", "scipy")},
         "NPY_DISABLE_CPU_FEATURES": os.environ.get("NPY_DISABLE_CPU_FEATURES"),
         "n_invalid": int((~valid).sum()),
+        "perturb_from": exp.perturb_from,
+        "noise": noise_dict(exp.noise),
+        "noise_seed": exp.noise_seed,
         **provenance(),
     }
     return ExperimentResult(
@@ -353,12 +438,12 @@ def run_experiment(
     )
 
 
-def check_supports(exp: Experiment, dt: float = 1 / 16) -> None:
+def check_supports(exp: Experiment, dt: float = 1 / 16, stop: float = 16.0) -> None:
     """Raise ``ValidationError`` if a sampled distribution's support leaves its parameter's domain, as
     ``run_experiment`` does before drawing (with every check on the fixed values)."""
     if exp.samples is None and support_errors(exp.sample):
         params, set_on_top = fixed_params(exp)
-        _validate(params, set_on_top, exp, {}, dt)
+        _validate(params, set_on_top, exp, {}, dt, stop)
 
 
 def _columns(df: pd.DataFrame | None) -> set[str]:
@@ -370,11 +455,27 @@ def _default_workers() -> int:
 
 
 def _validate(
-    params: Params, set_on_top: Mapping[str, float | None], exp: Experiment, sampled: Mapping[str, F], dt: float
+    params: Params,
+    set_on_top: Mapping[str, float | None],
+    exp: Experiment,
+    sampled: Mapping[str, F],
+    dt: float,
+    stop: float,
 ) -> None:
     # Any: a table override is one- or two-dimensional.
     tables: Mapping[str, Any] = exp.tables
     sample = exp.sample if exp.samples is None else None
     validate(
-        params, init=load_initial_state(), dt=dt, overrides=set_on_top, tables=tables, sampled=sampled, sample=sample
+        params,
+        init=load_initial_state(),
+        dt=dt,
+        overrides=set_on_top,
+        tables=tables,
+        sampled=sampled,
+        sample=sample,
+        perturb_from=exp.perturb_from,
+        stop=stop,
+        ai_on=exp.ai_on,
+        noise=exp.noise,
+        noise_seed=exp.noise_seed,
     )

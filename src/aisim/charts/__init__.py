@@ -6,7 +6,8 @@ does not import matplotlib; the first chart does, and raises an ``ImportError`` 
 Figures are drawn on the Agg canvas without ``pyplot``.
 
 - Default window 2024-2040 (``window=`` on every year chart); the 2024-2026 calibration period is shaded unless
-  ``shade=False``. Bands there reflect lever uncertainty applied from 2024 (see ``aisim.charts.core``).
+  ``shade=False``. Bands there reflect lever uncertainty applied from 2024 (see ``aisim.charts.core``). A result
+  with ``perturb_from = Y`` shades 2024 to Y instead, labelled "calibrated baseline until <Y>".
 - Y-labels come from ``catalogue().unit``, with " (unit inferred)" where the catalogue inferred it; ``ylabel=``
   overrides.
 - Colours are fixed per dimension value and scenario (``aisim.charts.colours``), colour-blind safe.

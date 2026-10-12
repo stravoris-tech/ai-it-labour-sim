@@ -26,6 +26,7 @@ import numpy as np
 import pandas as pd
 
 from aisim.experiment.sampling import Distribution
+from aisim.noise import Noise
 
 if TYPE_CHECKING:
     from aisim.experiment.runner import Experiment
@@ -56,6 +57,11 @@ def _table(values: Mapping[str, Any]) -> dict[str, Any]:
     return {k: (dict(v) if isinstance(v, Mapping) else v) for k, v in values.items()}
 
 
+def noise_dict(noise: Mapping[str, Noise]) -> dict[str, dict[str, float]]:
+    """The noise spec as ``{channel: {"sigma": ..., "tau": ...}}``."""
+    return {name: {"sigma": float(spec.sigma), "tau": float(spec.tau)} for name, spec in noise.items()}
+
+
 def experiment_dict(exp: Experiment) -> dict[str, Any]:
     """The experiment as plain, JSON-serialisable data."""
     return {
@@ -69,6 +75,9 @@ def experiment_dict(exp: Experiment) -> dict[str, Any]:
         "seed": exp.seed,
         "samples": None if exp.samples is None else samples_ref(exp.samples),
         "ai_on": exp.ai_on,
+        "perturb_from": exp.perturb_from,
+        "noise": noise_dict(exp.noise),
+        "noise_seed": exp.noise_seed,
     }
 
 

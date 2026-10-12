@@ -177,6 +177,17 @@ def settings_rows(source: ExperimentResult | ScenarioResult | Mapping[str, Any])
         rows.append(("explicit samples", f"{exp['samples']['shape']} sha256 {exp['samples']['sha256']}"))
     if exp.get("overrides"):
         rows.append(("overrides", ", ".join(f"{k} = {v}" for k, v in exp["overrides"].items())))
+    y0 = meta.get("perturb_from", exp.get("perturb_from"))
+    rows.append(
+        ("perturb_from", "none (levers act from 2024)" if y0 is None else f"{y0:g} (calibrated baseline until then)")
+    )
+    noise: Mapping[str, Any] = meta.get("noise", exp.get("noise")) or {}
+    on = {name: spec for name, spec in noise.items() if spec["sigma"] > 0}
+    if on:
+        specs = "; ".join(f"{name}: sigma {spec['sigma']:g}, tau {spec['tau']:g}" for name, spec in on.items())
+        rows.append(("noise", f"{specs} (noise_seed {show(meta.get('noise_seed', exp.get('noise_seed')))})"))
+    else:
+        rows.append(("noise", "off"))
     rows.append(("package versions", ", ".join(f"{k} {v}" for k, v in _versions(meta).items())))
     rows.append(("git_commit", show(meta.get("git_commit"))))
     rows.append(("git_dirty", show(meta.get("git_dirty"))))
@@ -233,8 +244,8 @@ class Report:
         return self
 
     def add_settings(self, source: ExperimentResult | ScenarioResult | Mapping[str, Any]) -> Report:
-        """The run settings from a result or its meta: seed, runs, ``n_invalid``, scenario(s), package versions, git
-        commit and dirty flag, platform and ``NPY_DISABLE_CPU_FEATURES``."""
+        """The run settings from a result or its meta: seed, runs, ``n_invalid``, scenario(s), ``perturb_from``, the
+        noise spec, package versions, git commit and dirty flag, platform and ``NPY_DISABLE_CPU_FEATURES``."""
         self._items.append(_Settings(settings_rows(source)))
         return self
 

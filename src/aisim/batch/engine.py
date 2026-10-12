@@ -31,6 +31,7 @@ from aisim.batch.util import B, F, Faults, softmax
 from aisim.batch.work import work
 from aisim.batch.workforce import level_mix, staffing, vacancies
 from aisim.dims import LEVELS
+from aisim.params import Reanchor
 
 Trace = Callable[[int, float, str, object], None]
 """``trace(step, year, section_id, intermediates)``, called after every section of every step."""
@@ -87,6 +88,10 @@ def run_batch(
     record_every: float = 1.0,
     outputs: Sequence[str] | None = None,
     trace: Trace | None = None,
+    start_step: int = 0,
+    tilt: bool = True,
+    reanchor: Reanchor | None = None,
+    noise: Mapping[str, F] | None = None,
 ) -> BatchResult:
     """Run N runs of the model from 2024 for ``stop`` years, together, and return their series, final states and mins.
 
@@ -99,6 +104,10 @@ def run_batch(
       keys). It may also name extras (``EXTRA_KEYS``), which are recorded only when asked for.
     - ``trace``, when given, is called after every section of every step with the step number, the year, the section
       ID (``aisim.scalar.engine.SECTION_IDS``) and the section's intermediates (arrays with a leading run axis).
+    - Restarts (phase 2 of a two-phase run, ``aisim.perturb``), as in the scalar ``run``: ``start_step`` (the global
+      step to start at; rows are recorded on the global step), ``tilt=False`` (skip S0), ``reanchor`` (the five
+      2024-anchored paths, per run where the rates differ from the base) and ``noise`` (channel to ``(N, steps + 1)``
+      factors, indexed by the global step). Every default reproduces a plain run bit for bit.
 
     A numerical failure in one run never raises and never changes another run. ``finite[i]`` marks a valid run: a
     finite state and no crash-site fault. It is False when any of these holds for run ``i``:
@@ -115,7 +124,18 @@ def run_batch(
     ``clamp``, say) and report ``finite = True``.
     """
     result, _ = simulate(
-        params, init, ai_on=ai_on, dt=dt, stop=stop, record_every=record_every, outputs=outputs, trace=trace
+        params,
+        init,
+        ai_on=ai_on,
+        dt=dt,
+        stop=stop,
+        record_every=record_every,
+        outputs=outputs,
+        trace=trace,
+        start_step=start_step,
+        tilt=tilt,
+        reanchor=reanchor,
+        noise=noise,
     )
     return result
 
@@ -130,6 +150,10 @@ def simulate(
     record_every: float = 1.0,
     outputs: Sequence[str] | None = None,
     trace: Trace | None = None,
+    start_step: int = 0,
+    tilt: bool = True,
+    reanchor: Reanchor | None = None,
+    noise: Mapping[str, F] | None = None,
 ) -> tuple[BatchResult, Faults]:
     """``run_batch``, also returning the per-site fault masks (internal; for tests of the fault sites)."""
     pr = BatchParams.baseline(1) if params is None else params
@@ -149,25 +173,28 @@ def simulate(
 
     with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
         # ---- S0 ----
-        tilt_sourcing_perception(st, pr["GCCMomentum"])
+        if tilt:
+            tilt_sourcing_perception(st, pr["GCCMomentum"])
         steps = round(stop / dt)
         rk = max(1, round(record_every / dt))
-        n_rec = steps // rk + 1
+        j0 = -(-start_step // rk)  # the first recorded row, counted on the global step
+        n_rec = steps // rk - j0 + 1
         years = np.empty(n_rec)
         series: dict[str, F] = {}
         mins = Mins()
         W = pr.fam("W_", LEVELS)
-        t = 0.0
-        for step in range(steps + 1):
+        t = start_step * dt
+        for step in range(start_step, steps + 1):
             # ---- S1 ----
             y = 2024 + t
-            s = _sections(pr, st, y, ai, W, faults, step, trace)
+            nz = {ch: a[:, step] for ch, a in noise.items()} if noise else None
+            s = _sections(pr, st, y, ai, W, faults, step, trace, reanchor, nz)
             # ---- REC ----
             if step % rk == 0:
                 row = record(st, s, pr.table("SectorShare"))
                 if want_extras:
                     row |= record_extras(st, s)
-                j = step // rk
+                j = step // rk - j0
                 if j == 0:
                     series = {k: np.empty((n, n_rec)) for k in keys}
                 years[j] = round(y, 4)
@@ -186,7 +213,16 @@ def simulate(
 
 
 def _sections(
-    pr: BatchParams, st: BatchState, y: float, ai: B, W: F, faults: Faults, step: int, trace: Trace | None
+    pr: BatchParams,
+    st: BatchState,
+    y: float,
+    ai: B,
+    W: F,
+    faults: Faults,
+    step: int,
+    trace: Trace | None,
+    reanchor: Reanchor | None = None,
+    nz: Mapping[str, F] | None = None,
 ) -> Step:
     """Run sections S2-S13 for one step and return their intermediates, calling ``trace`` after each."""
 
@@ -194,7 +230,7 @@ def _sections(
         if trace is not None:
             trace(step, y, section_id, value)
 
-    cap = capability(pr, st, y, ai, faults)
+    cap = capability(pr, st, y, ai, faults, reanchor=reanchor, nz=nz)
     emit("S2", cap)
     wk = work(pr, st, W, cap.Pew)
     emit("S3", wk)
@@ -218,9 +254,9 @@ def _sections(
     emit("S8e", ttf)
     pl = pools(pr, st, cap.G, unemp, ttf.TTFr)
     emit("S8f", pl)
-    cst = costs(pr, st, y, W, wk.CompE, wk.EffStaffE)
+    cst = costs(pr, st, y, W, wk.CompE, wk.EffStaffE, reanchor=reanchor, nz=nz)
     emit("S9", cst)
-    con = contracts(pr, st, y, wk.Pe, stf.UnitIn, hi.hires, cst)
+    con = contracts(pr, st, y, wk.Pe, stf.UnitIn, hi.hires, cst, nz=nz)
     emit("S10", con)
     flo = sourcing_flows(pr, st, con.VF)
     emit("S11a", flo)
@@ -232,11 +268,24 @@ def _sections(
     emit("S11d", spd)
     ado = adoption(pr, st, ai, wk.EffStaffE, cst.LabourCost, cst.AICostPerUnit, bks.VB, faults)
     emit("S12", ado)
-    drv = drivers(pr, st, y, ai, cap.G, wk.Completion, wk.P_all, cst.AIShockNow, spd.ServicesSpend, faults)
+    drv = drivers(
+        pr,
+        st,
+        y,
+        ai,
+        cap.G,
+        wk.Completion,
+        wk.P_all,
+        cst.AIShockNow,
+        spd.ServicesSpend,
+        faults,
+        reanchor=reanchor,
+        nz=nz,
+    )
     emit("S13a", drv)
     opt = option_costs(pr, st, W, mix.ShareL, cst.AICostPerUnit, con.VF)
     emit("S13b", opt)
-    csm = consumer(pr, st, y, ai, cap.G, wk.CS, wk.CompS, spd.ServicesSpend, drv)
+    csm = consumer(pr, st, y, ai, cap.G, wk.CS, wk.CompS, spd.ServicesSpend, drv, nz=nz)
     emit("S13c", csm)
     tgt = sourcing_targets(pr, st, ai, csm.cons.RegDrag, drv.GCCAppeal, pl.TTFratio, opt)
     emit("S13d", tgt)

@@ -148,3 +148,50 @@ class Params:
         if v is None:
             raise ValueError(f"{name} is None")
         return v
+
+
+@dataclass(frozen=True, slots=True)
+class Reanchor:
+    """The re-anchoring of the five 2024-anchored exogenous paths at year ``Y``, for phase 2 of a two-phase run.
+
+    ``aW`` (rate ``g``), ``VerifNow`` (``VerifDecline``), ``LOBAuto`` (``aL_max``, ``g``), ``CreditCostPB`` and
+    ``AICostPerUnit`` (``AICostDecline``) are written in closed form from 2024. A run whose rate differs from the base
+    rate would jump at Y to where the new rate would have taken the path since 2024 (recon 06 B5). Re-anchored, the
+    path continues from its base value at Y at the run's rate, so it is continuous at Y.
+
+    The engines use the re-anchored formula only for a run whose path inputs differ from the base rates held here, and
+    today's formula otherwise, so an unchanged run stays bit-identical (recon 06 E4). The base values at Y are computed
+    once here, in Python floats, so both engines read the same numbers.
+    """
+
+    Y: float
+    g: float
+    VerifDecline: float
+    aL_max: float
+    AICostDecline: float
+    g_decay: float
+    """``(1 - g) ** (Y - 2024)`` at the base ``g``."""
+    verif_Y: float
+    """The base ``VerifNow`` at Y."""
+    lob_Y: float
+    """The base ``LOBAuto`` at Y, before its floor at 0."""
+    cost_decay: float
+    """``(1 - AICostDecline) ** (Y - 2024)`` at the base ``AICostDecline``."""
+
+    @classmethod
+    def at(cls, base: Params, Y: float) -> Reanchor:
+        """The re-anchoring at year ``Y`` of the paths of ``base`` (the calibrated baseline of phase 1)."""
+        s = base.scalars
+        g, vd, aL_max, acd = (Params.float_of(s, k) for k in ("g", "VerifDecline", "aL_max", "AICostDecline"))
+        g_decay = (1 - g) ** (Y - 2024)
+        return cls(
+            Y=Y,
+            g=g,
+            VerifDecline=vd,
+            aL_max=aL_max,
+            AICostDecline=acd,
+            g_decay=g_decay,
+            verif_Y=Params.float_of(s, "Verif") * (1 - vd) ** (Y - 2024),
+            lob_Y=aL_max - (aL_max - Params.float_of(s, "aL_2024")) * g_decay,
+            cost_decay=(1 - acd) ** (Y - 2024),
+        )

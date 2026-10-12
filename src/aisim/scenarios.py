@@ -4,6 +4,9 @@
 - ``TORNADO``: the 14 one-at-a-time sensitivity ranges of ``TORNADO`` (lines 32-47), as ``(name, low, high, label)``.
   The ``Verif`` and ``JuniorCut`` ranges are relative to their baseline values, as in the prototype.
 - ``EXTREME``: the overrides of integrity test T4 in ``tests()`` (lines 98-99), which exercise abandonment and layoffs.
+- ``tornado_levers(perturb_from)``: the tornado ranges as ``Uniform`` distributions for a Monte Carlo. The set
+  depends on the perturb year: it drops every lever whose range cannot act from that year (``Verif`` from 2026.5;
+  also ``DemandGrowthLate`` from 2027).
 
 Spec: 07 (scenarios and the tornado).
 """
@@ -12,9 +15,12 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from types import MappingProxyType
-from typing import Final
+from typing import TYPE_CHECKING, Final
 
 from aisim.params import Params
+
+if TYPE_CHECKING:
+    from aisim.experiment.sampling import Uniform
 
 
 def _frozen(d: dict[str, float]) -> Mapping[str, float]:
@@ -66,6 +72,32 @@ def _tornado() -> tuple[tuple[str, float, float, str], ...]:
 
 TORNADO: Final = _tornado()
 """The 14 tornado parameters: ``(name, low, high, label)``."""
+
+
+def tornado_levers(perturb_from: float | None = None) -> dict[str, Uniform]:
+    """The ``TORNADO`` ranges as ``{name: Uniform(low, high)}``, in ``TORNADO`` order.
+
+    **The lever set depends on the perturb year.** With ``perturb_from`` set, a lever is dropped when its lower or upper
+    bound, applied as an override with that perturb year, fails validation (``aisim.experiment.validate``, at dt = 1/16
+    and stop = 16): a 2024 level such as ``Verif`` cannot act from a later year, and a lever whose window starts
+    before Y, such as ``DemandGrowthLate`` (after ``LateYear``, 2026.5), would change the run before Y. All 14 remain
+    with None, 13 at 2026.5 (``Verif`` out) and 12 at 2027.0 (``Verif`` and ``DemandGrowthLate`` out).
+    """
+    from aisim.experiment.sampling import Uniform
+    from aisim.experiment.validate import ValidationError, validate
+
+    out: dict[str, Uniform] = {}
+    base = Params.baseline()
+    for name, lo, hi, _ in TORNADO:
+        if perturb_from is not None:
+            try:
+                for v in (lo, hi):
+                    validate(base.with_overrides(**{name: v}), overrides={name: v}, perturb_from=perturb_from)
+            except ValidationError:
+                continue
+        out[name] = Uniform(lo, hi)
+    return out
+
 
 EXTREME: Final[Mapping[str, float]] = MappingProxyType(
     {

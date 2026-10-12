@@ -7,6 +7,7 @@ division ``CreditCost2024 / CreditCostPB`` (S13a) is a fault site (recon 03 B2).
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 import numpy as np
@@ -16,6 +17,7 @@ from aisim.batch.params import BatchParams
 from aisim.batch.state import BatchState
 from aisim.batch.util import B, F, Faults, clamp, csum, csum_axis, pw, ramp
 from aisim.dims import LEVELS, SECTORS
+from aisim.params import Reanchor
 
 CREDIT_COST_SITE = "S13a CreditCost2024 / CreditCostPB"
 
@@ -82,6 +84,9 @@ def drivers(
     AIShockNow: F,
     ServicesSpend: F,
     faults: Faults,
+    *,
+    reanchor: Reanchor | None = None,
+    nz: Mapping[str, F] | None = None,
 ) -> ConsumerDrivers:
     """S13a: exogenous consumer drivers and aggregates (see ``aisim.scalar.consumer.drivers``)."""
     H = st.H
@@ -90,6 +95,13 @@ def drivers(
     LOBAuto = np.maximum(0.0, aL_max - (aL_max - pr["aL_2024"]) * pw(1 - pr["g"], ex))
     decline = pw(1 - pr["AICostDecline"], ex)
     CreditCostPB = pr["CreditCost2024"] * decline * AIShockNow
+    if reanchor is not None:
+        g_Y = pw(1 - pr["g"], y - reanchor.Y)
+        LOB_Y = np.maximum(0.0, aL_max - (aL_max - reanchor.lob_Y) * g_Y)
+        LOBAuto = np.where((aL_max != reanchor.aL_max) | (pr["g"] != reanchor.g), LOB_Y, LOBAuto)
+        decline_Y = reanchor.cost_decay * pw(1 - pr["AICostDecline"], y - reanchor.Y)
+        credit_Y = pr["CreditCost2024"] * decline_Y * AIShockNow
+        CreditCostPB = np.where(pr["AICostDecline"] != reanchor.AICostDecline, credit_Y, CreditCostPB)
     faults.flag(CREDIT_COST_SITE, CreditCostPB == 0)
     CEc = clamp(pw(pr["CreditCost2024"] / CreditCostPB, pr["CostAdoptElast"]), pr["CEMin"], pr["CEMax"])
     RegRamp = ramp(y, pr["RegStart"], pr["RegEnd"], 0.0, 1.0)
@@ -104,6 +116,8 @@ def drivers(
     ConsIT = csum(H[:, ih, l] + H[:, gcc, l] for l in range(len(LEVELS)))
     in_window = (pr["BudgetShockStart"] <= y) & (y < pr["BudgetShockEnd"])
     BudgetGrowth = G * pw(1 + pr["ITBudgetGrowth"], ex) * (1 - np.where(in_window, pr["BudgetShock"], 0.0))
+    if nz is not None and "budget" in nz:
+        BudgetGrowth = BudgetGrowth * nz["budget"]
     CloudPB = pr["CloudPerBFY"] * (1 + pr["CloudAISens"] * (1 - 1 / P_all))
     end = pr["GCCAppealEnd"]
     GCCAppeal = np.where(
@@ -138,6 +152,8 @@ def consumer(
     CompS: F,
     ServicesSpend: F,
     drv: ConsumerDrivers,
+    *,
+    nz: Mapping[str, F] | None = None,
 ) -> Consumer:
     """S13c: the consumer side of each sector, and IT work demand (see ``aisim.scalar.consumer.consumer``)."""
     SectorShare, LOBWage, RegDragLevel = pr.table("SectorShare"), pr.table("LOBWage"), pr.table("RegDragLevel")
@@ -160,6 +176,8 @@ def consumer(
         np.minimum((c["pC"] + c["qC"] * AC) * kC * (1 - AC), (1 - AC) / c["MinAdoptionTime"]),
         0.0,
     )
+    if nz is not None and "adoption" in nz:
+        AdoptC = AdoptC * nz["adoption"][:, None]
     Port0 = pr.fam("Port0_", SECTORS)
     NewApps0 = Port0 / c["AppLife"]
     NewApps = NewApps0 * (1 - c["AppDisplacement"] * AIexp)

@@ -1,8 +1,10 @@
 """The package's data tables: parameter domains and the output catalogue.
 
 - ``domains()``: one row per scalar parameter (``Params.baseline()`` order) and per table entry (``SpeedUp[APP]``,
-  ``Mix0[OIT][TM]``), with its domain class, explicit bounds, the evidence (file:line in the scalar engine), notes, and
-  ``read``: False where ``run()`` never reads the value, so that overriding it has no effect.
+  ``Mix0[OIT][TM]``), with its domain class, explicit bounds, the evidence (file:line in the scalar engine), notes,
+  ``read``: False where ``run()`` never reads the value, so that overriding it has no effect, and ``level_2024``: True
+  where the value describes 2024 itself (a 2024 level or a stored 2024 calibration constant), so it cannot act from a
+  later perturb year (slice 6).
 - ``catalogue()``: one row per output name: the 317 row keys (``kind = row``), the extras (``kind = extra``) and the
   derived outputs (``kind = derived``), with family, dimensions, unit, description and spec reference.
 - ``keys(family, **dims)`` filters the names by family and dimension values; ``dims(key)`` parses one key's dimensions.
@@ -25,17 +27,19 @@ def _read(name: str) -> pd.DataFrame:
 
 
 def domains() -> pd.DataFrame:
-    """The parameter domains: ``name, domain, lower, lower_inclusive, upper, upper_inclusive, evidence, notes, read``.
+    """The parameter domains: ``name, domain, lower, lower_inclusive, upper, upper_inclusive, evidence, notes, read,
+    level_2024``.
 
     ``lower`` and ``upper`` are floats (NaN where there is no bound); the ``*_inclusive`` columns are nullable booleans
-    (missing where there is no bound); ``read`` is boolean. Returns a fresh copy.
+    (missing where there is no bound); ``read`` and ``level_2024`` are boolean. Returns a fresh copy.
     """
     df = _read("domains.csv").copy()
     for col in ("lower", "upper"):
         df[col] = df[col].astype(float)
     for col in ("lower_inclusive", "upper_inclusive"):
         df[col] = df[col].map({"true": True, "false": False, "": pd.NA}).astype("boolean")
-    df["read"] = df["read"].map({"true": True, "false": False}).astype(bool)
+    for col in ("read", "level_2024"):
+        df[col] = df[col].map({"true": True, "false": False}).astype(bool)
     return df
 
 

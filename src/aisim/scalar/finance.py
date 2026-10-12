@@ -13,6 +13,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 
 from aisim.dims import EFFORT, EMP_OF, LEVELS, POOL, SECTORS, TYPES, UNITS, VENDORS
+from aisim.params import Reanchor
 from aisim.state import Mat, State, Vec
 from aisim.util import clamp, softmax
 
@@ -115,7 +116,17 @@ class Spend:
     ServicesSpend: float
 
 
-def costs(pr: Mapping[str, float], st: State, y: float, W: Mapping[str, float], CompE: Vec, EffStaffE: Vec) -> Costs:
+def costs(
+    pr: Mapping[str, float],
+    st: State,
+    y: float,
+    W: Mapping[str, float],
+    CompE: Vec,
+    EffStaffE: Vec,
+    *,
+    reanchor: Reanchor | None = None,
+    nz: Mapping[str, float] | None = None,
+) -> Costs:
     """S9: delivery, wages and labour cost.
 
     - ``Delivered[u]`` splits the employer's completion over its units by effective staff ``capu``.
@@ -123,6 +134,9 @@ def costs(pr: Mapping[str, float], st: State, y: float, W: Mapping[str, float], 
       plus onboarding staff.
     - ``AICostPerUnit`` falls from ``AICost2024`` at ``AICostDecline`` a year, times ``AIShockMult`` inside the
       half-open shock window.
+
+    Two-phase runs (``aisim.perturb``): with ``reanchor``, ``AICostPerUnit`` continues from its base value at
+    ``reanchor.Y`` when ``AICostDecline`` differs from the base. The noise factor ``nz["aicost"]`` multiplies it.
     """
     H, O, WI = st["H"], st["O"], st["WI"]
     capu = {u: sum(W[l] * (H[u][l] + pr["OnboardProductivity"] * O[u][l]) for l in LEVELS) for u in UNITS}
@@ -130,7 +144,13 @@ def costs(pr: Mapping[str, float], st: State, y: float, W: Mapping[str, float], 
     Wage = {u: {l: pr["BaseWage_" + u] * pr["WageMult_" + l] * WI[u] for l in LEVELS} for u in UNITS}
     LabourCost = {u: sum((H[u][l] + O[u][l]) * Wage[u][l] for l in LEVELS) for u in UNITS}
     AIShockNow = pr["AIShockMult"] if pr["AIShockStart"] <= y < pr["AIShockEnd"] else 1.0
-    AICostPerUnit = pr["AICost2024"] * (1 - pr["AICostDecline"]) ** (y - 2024) * AIShockNow
+    if reanchor is not None and pr["AICostDecline"] != reanchor.AICostDecline:
+        decline = reanchor.cost_decay * (1 - pr["AICostDecline"]) ** (y - reanchor.Y)
+        AICostPerUnit = pr["AICost2024"] * decline * AIShockNow
+    else:
+        AICostPerUnit = pr["AICost2024"] * (1 - pr["AICostDecline"]) ** (y - 2024) * AIShockNow
+    if nz is not None and "aicost" in nz:
+        AICostPerUnit = AICostPerUnit * nz["aicost"]
     return Costs(
         capu=capu,
         Delivered=Delivered,
@@ -141,7 +161,17 @@ def costs(pr: Mapping[str, float], st: State, y: float, W: Mapping[str, float], 
     )
 
 
-def contracts(pr: Mapping[str, float], st: State, y: float, Pe: Vec, UnitIn: Vec, hires: Mat, cost: Costs) -> Contracts:
+def contracts(
+    pr: Mapping[str, float],
+    st: State,
+    y: float,
+    Pe: Vec,
+    UnitIn: Vec,
+    hires: Mat,
+    cost: Costs,
+    *,
+    nz: Mapping[str, float] | None = None,
+) -> Contracts:
     """S10: per-vendor contracts and finance.
 
     - ``Pass[k]`` is the share of AI gains contract type ``k`` passes to the client (fixed price none, effort-billed
@@ -156,6 +186,8 @@ def contracts(pr: Mapping[str, float], st: State, y: float, Pe: Vec, UnitIn: Vec
       by productivity), so T&M revenue falls as productivity rises (B2).
     - Revenue is delivered work at unit prices times ``AvgIdx``, less any price shock. Costs: AI on the automated
       share of delivered work, visa fees and compliance (OIT only), and labour net of the cost programme.
+
+    The noise factor ``nz["anchor"]`` (two-phase runs, ``aisim.perturb``) multiplies ``Anchor``.
     """
     H = st["H"]
     Delivered, LabourCost, AICostPerUnit = cost.Delivered, cost.LabourCost, cost.AICostPerUnit
@@ -167,6 +199,8 @@ def contracts(pr: Mapping[str, float], st: State, y: float, Pe: Vec, UnitIn: Vec
         CP = st["ClientP"][v]
         PU = max(0.0, (CP - st["ClientPRef"][v]) / (st["ClientPRef"][v] * pr["TrendTime"]))
         Anchor = (1 / (CP * (1 + pr["PriceHorizon"] * PU))) ** pr["PassThrough"]  # clients price in the trend
+        if nz is not None and "anchor" in nz:
+            Anchor = Anchor * nz["anchor"]
         Vi = st["Viab"][v]
         nm = pr["NormalMargin_" + v]
         dev = Vi - nm

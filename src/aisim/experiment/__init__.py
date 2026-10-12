@@ -19,6 +19,7 @@ from aisim.experiment.runner import Experiment, auto_chunk_size, run_experiment
 from aisim.experiment.sampling import Choice, Distribution, Fixed, Triangular, TruncNormal, Uniform
 from aisim.experiment.scenarios import ScenarioResult, run_scenarios
 from aisim.experiment.validate import ValidationError, Violation
+from aisim.noise import Noise
 
 __all__ = [
     "Choice",
@@ -26,6 +27,7 @@ __all__ = [
     "Experiment",
     "ExperimentResult",
     "Fixed",
+    "Noise",
     "ScenarioResult",
     "Triangular",
     "TruncNormal",

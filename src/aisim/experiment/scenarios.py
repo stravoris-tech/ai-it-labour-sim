@@ -12,6 +12,8 @@ scenarios' results are then due to the scenarios alone, not to different samples
 - **Overrides.** ``exp.overrides`` may not set a parameter that a requested scenario sets. In a single
   ``run_experiment`` an override replaces the scenario's value (the layers), but here it would silently erase the
   difference between the scenarios, so ``run_scenarios`` raises instead.
+- **Perturb year and noise.** ``exp.perturb_from`` is one Y for every block. Noise is keyed by the run's index within
+  its block, so run i has the same noise in every scenario (common random numbers for the noise too).
 """
 
 from __future__ import annotations
@@ -25,7 +27,7 @@ import pandas as pd
 
 from aisim.experiment.meta import experiment_dict
 from aisim.experiment.results import ExperimentResult
-from aisim.experiment.runner import Experiment, check_supports, design, fixed_params, run_experiment
+from aisim.experiment.runner import Experiment, check_supports, design, execute, fixed_params
 from aisim.scenarios import SCENARIOS
 
 BASELINE_LABEL = "Baseline"
@@ -115,7 +117,7 @@ def run_scenarios(
             "with run_experiment"
         )
     if validate:
-        check_supports(exp, dt)
+        check_supports(exp, dt, stop)
 
     base = design(exp)
     n = len(base)
@@ -143,8 +145,16 @@ def run_scenarios(
     combined = pd.concat(blocks, ignore_index=True)
     combined.index.name = "run"
 
-    res = run_experiment(
-        Experiment(overrides=exp.overrides, tables=exp.tables, samples=combined, ai_on=exp.ai_on),
+    res = execute(
+        Experiment(
+            overrides=exp.overrides,
+            tables=exp.tables,
+            samples=combined,
+            ai_on=exp.ai_on,
+            perturb_from=exp.perturb_from,
+            noise=exp.noise,
+            noise_seed=exp.noise_seed,
+        ),
         outputs=outputs,
         record_every=record_every,
         dt=dt,
@@ -152,6 +162,7 @@ def run_scenarios(
         workers=workers,
         chunk_size=chunk_size,
         validate=validate,
+        noise_index=np.tile(np.arange(n), len(names)),
     )
 
     views: dict[str | None, ExperimentResult] = {}
