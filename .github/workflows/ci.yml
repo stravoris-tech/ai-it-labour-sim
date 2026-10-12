@@ -8,7 +8,8 @@ on:
 jobs:
   gate:
     name: gate
-    runs-on: ubuntu-latest
+    # Pinned: moving to a newer image is a deliberate future change (a new glibc can move cross-platform golden checks).
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       # numpy's AVX-512 kernels differ from libm by 1 ulp and break batch parity; see README "Reproducibility".
