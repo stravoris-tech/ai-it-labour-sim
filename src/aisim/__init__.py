@@ -9,8 +9,12 @@ batched engine (``aisim.batch``) runs many at once: ``run_batch()`` advances N r
 The experiment API (``aisim.experiment``) asks questions with many runs: an ``Experiment`` combines a scenario, fixed
 overrides and sampled levers (``Uniform``, ``Triangular``, ``TruncNormal``, ``Choice``, ``Fixed``);
 ``run_experiment()`` validates it (``ValidationError``) and runs it across cores, returning an ``ExperimentResult``
-with percentile bands, ratios to 2024, derived outputs and the Q3 test. ``domains()``, ``catalogue()`` and ``keys()``
-describe the parameters and outputs.
+with percentile bands, ratios to 2024, derived outputs and the Q3 test. ``run_scenarios()`` runs several scenarios on
+the same samples (``ScenarioResult``). ``domains()``, ``catalogue()`` and ``keys()`` describe the parameters and
+outputs.
+
+Charts (``aisim.charts``, needs the ``charts`` extra: matplotlib) and one-page reports (``aisim.report``) turn results
+into figures and self-contained HTML.
 """
 
 from aisim.batch.engine import BatchResult, run_batch
@@ -21,6 +25,7 @@ from aisim.experiment import (
     Experiment,
     ExperimentResult,
     Fixed,
+    ScenarioResult,
     Triangular,
     TruncNormal,
     Uniform,
@@ -29,6 +34,7 @@ from aisim.experiment import (
     domains,
     keys,
     run_experiment,
+    run_scenarios,
 )
 from aisim.params import Params
 from aisim.scalar.engine import RunResult, run
@@ -48,6 +54,7 @@ __all__ = [
     "Fixed",
     "Params",
     "RunResult",
+    "ScenarioResult",
     "State",
     "Triangular",
     "TruncNormal",
@@ -61,4 +68,5 @@ __all__ = [
     "run",
     "run_batch",
     "run_experiment",
+    "run_scenarios",
 ]

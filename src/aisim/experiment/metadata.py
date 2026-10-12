@@ -5,6 +5,7 @@
   ``read``: False where ``run()`` never reads the value, so that overriding it has no effect.
 - ``catalogue()``: one row per output name: the 317 row keys (``kind = row``), the extras (``kind = extra``) and the
   derived outputs (``kind = derived``), with family, dimensions, unit, description and spec reference.
+- ``keys(family, **dims)`` filters the names by family and dimension values; ``dims(key)`` parses one key's dimensions.
 
 Both are built from recon 04 (``04-domains.csv``, ``04-catalogue.csv``) and ship in ``aisim/data/`` (CC BY 4.0).
 """
@@ -45,11 +46,54 @@ def catalogue() -> pd.DataFrame:
     return df
 
 
-def keys(family: str | None = None) -> list[str]:
-    """The output names in ``family`` (all if None), in catalogue order. Raises ``KeyError`` for an unknown family."""
+def _dims_of(text: str) -> dict[str, str]:
+    """Parse a catalogue ``dims`` cell (``vendor=OIT;type=FP``); ``{}`` for an empty one."""
+    if not text:
+        return {}
+    return dict(part.split("=", 1) for part in text.split(";"))
+
+
+@cache
+def _dims_table() -> dict[str, dict[str, str]]:
     cat = _read("catalogue.csv")
-    if family is None:
-        return list(cat["key"])
-    if family not in set(cat["family"]):
+    return {k: _dims_of(d) for k, d in zip(cat["key"], cat["dims"], strict=True)}
+
+
+@cache
+def dimension_names() -> tuple[str, ...]:
+    """The dimension names used in the catalogue, sorted (``employer``, ``level``, ... ``worktype``)."""
+    return tuple(sorted({name for d in _dims_table().values() for name in d}))
+
+
+def dims(key: str) -> dict[str, str]:
+    """The dimensions of an output name, e.g. ``{"vendor": "OIT", "type": "FP"}``; ``{}`` for a key without any.
+
+    Raises ``KeyError`` for an unknown name.
+    """
+    try:
+        return dict(_dims_table()[key])
+    except KeyError:
+        raise KeyError(f"unknown output name {key!r}; see aisim.catalogue()") from None
+
+
+def keys(family: str | None = None, **dims: str) -> list[str]:
+    """The output names in ``family`` (all if None) whose dimensions match every ``name=value`` given, in catalogue
+    order: ``keys(family="contract mix (book)", vendor="OIT")``.
+
+    Raises ``KeyError`` for an unknown family or dimension name.
+    """
+    cat = _read("catalogue.csv")
+    if family is not None and family not in set(cat["family"]):
         raise KeyError(f"unknown family {family!r}; families: {sorted(set(cat['family']))}")
-    return list(cat.loc[cat["family"] == family, "key"])
+    unknown = sorted(set(dims) - set(dimension_names()))
+    if unknown:
+        raise KeyError(f"unknown dimension(s) {unknown}; dimensions: {list(dimension_names())}")
+    table = _dims_table()
+    out = []
+    for key, fam in zip(cat["key"], cat["family"], strict=True):
+        if family is not None and fam != family:
+            continue
+        d = table[key]
+        if all(d.get(name) == value for name, value in dims.items()):
+            out.append(key)
+    return out

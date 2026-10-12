@@ -2,13 +2,15 @@
 
 A question combines four layers, applied lowest to highest: the baseline, an optional named scenario
 (``aisim.scenarios.SCENARIOS``), fixed ``overrides`` (and ``tables``), and sampled or explicit per-run values. A
-parameter both fixed and sampled is an error.
+parameter both fixed and sampled is an error, whether ``overrides`` or the scenario fixes it. An override may replace a
+scenario's value. To compare scenarios on the same samples, use ``aisim.experiment.scenarios.run_scenarios``.
 
 - **Seeding.** Every sample is drawn in the parent from one ``np.random.default_rng(seed)``, in the order the levers
   are declared (``aisim.experiment.sampling``).
 - **Chunks.** All batch inputs are built in the parent, split into contiguous chunks of ``chunk_size`` runs, run with
   ``run_batch`` in a spawn-context process pool, and reassembled in chunk order whatever order they finish in. Runs in
-  a batch never interact, so the result is bit-identical for any worker count and chunk size.
+  a batch never interact, so the result is bit-identical for any worker count and chunk size. ``chunk_size=None``
+  (the default) chooses it with ``auto_chunk_size`` (recon 05 C).
 - **Validation.** With ``validate=True`` (the default) every rule of ``aisim.experiment.validate`` is checked before
   any run starts; ``validate=False`` skips them, and ``valid`` (``BatchResult.finite``) still marks each run.
 
@@ -20,6 +22,7 @@ script that calls ``run_experiment`` with more than one worker must guard its en
 
 from __future__ import annotations
 
+import math
 import multiprocessing
 import os
 import warnings
@@ -37,6 +40,7 @@ from aisim.batch.state import BatchState
 from aisim.batch.util import B, F
 from aisim.experiment.derived import DERIVED
 from aisim.experiment.inputs import batch_arrays, make_batch_params
+from aisim.experiment.meta import experiment_dict, provenance
 from aisim.experiment.results import ExperimentResult
 from aisim.experiment.sampling import Distribution, Method, draw
 from aisim.experiment.validate import support_errors, validate
@@ -48,6 +52,26 @@ MEMORY_WARN_BYTES: Final = 4 * 2**30
 """Warn when the parent's estimated peak memory for the recorded series (about twice the data) exceeds this."""
 
 RECORDABLE: Final = (*ROW_KEYS, *EXTRA_KEYS)
+
+AUTO_IN_PROCESS_MAX: Final = 200
+"""Up to this many runs, ``chunk_size=None`` runs in one chunk, in this process: a pool costs about 0.3 s and only
+pays from about 300 runs (recon 05 C3)."""
+
+AUTO_CHUNK_MIN: Final = 50
+AUTO_CHUNK_MAX: Final = 625
+
+
+def auto_chunk_size(n: int, workers: int) -> int:
+    """The runs per chunk for ``chunk_size=None``.
+
+    ``n`` (one chunk, so in-process) up to ``AUTO_IN_PROCESS_MAX`` runs, otherwise ``min(625, max(50, ceil(n /
+    workers)))``: in recon 05 C2, ``ceil(n / 8)`` was best at n = 500 and 1,000, chunk 625 at n = 5,000 and 20,000.
+    """
+    if workers < 1:
+        raise ValueError("workers must be at least 1")
+    if n <= AUTO_IN_PROCESS_MAX:
+        return max(1, n)
+    return min(AUTO_CHUNK_MAX, max(AUTO_CHUNK_MIN, math.ceil(n / workers)))
 
 
 @dataclass(frozen=True)
@@ -208,7 +232,7 @@ def run_experiment(
     dt: float = 1 / 16,
     stop: float = 16.0,
     workers: int | None = None,
-    chunk_size: int = 500,
+    chunk_size: int | None = None,
     validate: bool = True,
     keep_state: bool = False,
 ) -> ExperimentResult:
@@ -217,17 +241,29 @@ def run_experiment(
     - ``outputs`` (required): row keys, extras and derived names (``aisim.catalogue()``), or ``"all"`` for every row
       key and extra. A derived name records the keys it needs.
     - ``workers`` defaults to ``min(8, os.cpu_count())``; with one worker (or one chunk) the runs execute in this
-      process, with no pool. ``chunk_size`` is the runs per ``run_batch`` call.
+      process, with no pool. ``chunk_size`` is the runs per ``run_batch`` call; None (the default) chooses it with
+      ``auto_chunk_size``, which runs up to 200 runs in this process.
     - ``validate=False`` skips the input checks (``valid`` still marks failed runs).
     - ``keep_state=True`` also returns every run's final state and stock minimums.
 
     Raises ``ValidationError`` (before any run) for invalid inputs, ``KeyError`` for unknown names and ``ValueError``
-    for an inconsistent experiment. Warns when the recorded series would need more than ``MEMORY_WARN_BYTES``.
+    for an inconsistent experiment, including a parameter that ``overrides`` or the scenario fixes and ``sample`` or
+    ``samples`` also varies. Warns when the recorded series would need more than ``MEMORY_WARN_BYTES``.
     """
     record, derived = resolve_outputs(outputs, record_every)
-    conflict = sorted(set(exp.overrides) & set(exp.sample) | set(exp.overrides) & set(_columns(exp.samples)))
+    varied = set(exp.sample) | _columns(exp.samples)
+    conflict = sorted(set(exp.overrides) & varied)
     if conflict:
         raise ValueError(f"parameter(s) both fixed and sampled: {conflict}")
+    if exp.scenario is not None and exp.scenario in SCENARIOS:
+        conflict = sorted(set(SCENARIOS[exp.scenario]) & varied)
+        if conflict:
+            raise ValueError(
+                f"parameter(s) both fixed and sampled: {conflict} (set by scenario {exp.scenario!r}); sample other "
+                "levers, or use run_scenarios to pin them per scenario"
+            )
+    if workers is not None and workers < 1:
+        raise ValueError("workers must be at least 1")
     params, set_on_top = fixed_params(exp)
     if validate and exp.samples is None and support_errors(exp.sample):
         # The values cannot be drawn: raise the support errors with every check on the fixed values.
@@ -251,7 +287,9 @@ def run_experiment(
         )
 
     scalars, tables, dgl = batch_arrays(params, sampled, n)
-    bounds = [(a, min(a + chunk_size, n)) for a in range(0, n, max(1, chunk_size))]
+    asked = _default_workers() if workers is None else workers
+    size = auto_chunk_size(n, asked) if chunk_size is None else max(1, chunk_size)
+    bounds = [(a, min(a + size, n)) for a in range(0, n, size)]
     chunks = [
         _Chunk(
             index=i,
@@ -267,7 +305,7 @@ def run_experiment(
         )
         for i, (lo, hi) in enumerate(bounds)
     ]
-    n_workers = min(_default_workers() if workers is None else workers, len(chunks))
+    n_workers = min(asked, len(chunks))
     if n_workers < 1:
         raise ValueError("workers must be at least 1")
     parts: list[_ChunkResult | None] = [None] * len(chunks)
@@ -294,22 +332,33 @@ def run_experiment(
         )
         mins = {k: np.concatenate([p.mins[k] for p in done if p.mins]) for k in done[0].mins or {}}
     meta = {
-        "experiment": exp,
+        "experiment": experiment_dict(exp),
         "seed": exp.seed,
+        "n": n,
         "outputs": outputs if isinstance(outputs, str) else list(outputs),
         "record_every": record_every,
         "dt": dt,
         "stop": stop,
         "workers": n_workers,
-        "chunk_size": chunk_size,
+        "chunk_size": size,
+        "chunk_size_auto": chunk_size is None,
         "validate": validate,
         "versions": {pkg: version(pkg) for pkg in ("ai-it-labour-sim", "numpy", "pandas", "scipy")},
         "NPY_DISABLE_CPU_FEATURES": os.environ.get("NPY_DISABLE_CPU_FEATURES"),
         "n_invalid": int((~valid).sum()),
+        **provenance(),
     }
     return ExperimentResult(
         samples=samples, years=years, series=series, valid=valid, meta=meta, final_state=final_state, mins=mins
     )
+
+
+def check_supports(exp: Experiment, dt: float = 1 / 16) -> None:
+    """Raise ``ValidationError`` if a sampled distribution's support leaves its parameter's domain, as
+    ``run_experiment`` does before drawing (with every check on the fixed values)."""
+    if exp.samples is None and support_errors(exp.sample):
+        params, set_on_top = fixed_params(exp)
+        _validate(params, set_on_top, exp, {}, dt)
 
 
 def _columns(df: pd.DataFrame | None) -> set[str]:

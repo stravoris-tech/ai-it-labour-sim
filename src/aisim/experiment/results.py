@@ -2,6 +2,8 @@
 
 - ``series[key]`` is ``(N, T)``: runs x recorded years. ``valid`` is ``BatchResult.finite`` (a finite state and no
   crash-site fault). The views (``frame``, ``long``, ``bands``, ``q3``) are built when asked for.
+- ``save`` and ``load`` keep a result on disk: an uncompressed ``.npz`` of the arrays plus a ``.json`` sidecar with the
+  meta (which is JSON-safe) and the names.
 - Percentiles use the prototype's ``pct`` exactly (``phase7_runs.py:151-153``), vectorised over years: sort along
   runs, then ``xs[f] + (xs[c] - xs[f]) * (i - f)``. ``np.quantile`` interpolates from the upper neighbour when the
   fraction is at least 0.5 and so differs from it by 1 ULP on some data (recon 04 D3).
@@ -9,10 +11,12 @@
 
 from __future__ import annotations
 
+import json
 import math
 import warnings
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -53,8 +57,9 @@ class ExperimentResult:
     - ``series``: key to ``(N, T)`` array, for every recorded key (requested, plus those a derived output needs) and
       every requested derived output.
     - ``valid``: ``(N,)``, ``BatchResult.finite``: a finite state and no crash-site fault.
-    - ``meta``: the experiment, seed, outputs, record_every, dt, stop, package versions, ``NPY_DISABLE_CPU_FEATURES``
-      and ``n_invalid``.
+    - ``meta``: JSON-safe: the experiment (``aisim.experiment.meta.experiment_dict``), seed, n, outputs,
+      record_every, dt, stop, workers and chunking, package versions, ``NPY_DISABLE_CPU_FEATURES``, ``n_invalid``,
+      ``git_commit``, ``git_dirty`` and ``platform``.
     - ``final_state`` and ``mins``: only with ``keep_state=True``.
     """
 
@@ -114,24 +119,41 @@ class ExperimentResult:
             }
         )
 
+    def single(self, key: str) -> F:
+        """``(T,)``: ``key`` of a one-run result (a deterministic run). Raises ``ValueError`` if ``n`` is not 1."""
+        if self.n != 1:
+            raise ValueError(f"single() needs a one-run result, not {self.n} runs; use bands() or series")
+        out: F = self._get(key)[0]
+        return out
+
     def ratio(self, key: str, base_year: float = 2024) -> F:
         """``(N, T)``: each run's ``key`` divided by its own value in ``base_year``."""
         return ratio_to_base(self._get(key), self.years, float(base_year))
 
     def bands(
         self,
-        key: str,
+        key: str | F,
         q: Sequence[float] = (0.1, 0.5, 0.9),
         ratio_to: float | None = None,
         years: tuple[float, float] | None = None,
     ) -> pd.DataFrame:
         """Per-year percentiles of ``key`` over the valid runs: a DataFrame of years x ``q``, with the exact ``pct``.
 
-        ``ratio_to`` divides each run by its own value in that year first (a ratio band), ``years = (start, end)``
-        keeps that window (inclusive). ``attrs["n_invalid"]`` holds the number of runs left out; a warning is issued
-        when it is above 0.
+        ``key`` is a recorded or derived name, or an ``(N, T)`` array computed from this result's series (one row per
+        run, one column per recorded year), which gets the same valid-run filter, window and ``pct``. ``ratio_to``
+        divides each run by its own value in that year first (a ratio band), ``years = (start, end)`` keeps that
+        window (inclusive). ``attrs["n_invalid"]`` holds the number of runs left out; a warning is issued when it is
+        above 0.
         """
-        a = self.ratio(key, ratio_to) if ratio_to is not None else self._get(key)
+        if isinstance(key, str):
+            a = self._get(key)
+        else:
+            a = np.asarray(key, dtype=np.float64)
+            if a.shape != (self.n, len(self.years)):
+                want = (self.n, len(self.years))
+                raise ValueError(f"an array for bands() must be (runs, years) = {want}, not {a.shape}")
+        if ratio_to is not None:
+            a = ratio_to_base(a, self.years, float(ratio_to))
         cols = np.ones(len(self.years), dtype=np.bool_)
         if years is not None:
             cols = (self.years >= years[0]) & (self.years <= years[1])
@@ -145,6 +167,62 @@ class ExperimentResult:
         if self.n_invalid:
             warnings.warn(f"bands: {self.n_invalid} invalid run(s) left out", stacklevel=2)
         return out
+
+    def save(self, path: str | Path, *, include_state: bool = True) -> Path:
+        """Write the result to ``path`` (``.npz``, uncompressed) and its ``.json`` sidecar; return the ``.npz`` path.
+
+        The arrays are ``years``, ``valid``, ``samples`` (runs x columns, float64) and one ``s<i>`` per series, in
+        order. The sidecar holds the meta, the series names, the keys requested (``meta["outputs"]``) apart from those
+        recorded only for derived outputs, and the sample columns. ``final_state`` and ``mins`` are not saved: if
+        present, this raises unless ``include_state=False``, which drops them and records ``state_dropped``.
+        """
+        path = Path(path)
+        if path.suffix != ".npz":
+            raise ValueError(f"save() writes a .npz file, not {path.name!r}")
+        has_state = self.final_state is not None or self.mins is not None
+        if has_state and include_state:
+            raise ValueError(
+                "this result holds final_state and mins (keep_state=True), which save() does not store; pass "
+                "include_state=False to save without them"
+            )
+        names = list(self.series)
+        outputs = self.meta.get("outputs")
+        requested = names if outputs == "all" or outputs is None else [k for k in names if k in set(outputs)]
+        arrays: dict[str, Any] = {
+            "years": self.years,
+            "valid": self.valid,
+            "samples": np.ascontiguousarray(self.samples.to_numpy(dtype=np.float64)).reshape(self.n, -1),
+        }
+        arrays.update({f"s{i}": self.series[k] for i, k in enumerate(names)})
+        sidecar = {
+            "format": "aisim.ExperimentResult/1",
+            "series": names,
+            "requested": requested,
+            "dependencies": [k for k in names if k not in set(requested)],
+            "sample_columns": [str(c) for c in self.samples.columns],
+            "state_dropped": has_state,
+            "meta": dict(self.meta),
+        }
+        with path.open("wb") as f:
+            np.savez(f, **arrays)
+        path.with_suffix(".json").write_text(json.dumps(sidecar, indent=2) + "\n", encoding="utf-8", newline="\n")
+        return path
+
+    @classmethod
+    def load(cls, path: str | Path) -> ExperimentResult:
+        """Read a result written by ``save``. ``meta["experiment"]`` comes back as its plain-data form."""
+        path = Path(path)
+        sidecar = json.loads(path.with_suffix(".json").read_text(encoding="utf-8"))
+        with np.load(path, allow_pickle=False) as z:
+            years = z["years"]
+            valid = z["valid"]
+            samples = pd.DataFrame(
+                z["samples"], columns=pd.Index(sidecar["sample_columns"]), index=pd.RangeIndex(len(valid), name="run")
+            )
+            series = {k: z[f"s{i}"] for i, k in enumerate(sidecar["series"])}
+        meta = dict(sidecar["meta"])
+        meta["state_dropped"] = sidecar["state_dropped"]
+        return cls(samples=samples, years=years, series=series, valid=valid, meta=meta)
 
     def q3(self) -> pd.DataFrame:
         """The Q3 outcome per run and vendor: ``collapse``, ``equilibrium`` or ``adjusting`` (NA for an invalid run).
