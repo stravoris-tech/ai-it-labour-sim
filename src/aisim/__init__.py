@@ -5,11 +5,31 @@ The ``aisim`` package is a port of the frozen Python prototype in ``reference/pr
 bit. ``run()`` runs it once; ``Params`` holds the calibrated parameters and ``SCENARIOS`` the named scenarios. The
 batched engine (``aisim.batch``) runs many at once: ``run_batch()`` advances N runs together as numpy arrays, with
 ``BatchParams`` and ``BatchState`` holding their parameters and states, and matches the scalar engine to 1e-12.
+
+The experiment API (``aisim.experiment``) asks questions with many runs: an ``Experiment`` combines a scenario, fixed
+overrides and sampled levers (``Uniform``, ``Triangular``, ``TruncNormal``, ``Choice``, ``Fixed``);
+``run_experiment()`` validates it (``ValidationError``) and runs it across cores, returning an ``ExperimentResult``
+with percentile bands, ratios to 2024, derived outputs and the Q3 test. ``domains()``, ``catalogue()`` and ``keys()``
+describe the parameters and outputs.
 """
 
 from aisim.batch.engine import BatchResult, run_batch
 from aisim.batch.params import BatchParams
 from aisim.batch.state import BatchState
+from aisim.experiment import (
+    Choice,
+    Experiment,
+    ExperimentResult,
+    Fixed,
+    Triangular,
+    TruncNormal,
+    Uniform,
+    ValidationError,
+    catalogue,
+    domains,
+    keys,
+    run_experiment,
+)
 from aisim.params import Params
 from aisim.scalar.engine import RunResult, run
 from aisim.scenarios import SCENARIOS
@@ -22,11 +42,23 @@ __all__ = [
     "BatchParams",
     "BatchResult",
     "BatchState",
+    "Choice",
+    "Experiment",
+    "ExperimentResult",
+    "Fixed",
     "Params",
     "RunResult",
     "State",
+    "Triangular",
+    "TruncNormal",
+    "Uniform",
+    "ValidationError",
     "__version__",
+    "catalogue",
+    "domains",
+    "keys",
     "load_initial_state",
     "run",
     "run_batch",
+    "run_experiment",
 ]

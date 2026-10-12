@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import math
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from aisim.dims import EMPLOYERS, LEVELS, SECTORS
 from aisim.params import Params
@@ -30,7 +30,7 @@ from aisim.scalar.consumer import consumer, drivers
 from aisim.scalar.finance import contracts, costs, spend, vendor_books, wage_targets
 from aisim.scalar.integrate import integrate, track_mins
 from aisim.scalar.labour_market import exits, hiring, pools, switching, time_to_fill, unemployment, visa_flows
-from aisim.scalar.record import record
+from aisim.scalar.record import record, record_extras
 from aisim.scalar.sourcing import option_costs, sourcing_flows, sourcing_targets
 from aisim.scalar.step import Step
 from aisim.scalar.work import work
@@ -74,11 +74,16 @@ TABLES_1D = ("SectorShare", "LOBWage", "RegDragLevel", "WTMix", "a2024", "amax",
 
 @dataclass(frozen=True, slots=True)
 class RunResult:
-    """The output of one run: recorded rows, the state at the end and the minimum of each tracked stock."""
+    """The output of one run: recorded rows, the state at the end and the minimum of each tracked stock.
+
+    ``extras`` holds the extras (``aisim.scalar.record.EXTRA_KEYS``) in the row format, one per row at the same times,
+    when ``run`` was asked for them (``extras=True``); otherwise it is empty.
+    """
 
     rows: list[dict[str, float]]
     final_state: State
     mins: dict[str, float]
+    extras: list[dict[str, float]] = field(default_factory=list)
 
 
 def tilt_sourcing_perception(st: State, GCCMomentum: float) -> None:
@@ -103,6 +108,7 @@ def run(
     stop: float = 16.0,
     record_every: float = 0.25,
     trace: Trace | None = None,
+    extras: bool = False,
     **overrides: float,
 ) -> RunResult:
     """Run the model from 2024 for ``stop`` years and return its rows, final state and stock minimums.
@@ -111,7 +117,8 @@ def run(
     changed. ``overrides`` are applied with ``Params.with_overrides``. ``ai_on=False`` switches off delivery AI,
     consumer AI, AI seat attach and AI-driven demand. A row is recorded every ``record_every`` years (rounded to whole
     steps). ``trace``, when given, is called after every section of every step with the step number, the year, the
-    section ID (``SECTION_IDS``) and the section's intermediates; it does not change the results.
+    section ID (``SECTION_IDS``) and the section's intermediates; it does not change the results. ``extras=True`` also
+    records the extras into ``RunResult.extras``; the rows are the same either way.
     """
     p = Params.baseline() if params is None else params
     if overrides:
@@ -124,6 +131,7 @@ def run(
     # ---- S0 ----
     tilt_sourcing_perception(st, pr["GCCMomentum"])
     rows: list[dict[str, float]] = []
+    extra_rows: list[dict[str, float]] = []
     n = round(stop / dt)
     rk = max(1, round(record_every / dt))
     mins: dict[str, float] = {}
@@ -232,10 +240,12 @@ def run(
         # ---- REC ----
         if step % rk == 0:
             rows.append(record(st, s, tb["SectorShare"]))
+            if extras:
+                extra_rows.append(record_extras(st, s))
         if step == n:
             break
         # ---- INT ----
         integrate(pr, st, s, dt)
         track_mins(st, mins)
         t += dt
-    return RunResult(rows=rows, final_state=st, mins=mins)
+    return RunResult(rows=rows, final_state=st, mins=mins, extras=extra_rows)
