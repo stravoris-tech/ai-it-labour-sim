@@ -9,8 +9,8 @@
   references to it, is prefixed ``c<i>-``: matplotlib's counter ids (``figure_1``, ``axes_1``) and the chart gids
   repeat between charts, and duplicate ids are invalid in one HTML document. A gid repeated within one chart (one
   per panel) gets ``-2``, ``-3`` on its later copies.
-- **Settings.** ``add_settings`` records the seed, runs, invalid runs, scenario(s), package versions, git commit and
-  dirty flag, platform and ``NPY_DISABLE_CPU_FEATURES`` from a result's meta.
+- **Settings.** ``add_settings`` records the seed, runs, invalid runs, scenario(s), the model, package versions, git
+  commit and dirty flag, platform and ``NPY_DISABLE_CPU_FEATURES`` from a result's meta.
 
 ``to_markdown_table(df)`` writes a markdown table (``DataFrame.to_markdown`` needs ``tabulate``, which is not a
 dependency). Importing this module does not import matplotlib.
@@ -169,6 +169,7 @@ def settings_rows(source: ExperimentResult | ScenarioResult | Mapping[str, Any])
         rows.append(("scenario", scenario_label(exp.get("scenario"))))
         if meta.get("pinned"):
             rows.append(("pinned levers", ", ".join(meta["pinned"])))
+    rows.append(("model", show(exp.get("model"))))
     rows.append(("invalid runs (n_invalid)", show(meta.get("n_invalid"))))
     sample = exp.get("sample") or {}
     if sample:
@@ -244,8 +245,9 @@ class Report:
         return self
 
     def add_settings(self, source: ExperimentResult | ScenarioResult | Mapping[str, Any]) -> Report:
-        """The run settings from a result or its meta: seed, runs, ``n_invalid``, scenario(s), ``perturb_from``, the
-        noise spec, package versions, git commit and dirty flag, platform and ``NPY_DISABLE_CPU_FEATURES``."""
+        """The run settings from a result or its meta: seed, runs, ``n_invalid``, scenario(s), the model,
+        ``perturb_from``, the noise spec, package versions, git commit and dirty flag, platform and
+        ``NPY_DISABLE_CPU_FEATURES``."""
         self._items.append(_Settings(settings_rows(source)))
         return self
 

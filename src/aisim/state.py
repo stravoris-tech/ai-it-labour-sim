@@ -11,6 +11,7 @@ from __future__ import annotations
 import copy
 import json
 from importlib.resources import files
+from importlib.resources.abc import Traversable
 from typing import Any, Final, TypedDict
 
 Vec = dict[str, float]
@@ -99,22 +100,30 @@ class State(TypedDict):
     """Perceived cost index of IT services."""
 
 
-MODELS: Final = ("phase7", "phase8")
-"""The named models: ``phase7`` (the prototype's calibrated model, the default) and ``phase8`` (contract pricing)."""
+BASELINE_FILES: Final[dict[str, Traversable]] = {"phase7": files("aisim").joinpath("data", "baseline.json")}
+"""The model registry: each named model's baseline file. ``phase7`` (``data/baseline.json``, the prototype's
+calibrated model) is the default and today the only model.
 
-BASELINE_FILES: Final = {"phase7": "baseline.json", "phase8": "baseline_phase8.json"}
-"""The baseline file of each model under ``aisim/data``."""
+Every check reads this mapping at call time (``models()``), so it is the one list of models. A model registered at
+runtime (the test fixture ``register_model``) is visible in this process only, so use it with ``workers=1``; a shipped
+model is a package file and works with any worker count.
+"""
+
+
+def models() -> tuple[str, ...]:
+    """The names of the registered models (``BASELINE_FILES``), read at call time."""
+    return tuple(BASELINE_FILES)
 
 
 def baseline_data(model: str = "phase7") -> dict[str, Any]:
-    """Return the parsed baseline file of ``model`` shipped with the package (a fresh object on every call).
+    """Return the parsed baseline file of ``model`` (a fresh object on every call).
 
-    ``phase7`` reads ``data/baseline.json``, ``phase8`` reads ``data/baseline_phase8.json``. Raises ``ValueError``
-    for a model not in ``MODELS``. ``Any``: parsed JSON; ``Params`` and ``State`` give it its types.
+    ``phase7`` reads ``data/baseline.json``. Raises ``ValueError`` for a model not in ``BASELINE_FILES``. ``Any``:
+    parsed JSON; ``Params`` and ``State`` give it its types.
     """
-    if model not in MODELS:
-        raise ValueError(f"unknown model {model!r}: one of {list(MODELS)}")
-    text = files("aisim").joinpath("data", BASELINE_FILES[model]).read_text(encoding="utf-8")
+    if model not in BASELINE_FILES:
+        raise ValueError(f"unknown model {model!r}: one of {list(models())}")
+    text = BASELINE_FILES[model].read_text(encoding="utf-8")
     data: dict[str, Any] = json.loads(text)
     return data
 
@@ -127,8 +136,8 @@ def copy_state(state: State) -> State:
 def load_initial_state() -> State:
     """Return the calibrated 2024 state, a fresh copy on every call.
 
-    Every model starts from this state: phase 8 adds no stock and is neutral in 2024, so its baseline file carries
-    the same ``init``.
+    Every model starts from this state: the model extensions (``aisim.params.EXTENSION_DEFAULTS``) add no stock, so a
+    model's baseline file carries the same ``init``.
     """
     init: State = baseline_data()["init"]
     return init

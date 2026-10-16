@@ -1,9 +1,10 @@
-"""The calibration tool (``tools/calibrate.py``), the phase 8 fit and the phase 8 baseline (``tools/build_phase8.py``).
+"""The calibration tool (``tools/calibrate.py``) and the model-baseline builder (``tools/build_model.py``).
 
 - The targets CSV and the tool's FIT bounds, start and optimiser settings are ``calibrate7.py``'s, read by ``ast``.
 - Driving all eleven FIT parameters from ``X0`` reproduces ``calib7.json`` (slow).
-- The committed fit records its profile, and its loss is the model's.
-- ``baseline_phase8.json`` is reproducible and differs from Phase 7 in exactly four parameters.
+- A profile fit records its grid, and its loss is the model's.
+- ``build_model.py`` on a spec and fit in ``tmp_path``: reproducible, the spec's and fit's keys are the only ones
+  that differ from Phase 7 plus ``EXTENSION_DEFAULTS``, and the tables and inits are equal.
 """
 
 from __future__ import annotations
@@ -19,7 +20,7 @@ import pytest
 from aisim import Params
 from aisim.params import EXTENSION_DEFAULTS
 from aisim.state import baseline_data
-from tools.build_phase8 import OUTPUT, ROOT, SPEC, build
+from tools.build_model import build, main
 from tools.calibrate import (
     DIFF_STEP,
     FIT_BOUNDS,
@@ -36,8 +37,8 @@ from tools.calibrate import (
 )
 from tools.reference_runner import CALIB_PATH, CODE
 
-FIT_JSON = ROOT / "tools" / "fits" / "phase8_pricing.json"
-PHASE8_KEYS = {"PassThrough", "AnnuityShare", "AnnuityAnchorW", "PriceHorizon"}
+SET = {"PassThrough": 0.75, "AnnuityShare": 0.3, "AnnuityAnchorW": 0.4}
+"""The spec values of the test model (the held slice 8 design values)."""
 
 
 KW = {"least_squares": ("x_scale", "diff_step", "max_nfev"), "run": ("record_every",)}
@@ -98,16 +99,20 @@ def test_reproduces_the_phase7_fit() -> None:
     assert out["loss"] == pytest.approx(0.00080078560551, rel=1e-9)
 
 
-def test_phase8_fit_records_its_profile() -> None:
-    fit = json.loads(FIT_JSON.read_text(encoding="utf-8"))
-    spec = json.loads(SPEC.read_text(encoding="utf-8"))
-    assert fit["model"] == "phase7" and fit["fixed"] == spec["set"] and list(fit["fitted"]) == ["PriceHorizon"]
+def test_profile_fit_records_its_grid(tmp_path: Path) -> None:
+    """``--profile`` on a small grid (3 points): the fit JSON holds the grid, bounds, the best loss, the command
+    provenance, and every target's model value; re-evaluating the fitted value gives the stored loss."""
+    fixed = {k: str(v) for k, v in SET.items()}
+    argv = ["--model", "phase7", "--profile", "PriceHorizon=6.5,7,0.25"]
+    argv += [x for k, v in fixed.items() for x in ("--fix", f"{k}={v}")]
+    fit, _ = run([*argv, "--out", str(tmp_path / "fit.json")])
+    assert fit["model"] == "phase7" and fit["fixed"] == SET and list(fit["fitted"]) == ["PriceHorizon"]
     grid = fit["profile"]["grid"]
-    assert [g["x"] for g in grid] == [float(v) for v in np.linspace(4.0, 7.0, 61)]
-    assert fit["bounds"] == {"PriceHorizon": [4.0, 7.0]}
+    assert [g["x"] for g in grid] == [6.5, 6.75, 7.0]
+    assert fit["bounds"] == {"PriceHorizon": [6.5, 7.0]}
     best = min(g["loss"] for g in grid)
     assert fit["loss"] == min(best, fit["profile"]["refine"]["loss"])
-    assert 4.0 <= fit["fitted"]["PriceHorizon"] <= 7.0
+    assert 6.5 <= fit["fitted"]["PriceHorizon"] <= 7.0
     assert fit["git_commit"] and set(fit["versions"]) == {"ai-it-labour-sim", "numpy", "scipy"}
     obj = Objective("phase7", ["PriceHorizon"], fit["fixed"], load_targets())
     r = obj.residuals(np.array([fit["fitted"]["PriceHorizon"]]))
@@ -115,31 +120,40 @@ def test_phase8_fit_records_its_profile() -> None:
     assert [t["model"] for t in fit["targets"]] == [float(v) for v in obj.values([[fit["fitted"]["PriceHorizon"]]])[0]]
 
 
-def test_build_phase8_is_reproducible() -> None:
-    assert build() == OUTPUT.read_text(encoding="utf-8")
+def write_spec(tmp_path: Path, fixed: dict[str, float] | None = None) -> Path:
+    """A spec and a minimal fit in ``tmp_path``: the spec sets ``SET``, the fit was made at ``fixed`` (default
+    ``SET``) and found ``PriceHorizon`` 7.0."""
+    fit = tmp_path / "fit.json"
+    fit.write_text(json.dumps({"fixed": SET if fixed is None else fixed, "fitted": {"PriceHorizon": 7.0}}), "utf-8")
+    spec = tmp_path / "spec.json"
+    spec.write_text(json.dumps({"model": "test", "set": SET, "fit": fit.as_posix(), "note": "test"}), "utf-8")
+    return spec
 
 
-def test_phase8_differs_from_phase7_in_exactly_four_parameters() -> None:
-    p7, p8 = Params.baseline("phase7"), Params.baseline("phase8")
-    assert list(p8.scalars) == list(p7.scalars)
-    assert list(baseline_data("phase8")["params"]) == list(p7.scalars)
-    assert {k for k in p7.scalars if p7.scalars[k] != p8.scalars[k]} == PHASE8_KEYS
-    spec = json.loads(SPEC.read_text(encoding="utf-8"))
-    fit = json.loads(FIT_JSON.read_text(encoding="utf-8"))
-    assert {k: p8.scalars[k] for k in PHASE8_KEYS} == {**spec["set"], **fit["fitted"]}
+def test_build_model_is_reproducible(tmp_path: Path) -> None:
+    spec = write_spec(tmp_path)
+    out = tmp_path / "baseline_test.json"
+    assert main(["--spec", str(spec), "--out", str(out)]) == 0
+    first = out.read_bytes()
+    assert main(["--spec", str(spec), "--out", str(out)]) == 0
+    assert out.read_bytes() == first
+    assert first.decode("utf-8") == build(spec, out)
+
+
+def test_build_model_differs_from_phase7_only_in_the_spec_and_fit_keys(tmp_path: Path) -> None:
+    spec = write_spec(tmp_path)
+    data = json.loads(build(spec))
+    p7 = Params.baseline("phase7")
+    assert list(data["params"]) == list(p7.scalars)
+    assert {k for k in p7.scalars if p7.scalars[k] != data["params"][k]} == {*SET, "PriceHorizon"}
+    assert {k: data["params"][k] for k in [*SET, "PriceHorizon"]} == {**SET, "PriceHorizon": 7.0}
     assert {k: p7.scalars[k] for k in EXTENSION_DEFAULTS} == dict(EXTENSION_DEFAULTS)
-    assert p8.tables == p7.tables
-    assert baseline_data("phase8")["init"] == baseline_data("phase7")["init"]
+    assert data["tables"] == baseline_data("phase7")["tables"]
+    assert data["init"] == baseline_data("phase7")["init"]
+    assert data["meta"]["model"] == "test" and data["meta"]["fitted"] == {"PriceHorizon": 7.0}
 
 
-def test_build_phase8_rejects_a_fit_made_at_other_values() -> None:
-    spec = json.loads(SPEC.read_text(encoding="utf-8"))
-    spec["set"]["PassThrough"] = 0.8
-    path = ROOT / "temp" / "test_build_phase8_spec.json"
-    path.parent.mkdir(exist_ok=True)  # temp/ is gitignored scratch
-    path.write_text(json.dumps(spec), encoding="utf-8")
-    try:
-        with pytest.raises(ValueError, match="the fit was made at"):
-            build(path)
-    finally:
-        path.unlink()
+def test_build_model_rejects_a_fit_made_at_other_values(tmp_path: Path) -> None:
+    spec = write_spec(tmp_path, fixed={**SET, "PassThrough": 0.8})
+    with pytest.raises(ValueError, match="the fit was made at"):
+        build(spec)

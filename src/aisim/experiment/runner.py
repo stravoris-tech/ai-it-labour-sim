@@ -53,7 +53,7 @@ from aisim.noise import Noise, Runs, active, ou_factors
 from aisim.params import Params, Table
 from aisim.perturb import Phase1, phase1, run_batch_from
 from aisim.scenarios import SCENARIOS
-from aisim.state import MODELS, load_initial_state
+from aisim.state import BASELINE_FILES, load_initial_state
 
 MEMORY_WARN_BYTES: Final = 4 * 2**30
 """Warn when the parent's estimated peak memory for the recorded series (about twice the data) exceeds this."""
@@ -98,8 +98,8 @@ class Experiment:
       ``level_2024``, ``Verif`` among them) must stay at their baseline values.
     - ``noise``: process noise by channel (``aisim.noise.CHANNELS``), off by default; it needs ``perturb_from`` and a
       ``noise_seed``. No amplitude is built in.
-    - ``model``: the named model (``aisim.state.MODELS``) whose baseline every run starts from: ``"phase7"`` (the
-      default) or ``"phase8"``.
+    - ``model``: the named model (``aisim.state.BASELINE_FILES``) whose baseline every run starts from: ``"phase7"``
+      (the default, and today the only shipped model).
     """
 
     scenario: str | None = None
@@ -456,7 +456,7 @@ def check_supports(exp: Experiment, dt: float = 1 / 16, stop: float = 16.0) -> N
 def known_model(exp: Experiment) -> Experiment:
     """``exp``, or with an unknown model ``exp`` on phase 7: validation then checks every other rule against phase 7
     and reports the unknown model in the same ``ValidationError`` (validate rule 10)."""
-    return exp if exp.model in MODELS else replace(exp, model="phase7")
+    return exp if exp.model in BASELINE_FILES else replace(exp, model="phase7")
 
 
 def _columns(df: pd.DataFrame | None) -> set[str]:

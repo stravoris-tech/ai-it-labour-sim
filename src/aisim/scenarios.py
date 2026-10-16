@@ -83,7 +83,7 @@ def tornado_levers(perturb_from: float | None = None, model: str = "phase7") -> 
     before Y, such as ``DemandGrowthLate`` (after ``LateYear``, 2026.5), would change the run before Y. All 14 remain
     with None, 13 at 2026.5 (``Verif`` out) and 12 at 2027.0 (``Verif`` and ``DemandGrowthLate`` out).
 
-    ``model`` (``aisim.state.MODELS``) is the baseline the bounds are applied to and validated against.
+    ``model`` (``aisim.state.BASELINE_FILES``) is the baseline the bounds are applied to and validated against.
     """
     from aisim.experiment.sampling import Uniform
     from aisim.experiment.validate import ValidationError, validate

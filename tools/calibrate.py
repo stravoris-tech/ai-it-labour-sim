@@ -23,7 +23,7 @@ Usage (from the repository root):
     uv run python tools/calibrate.py --model phase7 --fit p,q,Verif,GCCAppealEnd,JuniorCut,GCCMomentum,qC,pAtt,\
 PriceHorizon,SeekerExitRate,AICost2024 --out temp/fit.json
     uv run python tools/calibrate.py --model phase7 --profile PriceHorizon=4,7,0.05 --fix PassThrough=0.75 \
---fix AnnuityShare=0.3 --fix AnnuityAnchorW=0.4 --out tools/fits/phase8_pricing.json
+--fix AnnuityShare=0.3 --fix AnnuityAnchorW=0.4 --out temp/profile.json
 """
 
 from __future__ import annotations

@@ -117,8 +117,9 @@ class BatchParams:
     def baseline(cls, n: int, *, model: Override = "phase7", **overrides: Override) -> BatchParams:
         """The calibrated baseline of ``model`` for ``n`` runs, with ``overrides`` (a value for all or one per run).
 
-        ``model`` is a name in ``aisim.state.MODELS``. It is typed ``Override`` (which admits ``str``) only so that a
-        ``**overrides`` mapping of floats type-checks against it; anything but a model name raises ``ValueError``.
+        ``model`` is a name in ``aisim.state.BASELINE_FILES``. It is typed ``Override`` (which admits ``str``) only so
+        that a ``**overrides`` mapping of floats type-checks against it; anything but a model name raises
+        ``ValueError``.
 
         Raises ``KeyError`` for an unknown name, ``ValueError`` for an unknown model, for a per-run sequence that is
         not of length ``n`` and for ``None`` on any name but ``DemandGrowthLate``. Recomputes ``AdoptC0`` per run as
@@ -127,7 +128,7 @@ class BatchParams:
         if n < 1:
             raise ValueError("n must be at least 1")
         if not isinstance(model, str):
-            raise ValueError(f"unknown model {model!r}: a name in aisim.state.MODELS")
+            raise ValueError(f"unknown model {model!r}: a name in aisim.state.BASELINE_FILES")
         base = Params.baseline(model)
         unknown = sorted(k for k in overrides if k not in base.scalars)
         if unknown:

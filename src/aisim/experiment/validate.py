@@ -49,9 +49,9 @@ raises one ``ValidationError`` listing every violation. Rules (recon 04 B1-B3; a
 
 9. **Noise** (slice 6): known channels, ``sigma`` in [0, 0.5], ``tau`` positive and ``>= dt``; with any ``sigma > 0``
    a ``perturb_from`` (no noise in the calibration period) and a ``noise_seed``.
-10. **Model** (slice 8): ``model`` is in ``aisim.state.MODELS``. The rules that compare with the baseline (5's C8
-    ratios and 8) use that model's baseline; with an unknown model they use phase 7's, so that one
-    ``ValidationError`` still lists every other violation.
+10. **Model** (slice 8): ``model`` is in ``aisim.state.BASELINE_FILES`` (read at call time). The rules that compare
+    with the baseline (5's C8 ratios and 8) use that model's baseline; with an unknown model they use phase 7's, so
+    that one ``ValidationError`` still lists every other violation.
 """
 
 from __future__ import annotations
@@ -75,7 +75,7 @@ from aisim.experiment.metadata import domains
 from aisim.experiment.sampling import Distribution, support_violations
 from aisim.noise import CHANNELS, Noise
 from aisim.params import Params
-from aisim.state import MODELS, State, load_initial_state
+from aisim.state import BASELINE_FILES, State, load_initial_state, models
 
 TOL: Final = 1e-9
 MAX_RUNS_SHOWN: Final = 10
@@ -370,9 +370,9 @@ def validate(
         v = _Values(params, sampled or {})
     sampled_names = [*(sample or {}), *(n for n in v.sampled if n not in (sample or {}))]
     out: list[Violation] = list(support)
-    known = model if model in MODELS else "phase7"
+    known = model if model in BASELINE_FILES else "phase7"
     if known != model:
-        out.append(Violation("model", "model", repr(model), f"one of {list(MODELS)}", "aisim.state.MODELS"))
+        out.append(Violation("model", "model", repr(model), f"one of {list(models())}", "aisim.state.BASELINE_FILES"))
     out += _domain_violations(v)
     out += _no_effect_violations(v, overrides or {}, tables or {}, sampled_names)
     out += _joint_violations(v, st)

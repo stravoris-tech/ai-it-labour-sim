@@ -1,4 +1,4 @@
-"""The phase 8 pricing mechanism (slice 8, E2a) and the ``PNew`` extras, in both engines.
+"""The E2a annuity pricing term (slice 8) and the ``PNew`` extras, in both engines.
 
 ``PNew_TM = ((1 - AnnuityShare) + AnnuityShare x Anchor ** AnnuityAnchorW) x (1 - Disc)``; FP, MS, OB and SA prices
 are unchanged. There is no prototype for it, so the scalar engine is the oracle and batch-scalar parity the

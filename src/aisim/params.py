@@ -3,8 +3,8 @@
 ``Params.baseline()`` is the calibrated Phase 7 parameter set from ``data/baseline.json``: the scalars exactly as
 ``phase7_runs.py`` assembles them from ``calib7.json`` and the module ``P``, and the module-level tables of
 ``phase7_sim.py`` (``SEC6``, ``WT6``, ``EMPS6``, ``MIX0``, ``SRC0``), plus the model extensions at their neutral
-``EXTENSION_DEFAULTS``. ``Params.baseline("phase8")`` is the phase 8 set from ``data/baseline_phase8.json``.
-``data/parameters.csv`` classifies every scalar.
+``EXTENSION_DEFAULTS``. ``Params.baseline(model)`` reads another registered model's file
+(``aisim.state.BASELINE_FILES``; today only ``phase7``). ``data/parameters.csv`` classifies every scalar.
 
 Two conventions differ from the prototype:
 
@@ -32,7 +32,7 @@ EXTENSION_DEFAULTS: Final[Mapping[str, float]] = MappingProxyType({"AnnuityShare
 
 They are not in ``data/baseline.json`` (whose bytes stay the prototype's); ``Params.baseline`` merges them in.
 ``AnnuityShare`` is the annuity share of new TM signings and ``AnnuityAnchorW`` the weight of the client price anchor
-on their price (phase 8, E2a).
+on their price (the E2a annuity pricing term, slice 8).
 """
 
 NULLABLE = frozenset({"DemandGrowthLate"})
@@ -95,10 +95,10 @@ class Params:
 
     @classmethod
     def baseline(cls, model: str = "phase7") -> Params:
-        """Return the calibrated baseline parameters of ``model`` (``aisim.state.MODELS``).
+        """Return the calibrated baseline parameters of ``model`` (``aisim.state.BASELINE_FILES``).
 
-        ``phase7`` is ``data/baseline.json``, ``phase8`` is ``data/baseline_phase8.json``. ``EXTENSION_DEFAULTS``
-        fill any extension the file does not carry, after its own scalars. Raises ``ValueError`` for an unknown model.
+        ``phase7`` is ``data/baseline.json``. ``EXTENSION_DEFAULTS`` fill any extension the file does not carry,
+        after its own scalars. Raises ``ValueError`` for an unknown model.
         """
         data = baseline_data(model)
         scalars = dict(data["params"])
