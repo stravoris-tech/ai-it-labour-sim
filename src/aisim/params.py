@@ -2,7 +2,9 @@
 
 ``Params.baseline()`` is the calibrated Phase 7 parameter set from ``data/baseline.json``: the scalars exactly as
 ``phase7_runs.py`` assembles them from ``calib7.json`` and the module ``P``, and the module-level tables of
-``phase7_sim.py`` (``SEC6``, ``WT6``, ``EMPS6``, ``MIX0``, ``SRC0``). ``data/parameters.csv`` classifies every scalar.
+``phase7_sim.py`` (``SEC6``, ``WT6``, ``EMPS6``, ``MIX0``, ``SRC0``), plus the model extensions at their neutral
+``EXTENSION_DEFAULTS``. ``Params.baseline("phase8")`` is the phase 8 set from ``data/baseline_phase8.json``.
+``data/parameters.csv`` classifies every scalar.
 
 Two conventions differ from the prototype:
 
@@ -17,13 +19,21 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 from types import MappingProxyType
-from typing import Any, Literal, overload
+from typing import Any, Final, Literal, overload
 
 from aisim.state import baseline_data
 
 Table1D = Mapping[str, float]
 Table2D = Mapping[str, Mapping[str, float]]
 Table = Table1D | Table2D
+
+EXTENSION_DEFAULTS: Final[Mapping[str, float]] = MappingProxyType({"AnnuityShare": 0.0, "AnnuityAnchorW": 0.0})
+"""Model extensions: parameters the prototype does not have, at values that reproduce Phase 7 bit for bit.
+
+They are not in ``data/baseline.json`` (whose bytes stay the prototype's); ``Params.baseline`` merges them in.
+``AnnuityShare`` is the annuity share of new TM signings and ``AnnuityAnchorW`` the weight of the client price anchor
+on their price (phase 8, E2a).
+"""
 
 NULLABLE = frozenset({"DemandGrowthLate"})
 """The only scalar that may be ``None``."""
@@ -84,10 +94,17 @@ class Params:
         object.__setattr__(self, "tables", MappingProxyType(tables))
 
     @classmethod
-    def baseline(cls) -> Params:
-        """Return the calibrated baseline parameters shipped in ``data/baseline.json``."""
-        data = baseline_data()
-        return cls(scalars=data["params"], tables=data["tables"])
+    def baseline(cls, model: str = "phase7") -> Params:
+        """Return the calibrated baseline parameters of ``model`` (``aisim.state.MODELS``).
+
+        ``phase7`` is ``data/baseline.json``, ``phase8`` is ``data/baseline_phase8.json``. ``EXTENSION_DEFAULTS``
+        fill any extension the file does not carry, after its own scalars. Raises ``ValueError`` for an unknown model.
+        """
+        data = baseline_data(model)
+        scalars = dict(data["params"])
+        for name, value in EXTENSION_DEFAULTS.items():
+            scalars.setdefault(name, value)
+        return cls(scalars=scalars, tables=data["tables"])
 
     def with_overrides(self, **scalars: float | None) -> Params:
         """Return a new ``Params`` with the given scalars replaced.

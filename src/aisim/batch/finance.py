@@ -192,6 +192,9 @@ def contracts(
     Anchor = pw(1 / (CP * (1 + pr["PriceHorizon"][:, None] * PU)), pr["PassThrough"][:, None])
     if nz is not None and "anchor" in nz:
         Anchor = Anchor * nz["anchor"][:, None]
+    # Phase 8 (E2a), as the scalar engine: exactly 1.0 at AnnuityShare 0.
+    a_ann = pr["AnnuityShare"][:, None]
+    EffMult_TM = (1 - a_ann) + a_ann * pw(Anchor, pr["AnnuityAnchorW"][:, None])
     Vi = st.Viab.copy()
     nm = pr.fam("NormalMargin_", VENDORS)
     dev = Vi - nm
@@ -212,6 +215,7 @@ def contracts(
     AvgDur = np.where(NV > 1e-12, ND / NV, Dnew)
     Disc_k = (1 - Disc)[:, :, None]
     PNew = np.where(EFFORT_TYPE[None, None, :], Disc_k, Anchor[:, :, None] * Disc_k)
+    PNew[:, :, TYPE_IX["TM"]] = EffMult_TM * Disc_k[:, :, 0]
     AvgP = np.where(NV > 1e-12, NP / NV, PNew)
     ExpLeg = Leg / BaseDur
     ExpNew = NV / AvgDur

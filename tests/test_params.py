@@ -54,7 +54,7 @@ def csv_rows() -> list[dict[str, str]]:
 
 def test_baseline_shape() -> None:
     p = Params.baseline()
-    assert len(p.scalars) == 330
+    assert len(p.scalars) == 332
     assert set(p.tables) == set(TABLE_KEYS) | {"Mix0", "Src0"}
     for name, keys in TABLE_KEYS.items():
         assert tuple(p.table(name)) == keys, name
@@ -68,7 +68,7 @@ def test_baseline_shape() -> None:
 def test_baseline_values_equal_calibration() -> None:
     p = Params.baseline()
     calib = load_json(CALIB_PATH)["params"]
-    assert set(p.scalars) - set(calib) == {"DemandGrowthLate", "LateYear"}
+    assert set(p.scalars) - set(calib) == {"DemandGrowthLate", "LateYear", "AnnuityShare", "AnnuityAnchorW"}
     for k, v in calib.items():
         assert p.scalars[k] == v, k
     assert p.scalars["DemandGrowthLate"] is None
@@ -131,12 +131,12 @@ def test_with_table_checks_keys() -> None:
 
 def test_parameters_csv() -> None:
     rows = csv_rows()
-    assert len(rows) == 330
+    assert len(rows) == 332
     assert list(rows[0]) == ["name", "value", "kind", "lever", "fitted"]
     assert {r["name"] for r in rows} == set(Params.baseline().scalars)
     assert {r["name"] for r in rows if r["fitted"] == "yes"} == FITTED
     assert {r["name"] for r in rows if r["kind"] == "unused"} == UNUSED
-    assert {r["kind"] for r in rows} == {"calibrated", "structural", "unused"}
+    assert {r["kind"] for r in rows} == {"calibrated", "structural", "unused", "extension"}
     assert sum(r["kind"] == "calibrated" for r in rows) == 99
     results = load_json(ROOT / "reference" / "goldens" / "phase7_results.json")
     levers = {k for s in results["scenarios"].values() for k in s["over"]} | {t["param"] for t in results["tornado"]}

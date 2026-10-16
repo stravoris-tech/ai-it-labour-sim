@@ -193,7 +193,7 @@ def test_auto_chunking_is_bit_identical(n: int) -> None:
 # ---- 4. keys() by dimension and dims() -------------------------------------------------------------------------------
 
 F1 = {
-    "type;vendor": 75,
+    "type;vendor": 90,
     "sector": 70,
     "employer;sector": 70,
     "vendor": 66,
@@ -217,7 +217,7 @@ def test_dimension_combinations() -> None:
 
 def test_keys_filter() -> None:
     assert keys(family="contract mix (book)", vendor="OIT") == [f"Mix_OIT_{t}" for t in ("FP", "TM", "MS", "SA", "OB")]
-    assert len(keys(vendor="OIT", type="FP")) == 75 // 15
+    assert len(keys(vendor="OIT", type="FP")) == 90 // 15
     assert len(keys(sector="FIN")) == (70 + 70) // 7
     assert keys() == list(pd.read_csv(Path("src/aisim/data/catalogue.csv"), dtype=str)["key"])
     assert dims("Mix_OIT_FP") == {"vendor": "OIT", "type": "FP"} and dims("HeadTotal") == {}

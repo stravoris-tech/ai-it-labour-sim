@@ -74,7 +74,7 @@ TORNADO: Final = _tornado()
 """The 14 tornado parameters: ``(name, low, high, label)``."""
 
 
-def tornado_levers(perturb_from: float | None = None) -> dict[str, Uniform]:
+def tornado_levers(perturb_from: float | None = None, model: str = "phase7") -> dict[str, Uniform]:
     """The ``TORNADO`` ranges as ``{name: Uniform(low, high)}``, in ``TORNADO`` order.
 
     **The lever set depends on the perturb year.** With ``perturb_from`` set, a lever is dropped when its lower or upper
@@ -82,17 +82,21 @@ def tornado_levers(perturb_from: float | None = None) -> dict[str, Uniform]:
     and stop = 16): a 2024 level such as ``Verif`` cannot act from a later year, and a lever whose window starts
     before Y, such as ``DemandGrowthLate`` (after ``LateYear``, 2026.5), would change the run before Y. All 14 remain
     with None, 13 at 2026.5 (``Verif`` out) and 12 at 2027.0 (``Verif`` and ``DemandGrowthLate`` out).
+
+    ``model`` (``aisim.state.MODELS``) is the baseline the bounds are applied to and validated against.
     """
     from aisim.experiment.sampling import Uniform
     from aisim.experiment.validate import ValidationError, validate
 
     out: dict[str, Uniform] = {}
-    base = Params.baseline()
+    base = Params.baseline(model)
     for name, lo, hi, _ in TORNADO:
         if perturb_from is not None:
             try:
                 for v in (lo, hi):
-                    validate(base.with_overrides(**{name: v}), overrides={name: v}, perturb_from=perturb_from)
+                    validate(
+                        base.with_overrides(**{name: v}), overrides={name: v}, perturb_from=perturb_from, model=model
+                    )
             except ValidationError:
                 continue
         out[name] = Uniform(lo, hi)

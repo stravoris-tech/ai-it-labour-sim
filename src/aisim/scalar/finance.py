@@ -201,6 +201,9 @@ def contracts(
         Anchor = (1 / (CP * (1 + pr["PriceHorizon"] * PU))) ** pr["PassThrough"]  # clients price in the trend
         if nz is not None and "anchor" in nz:
             Anchor = Anchor * nz["anchor"]
+        # Phase 8 (E2a): the annuity share of new TM signings carries Anchor ** AnnuityAnchorW. At AnnuityShare 0 this
+        # is exactly 1.0 (Anchor ** w is finite, 0 x it is 0.0), so PNew_TM is Phase 7's bit for bit.
+        EffMult_TM = (1 - pr["AnnuityShare"]) + pr["AnnuityShare"] * Anchor ** pr["AnnuityAnchorW"]
         Vi = st["Viab"][v]
         nm = pr["NormalMargin_" + v]
         dev = Vi - nm
@@ -219,7 +222,10 @@ def contracts(
             for k in TYPES
         }
         AvgDur = {k: (ND[k] / NV[k] if NV[k] > 1e-12 else Dnew[k]) for k in TYPES}
-        PNew = {k: ((1 - Disc) if k in EFFORT else Anchor * (1 - Disc)) for k in TYPES}
+        PNew = {
+            k: (EffMult_TM * (1 - Disc) if k == "TM" else (1 - Disc) if k in EFFORT else Anchor * (1 - Disc))
+            for k in TYPES
+        }
         AvgP = {k: (NP[k] / NV[k] if NV[k] > 1e-12 else PNew[k]) for k in TYPES}
         ExpLeg = {k: Leg[k] / pr["BaseDur_" + k] for k in TYPES}
         ExpNew = {k: NV[k] / AvgDur[k] for k in TYPES}

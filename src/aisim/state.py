@@ -11,7 +11,7 @@ from __future__ import annotations
 import copy
 import json
 from importlib.resources import files
-from typing import Any, TypedDict
+from typing import Any, Final, TypedDict
 
 Vec = dict[str, float]
 """A quantity indexed by one dimension."""
@@ -99,12 +99,22 @@ class State(TypedDict):
     """Perceived cost index of IT services."""
 
 
-def baseline_data() -> dict[str, Any]:
-    """Return the parsed ``data/baseline.json`` shipped with the package (a fresh object on every call).
+MODELS: Final = ("phase7", "phase8")
+"""The named models: ``phase7`` (the prototype's calibrated model, the default) and ``phase8`` (contract pricing)."""
 
-    ``Any``: parsed JSON; ``Params`` and ``State`` give it its types.
+BASELINE_FILES: Final = {"phase7": "baseline.json", "phase8": "baseline_phase8.json"}
+"""The baseline file of each model under ``aisim/data``."""
+
+
+def baseline_data(model: str = "phase7") -> dict[str, Any]:
+    """Return the parsed baseline file of ``model`` shipped with the package (a fresh object on every call).
+
+    ``phase7`` reads ``data/baseline.json``, ``phase8`` reads ``data/baseline_phase8.json``. Raises ``ValueError``
+    for a model not in ``MODELS``. ``Any``: parsed JSON; ``Params`` and ``State`` give it its types.
     """
-    text = files("aisim").joinpath("data", "baseline.json").read_text(encoding="utf-8")
+    if model not in MODELS:
+        raise ValueError(f"unknown model {model!r}: one of {list(MODELS)}")
+    text = files("aisim").joinpath("data", BASELINE_FILES[model]).read_text(encoding="utf-8")
     data: dict[str, Any] = json.loads(text)
     return data
 
@@ -115,6 +125,10 @@ def copy_state(state: State) -> State:
 
 
 def load_initial_state() -> State:
-    """Return the calibrated 2024 state, a fresh copy on every call."""
+    """Return the calibrated 2024 state, a fresh copy on every call.
+
+    Every model starts from this state: phase 8 adds no stock and is neutral in 2024, so its baseline file carries
+    the same ``init``.
+    """
     init: State = baseline_data()["init"]
     return init

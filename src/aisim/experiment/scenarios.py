@@ -27,7 +27,7 @@ import pandas as pd
 
 from aisim.experiment.meta import experiment_dict
 from aisim.experiment.results import ExperimentResult
-from aisim.experiment.runner import Experiment, check_supports, design, execute, fixed_params
+from aisim.experiment.runner import Experiment, check_supports, design, execute, fixed_params, known_model
 from aisim.scenarios import SCENARIOS
 
 BASELINE_LABEL = "Baseline"
@@ -119,10 +119,11 @@ def run_scenarios(
     if validate:
         check_supports(exp, dt, stop)
 
-    base = design(exp)
+    known = known_model(exp) if validate else exp
+    base = design(known)
     n = len(base)
     sampled = [str(c) for c in base.columns]
-    fixed, _ = fixed_params(exp)
+    fixed, _ = fixed_params(known)
     # Scenario parameters that are not sampled become columns too: the scenario's value in its block, the fixed value
     # (baseline, or an override's) elsewhere. NaN in DemandGrowthLate means None.
     extra: list[str] = []
@@ -154,6 +155,7 @@ def run_scenarios(
             perturb_from=exp.perturb_from,
             noise=exp.noise,
             noise_seed=exp.noise_seed,
+            model=exp.model,
         ),
         outputs=outputs,
         record_every=record_every,

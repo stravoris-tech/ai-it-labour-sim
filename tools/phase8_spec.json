@@ -1,0 +1,10 @@
+{
+ "model": "phase8",
+ "set": {
+  "PassThrough": 0.75,
+  "AnnuityShare": 0.3,
+  "AnnuityAnchorW": 0.4
+ },
+ "fit": "tools/fits/phase8_pricing.json",
+ "note": "Slice 8 decisions 2 and 4: PassThrough 0.75 (vendors concede about 70-80% of client asks), AnnuityShare 0.3 and AnnuityAnchorW 0.4 (30-50% of the fixed-price anchor on annuity work), and PriceHorizon from the pricing-only fit in [4, 7]. Every other parameter keeps its Phase 7 value."
+}

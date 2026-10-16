@@ -35,7 +35,7 @@ def test_domains_cover_every_scalar_and_table_entry_in_order() -> None:
         "level_2024",
     ]
     assert list(df["name"]) == expect
-    assert len(df) == 436
+    assert len(df) == 438
 
 
 def test_domain_classes_and_bounds() -> None:
@@ -83,7 +83,7 @@ def test_catalogue_keys_kinds_and_units() -> None:
     assert list(df.columns) == ["key", "family", "dims", "unit", "description", "spec_ref", "kind", "unit_inferred"]
     assert list(df["key"]) == [*ROW_KEYS, *EXTRA_KEYS, *DERIVED]
     assert list(df["kind"]) == ["row"] * 317 + ["extra"] * len(EXTRA_KEYS) + ["derived"] * len(DERIVED)
-    assert len(EXTRA_KEYS) == 81
+    assert len(EXTRA_KEYS) == 96
     assert int(df["unit_inferred"].sum()) == 46
     assert (df["unit"] != "").all()
     derived = df.set_index("key").loc[list(DERIVED)]
