@@ -27,12 +27,15 @@ Table1D = Mapping[str, float]
 Table2D = Mapping[str, Mapping[str, float]]
 Table = Table1D | Table2D
 
-EXTENSION_DEFAULTS: Final[Mapping[str, float]] = MappingProxyType({"AnnuityShare": 0.0, "AnnuityAnchorW": 0.0})
+EXTENSION_DEFAULTS: Final[Mapping[str, float]] = MappingProxyType(
+    {"AnnuityShare": 0.0, "AnnuityAnchorW": 0.0, "OpeningsContinuous": 0.0}
+)
 """Model extensions: parameters the prototype does not have, at values that reproduce Phase 7 bit for bit.
 
 They are not in ``data/baseline.json`` (whose bytes stay the prototype's); ``Params.baseline`` merges them in.
 ``AnnuityShare`` is the annuity share of new TM signings and ``AnnuityAnchorW`` the weight of the client price anchor
-on their price (the E2a annuity pricing term, slice 8).
+on their price (the E2a annuity pricing term, slice 8). ``OpeningsContinuous`` is a switch (on when ``>= 0.5``): new
+openings follow one formula for every surplus, so the flow is continuous where the surplus changes sign (slice 9).
 """
 
 NULLABLE = frozenset({"DemandGrowthLate"})

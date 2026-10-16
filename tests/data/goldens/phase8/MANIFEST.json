@@ -1,0 +1,28 @@
+{
+ "model": "phase8",
+ "baseline": {
+  "path": "src/aisim/data/baseline_phase8.json",
+  "sha256": "97bfca78cd4c78879ccfdf14893136bba6ea419b5ae386fa665bedf4c6456ac0"
+ },
+ "goldens": {
+  "base.json": "b8edffc274f49c7cea13dc5efe1f60adfd151e7441c266431a74383ffdf6bf2a",
+  "ai_off.json": "a3ce2d1799c71610facf6ae4a6f01d6751638d499c046039ff9184c61a722b40",
+  "results.json": "928f4648ed335f55898f2b1f4e2d3004f51e996b5829c32bde734c2c910f2354"
+ },
+ "environment": {
+  "python_version": "3.12.10",
+  "python_implementation": "CPython",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "machine": "ARM64",
+  "uv_version": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-pc-windows-msvc)"
+ },
+ "generated_utc": "2026-10-16T23:27:46+00:00",
+ "command": "uv run python tools/generate_goldens_phase8.py",
+ "git_commit": "87dbf0522e2bba6a8161266c3bb82673c2ff7ad5",
+ "git_dirty": true,
+ "wall_time_s": {
+  "base": 0.28,
+  "ai_off": 0.282,
+  "results": 72.29
+ }
+}

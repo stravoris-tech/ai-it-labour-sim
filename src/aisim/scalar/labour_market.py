@@ -186,6 +186,9 @@ def exits(
     - In shortfall, new openings replace the net loss plus the shortfall not already covered by vacancies, over
       ``HireAdjTime``. In surplus there are no openings, and layoffs remove the surplus over ``LayoffAdjTime`` net of
       attrition, no faster than ``MinLayoffTime`` allows.
+    - With the extension ``OpeningsContinuous`` on (``>= 0.5``), openings follow the shortfall formula for every
+      surplus, so they taper to 0 as overstaffing grows instead of dropping to 0 at the sign change. Layoffs are
+      unchanged.
     - Onboarding staff become productive over ``OnboardTime``.
     """
     H, O, V = st["H"], st["O"], st["V"]
@@ -200,7 +203,13 @@ def exits(
             visa_out = (expiry[l] + conv[l]) if u == "OV" else 0.0
             netloss = quits + leave + retire + promo_out + sw[u][l]["out"] + visa_out
             sp = surplus[u][l]
-            if sp <= 0:
+            if pr["OpeningsContinuous"] >= 0.5:
+                openings = max(0.0, netloss + (-sp - V[u][l]) / pr["HireAdjTime"])
+                if sp <= 0:
+                    layoffs = 0.0
+                else:
+                    layoffs = min(max(0.0, sp / pr["LayoffAdjTime"] - netloss), H[u][l] / pr["MinLayoffTime"])
+            elif sp <= 0:
                 openings = max(0.0, netloss + (-sp - V[u][l]) / pr["HireAdjTime"])
                 layoffs = 0.0
             else:

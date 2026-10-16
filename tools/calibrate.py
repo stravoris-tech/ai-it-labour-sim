@@ -15,6 +15,22 @@ Two modes:
   the grid ``lo, lo + step, ..., hi`` in one batch, then refined between the best grid point's neighbours with
   ``scipy.optimize.minimize_scalar(method="bounded")``. The fit JSON records the grid.
 
+**Multi-start** (least squares only). The defaults keep ``calibrate7.py``'s single fit from ``X0``; the flags add:
+
+- ``--starts N``: N Latin-hypercube starts (``scipy.stats.qmc.LatinHypercube`` with ``rng`` one
+  ``np.random.default_rng(--seed)``), scaled to the fitted parameters' bounds after ``--bounds``. N = 0 (the default)
+  is the single start from ``X0``.
+- ``--warm FIT.json``: one more start, last, from that fit JSON's top-level ``fitted`` (clipped to the bounds).
+- ``--seed`` (default 20261016), ``--tol`` (``xtol = ftol = gtol``; default scipy's) and ``--diff-step`` (default
+  ``DIFF_STEP``).
+- ``--procs P``: the starts run in up to P spawned processes, one start each (``fit_one``, a top-level function); the
+  default 1 runs them in-process. Each start is the same computation wherever it runs, so the result does not
+  depend on P. A model registered at runtime exists in-process only: use ``--procs 1`` for it.
+
+The fit JSON holds every start's record (``starts``), the seed and the settings, and the best start's ``fitted``,
+loss and target values at top level (the format ``tools/build_model.py`` reads). ``near_starts`` lists the starts
+within 5% of the best loss.
+
 Every run starts from the model's baseline (``--model``), with ``--fix name=value`` overrides, from the shipped 2024
 state; no fitted parameter enters the 2024 calibration (``calibrate7_ss``), so this state is the fit's initial state.
 
@@ -24,6 +40,9 @@ Usage (from the repository root):
 PriceHorizon,SeekerExitRate,AICost2024 --out temp/fit.json
     uv run python tools/calibrate.py --model phase7 --profile PriceHorizon=4,7,0.05 --fix PassThrough=0.75 \
 --fix AnnuityShare=0.3 --fix AnnuityAnchorW=0.4 --out temp/profile.json
+    uv run python tools/calibrate.py --model phase7 --fit p,q,Verif,GCCAppealEnd,JuniorCut,GCCMomentum,qC,pAtt,\
+PriceHorizon,SeekerExitRate,AICost2024 --starts 32 --seed 20261016 --tol 1e-10 --diff-step 1e-3 \
+--bounds PriceHorizon=0,7 --fix OpeningsContinuous=1 --procs 12 --out temp/fit_ms.json
 """
 
 from __future__ import annotations
@@ -32,7 +51,9 @@ import argparse
 import csv
 import json
 import sys
+import time
 from collections.abc import Callable, Iterable, Mapping, Sequence
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
 from importlib.metadata import version
 from pathlib import Path
@@ -40,6 +61,7 @@ from typing import Any, Final, cast
 
 import numpy as np
 from scipy.optimize import least_squares, minimize_scalar
+from scipy.stats import qmc
 
 # Run as a script, Python puts tools/ on sys.path; the repository root is needed to import the tools package.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -76,6 +98,12 @@ X_SCALE: Final = (0.01, 0.1, 0.1, 0.5, 0.1, 0.5, 0.05, 0.005, 1.0, 0.1, 5000.0)
 
 DIFF_STEP: Final = 1e-2
 MAX_NFEV: Final = 300
+SCIPY_TOL: Final = 1e-8
+"""``least_squares``'s default ``xtol``, ``ftol`` and ``gtol``, the tolerances ``calibrate7.py`` runs with."""
+SEED: Final = 20261016
+"""The default ``--seed`` of the multi-start Latin hypercube."""
+NEAR: Final = 1.05
+"""A start is near the best when its loss is at most 5% above the best loss."""
 STOP: Final = 6.5
 """``calibrate7.py`` runs to 2030.5 with rows every quarter year."""
 RECORD_EVERY: Final = 0.25
@@ -208,17 +236,29 @@ class Objective:
 
 
 def fit_least_squares(
-    obj: Objective, x0: Sequence[float], lower: Sequence[float], upper: Sequence[float], x_scale: Sequence[float]
+    obj: Objective,
+    x0: Sequence[float],
+    lower: Sequence[float],
+    upper: Sequence[float],
+    x_scale: Sequence[float],
+    *,
+    tol: float | None = None,
+    diff_step: float = DIFF_STEP,
 ) -> dict[str, Any]:
-    """``calibrate7.py``'s ``least_squares`` call. ``Any``: JSON-ready values."""
+    """``calibrate7.py``'s ``least_squares`` call; ``tol``, when given, sets ``xtol``, ``ftol`` and ``gtol`` (otherwise
+    scipy's defaults, as ``calibrate7.py``). ``Any``: JSON-ready values."""
+    t = SCIPY_TOL if tol is None else tol
     res = least_squares(
         obj.residuals,
         np.array(x0, dtype=np.float64),
         bounds=(list(lower), list(upper)),
         x_scale=np.array(x_scale, dtype=np.float64),
-        diff_step=np.full(len(x0), DIFF_STEP),
+        diff_step=np.full(len(x0), diff_step),
         max_nfev=MAX_NFEV,
         workers=obj.map,
+        xtol=t,
+        ftol=t,
+        gtol=t,
     )
     return {
         "x": [float(v) for v in res.x],
@@ -228,6 +268,47 @@ def fit_least_squares(
         "status": int(res.status),
         "message": str(res.message),
     }
+
+
+def lhs_starts(n: int, seed: int, lower: Sequence[float], upper: Sequence[float]) -> list[list[float]]:
+    """``n`` Latin-hypercube points from one ``np.random.default_rng(seed)``, scaled to ``[lower, upper]``."""
+    u = qmc.LatinHypercube(d=len(lower), rng=np.random.default_rng(seed)).random(n)
+    lo, hi = np.array(lower, dtype=np.float64), np.array(upper, dtype=np.float64)
+    return [[float(v) for v in lo + row * (hi - lo)] for row in u]
+
+
+def fit_one(job: Mapping[str, Any]) -> dict[str, Any]:
+    """One start's least-squares fit: top level, so spawned processes can run it. ``Any``: JSON-ready values."""
+    t0 = time.perf_counter()
+    obj = Objective(job["model"], job["names"], job["fixed"], load_targets())
+    result = fit_least_squares(
+        obj, job["x0"], job["lower"], job["upper"], job["x_scale"], tol=job["tol"], diff_step=job["diff_step"]
+    )
+    return {
+        "start": job["start"],
+        "x0": list(job["x0"]),
+        **result,
+        "runs": obj.runs,
+        "batches": obj.batches,
+        "seconds": time.perf_counter() - t0,
+    }
+
+
+def fit_starts(jobs: Sequence[Mapping[str, Any]], procs: int) -> list[dict[str, Any]]:
+    """Every start's fit, in start order: in-process for ``procs`` 1, else one start per spawned process."""
+    if procs <= 1 or len(jobs) == 1:
+        return [fit_one(j) for j in jobs]
+    with ProcessPoolExecutor(max_workers=min(procs, len(jobs))) as ex:
+        return list(ex.map(fit_one, jobs))
+
+
+def warm_start(path: Path, names: Sequence[str], lower: Sequence[float], upper: Sequence[float]) -> list[float]:
+    """The ``fitted`` values of the fit JSON at ``path`` for ``names``, clipped to the bounds."""
+    fitted: dict[str, float] = json.loads(path.read_text(encoding="utf-8"))["fitted"]
+    missing = sorted(n for n in names if n not in fitted)
+    if missing:
+        raise ValueError(f"the warm start {path.as_posix()} has no fitted {missing}")
+    return [min(max(float(fitted[n]), lo), hi) for n, lo, hi in zip(names, lower, upper, strict=True)]
 
 
 def grid_of(lo: float, hi: float, step: float) -> list[float]:
@@ -280,8 +361,16 @@ def run(argv: Sequence[str]) -> tuple[dict[str, Any], Path]:
     ap.add_argument("--fix", action="append", default=[], help="name=value, held fixed")
     ap.add_argument("--bounds", action="append", default=[], help="name=lo,hi, replacing the FIT bounds")
     ap.add_argument("--profile", default=None, help="name=lo,hi,step: profile one parameter instead")
+    ap.add_argument("--starts", type=int, default=0, help="Latin-hypercube starts (0: the single start from X0)")
+    ap.add_argument("--seed", type=int, default=SEED, help="the Latin hypercube's seed")
+    ap.add_argument("--tol", type=float, default=None, help="xtol = ftol = gtol (default scipy's)")
+    ap.add_argument("--diff-step", type=float, default=DIFF_STEP, help="least_squares diff_step")
+    ap.add_argument("--procs", type=int, default=1, help="processes for the starts (1: in-process)")
+    ap.add_argument("--warm", type=Path, default=None, help="a fit JSON whose fitted values are one more start")
     ap.add_argument("--out", required=True)
     a = ap.parse_args(list(argv))
+    if a.starts < 0 or a.procs < 1:
+        raise ValueError("--starts must be at least 0 and --procs at least 1")
     fixed = {k: float(v) for k, v in parse_pairs(a.fix).items()}
     targets = load_targets()
     base = Params.baseline(a.model)
@@ -289,9 +378,12 @@ def run(argv: Sequence[str]) -> tuple[dict[str, Any], Path]:
     if unknown:
         raise KeyError(f"unknown parameter(s): {unknown}")
     result: dict[str, Any]
+    multi: dict[str, Any] = {}
     if a.profile is not None:
         if a.fit or a.bounds:
             raise ValueError("--profile fits one parameter: it excludes --fit and --bounds")
+        if a.starts or a.warm is not None:
+            raise ValueError("--profile has no starts: it excludes --starts and --warm")
         name, spec = next(iter(parse_pairs([a.profile]).items()))
         lo, hi, step = (float(v) for v in spec.split(","))
         names = [name]
@@ -314,8 +406,31 @@ def run(argv: Sequence[str]) -> tuple[dict[str, Any], Path]:
         lower, upper = [bounds[n][0] for n in names], [bounds[n][1] for n in names]
         x0 = [min(max(x, lo), hi) for x, lo, hi in zip(x0, lower, upper, strict=True)]
         x_scale = [X_SCALE[index[n]] if n in index else 1.0 for n in names]
+        starts = lhs_starts(a.starts, a.seed, lower, upper) if a.starts else [x0]
+        if a.warm is not None:
+            starts.append(warm_start(a.warm, names, lower, upper))
+        common = {"model": a.model, "names": names, "fixed": fixed, "lower": lower, "upper": upper}
+        common |= {"x_scale": x_scale, "tol": a.tol, "diff_step": a.diff_step}
+        records = fit_starts([{**common, "start": i, "x0": s} for i, s in enumerate(starts)], a.procs)
+        best = min(records, key=lambda r: r["loss"])
+        result = {k: best[k] for k in ("x", "loss", "nfev", "njev", "status", "message")}
+        multi = {
+            "best_start": best["start"],
+            "near_starts": [r["start"] for r in records if r["loss"] <= NEAR * best["loss"]],
+            "seed": a.seed,
+            "settings": {
+                "starts": a.starts,
+                "warm": None if a.warm is None else a.warm.as_posix(),
+                "tol": a.tol,
+                "diff_step": a.diff_step,
+                "max_nfev": MAX_NFEV,
+                "procs": a.procs,
+            },
+            "starts": records,
+        }
         obj = Objective(a.model, names, fixed, targets)
-        result = fit_least_squares(obj, x0, lower, upper, x_scale)
+        obj.runs = sum(r["runs"] for r in records)
+        obj.batches = sum(r["batches"] for r in records)
     x = result.pop("x")
     model_vals = obj.values([x])[0]
     prov = provenance()
@@ -340,6 +455,7 @@ def run(argv: Sequence[str]) -> tuple[dict[str, Any], Path]:
         ],
         "runs": obj.runs,
         "batches": obj.batches,
+        **multi,
         "command": "uv run python tools/calibrate.py " + " ".join(argv),
         "git_commit": prov["git_commit"],
         "git_dirty": prov["git_dirty"],

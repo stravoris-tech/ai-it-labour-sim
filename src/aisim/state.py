@@ -100,9 +100,18 @@ class State(TypedDict):
     """Perceived cost index of IT services."""
 
 
-BASELINE_FILES: Final[dict[str, Traversable]] = {"phase7": files("aisim").joinpath("data", "baseline.json")}
-"""The model registry: each named model's baseline file. ``phase7`` (``data/baseline.json``, the prototype's
-calibrated model) is the default and today the only model.
+BASELINE_FILES: Final[dict[str, Traversable]] = {
+    "phase7": files("aisim").joinpath("data", "baseline.json"),
+    "phase8": files("aisim").joinpath("data", "baseline_phase8.json"),
+    "phase8_highadoption": files("aisim").joinpath("data", "baseline_phase8_highadoption.json"),
+}
+"""The model registry: each named model's baseline file.
+
+- ``phase7`` (``data/baseline.json``, the prototype's calibrated model) is the default.
+- ``phase8`` adds continuous openings and the slice 8 pricing design, with a full multi-start refit.
+- ``phase8_highadoption`` is the same refitted with ``p`` at Phase 7's 0.044, the adoption-speed alternative.
+
+The phase 8 files are written by ``tools/build_model.py`` from ``tools/models/<name>/spec.json`` and ``fit.json``.
 
 Every check reads this mapping at call time (``models()``), so it is the one list of models. A model registered at
 runtime (the test fixture ``register_model``) is visible in this process only, so use it with ``workers=1``; a shipped

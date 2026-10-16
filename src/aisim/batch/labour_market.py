@@ -157,7 +157,10 @@ def exits(pr: BatchParams, st: BatchState, surplus: F, promo: F, sw: F, visa: Vi
     netloss = quits + leave + retire + promo_out + sw[:, :, :, 1] + visa_out
     sp = surplus
     short = sp <= 0
-    openings = np.where(short, np.maximum(0.0, netloss + (-sp - V) / pr["HireAdjTime"][:, None, None]), 0.0)
+    openings0 = np.where(short, np.maximum(0.0, netloss + (-sp - V) / pr["HireAdjTime"][:, None, None]), 0.0)
+    openings1 = np.maximum(0.0, netloss + (-sp - V) / pr["HireAdjTime"][:, None, None])
+    cont = (pr["OpeningsContinuous"] >= 0.5)[:, None, None]
+    openings = np.where(cont, openings1, openings0)
     layoffs = np.where(
         short,
         0.0,

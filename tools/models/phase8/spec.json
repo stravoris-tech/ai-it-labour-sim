@@ -1,0 +1,11 @@
+{
+ "model": "phase8",
+ "set": {
+  "OpeningsContinuous": 1.0,
+  "PassThrough": 0.75,
+  "AnnuityShare": 0.3,
+  "AnnuityAnchorW": 0.4
+ },
+ "fit": "tools/models/phase8/fit.json",
+ "note": "Phase 8 (slice 9): continuous openings, the slice 8 pricing design (PassThrough 0.75, AnnuityShare 0.3, AnnuityAnchorW 0.4) and all 11 FIT parameters from a 32-start fit (seed 20261016, tol 1e-10, diff_step 1e-3, PriceHorizon in [0, 7]); recon 09b D."
+}
