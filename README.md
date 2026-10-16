@@ -6,7 +6,7 @@ simulations under chosen scenario levers and uncertainty.
 
 ## Status
 
-Noise and perturb-from-year built; docs and public release next. The frozen Python prototype is in
+Model selector and pricing groundwork built; calibration slice next. The frozen Python prototype is in
 [`reference/`](reference/README.md).
 
 ## Asking a question
@@ -131,7 +131,7 @@ if __name__ == "__main__":
 - **Channels.** Six, each a factor at one point of the model: `cap` (the productivity of AI-assisted work), `demand`
   (the underlying demand index, which also drives budgets, enrolment, the visa cap and seats), `budget` (IT budget
   growth), `aicost` (AI cost per automated unit), `adoption` (the consumer AI adoption flow) and `anchor` (the client
-  price anchor on new contracts).
+  price anchor on new FP, MS and OB prices, and on the annuity share of new TM prices when `AnnuityShare` > 0).
 - **Process.** Each factor is `exp(x)`, with `x` an exact Ornstein-Uhlenbeck process: stationary sd `sigma`, one-year
   autocorrelation `exp(-1 / tau)` at any step size. `x` starts at 0 at Y, so the noise is exactly 0 up to and
   including Y, and the factor is always positive. `sigma` must be in [0, 0.5] and `tau` at least one step.
@@ -143,6 +143,24 @@ if __name__ == "__main__":
   year-to-year sd of about 1 point. The sd of the one-year change in a factor is `sigma sqrt(2 (1 - exp(-1 / tau)))`,
   so with `tau` = 1 year that point corresponds to a `demand` `sigma` of about 0.009. `sigma = 0.05` is about 5 times
   that. Nothing in the repo sets the other channels.
+
+## Models
+
+- **Choosing a model.** `Experiment.model` and `Params.baseline(model=...)` name the calibrated baseline every run
+  starts from. Only `phase7`, the prototype's calibrated model and the default, is registered today; any other name
+  raises.
+- **Phase 8 is not here yet.** Phase 8 is contract pricing in which part of new T&M work is annuity work that carries
+  the client price anchor. It will be defined, together with a recalibration, in a calibration slice.
+- **Pricing what-ifs on phase 7.** The pricing parameters can already be used as overrides or sampled levers:
+  - `AnnuityShare`: the annuity share of new T&M signings, which carries `Anchor ** AnnuityAnchorW`;
+  - `AnnuityAnchorW`: the weight of the anchor on that share;
+  - `PassThrough`: the share of the trend clients pass into prices.
+
+  `AnnuityShare` and `AnnuityAnchorW` default to 0, which reproduces phase 7 exactly. Under `perturb_from` they act
+  from Y, like any lever.
+- **A known limitation.** Phase 7's fit is weak in two ways. Its optimiser stalls on a discontinuity in junior hiring,
+  and its AI adoption path after 2026 is weakly identified. Results that depend on adoption after 2026 carry that
+  caveat. Both are the calibration slice's subject.
 
 ## Charts and reports
 

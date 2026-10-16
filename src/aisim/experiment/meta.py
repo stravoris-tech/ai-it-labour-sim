@@ -78,6 +78,7 @@ def experiment_dict(exp: Experiment) -> dict[str, Any]:
         "perturb_from": exp.perturb_from,
         "noise": noise_dict(exp.noise),
         "noise_seed": exp.noise_seed,
+        "model": exp.model,
     }
 
 

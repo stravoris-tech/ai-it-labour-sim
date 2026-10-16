@@ -5,13 +5,13 @@ from __future__ import annotations
 import json
 import math
 import platform
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any, NamedTuple, cast
 
 import pytest
 
-from aisim import RunResult
+from aisim import Params, RunResult
 from aisim.dims import LEVELS, REGIONS, UNITS
 from aisim.state import State, copy_state, load_initial_state
 from tools.reference_runner import InitEdit, apply_init_edits, iter_numeric_pairs, max_rel_diff, rel_diff
@@ -150,3 +150,29 @@ def golden_platform_matches(env: Mapping[str, str], here: Mapping[str, str] | No
     """
     mine = platform_signature() if here is None else dict(here)
     return platform_signature(env) == {k: mine[k] for k in PLATFORM_FIELDS}
+
+
+# ---- a second model for tests (slice 8 close-out) --------------------------------------------------------------------
+
+SECOND_MODEL = "fixture"
+"""The name the ``register_model`` fixture (``tests/conftest.py``) registers a test model under."""
+
+PRICING_CHANGES: Mapping[str, float] = {
+    "PassThrough": 0.75,
+    "PriceHorizon": 7.0,
+    "AnnuityShare": 0.3,
+    "AnnuityAnchorW": 0.4,
+}
+"""Pricing changes that are neutral in 2024 (the held phase 8 design values): a model with only these has Phase 7's
+2024 row."""
+
+LEVEL_2024_CHANGE = "PriceMult_OIT"
+"""The ``level_2024`` parameter the fixture model changes. It moves the 2024 C8 services-spend ratio (rule 5), so the
+fixture also tests that C8 is judged against the selected model's 2024 step."""
+
+FIXTURE_CHANGES: Mapping[str, float] = {**PRICING_CHANGES, LEVEL_2024_CHANGE: 1.07}
+"""The fixture model: Phase 7 plus ``PRICING_CHANGES`` plus one ``level_2024`` change (``PriceMult_OIT`` 1.0154 to
+1.07)."""
+
+RegisterModel = Callable[[str, Mapping[str, float]], Params]
+"""The ``register_model`` fixture: ``register(name, changes)`` registers a model and returns its baseline."""

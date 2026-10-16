@@ -15,7 +15,8 @@ is stored as ``null``, meaning "same as ``DemandGrowth``".
 ``parameters.csv`` classifies every scalar:
 
 - ``kind``: ``calibrated`` (written by ``calibrate7_ss.py``, recon class c), ``unused`` (never read by ``run()``, recon
-  class e) or ``structural`` (everything else).
+  class e) or ``structural`` (everything else). After the prototype's scalars come the model extensions
+  (``aisim.params.EXTENSION_DEFAULTS``, not in ``baseline.json``), one row each with ``kind`` ``extension``.
 - ``lever``: ``yes`` if a scenario or the tornado in ``reference/goldens/phase7_results.json`` sets it.
 - ``fitted``: ``yes`` for the names in ``calibrate7.py`` ``FIT``, read from its source without running it.
 
@@ -26,6 +27,7 @@ from __future__ import annotations
 
 import ast
 import csv
+import io
 import json
 import sys
 from pathlib import Path
@@ -34,6 +36,7 @@ from typing import Any
 # Run as a script, Python puts tools/ on sys.path; the repository root is needed to import the tools package.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from aisim.params import EXTENSION_DEFAULTS
 from tools.hash_tree import hash_tree, sha256_file
 from tools.reference_runner import CALIB_PATH, CODE, PROTOTYPE, ROOT, apply_calibration, load_prototype_sim
 
@@ -168,26 +171,35 @@ def build() -> tuple[dict[str, Any], list[dict[str, str]]]:
                 "fitted": "yes" if name in fitted else "no",
             }
         )
+    for name, ext in EXTENSION_DEFAULTS.items():
+        rows.append({"name": name, "value": repr(ext), "kind": "extension", "lever": "no", "fitted": "no"})
     if n_calibrated != N_CALIBRATED:
         raise ValueError(f"{n_calibrated} calibrated parameters, expected {N_CALIBRATED}")
     return baseline, rows
 
 
+def render() -> tuple[dict[str, Any], str, str, int]:
+    """The baseline object, the text of ``baseline.json`` and of ``parameters.csv``, and the CSV row count."""
+    baseline, rows = build()
+    buf = io.StringIO()
+    writer = csv.DictWriter(buf, fieldnames=["name", "value", "kind", "lever", "fitted"], lineterminator="\n")
+    writer.writeheader()
+    writer.writerows(rows)
+    return baseline, json.dumps(baseline, indent=1) + "\n", buf.getvalue(), len(rows)
+
+
 def main() -> int:
     """Write ``baseline.json`` and ``parameters.csv``."""
-    baseline, rows = build()
+    baseline, baseline_text, csv_text, n_rows = render()
     DATA.mkdir(parents=True, exist_ok=True)
     with BASELINE.open("w", encoding="utf-8", newline="\n") as f:
-        json.dump(baseline, f, indent=1)
-        f.write("\n")
+        f.write(baseline_text)
     with PARAMETERS_CSV.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=["name", "value", "kind", "lever", "fitted"], lineterminator="\n")
-        writer.writeheader()
-        writer.writerows(rows)
+        f.write(csv_text)
     print(
         f"{BASELINE.relative_to(ROOT).as_posix()}: {len(baseline['params'])} params, {len(baseline['tables'])} tables"
     )
-    print(f"{PARAMETERS_CSV.relative_to(ROOT).as_posix()}: {len(rows)} rows")
+    print(f"{PARAMETERS_CSV.relative_to(ROOT).as_posix()}: {n_rows} rows")
     return 0
 
 

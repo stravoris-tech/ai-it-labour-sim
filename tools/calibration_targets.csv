@@ -1,0 +1,12 @@
+metric,year,observable,target,weight,scale,source
+A_mean,2025.0,A_mean,0.5,1.0,0.5,"Stack Overflow 2025: 84% use or plan to use AI tools, 51% of professionals daily (2024: 62% using)"
+A_mean,2026.0,A_mean,0.62,1.0,0.62,DORA 2025: 90% of technologists use AI at work; daily use rising
+PriceIdx_OIT,2026.0,AvgIdx_OIT,0.96,1.0,0.96,"AI-driven deflation 2-5%/yr on renewed deals (HCL 2-3%, Kotak 3.5%): about -4% on the whole book by 2026"
+HeadOIT_ratio,2026.0,Head_OIT / Head_OIT(2024),1.003,1.0,1.003,"Top-5 Indian IT headcount 1,525,776 (Mar 2024) to 1,530,073 (Mar 2026)"
+MarginOIT_change,2026.0,Margin_OIT - Margin_OIT(2024),0.0,1.0,0.1,"Indian IT margins flat: TCS 24.6% to 25.0%, Infosys ~21%, HCL 18.2% to 17.2%"
+GCC_ratio,2026.0,Head_GCC / Head_GCC(2024),1.24,1.0,1.24,NASSCOM/Zinnov: GCC employees 1.9M (FY24) to 2.36M (FY26)
+GCC_ratio,2030.0,Head_GCC / Head_GCC(2024),1.7,0.5,1.7,"Outlook, not data: GCC workforce to reach ~3.2-3.5M by 2030 (NASSCOM/Zinnov, Nov 2025)"
+JuniorHires_ratio,2026.0,"HireJ_IN + HireJ_ON, mean of year - 0.25, year and year + 0.25, / 2024",0.65,1.0,0.65,TCS fresher intake 42-44k to ~25k offers; US new-grad hiring down sharply
+AC_mean,2026.0,AC_mean,0.42,1.0,0.42,McKinsey State of AI: share of firms scaling AI 33% (2024) to ~40%+ (2025-26)
+Att,2026.0,Att,0.065,0.5,0.065,Microsoft 365 Copilot ~30M+ paid seats on ~450M commercial seats (~6.5%)
+UnempON_change,2026.0,Unemp_ON - Unemp_ON(2024),0.0145,1.0,0.1,US tech unemployment 2.0% (Dec 2024) to 3.3-3.6% (2026)

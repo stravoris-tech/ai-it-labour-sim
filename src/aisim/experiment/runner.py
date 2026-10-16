@@ -32,7 +32,7 @@ import multiprocessing
 import os
 import warnings
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from importlib.metadata import version
 from typing import Any, Final, Literal
 
@@ -53,7 +53,7 @@ from aisim.noise import Noise, Runs, active, ou_factors
 from aisim.params import Params, Table
 from aisim.perturb import Phase1, phase1, run_batch_from
 from aisim.scenarios import SCENARIOS
-from aisim.state import load_initial_state
+from aisim.state import BASELINE_FILES, load_initial_state
 
 MEMORY_WARN_BYTES: Final = 4 * 2**30
 """Warn when the parent's estimated peak memory for the recorded series (about twice the data) exceeds this."""
@@ -98,6 +98,8 @@ class Experiment:
       ``level_2024``, ``Verif`` among them) must stay at their baseline values.
     - ``noise``: process noise by channel (``aisim.noise.CHANNELS``), off by default; it needs ``perturb_from`` and a
       ``noise_seed``. No amplitude is built in.
+    - ``model``: the named model (``aisim.state.BASELINE_FILES``) whose baseline every run starts from: ``"phase7"``
+      (the default, and today the only shipped model).
     """
 
     scenario: str | None = None
@@ -113,6 +115,7 @@ class Experiment:
     perturb_from: float | None = None
     noise: Mapping[str, Noise] = field(default_factory=dict)
     noise_seed: int | None = None
+    model: str = "phase7"
 
 
 @dataclass(frozen=True, slots=True)
@@ -209,8 +212,9 @@ def resolve_outputs(outputs: Sequence[str] | Literal["all"], record_every: float
 
 def fixed_params(exp: Experiment) -> tuple[Params, dict[str, float | None]]:
     """The fixed parameters (baseline, then scenario, then overrides and tables) and the scalar names set on top of
-    the baseline. ``AdoptC0`` keeps its shipped value unless ``pC``, ``qC`` or ``AC0`` is overridden."""
-    p = Params.baseline()
+    the baseline. ``AdoptC0`` keeps its shipped value unless ``pC``, ``qC`` or ``AC0`` is overridden. The baseline
+    is ``exp.model``'s; an unknown model raises ``ValueError``."""
+    p = Params.baseline(exp.model)
     set_on_top: dict[str, float | None] = {}
     if exp.scenario is not None:
         if exp.scenario not in SCENARIOS:
@@ -229,7 +233,7 @@ def fixed_params(exp: Experiment) -> tuple[Params, dict[str, float | None]]:
 
 def design(exp: Experiment) -> pd.DataFrame:
     """The per-run values of the varying parameters: the explicit ``samples`` or a draw of ``sample``."""
-    base = Params.baseline().scalars
+    base = Params.baseline(exp.model).scalars
     if exp.samples is not None:
         df = exp.samples
         if exp.sample or exp.method != "random" or exp.correlation or exp.n not in (1, len(df)):
@@ -331,11 +335,12 @@ def execute(
             )
     if workers is not None and workers < 1:
         raise ValueError("workers must be at least 1")
-    params, set_on_top = fixed_params(exp)
+    known = known_model(exp) if validate else exp
+    params, set_on_top = fixed_params(known)
     if validate and exp.samples is None and support_errors(exp.sample):
         # The values cannot be drawn: raise the support errors with every check on the fixed values.
         _validate(params, set_on_top, exp, {}, dt, stop)
-    samples = design(exp)
+    samples = design(known)
     n = len(samples)
     sampled = {str(c): samples[c].to_numpy(dtype=np.float64) for c in samples.columns}
     if validate:
@@ -364,7 +369,9 @@ def execute(
     scalars, tables, dgl = batch_arrays(params, sampled, n)
     first = None
     if exp.perturb_from is not None:
-        first = phase1(exp.perturb_from, dt=dt, record_every=record_every, outputs=record)
+        first = phase1(
+            exp.perturb_from, base=Params.baseline(exp.model), dt=dt, record_every=record_every, outputs=record
+        )
     asked = _default_workers() if workers is None else workers
     size = auto_chunk_size(n, asked) if chunk_size is None else max(1, chunk_size)
     bounds = [(a, min(a + size, n)) for a in range(0, n, size)]
@@ -442,8 +449,14 @@ def check_supports(exp: Experiment, dt: float = 1 / 16, stop: float = 16.0) -> N
     """Raise ``ValidationError`` if a sampled distribution's support leaves its parameter's domain, as
     ``run_experiment`` does before drawing (with every check on the fixed values)."""
     if exp.samples is None and support_errors(exp.sample):
-        params, set_on_top = fixed_params(exp)
+        params, set_on_top = fixed_params(known_model(exp))
         _validate(params, set_on_top, exp, {}, dt, stop)
+
+
+def known_model(exp: Experiment) -> Experiment:
+    """``exp``, or with an unknown model ``exp`` on phase 7: validation then checks every other rule against phase 7
+    and reports the unknown model in the same ``ValidationError`` (validate rule 10)."""
+    return exp if exp.model in BASELINE_FILES else replace(exp, model="phase7")
 
 
 def _columns(df: pd.DataFrame | None) -> set[str]:
@@ -478,4 +491,5 @@ def _validate(
         ai_on=exp.ai_on,
         noise=exp.noise,
         noise_seed=exp.noise_seed,
+        model=exp.model,
     )

@@ -49,6 +49,9 @@ raises one ``ValidationError`` listing every violation. Rules (recon 04 B1-B3; a
 
 9. **Noise** (slice 6): known channels, ``sigma`` in [0, 0.5], ``tau`` positive and ``>= dt``; with any ``sigma > 0``
    a ``perturb_from`` (no noise in the calibration period) and a ``noise_seed``.
+10. **Model** (slice 8): ``model`` is in ``aisim.state.BASELINE_FILES`` (read at call time). The rules that compare
+    with the baseline (5's C8 ratios and 8) use that model's baseline; with an unknown model they use phase 7's, so
+    that one ``ValidationError`` still lists every other violation.
 """
 
 from __future__ import annotations
@@ -72,7 +75,7 @@ from aisim.experiment.metadata import domains
 from aisim.experiment.sampling import Distribution, support_violations
 from aisim.noise import CHANNELS, Noise
 from aisim.params import Params
-from aisim.state import State, load_initial_state
+from aisim.state import BASELINE_FILES, State, load_initial_state, models
 
 TOL: Final = 1e-9
 MAX_RUNS_SHOWN: Final = 10
@@ -153,6 +156,7 @@ ORDERED: Final = (
 """Ordered pairs (B3 A): first <= second, equality allowed."""
 
 FAMILIES: Final = (
+    "model",
     "domain",
     "no-effect",
     "derived",
@@ -338,6 +342,7 @@ def validate(
     ai_on: bool = True,
     noise: Mapping[str, Noise] | None = None,
     noise_seed: int | None = None,
+    model: str = "phase7",
 ) -> None:
     """Check ``params`` (the fixed parameters, overrides and tables applied) and the sampled values. Raises
     ``ValidationError`` listing every violation.
@@ -351,6 +356,7 @@ def validate(
       ``sampled`` is ignored and only the checks that do not depend on drawn values run; all are raised together.
     - ``perturb_from``, ``stop``, ``ai_on``: the perturb year, the run length and the AI switch, for rule 8.
     - ``noise`` and ``noise_seed``: the noise spec and its seed, for rule 9.
+    - ``model``: the model whose baseline ``params`` derive from, for rules 5 (C8), 8 and 10.
 
     ``Any``: a table override is one- or two-dimensional.
     """
@@ -364,13 +370,16 @@ def validate(
         v = _Values(params, sampled or {})
     sampled_names = [*(sample or {}), *(n for n in v.sampled if n not in (sample or {}))]
     out: list[Violation] = list(support)
+    known = model if model in BASELINE_FILES else "phase7"
+    if known != model:
+        out.append(Violation("model", "model", repr(model), f"one of {list(models())}", "aisim.state.BASELINE_FILES"))
     out += _domain_violations(v)
     out += _no_effect_violations(v, overrides or {}, tables or {}, sampled_names)
     out += _joint_violations(v, st)
-    out += _calibration_violations(v, st, dt)
+    out += _calibration_violations(v, st, dt, known)
     out += _dt_violations(v, dt)
     if perturb_from is not None:
-        out += _perturb_violations(v, perturb_from, stop, dt, ai_on)
+        out += _perturb_violations(v, perturb_from, stop, dt, ai_on, known)
     out += _noise_violations(noise or {}, noise_seed, perturb_from, dt)
     if out:
         out.sort(key=lambda x: FAMILIES.index(x.family))
@@ -594,7 +603,7 @@ def _close(a: F, b: float | F) -> B:
     return out
 
 
-def _calibration_violations(v: _Values, st: State, dt: float) -> list[Violation]:
+def _calibration_violations(v: _Values, st: State, dt: float, model: str) -> list[Violation]:
     out: list[Violation] = []
 
     def ident(name: str, stocks: Mapping[str, float], cite: str) -> None:
@@ -626,7 +635,7 @@ def _calibration_violations(v: _Values, st: State, dt: float) -> list[Violation]
         ident(f"LOB0_{x}", {f"LOB[{x}]": st["LOB"][x]}, "consumer.py:169; recon 04 B3 C7")
         ident(f"Port0_{x}", {f"Port[{x}]": st["Port"][x]}, "consumer.py:177; recon 04 B3 C7")
         ident(f"Seats0_{x}", {f"SeatsB[{x}]": st["SeatsB"][x]}, "consumer.py:198; recon 04 B3 C7")
-    out += _c8_violations(v, st, dt)
+    out += _c8_violations(v, st, dt, model)
     return out
 
 
@@ -661,14 +670,14 @@ def _one_step(params: Params, sampled: Mapping[str, F], n: int, st: State, dt: f
 
 
 @cache
-def _c8_baseline() -> dict[str, float]:
-    ratios = _one_step(Params.baseline(), {}, 1, load_initial_state(), 1 / 16)
+def _c8_baseline(model: str) -> dict[str, float]:
+    ratios = _one_step(Params.baseline(model), {}, 1, load_initial_state(), 1 / 16)
     return {k: float(a[0]) for k, a in ratios.items()}
 
 
-def _c8_violations(v: _Values, st: State, dt: float) -> list[Violation]:
+def _c8_violations(v: _Values, st: State, dt: float, model: str) -> list[Violation]:
     ratios = _one_step(v.params, v.sampled, v.n, st, dt)
-    base = _c8_baseline()
+    base = _c8_baseline(model)
     out = []
     for name, r in ratios.items():
         bad = ~(np.abs(r - base[name]) <= TOL * abs(base[name]))
@@ -831,7 +840,7 @@ LEVEL_RULE: Final = (
 )
 
 
-def _perturb_violations(v: _Values, Y: float, stop: float, dt: float, ai_on: bool) -> list[Violation]:
+def _perturb_violations(v: _Values, Y: float, stop: float, dt: float, ai_on: bool, model: str) -> list[Violation]:
     out: list[Violation] = []
     year = next(row for row in _domain_rows() if row.domain == "year")
     finite = math.isfinite(Y)
@@ -856,7 +865,7 @@ def _perturb_violations(v: _Values, Y: float, stop: float, dt: float, ai_on: boo
                 "slice 6 operator ruling",
             )
         )
-    base = _Values(Params.baseline(), {})
+    base = _Values(Params.baseline(model), {})
     for row in _domain_rows():
         # At Y = 2024 everything acts from 2024, as without perturb_from, so a 2024 level may change there.
         if not row.level_2024 or not (finite and Y > 2024):

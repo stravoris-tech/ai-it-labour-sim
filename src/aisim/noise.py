@@ -7,7 +7,8 @@ A run's noise is a factor ``exp(x)`` per channel and step, applied at one point 
 - ``budget``: ``BudgetGrowth``, IT budget growth (S13a);
 - ``aicost``: ``AICostPerUnit``, delivery AI cost per automated unit (S9);
 - ``adoption``: ``AdoptC``, the consumer AI adoption flow (S13c);
-- ``anchor``: ``Anchor``, the client price anchor on new FP, MS and OB prices (S10).
+- ``anchor``: ``Anchor``, the client price anchor on new FP, MS and OB prices, and on the annuity share of new TM
+  prices when ``AnnuityShare`` > 0 (S10).
 
 ``x`` is an exact Ornstein-Uhlenbeck process, ``x[k+1] = phi x[k] + sigma sqrt(1 - phi^2) w[k]`` with
 ``phi = exp(-dt / tau)``: its stationary sd is ``sigma`` and its one-year autocorrelation ``exp(-1 / tau)`` at any dt
