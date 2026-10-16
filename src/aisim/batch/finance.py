@@ -192,7 +192,7 @@ def contracts(
     Anchor = pw(1 / (CP * (1 + pr["PriceHorizon"][:, None] * PU)), pr["PassThrough"][:, None])
     if nz is not None and "anchor" in nz:
         Anchor = Anchor * nz["anchor"][:, None]
-    # Phase 8 (E2a), as the scalar engine: exactly 1.0 at AnnuityShare 0.
+    # E2a annuity term (neutral at AnnuityShare 0), as the scalar engine: exactly 1.0 at AnnuityShare 0.
     a_ann = pr["AnnuityShare"][:, None]
     EffMult_TM = (1 - a_ann) + a_ann * pw(Anchor, pr["AnnuityAnchorW"][:, None])
     Vi = st.Viab.copy()
