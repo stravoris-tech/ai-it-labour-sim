@@ -25,6 +25,7 @@ from numpy.typing import ArrayLike
 from aisim.batch.util import B, F
 from aisim.dims import EMPLOYERS, LEVELS, REGIONS, SECTORS, TYPES, VENDORS, WTYPES
 from aisim.params import ADOPTC0_INPUTS, NULLABLE, Params
+from aisim.state import DEFAULT_MODEL
 
 TABLE_AXES: Final[Mapping[str, tuple[tuple[str, ...], ...]]] = MappingProxyType(
     {
@@ -114,7 +115,7 @@ class BatchParams:
         return cls._build(scalars, tables, is_none)
 
     @classmethod
-    def baseline(cls, n: int, *, model: Override = "phase7", **overrides: Override) -> BatchParams:
+    def baseline(cls, n: int, *, model: Override = DEFAULT_MODEL, **overrides: Override) -> BatchParams:
         """The calibrated baseline of ``model`` for ``n`` runs, with ``overrides`` (a value for all or one per run).
 
         ``model`` is a name in ``aisim.state.BASELINE_FILES``. It is typed ``Override`` (which admits ``str``) only so

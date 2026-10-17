@@ -36,7 +36,7 @@ pytestmark = pytest.mark.usefixtures("numpy_kernels_match_libm")
 
 E2A = {"AnnuityShare": 0.3, "AnnuityAnchorW": 0.4}
 NEUTRAL = ({"AnnuityShare": 0.0, "AnnuityAnchorW": 0.0}, {"AnnuityShare": 0.0, "AnnuityAnchorW": 0.4})
-BASE = Params.baseline()
+BASE = Params.baseline("phase7")
 DT = 1 / 16
 Y = 2026.5
 
@@ -105,7 +105,7 @@ def test_parity_two_phase_with_anchor_noise() -> None:
     """Five two-phase runs at Y = 2026.5 with noise on the anchor (and on demand): bit-identical."""
     noise = {"anchor": Noise(0.1, 1.0), "demand": Noise(0.05, 2.0)}
     factors = ou_factors(noise, 41, range(len(MIXED_TWO_PHASE)), start_step=start_step_of(Y, DT), steps=256, dt=DT)
-    batch = run_batch_from(BatchParams.stack(MIXED_TWO_PHASE), Y=Y, record_every=0.25, noise=factors)
+    batch = run_batch_from(BatchParams.stack(MIXED_TWO_PHASE), Y=Y, record_every=0.25, noise=factors, base=BASE)
     assert batch.finite.all()
     for i, p in enumerate(MIXED_TWO_PHASE):
         assert_bit_identical(batch, i, run_from(BASE, p, Y=Y, record_every=0.25, noise=scalar_noise(factors, i)))

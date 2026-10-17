@@ -41,7 +41,7 @@ pytestmark = pytest.mark.usefixtures("numpy_kernels_match_libm")
 """The parity tests here need numpy's kernels to match libm (``tests/conftest.py``)."""
 
 ON = {"OpeningsContinuous": 1.0}
-BASE = Params.baseline()
+BASE = Params.baseline("phase7")
 DT = 1 / 16
 Y = 2026.5
 
@@ -155,7 +155,7 @@ def test_parity_two_phase_with_noise_at_one() -> None:
     ]
     noise = {"anchor": Noise(0.1, 1.0), "demand": Noise(0.05, 2.0)}
     factors = ou_factors(noise, 43, range(len(runs)), start_step=start_step_of(Y, DT), steps=256, dt=DT)
-    batch = run_batch_from(BatchParams.stack(runs), Y=Y, record_every=0.25, noise=factors)
+    batch = run_batch_from(BatchParams.stack(runs), Y=Y, record_every=0.25, noise=factors, base=BASE)
     assert batch.finite.all()
     for i, p in enumerate(runs):
         assert_bit_identical(batch, i, run_from(BASE, p, Y=Y, record_every=0.25, noise=scalar_noise(factors, i)))

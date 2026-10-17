@@ -66,7 +66,7 @@ def test_baseline_shape() -> None:
 
 
 def test_baseline_values_equal_calibration() -> None:
-    p = Params.baseline()
+    p = Params.baseline("phase7")
     calib = load_json(CALIB_PATH)["params"]
     assert set(p.scalars) - set(calib) == {
         "DemandGrowthLate",

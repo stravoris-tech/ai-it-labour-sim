@@ -50,8 +50,8 @@ raises one ``ValidationError`` listing every violation. Rules (recon 04 B1-B3; a
 9. **Noise** (slice 6): known channels, ``sigma`` in [0, 0.5], ``tau`` positive and ``>= dt``; with any ``sigma > 0``
    a ``perturb_from`` (no noise in the calibration period) and a ``noise_seed``.
 10. **Model** (slice 8): ``model`` is in ``aisim.state.BASELINE_FILES`` (read at call time). The rules that compare
-    with the baseline (5's C8 ratios and 8) use that model's baseline; with an unknown model they use phase 7's, so
-    that one ``ValidationError`` still lists every other violation.
+    with the baseline (5's C8 ratios and 8) use that model's baseline; with an unknown model they use the default
+    model's (``aisim.state.DEFAULT_MODEL``), so that one ``ValidationError`` still lists every other violation.
 """
 
 from __future__ import annotations
@@ -75,7 +75,7 @@ from aisim.experiment.metadata import domains
 from aisim.experiment.sampling import Distribution, support_violations
 from aisim.noise import CHANNELS, Noise
 from aisim.params import Params
-from aisim.state import BASELINE_FILES, State, load_initial_state, models
+from aisim.state import BASELINE_FILES, DEFAULT_MODEL, State, load_initial_state, models
 
 TOL: Final = 1e-9
 MAX_RUNS_SHOWN: Final = 10
@@ -342,7 +342,7 @@ def validate(
     ai_on: bool = True,
     noise: Mapping[str, Noise] | None = None,
     noise_seed: int | None = None,
-    model: str = "phase7",
+    model: str = DEFAULT_MODEL,
 ) -> None:
     """Check ``params`` (the fixed parameters, overrides and tables applied) and the sampled values. Raises
     ``ValidationError`` listing every violation.
@@ -370,7 +370,7 @@ def validate(
         v = _Values(params, sampled or {})
     sampled_names = [*(sample or {}), *(n for n in v.sampled if n not in (sample or {}))]
     out: list[Violation] = list(support)
-    known = model if model in BASELINE_FILES else "phase7"
+    known = model if model in BASELINE_FILES else DEFAULT_MODEL
     if known != model:
         out.append(Violation("model", "model", repr(model), f"one of {list(models())}", "aisim.state.BASELINE_FILES"))
     out += _domain_violations(v)

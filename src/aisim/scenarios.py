@@ -18,6 +18,7 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Final
 
 from aisim.params import Params
+from aisim.state import DEFAULT_MODEL
 
 if TYPE_CHECKING:
     from aisim.experiment.sampling import Uniform
@@ -48,8 +49,10 @@ SCENARIOS: Final[Mapping[str, Mapping[str, float]]] = MappingProxyType(
 """The 14 named scenarios: scenario name to parameter overrides."""
 
 
-def _tornado() -> tuple[tuple[str, float, float, str], ...]:
-    base = Params.baseline().scalars
+def _tornado(model: str) -> tuple[tuple[str, float, float, str], ...]:
+    """The 14 tornado ranges of ``model``: ``Verif`` and ``JuniorCut`` relative to that model's values (the
+    prototype's x0.7/x1.3 and x0.5/x1.5), every other range by hand and the same in every model."""
+    base = Params.baseline(model).scalars
     verif = Params.float_of(base, "Verif")
     junior_cut = Params.float_of(base, "JuniorCut")
     return (
@@ -70,12 +73,22 @@ def _tornado() -> tuple[tuple[str, float, float, str], ...]:
     )
 
 
-TORNADO: Final = _tornado()
-"""The 14 tornado parameters: ``(name, low, high, label)``."""
+TORNADO: Final = _tornado("phase7")
+"""The Phase 7 tornado, the prototype's 14 parameters: ``(name, low, high, label)``.
+
+It is built from ``Params.baseline("phase7")`` explicitly, not from the default model, so it stays the prototype's
+ranges (``phase7_runs.py:32-47``) whatever the default. For another model's ranges use ``tornado_levers(model=...)``.
+"""
 
 
-def tornado_levers(perturb_from: float | None = None, model: str = "phase7") -> dict[str, Uniform]:
-    """The ``TORNADO`` ranges as ``{name: Uniform(low, high)}``, in ``TORNADO`` order.
+def tornado_levers(perturb_from: float | None = None, model: str = DEFAULT_MODEL) -> dict[str, Uniform]:
+    """The tornado ranges of ``model`` as ``{name: Uniform(low, high)}``, in ``TORNADO`` order.
+
+    **The ranges are computed per model.** ``Verif`` and ``JuniorCut`` are x0.7/x1.3 and x0.5/x1.5 of the model's own
+    values, the prototype's ratios; every other range is the prototype's hand-set range, the same in every model. So
+    ``tornado_levers(model="phase7")`` gives exactly ``TORNADO``'s ranges. Two ranges are not re-centred, by choice:
+    ``PriceHorizon`` (4-8) sits at 0.75 of its range on ``phase8``, and ``JevonsEps`` (0-0.5) is one-sided from 0 by
+    design (a centred range would cross its lower bound 0).
 
     **The lever set depends on the perturb year.** With ``perturb_from`` set, a lever is dropped when its lower or upper
     bound, applied as an override with that perturb year, fails validation (``aisim.experiment.validate``, at dt = 1/16
@@ -90,7 +103,7 @@ def tornado_levers(perturb_from: float | None = None, model: str = "phase7") -> 
 
     out: dict[str, Uniform] = {}
     base = Params.baseline(model)
-    for name, lo, hi, _ in TORNADO:
+    for name, lo, hi, _ in _tornado(model):
         if perturb_from is not None:
             try:
                 for v in (lo, hi):

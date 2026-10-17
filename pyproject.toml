@@ -3,7 +3,8 @@ name = "ai-it-labour-sim"
 version = "0.1.0"
 description = "A System Dynamics model of AI's impact on IT employment in India and onshore, 2024-2040."
 readme = "README.md"
-license = "MIT"
+license = "MIT AND CC-BY-4.0"
+license-files = ["LICENSE", "LICENSE-DOCS"]
 requires-python = ">=3.12"
 dependencies = [
     "numpy>=2.5.4",

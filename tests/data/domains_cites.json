@@ -1,0 +1,6135 @@
+{
+ "BaseDemand": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ]
+  },
+  "notes": {
+   "consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ]
+  }
+ },
+ "WorkPerPerson": {
+  "evidence": {
+   "src/aisim/scalar/work.py:70": [
+    "CapE = {e: pr[\"WorkPerPerson\"] * Pe[e] * EffStaffE[e] for e in EMPLOYERS}"
+   ],
+   "src/aisim/scalar/workforce.py:94": [
+    "DesiredE = {e: BLe[e] / (pr[\"TargetClearanceTime\"] * pr[\"WorkPerPerson\"] * PerceivedP[e]) for e in EMPLOYERS}"
+   ]
+  },
+  "notes": {
+   "workforce.py:94": [
+    "DesiredE = {e: BLe[e] / (pr[\"TargetClearanceTime\"] * pr[\"WorkPerPerson\"] * PerceivedP[e]) for e in EMPLOYERS}"
+   ],
+   "work.py:70": [
+    "CapE = {e: pr[\"WorkPerPerson\"] * Pe[e] * EffStaffE[e] for e in EMPLOYERS}"
+   ]
+  }
+ },
+ "TargetClearanceTime": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:94": [
+    "DesiredE = {e: BLe[e] / (pr[\"TargetClearanceTime\"] * pr[\"WorkPerPerson\"] * PerceivedP[e]) for e in EMPLOYERS}"
+   ]
+  },
+  "notes": {
+   "workforce.py:94": [
+    "DesiredE = {e: BLe[e] / (pr[\"TargetClearanceTime\"] * pr[\"WorkPerPerson\"] * PerceivedP[e]) for e in EMPLOYERS}"
+   ]
+  }
+ },
+ "MinCompletionTime": {
+  "evidence": {
+   "src/aisim/scalar/work.py:71": [
+    "CompE = {e: min(CapE[e], BLe[e] / pr[\"MinCompletionTime\"]) for e in EMPLOYERS}"
+   ]
+  },
+  "notes": {
+   "work.py:71": [
+    "CompE = {e: min(CapE[e], BLe[e] / pr[\"MinCompletionTime\"]) for e in EMPLOYERS}"
+   ]
+  }
+ },
+ "AbandonTolerance": {
+  "evidence": {
+   "src/aisim/scalar/work.py:76": [
+    "w: sum(EmpShare[x][e] * max(0.0, BL[x][w] * (1 - RateE[e] * pr[\"AbandonTolerance\"])) for e in EMPLOYERS)"
+   ]
+  }
+ },
+ "AbandonTime": {
+  "evidence": {
+   "src/aisim/scalar/work.py:77": [
+    "/ pr[\"AbandonTime\"]"
+   ]
+  },
+  "notes": {
+   "work.py:77": [
+    "/ pr[\"AbandonTime\"]"
+   ]
+  }
+ },
+ "LayoffAdjTime": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:217": [
+    "layoffs = min(max(0.0, sp / pr[\"LayoffAdjTime\"] - netloss), H[u][l] / pr[\"MinLayoffTime\"])"
+   ],
+   "src/aisim/scalar/labour_market.py:211": [
+    "layoffs = min(max(0.0, sp / pr[\"LayoffAdjTime\"] - netloss), H[u][l] / pr[\"MinLayoffTime\"])"
+   ]
+  },
+  "notes": {
+   "labour_market.py:217": [
+    "layoffs = min(max(0.0, sp / pr[\"LayoffAdjTime\"] - netloss), H[u][l] / pr[\"MinLayoffTime\"])"
+   ],
+   "labour_market.py:211": [
+    "layoffs = min(max(0.0, sp / pr[\"LayoffAdjTime\"] - netloss), H[u][l] / pr[\"MinLayoffTime\"])"
+   ]
+  }
+ },
+ "MinLayoffTime": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:217": [
+    "layoffs = min(max(0.0, sp / pr[\"LayoffAdjTime\"] - netloss), H[u][l] / pr[\"MinLayoffTime\"])"
+   ],
+   "src/aisim/scalar/labour_market.py:211": [
+    "layoffs = min(max(0.0, sp / pr[\"LayoffAdjTime\"] - netloss), H[u][l] / pr[\"MinLayoffTime\"])"
+   ]
+  },
+  "notes": {
+   "labour_market.py:217": [
+    "layoffs = min(max(0.0, sp / pr[\"LayoffAdjTime\"] - netloss), H[u][l] / pr[\"MinLayoffTime\"])"
+   ],
+   "labour_market.py:211": [
+    "layoffs = min(max(0.0, sp / pr[\"LayoffAdjTime\"] - netloss), H[u][l] / pr[\"MinLayoffTime\"])"
+   ]
+  }
+ },
+ "HireAdjTime": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:213": [
+    "openings = max(0.0, netloss + (-sp - V[u][l]) / pr[\"HireAdjTime\"])"
+   ],
+   "src/aisim/scalar/labour_market.py:207": [
+    "openings = max(0.0, netloss + (-sp - V[u][l]) / pr[\"HireAdjTime\"])"
+   ]
+  },
+  "notes": {
+   "labour_market.py:213": [
+    "openings = max(0.0, netloss + (-sp - V[u][l]) / pr[\"HireAdjTime\"])"
+   ],
+   "labour_market.py:207": [
+    "openings = max(0.0, netloss + (-sp - V[u][l]) / pr[\"HireAdjTime\"])"
+   ]
+  }
+ },
+ "PerceptionTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:102": [
+    "st[\"PerceivedP\"][e] += d * (Pe[e] - st[\"PerceivedP\"][e]) / pr[\"PerceptionTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:102": [
+    "st[\"PerceivedP\"][e] += d * (Pe[e] - st[\"PerceivedP\"][e]) / pr[\"PerceptionTime\"]"
+   ]
+  }
+ },
+ "g": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "src/aisim/scalar/consumer.py:106": [
+    "LOBAuto = max(0.0, pr[\"aL_max\"] - (pr[\"aL_max\"] - pr[\"aL_2024\"]) * (1 - pr[\"g\"]) ** (y - 2024))"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "consumer.py:106": [
+    "LOBAuto = max(0.0, pr[\"aL_max\"] - (pr[\"aL_max\"] - pr[\"aL_2024\"]) * (1 - pr[\"g\"]) ** (y - 2024))"
+   ]
+  }
+ },
+ "p": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  },
+  "notes": {
+   "adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  }
+ },
+ "q": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  },
+  "notes": {
+   "adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  }
+ },
+ "A0": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:79": [
+    "w: (Aemp[e] * PAI[w] + (1 - Aemp[e])) / (pr[\"A0\"] * PAI0[w] + (1 - pr[\"A0\"])) if ai_on else 1.0"
+   ],
+   "src/aisim/scalar/workforce.py:60": [
+    "sJ = pr[\"Share0_J\"] * max(0.05, 1 - pr[\"JuniorCut\"] * (max(0.0, Aemp[e] - pr[\"A0\"]) if ai_on else 0.0))"
+   ]
+  },
+  "notes": {
+   "capability.py:79": [
+    "w: (Aemp[e] * PAI[w] + (1 - Aemp[e])) / (pr[\"A0\"] * PAI0[w] + (1 - pr[\"A0\"])) if ai_on else 1.0"
+   ],
+   "workforce.py:60": [
+    "sJ = pr[\"Share0_J\"] * max(0.05, 1 - pr[\"JuniorCut\"] * (max(0.0, Aemp[e] - pr[\"A0\"]) if ai_on else 0.0))"
+   ]
+  }
+ },
+ "MinAdoptionTime": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:66": [
+    "(1 - Ae) / pr[\"MinAdoptionTime\"],"
+   ],
+   "src/aisim/scalar/consumer.py:116": [
+    "AttAdopt = min((pr[\"pAtt\"] + pr[\"qAtt\"] * Att) * (1 - Att), (1 - Att) / pr[\"MinAdoptionTime\"]) if ai_on else 0.0"
+   ],
+   "src/aisim/scalar/consumer.py:197": [
+    "AdoptC = min((pr[\"pC\"] + pr[\"qC\"] * AC) * kC * (1 - AC), (1 - AC) / pr[\"MinAdoptionTime\"]) if ai_on else 0.0"
+   ]
+  },
+  "notes": {
+   "adoption.py:66": [
+    "(1 - Ae) / pr[\"MinAdoptionTime\"],"
+   ],
+   "consumer.py:116": [
+    "AttAdopt = min((pr[\"pAtt\"] + pr[\"qAtt\"] * Att) * (1 - Att), (1 - Att) / pr[\"MinAdoptionTime\"]) if ai_on else 0.0"
+   ],
+   "consumer.py:197": [
+    "AdoptC = min((pr[\"pC\"] + pr[\"qC\"] * AC) * kC * (1 - AC), (1 - AC) / pr[\"MinAdoptionTime\"]) if ai_on else 0.0"
+   ]
+  }
+ },
+ "JevonsEps": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:118": [
+    "Jev = min(pr[\"JevonsCap\"], st[\"CostPerc\"] ** (-pr[\"JevonsEps\"]))"
+   ]
+  },
+  "notes": {
+   "consumer.py:118": [
+    "Jev = min(pr[\"JevonsCap\"], st[\"CostPerc\"] ** (-pr[\"JevonsEps\"]))"
+   ]
+  }
+ },
+ "JevonsCap": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:118": [
+    "Jev = min(pr[\"JevonsCap\"], st[\"CostPerc\"] ** (-pr[\"JevonsEps\"]))"
+   ]
+  },
+  "notes": {
+   "consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  }
+ },
+ "DemandStep": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ]
+  },
+  "notes": {
+   "consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ]
+  }
+ },
+ "StepYear": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ]
+  },
+  "notes": {
+   "consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ]
+  }
+ },
+ "W_J": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:158": [
+    "W = {l: pr[\"W_\" + l] for l in LEVELS}"
+   ]
+  },
+  "notes": {
+   "engine.py:158": [
+    "W = {l: pr[\"W_\" + l] for l in LEVELS}"
+   ],
+   "workforce.py:96": [
+    "u: {l: DesiredE[EMP_OF[u]] * UnitIn[u] * ShareL[EMP_OF[u]][l] / denomE[EMP_OF[u]] for l in LEVELS}"
+   ],
+   "sourcing.py:95": [
+    "\"IH\": pr[\"BaseWage_IH\"] * WI[\"IH\"] * AvgWM[\"IH\"] / (AvgW[\"IH\"] * ClientP[\"IH\"])"
+   ],
+   "sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  }
+ },
+ "W_M": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:158": [
+    "W = {l: pr[\"W_\" + l] for l in LEVELS}"
+   ]
+  },
+  "notes": {
+   "engine.py:158": [
+    "W = {l: pr[\"W_\" + l] for l in LEVELS}"
+   ],
+   "workforce.py:96": [
+    "u: {l: DesiredE[EMP_OF[u]] * UnitIn[u] * ShareL[EMP_OF[u]][l] / denomE[EMP_OF[u]] for l in LEVELS}"
+   ],
+   "sourcing.py:95": [
+    "\"IH\": pr[\"BaseWage_IH\"] * WI[\"IH\"] * AvgWM[\"IH\"] / (AvgW[\"IH\"] * ClientP[\"IH\"])"
+   ],
+   "sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  }
+ },
+ "W_S": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:158": [
+    "W = {l: pr[\"W_\" + l] for l in LEVELS}"
+   ]
+  },
+  "notes": {
+   "engine.py:158": [
+    "W = {l: pr[\"W_\" + l] for l in LEVELS}"
+   ],
+   "workforce.py:96": [
+    "u: {l: DesiredE[EMP_OF[u]] * UnitIn[u] * ShareL[EMP_OF[u]][l] / denomE[EMP_OF[u]] for l in LEVELS}"
+   ],
+   "sourcing.py:95": [
+    "\"IH\": pr[\"BaseWage_IH\"] * WI[\"IH\"] * AvgWM[\"IH\"] / (AvgW[\"IH\"] * ClientP[\"IH\"])"
+   ],
+   "sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  }
+ },
+ "Share0_J": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:60": [
+    "sJ = pr[\"Share0_J\"] * max(0.05, 1 - pr[\"JuniorCut\"] * (max(0.0, Aemp[e] - pr[\"A0\"]) if ai_on else 0.0))"
+   ]
+  },
+  "notes": {
+   "workforce.py:60": [
+    "sJ = pr[\"Share0_J\"] * max(0.05, 1 - pr[\"JuniorCut\"] * (max(0.0, Aemp[e] - pr[\"A0\"]) if ai_on else 0.0))"
+   ]
+  }
+ },
+ "Share0_M": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:61": [
+    "rest0 = pr[\"Share0_M\"] + pr[\"Share0_S\"]"
+   ],
+   "src/aisim/scalar/workforce.py:62": [
+    "ShareL[e] = {\"J\": sJ, \"M\": pr[\"Share0_M\"] * (1 - sJ) / rest0, \"S\": pr[\"Share0_S\"] * (1 - sJ) / rest0}"
+   ]
+  },
+  "notes": {
+   "workforce.py:62": [
+    "ShareL[e] = {\"J\": sJ, \"M\": pr[\"Share0_M\"] * (1 - sJ) / rest0, \"S\": pr[\"Share0_S\"] * (1 - sJ) / rest0}"
+   ]
+  }
+ },
+ "Share0_S": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:61": [
+    "rest0 = pr[\"Share0_M\"] + pr[\"Share0_S\"]"
+   ],
+   "src/aisim/scalar/workforce.py:62": [
+    "ShareL[e] = {\"J\": sJ, \"M\": pr[\"Share0_M\"] * (1 - sJ) / rest0, \"S\": pr[\"Share0_S\"] * (1 - sJ) / rest0}"
+   ]
+  },
+  "notes": {
+   "workforce.py:62": [
+    "ShareL[e] = {\"J\": sJ, \"M\": pr[\"Share0_M\"] * (1 - sJ) / rest0, \"S\": pr[\"Share0_S\"] * (1 - sJ) / rest0}"
+   ]
+  }
+ },
+ "JuniorCut": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:60": [
+    "sJ = pr[\"Share0_J\"] * max(0.05, 1 - pr[\"JuniorCut\"] * (max(0.0, Aemp[e] - pr[\"A0\"]) if ai_on else 0.0))"
+   ]
+  },
+  "notes": {
+   "workforce.py:60": [
+    "sJ = pr[\"Share0_J\"] * max(0.05, 1 - pr[\"JuniorCut\"] * (max(0.0, Aemp[e] - pr[\"A0\"]) if ai_on else 0.0))"
+   ]
+  }
+ },
+ "TimeInJunior": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:137": [
+    "\"M\": min(H[u][\"J\"] / pr[\"TimeInJunior\"], V[u][\"M\"] / pr[\"PromoFillTime\"], avail[u][\"M\"]),"
+   ]
+  },
+  "notes": {
+   "workforce.py:137": [
+    "\"M\": min(H[u][\"J\"] / pr[\"TimeInJunior\"], V[u][\"M\"] / pr[\"PromoFillTime\"], avail[u][\"M\"]),"
+   ]
+  }
+ },
+ "TimeInMid": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:138": [
+    "\"S\": min(H[u][\"M\"] / pr[\"TimeInMid\"], V[u][\"S\"] / pr[\"PromoFillTime\"], avail[u][\"S\"]),"
+   ]
+  },
+  "notes": {
+   "workforce.py:138": [
+    "\"S\": min(H[u][\"M\"] / pr[\"TimeInMid\"], V[u][\"S\"] / pr[\"PromoFillTime\"], avail[u][\"S\"]),"
+   ]
+  }
+ },
+ "PromoFillTime": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:137": [
+    "\"M\": min(H[u][\"J\"] / pr[\"TimeInJunior\"], V[u][\"M\"] / pr[\"PromoFillTime\"], avail[u][\"M\"]),"
+   ],
+   "src/aisim/scalar/workforce.py:138": [
+    "\"S\": min(H[u][\"M\"] / pr[\"TimeInMid\"], V[u][\"S\"] / pr[\"PromoFillTime\"], avail[u][\"S\"]),"
+   ]
+  },
+  "notes": {
+   "workforce.py:137": [
+    "\"M\": min(H[u][\"J\"] / pr[\"TimeInJunior\"], V[u][\"M\"] / pr[\"PromoFillTime\"], avail[u][\"M\"]),"
+   ],
+   "workforce.py:138": [
+    "\"S\": min(H[u][\"M\"] / pr[\"TimeInMid\"], V[u][\"S\"] / pr[\"PromoFillTime\"], avail[u][\"S\"]),"
+   ]
+  }
+ },
+ "QuitRate_J": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:199": [
+    "quits = H[u][l] * pr[\"QuitRate_\" + l]"
+   ]
+  },
+  "notes": {
+   "labour_market.py:199": [
+    "quits = H[u][l] * pr[\"QuitRate_\" + l]"
+   ]
+  }
+ },
+ "QuitRate_M": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:199": [
+    "quits = H[u][l] * pr[\"QuitRate_\" + l]"
+   ]
+  },
+  "notes": {
+   "labour_market.py:199": [
+    "quits = H[u][l] * pr[\"QuitRate_\" + l]"
+   ]
+  }
+ },
+ "QuitRate_S": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:199": [
+    "quits = H[u][l] * pr[\"QuitRate_\" + l]"
+   ]
+  },
+  "notes": {
+   "labour_market.py:199": [
+    "quits = H[u][l] * pr[\"QuitRate_\" + l]"
+   ]
+  }
+ },
+ "LeaveITRate_J": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:200": [
+    "leave = H[u][l] * pr[\"LeaveITRate_\" + l]"
+   ]
+  },
+  "notes": {
+   "labour_market.py:200": [
+    "leave = H[u][l] * pr[\"LeaveITRate_\" + l]"
+   ]
+  }
+ },
+ "LeaveITRate_M": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:200": [
+    "leave = H[u][l] * pr[\"LeaveITRate_\" + l]"
+   ]
+  },
+  "notes": {
+   "labour_market.py:200": [
+    "leave = H[u][l] * pr[\"LeaveITRate_\" + l]"
+   ]
+  }
+ },
+ "LeaveITRate_S": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:200": [
+    "leave = H[u][l] * pr[\"LeaveITRate_\" + l]"
+   ]
+  },
+  "notes": {
+   "labour_market.py:200": [
+    "leave = H[u][l] * pr[\"LeaveITRate_\" + l]"
+   ]
+  }
+ },
+ "RetireRate_S": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:201": [
+    "retire = H[u][l] * pr[\"RetireRate_S\"] if l == \"S\" else 0.0"
+   ],
+   "src/aisim/scalar/labour_market.py:323": [
+    "rec_retire=R[r][l] * pr[\"RetireRate_S\"] if l == \"S\" else 0.0,"
+   ],
+   "src/aisim/scalar/labour_market.py:324": [
+    "seek_retire=U[r][l] * pr[\"RetireRate_S\"] if l == \"S\" else 0.0,"
+   ]
+  },
+  "notes": {
+   "labour_market.py:201": [
+    "retire = H[u][l] * pr[\"RetireRate_S\"] if l == \"S\" else 0.0"
+   ]
+  }
+ },
+ "OnboardTime": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:225": [
+    "onboard=O[u][l] / pr[\"OnboardTime\"],"
+   ]
+  },
+  "notes": {
+   "labour_market.py:225": [
+    "onboard=O[u][l] / pr[\"OnboardTime\"],"
+   ]
+  }
+ },
+ "OnboardProductivity": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:142": [
+    "capu = {u: sum(W[l] * (H[u][l] + pr[\"OnboardProductivity\"] * O[u][l]) for l in LEVELS) for u in UNITS}"
+   ],
+   "src/aisim/scalar/work.py:67": [
+    "e: sum(W[l] * (H[u][l] + pr[\"OnboardProductivity\"] * O[u][l]) for u in UNITS if EMP_OF[u] == e for l in LEVELS)"
+   ]
+  },
+  "notes": {
+   "work.py:67": [
+    "e: sum(W[l] * (H[u][l] + pr[\"OnboardProductivity\"] * O[u][l]) for u in UNITS if EMP_OF[u] == e for l in LEVELS)"
+   ],
+   "finance.py:142": [
+    "capu = {u: sum(W[l] * (H[u][l] + pr[\"OnboardProductivity\"] * O[u][l]) for l in LEVELS) for u in UNITS}"
+   ]
+  }
+ },
+ "CancelTime": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:129": [
+    "cancel_rate = (max(0.0, V[u][l] + sp) if sp <= 0 else V[u][l]) / pr[\"CancelTime\"]"
+   ]
+  },
+  "notes": {
+   "workforce.py:129": [
+    "cancel_rate = (max(0.0, V[u][l] + sp) if sp <= 0 else V[u][l]) / pr[\"CancelTime\"]"
+   ]
+  }
+ },
+ "m": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:255": [
+    "match = pr[\"m\"] * U[r][l] ** pr[\"alpha\"] * vac_pool ** (1 - pr[\"alpha\"])"
+   ]
+  },
+  "notes": {
+   "labour_market.py:255": [
+    "match = pr[\"m\"] * U[r][l] ** pr[\"alpha\"] * vac_pool ** (1 - pr[\"alpha\"])"
+   ]
+  }
+ },
+ "alpha": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:255": [
+    "match = pr[\"m\"] * U[r][l] ** pr[\"alpha\"] * vac_pool ** (1 - pr[\"alpha\"])"
+   ]
+  },
+  "notes": {
+   "labour_market.py:255": [
+    "match = pr[\"m\"] * U[r][l] ** pr[\"alpha\"] * vac_pool ** (1 - pr[\"alpha\"])"
+   ],
+   "labour_market.py:253": [
+    "if vac_pool <= 0 or U[r][l] <= 0:"
+   ]
+  }
+ },
+ "MinFillTime": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:260": [
+    "capU = U[r][l] / pr[\"MinFillTime\"]"
+   ],
+   "src/aisim/scalar/workforce.py:130": [
+    "cap = V[u][l] / pr[\"MinFillTime\"]"
+   ]
+  },
+  "notes": {
+   "workforce.py:130": [
+    "cap = V[u][l] / pr[\"MinFillTime\"]"
+   ],
+   "labour_market.py:260": [
+    "capU = U[r][l] / pr[\"MinFillTime\"]"
+   ]
+  }
+ },
+ "RecoveryTime": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:317": [
+    "rec_out = R[r][l] / pr[\"RecoveryTime\"]"
+   ]
+  },
+  "notes": {
+   "labour_market.py:317": [
+    "rec_out = R[r][l] / pr[\"RecoveryTime\"]"
+   ]
+  }
+ },
+ "BaseLeaveFrac_J": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:318": [
+    "lf = clamp(pr[\"BaseLeaveFrac_\" + l] * LeaveEffect[r], 0.0, 0.9)"
+   ]
+  },
+  "notes": {
+   "labour_market.py:318": [
+    "lf = clamp(pr[\"BaseLeaveFrac_\" + l] * LeaveEffect[r], 0.0, 0.9)"
+   ]
+  }
+ },
+ "BaseLeaveFrac_M": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:318": [
+    "lf = clamp(pr[\"BaseLeaveFrac_\" + l] * LeaveEffect[r], 0.0, 0.9)"
+   ]
+  },
+  "notes": {
+   "labour_market.py:318": [
+    "lf = clamp(pr[\"BaseLeaveFrac_\" + l] * LeaveEffect[r], 0.0, 0.9)"
+   ]
+  }
+ },
+ "BaseLeaveFrac_S": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:318": [
+    "lf = clamp(pr[\"BaseLeaveFrac_\" + l] * LeaveEffect[r], 0.0, 0.9)"
+   ]
+  },
+  "notes": {
+   "labour_market.py:318": [
+    "lf = clamp(pr[\"BaseLeaveFrac_\" + l] * LeaveEffect[r], 0.0, 0.9)"
+   ]
+  }
+ },
+ "SeekerExitRate": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:322": [
+    "seek_exit=U[r][l] * pr[\"SeekerExitRate\"] * LeaveEffect[r],"
+   ]
+  },
+  "notes": {
+   "labour_market.py:322": [
+    "seek_exit=U[r][l] * pr[\"SeekerExitRate\"] * LeaveEffect[r],"
+   ]
+  }
+ },
+ "UnempPerceptionTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:96": [
+    "st[\"PUS\"][r] += d * (UnempRate[r] - st[\"PUS\"][r]) / pr[\"UnempPerceptionTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:96": [
+    "st[\"PUS\"][r] += d * (UnempRate[r] - st[\"PUS\"][r]) / pr[\"UnempPerceptionTime\"]"
+   ]
+  }
+ },
+ "StudyTime": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:327": [
+    "Grad = {r: st[\"Pipeline\"][r] / pr[\"StudyTime\"] for r in REGIONS}"
+   ]
+  },
+  "notes": {
+   "labour_market.py:327": [
+    "Grad = {r: st[\"Pipeline\"][r] / pr[\"StudyTime\"] for r in REGIONS}"
+   ]
+  }
+ },
+ "StudentPerceptionTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:97": [
+    "st[\"PUL\"][r] += d * (UnempRate[r] - st[\"PUL\"][r]) / pr[\"StudentPerceptionTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:97": [
+    "st[\"PUL\"][r] += d * (UnempRate[r] - st[\"PUL\"][r]) / pr[\"StudentPerceptionTime\"]"
+   ]
+  }
+ },
+ "EnrolSensitivity": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:123": [
+    "EnrolEffect[r] = clamp(1 - pr[\"EnrolSensitivity\"] * (st[\"PUL\"][r] / norm - 1), 0.4, 1.3)"
+   ]
+  },
+  "notes": {
+   "labour_market.py:123": [
+    "EnrolEffect[r] = clamp(1 - pr[\"EnrolSensitivity\"] * (st[\"PUL\"][r] / norm - 1), 0.4, 1.3)"
+   ]
+  }
+ },
+ "ExtEntryRate_M": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:295": [
+    "pr[\"ExtEntryRate_\" + l]"
+   ]
+  },
+  "notes": {
+   "labour_market.py:295": [
+    "pr[\"ExtEntryRate_\" + l]"
+   ]
+  }
+ },
+ "ExtEntryRate_S": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:295": [
+    "pr[\"ExtEntryRate_\" + l]"
+   ]
+  },
+  "notes": {
+   "labour_market.py:295": [
+    "pr[\"ExtEntryRate_\" + l]"
+   ]
+  }
+ },
+ "ExtEntryMax": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:297": [
+    "* clamp(TTFr[r][l] / pr[f\"NormalTTF_{r}_{l}\"] - 1, 0.0, pr[\"ExtEntryMax\"])"
+   ]
+  },
+  "notes": {
+   "labour_market.py:297": [
+    "* clamp(TTFr[r][l] / pr[f\"NormalTTF_{r}_{l}\"] - 1, 0.0, pr[\"ExtEntryMax\"])"
+   ]
+  }
+ },
+ "BaseEnrolment_IN": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:326": [
+    "Enrol = {r: pr[\"BaseEnrolment_\" + r] * G * unemp.EnrolEffect[r] for r in REGIONS}"
+   ]
+  },
+  "notes": {
+   "labour_market.py:326": [
+    "Enrol = {r: pr[\"BaseEnrolment_\" + r] * G * unemp.EnrolEffect[r] for r in REGIONS}"
+   ]
+  }
+ },
+ "BaseEnrolment_ON": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:326": [
+    "Enrol = {r: pr[\"BaseEnrolment_\" + r] * G * unemp.EnrolEffect[r] for r in REGIONS}"
+   ]
+  },
+  "notes": {
+   "labour_market.py:326": [
+    "Enrol = {r: pr[\"BaseEnrolment_\" + r] * G * unemp.EnrolEffect[r] for r in REGIONS}"
+   ]
+  }
+ },
+ "NormalUnempRate_IN": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:373": [
+    "tight = (pr[\"NormalUnempRate_\" + rgn] / max(st[\"PUS\"][rgn], 1e-6)) ** pr[\"WageElasticity\"]"
+   ],
+   "src/aisim/scalar/labour_market.py:121": [
+    "norm = pr[\"NormalUnempRate_\" + r]"
+   ]
+  },
+  "notes": {
+   "labour_market.py:121-123": [
+    "norm = pr[\"NormalUnempRate_\" + r]",
+    "EnrolEffect[r] = clamp(1 - pr[\"EnrolSensitivity\"] * (st[\"PUL\"][r] / norm - 1), 0.4, 1.3)"
+   ],
+   "finance.py:373": [
+    "tight = (pr[\"NormalUnempRate_\" + rgn] / max(st[\"PUS\"][rgn], 1e-6)) ** pr[\"WageElasticity\"]"
+   ]
+  }
+ },
+ "NormalUnempRate_ON": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:373": [
+    "tight = (pr[\"NormalUnempRate_\" + rgn] / max(st[\"PUS\"][rgn], 1e-6)) ** pr[\"WageElasticity\"]"
+   ],
+   "src/aisim/scalar/labour_market.py:121": [
+    "norm = pr[\"NormalUnempRate_\" + r]"
+   ]
+  },
+  "notes": {
+   "labour_market.py:121-123": [
+    "norm = pr[\"NormalUnempRate_\" + r]",
+    "EnrolEffect[r] = clamp(1 - pr[\"EnrolSensitivity\"] * (st[\"PUL\"][r] / norm - 1), 0.4, 1.3)"
+   ],
+   "finance.py:373": [
+    "tight = (pr[\"NormalUnempRate_\" + rgn] / max(st[\"PUS\"][rgn], 1e-6)) ** pr[\"WageElasticity\"]"
+   ]
+  }
+ },
+ "NormalTTF_IN_M": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:297": [
+    "* clamp(TTFr[r][l] / pr[f\"NormalTTF_{r}_{l}\"] - 1, 0.0, pr[\"ExtEntryMax\"])"
+   ],
+   "src/aisim/scalar/labour_market.py:328": [
+    "TTFratio = {r: TTFr[r][\"M\"] / pr[f\"NormalTTF_{r}_M\"] for r in REGIONS}"
+   ]
+  },
+  "notes": {
+   "labour_market.py:297": [
+    "* clamp(TTFr[r][l] / pr[f\"NormalTTF_{r}_{l}\"] - 1, 0.0, pr[\"ExtEntryMax\"])"
+   ],
+   "labour_market.py:328": [
+    "TTFratio = {r: TTFr[r][\"M\"] / pr[f\"NormalTTF_{r}_M\"] for r in REGIONS}"
+   ]
+  }
+ },
+ "NormalTTF_IN_S": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:297": [
+    "* clamp(TTFr[r][l] / pr[f\"NormalTTF_{r}_{l}\"] - 1, 0.0, pr[\"ExtEntryMax\"])"
+   ]
+  },
+  "notes": {
+   "labour_market.py:297": [
+    "* clamp(TTFr[r][l] / pr[f\"NormalTTF_{r}_{l}\"] - 1, 0.0, pr[\"ExtEntryMax\"])"
+   ],
+   "labour_market.py:328": [
+    "TTFratio = {r: TTFr[r][\"M\"] / pr[f\"NormalTTF_{r}_M\"] for r in REGIONS}"
+   ]
+  }
+ },
+ "NormalTTF_ON_M": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:297": [
+    "* clamp(TTFr[r][l] / pr[f\"NormalTTF_{r}_{l}\"] - 1, 0.0, pr[\"ExtEntryMax\"])"
+   ],
+   "src/aisim/scalar/labour_market.py:328": [
+    "TTFratio = {r: TTFr[r][\"M\"] / pr[f\"NormalTTF_{r}_M\"] for r in REGIONS}"
+   ]
+  },
+  "notes": {
+   "labour_market.py:297": [
+    "* clamp(TTFr[r][l] / pr[f\"NormalTTF_{r}_{l}\"] - 1, 0.0, pr[\"ExtEntryMax\"])"
+   ],
+   "labour_market.py:328": [
+    "TTFratio = {r: TTFr[r][\"M\"] / pr[f\"NormalTTF_{r}_M\"] for r in REGIONS}"
+   ]
+  }
+ },
+ "NormalTTF_ON_S": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:297": [
+    "* clamp(TTFr[r][l] / pr[f\"NormalTTF_{r}_{l}\"] - 1, 0.0, pr[\"ExtEntryMax\"])"
+   ]
+  },
+  "notes": {
+   "labour_market.py:297": [
+    "* clamp(TTFr[r][l] / pr[f\"NormalTTF_{r}_{l}\"] - 1, 0.0, pr[\"ExtEntryMax\"])"
+   ],
+   "labour_market.py:328": [
+    "TTFratio = {r: TTFr[r][\"M\"] / pr[f\"NormalTTF_{r}_M\"] for r in REGIONS}"
+   ]
+  }
+ },
+ "GCCRampStart": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:129": [
+    "ramp(y, pr[\"GCCRampStart\"], pr[\"GCCRampEnd\"], 0.0, pr[\"GCCAppealEnd\"])"
+   ]
+  },
+  "notes": {
+   "consumer.py:129": [
+    "ramp(y, pr[\"GCCRampStart\"], pr[\"GCCRampEnd\"], 0.0, pr[\"GCCAppealEnd\"])"
+   ]
+  }
+ },
+ "GCCRampEnd": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:129": [
+    "ramp(y, pr[\"GCCRampStart\"], pr[\"GCCRampEnd\"], 0.0, pr[\"GCCAppealEnd\"])"
+   ],
+   "src/aisim/scalar/consumer.py:130": [
+    "if y < pr[\"GCCRampEnd\"]"
+   ],
+   "src/aisim/scalar/consumer.py:131": [
+    "else ramp(y, pr[\"GCCRampEnd\"], pr[\"GCCFadeEnd\"], pr[\"GCCAppealEnd\"], pr[\"GCCAppealEnd\"] * pr[\"GCCAppealKeep\"])"
+   ]
+  },
+  "notes": {
+   "consumer.py:129-131": [
+    "ramp(y, pr[\"GCCRampStart\"], pr[\"GCCRampEnd\"], 0.0, pr[\"GCCAppealEnd\"])",
+    "else ramp(y, pr[\"GCCRampEnd\"], pr[\"GCCFadeEnd\"], pr[\"GCCAppealEnd\"], pr[\"GCCAppealEnd\"] * pr[\"GCCAppealKeep\"])"
+   ]
+  }
+ },
+ "OnsiteShare0": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:81": [
+    "OnsiteShare = clamp(pr[\"OnsiteShare0\"] * (1 - pr[\"OffshoreShiftSens\"] * dTight), 0.0, 1.0)"
+   ]
+  },
+  "notes": {
+   "workforce.py:81": [
+    "OnsiteShare = clamp(pr[\"OnsiteShare0\"] * (1 - pr[\"OffshoreShiftSens\"] * dTight), 0.0, 1.0)"
+   ]
+  }
+ },
+ "OffshoreShiftSens": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:81": [
+    "OnsiteShare = clamp(pr[\"OnsiteShare0\"] * (1 - pr[\"OffshoreShiftSens\"] * dTight), 0.0, 1.0)"
+   ]
+  },
+  "notes": {
+   "workforce.py:81": [
+    "OnsiteShare = clamp(pr[\"OnsiteShare0\"] * (1 - pr[\"OffshoreShiftSens\"] * dTight), 0.0, 1.0)"
+   ]
+  }
+ },
+ "VisaMix0": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:82": [
+    "VisaMix = clamp(pr[\"VisaMix0\"] * (1 - pr[\"VisaMixSens\"] * dTight), 0.0, 1.0)"
+   ]
+  },
+  "notes": {
+   "workforce.py:82": [
+    "VisaMix = clamp(pr[\"VisaMix0\"] * (1 - pr[\"VisaMixSens\"] * dTight), 0.0, 1.0)"
+   ]
+  }
+ },
+ "VisaMixSens": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:82": [
+    "VisaMix = clamp(pr[\"VisaMix0\"] * (1 - pr[\"VisaMixSens\"] * dTight), 0.0, 1.0)"
+   ]
+  },
+  "notes": {
+   "workforce.py:82": [
+    "VisaMix = clamp(pr[\"VisaMix0\"] * (1 - pr[\"VisaMixSens\"] * dTight), 0.0, 1.0)"
+   ]
+  }
+ },
+ "VTBase": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:108": [
+    "RiskOpt[\"OIT\"] -= pr[\"VisaRiskSens\"] * max(0.0, st[\"TightPerc\"] - pr[\"VTBase\"])"
+   ],
+   "src/aisim/scalar/workforce.py:79": [
+    "VisaTight = ramp(y, pr[\"VTRampStart\"], pr[\"VTRampEnd\"], pr[\"VTBase\"], pr[\"VTEnd\"])"
+   ],
+   "src/aisim/scalar/workforce.py:80": [
+    "dTight = st[\"TightPerc\"] - pr[\"VTBase\"]"
+   ]
+  },
+  "notes": {
+   "workforce.py:79": [
+    "VisaTight = ramp(y, pr[\"VTRampStart\"], pr[\"VTRampEnd\"], pr[\"VTBase\"], pr[\"VTEnd\"])"
+   ],
+   "workforce.py:80": [
+    "dTight = st[\"TightPerc\"] - pr[\"VTBase\"]"
+   ],
+   "sourcing.py:108": [
+    "RiskOpt[\"OIT\"] -= pr[\"VisaRiskSens\"] * max(0.0, st[\"TightPerc\"] - pr[\"VTBase\"])"
+   ],
+   "labour_market.py:174-175": [
+    "conv = {l: H[\"OV\"][l] * pr[\"ConvRate\"] * (1 - VisaTight) for l in LEVELS}",
+    "VisaCap = pr[\"BaseVisaCap\"] * (1 - VisaTight) * (G if pr[\"Burn\"] >= 0.5 else 1.0)"
+   ]
+  }
+ },
+ "VTEnd": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:79": [
+    "VisaTight = ramp(y, pr[\"VTRampStart\"], pr[\"VTRampEnd\"], pr[\"VTBase\"], pr[\"VTEnd\"])"
+   ]
+  },
+  "notes": {
+   "workforce.py:79": [
+    "VisaTight = ramp(y, pr[\"VTRampStart\"], pr[\"VTRampEnd\"], pr[\"VTBase\"], pr[\"VTEnd\"])"
+   ]
+  }
+ },
+ "VTRampStart": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:79": [
+    "VisaTight = ramp(y, pr[\"VTRampStart\"], pr[\"VTRampEnd\"], pr[\"VTBase\"], pr[\"VTEnd\"])"
+   ]
+  },
+  "notes": {
+   "workforce.py:79": [
+    "VisaTight = ramp(y, pr[\"VTRampStart\"], pr[\"VTRampEnd\"], pr[\"VTBase\"], pr[\"VTEnd\"])"
+   ]
+  }
+ },
+ "VTRampEnd": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:79": [
+    "VisaTight = ramp(y, pr[\"VTRampStart\"], pr[\"VTRampEnd\"], pr[\"VTBase\"], pr[\"VTEnd\"])"
+   ]
+  },
+  "notes": {
+   "workforce.py:79": [
+    "VisaTight = ramp(y, pr[\"VTRampStart\"], pr[\"VTRampEnd\"], pr[\"VTBase\"], pr[\"VTEnd\"])"
+   ]
+  }
+ },
+ "TightPerceptionTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:106": [
+    "st[\"TightPerc\"] += d * (s.staffing.VisaTight - st[\"TightPerc\"]) / pr[\"TightPerceptionTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:106": [
+    "st[\"TightPerc\"] += d * (s.staffing.VisaTight - st[\"TightPerc\"]) / pr[\"TightPerceptionTime\"]"
+   ]
+  }
+ },
+ "BaseVisaCap": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:175": [
+    "VisaCap = pr[\"BaseVisaCap\"] * (1 - VisaTight) * (G if pr[\"Burn\"] >= 0.5 else 1.0)"
+   ]
+  },
+  "notes": {
+   "labour_market.py:175": [
+    "VisaCap = pr[\"BaseVisaCap\"] * (1 - VisaTight) * (G if pr[\"Burn\"] >= 0.5 else 1.0)"
+   ]
+  }
+ },
+ "VisaTenure": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:173": [
+    "expiry = {l: H[\"OV\"][l] / pr[\"VisaTenure\"] for l in LEVELS}"
+   ]
+  },
+  "notes": {
+   "labour_market.py:173": [
+    "expiry = {l: H[\"OV\"][l] / pr[\"VisaTenure\"] for l in LEVELS}"
+   ]
+  }
+ },
+ "ConvRate": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:174": [
+    "conv = {l: H[\"OV\"][l] * pr[\"ConvRate\"] * (1 - VisaTight) for l in LEVELS}"
+   ]
+  },
+  "notes": {
+   "labour_market.py:174": [
+    "conv = {l: H[\"OV\"][l] * pr[\"ConvRate\"] * (1 - VisaTight) for l in LEVELS}"
+   ]
+  }
+ },
+ "Wage_IH": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  },
+  "notes": {
+   "labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  }
+ },
+ "Wage_GCC": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  },
+  "notes": {
+   "labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  }
+ },
+ "Wage_VI": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  },
+  "notes": {
+   "labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  }
+ },
+ "Wage_OV": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  },
+  "notes": {
+   "labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  }
+ },
+ "Wage_OL": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  },
+  "notes": {
+   "labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  }
+ },
+ "Wage_SI_IN": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  },
+  "notes": {
+   "labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  }
+ },
+ "Wage_SI_ON": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  },
+  "notes": {
+   "labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  }
+ },
+ "Wage_BQ": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  },
+  "notes": {
+   "labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  }
+ },
+ "SwitchRate": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:151": [
+    "H[src][l] * pr[\"SwitchRate\"] * gw * V[dst][l] / vac_others if vac_others > 0 else 0.0"
+   ]
+  },
+  "notes": {
+   "labour_market.py:151": [
+    "H[src][l] * pr[\"SwitchRate\"] * gw * V[dst][l] / vac_others if vac_others > 0 else 0.0"
+   ]
+  }
+ },
+ "SwitchElasticity": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  },
+  "notes": {
+   "labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  }
+ },
+ "SwitchMax": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:147": [
+    "pr[\"SwitchMax\"],"
+   ]
+  },
+  "notes": {
+   "labour_market.py:147": [
+    "pr[\"SwitchMax\"],"
+   ]
+  }
+ },
+ "BaseWage_IH": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "src/aisim/scalar/sourcing.py:95": [
+    "\"IH\": pr[\"BaseWage_IH\"] * WI[\"IH\"] * AvgWM[\"IH\"] / (AvgW[\"IH\"] * ClientP[\"IH\"])"
+   ]
+  },
+  "notes": {
+   "finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "sourcing.py:95": [
+    "\"IH\": pr[\"BaseWage_IH\"] * WI[\"IH\"] * AvgWM[\"IH\"] / (AvgW[\"IH\"] * ClientP[\"IH\"])"
+   ],
+   "sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  }
+ },
+ "BaseWage_GCC": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "src/aisim/scalar/sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  },
+  "notes": {
+   "finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "sourcing.py:95": [
+    "\"IH\": pr[\"BaseWage_IH\"] * WI[\"IH\"] * AvgWM[\"IH\"] / (AvgW[\"IH\"] * ClientP[\"IH\"])"
+   ],
+   "sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  }
+ },
+ "BaseWage_VI": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ]
+  },
+  "notes": {
+   "finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "sourcing.py:95": [
+    "\"IH\": pr[\"BaseWage_IH\"] * WI[\"IH\"] * AvgWM[\"IH\"] / (AvgW[\"IH\"] * ClientP[\"IH\"])"
+   ],
+   "sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  }
+ },
+ "BaseWage_OV": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ]
+  },
+  "notes": {
+   "finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "sourcing.py:95": [
+    "\"IH\": pr[\"BaseWage_IH\"] * WI[\"IH\"] * AvgWM[\"IH\"] / (AvgW[\"IH\"] * ClientP[\"IH\"])"
+   ],
+   "sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  }
+ },
+ "BaseWage_OL": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ]
+  },
+  "notes": {
+   "finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "sourcing.py:95": [
+    "\"IH\": pr[\"BaseWage_IH\"] * WI[\"IH\"] * AvgWM[\"IH\"] / (AvgW[\"IH\"] * ClientP[\"IH\"])"
+   ],
+   "sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  }
+ },
+ "BaseWage_SI_IN": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ]
+  },
+  "notes": {
+   "finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "sourcing.py:95": [
+    "\"IH\": pr[\"BaseWage_IH\"] * WI[\"IH\"] * AvgWM[\"IH\"] / (AvgW[\"IH\"] * ClientP[\"IH\"])"
+   ],
+   "sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  }
+ },
+ "BaseWage_SI_ON": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ]
+  },
+  "notes": {
+   "finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "sourcing.py:95": [
+    "\"IH\": pr[\"BaseWage_IH\"] * WI[\"IH\"] * AvgWM[\"IH\"] / (AvgW[\"IH\"] * ClientP[\"IH\"])"
+   ],
+   "sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  }
+ },
+ "BaseWage_BQ": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ]
+  },
+  "notes": {
+   "finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "sourcing.py:95": [
+    "\"IH\": pr[\"BaseWage_IH\"] * WI[\"IH\"] * AvgWM[\"IH\"] / (AvgW[\"IH\"] * ClientP[\"IH\"])"
+   ],
+   "sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  }
+ },
+ "WageMult_J": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "src/aisim/scalar/sourcing.py:92": [
+    "AvgWM = {e: sum(ShareL[e][l] * pr[\"WageMult_\" + l] for l in LEVELS) for e in (\"IH\", \"GCC\")}"
+   ]
+  },
+  "notes": {
+   "finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "sourcing.py:92": [
+    "AvgWM = {e: sum(ShareL[e][l] * pr[\"WageMult_\" + l] for l in LEVELS) for e in (\"IH\", \"GCC\")}"
+   ]
+  }
+ },
+ "WageMult_M": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "src/aisim/scalar/sourcing.py:92": [
+    "AvgWM = {e: sum(ShareL[e][l] * pr[\"WageMult_\" + l] for l in LEVELS) for e in (\"IH\", \"GCC\")}"
+   ]
+  },
+  "notes": {
+   "finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "sourcing.py:92": [
+    "AvgWM = {e: sum(ShareL[e][l] * pr[\"WageMult_\" + l] for l in LEVELS) for e in (\"IH\", \"GCC\")}"
+   ]
+  }
+ },
+ "WageMult_S": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "src/aisim/scalar/sourcing.py:92": [
+    "AvgWM = {e: sum(ShareL[e][l] * pr[\"WageMult_\" + l] for l in LEVELS) for e in (\"IH\", \"GCC\")}"
+   ]
+  },
+  "notes": {
+   "finance.py:144": [
+    "Wage = {u: {l: pr[\"BaseWage_\" + u] * pr[\"WageMult_\" + l] * WI[u] for l in LEVELS} for u in UNITS}"
+   ],
+   "sourcing.py:92": [
+    "AvgWM = {e: sum(ShareL[e][l] * pr[\"WageMult_\" + l] for l in LEVELS) for e in (\"IH\", \"GCC\")}"
+   ]
+  }
+ },
+ "Price_VI": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:236": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)"
+   ],
+   "src/aisim/scalar/finance.py:237": [
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  },
+  "notes": {
+   "finance.py:236-237": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)",
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  }
+ },
+ "Price_OV": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:236": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)"
+   ],
+   "src/aisim/scalar/finance.py:237": [
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  },
+  "notes": {
+   "finance.py:236-237": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)",
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  }
+ },
+ "Price_OL": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:236": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)"
+   ],
+   "src/aisim/scalar/finance.py:237": [
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  },
+  "notes": {
+   "finance.py:236-237": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)",
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  }
+ },
+ "Price_SI_IN": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:236": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)"
+   ],
+   "src/aisim/scalar/finance.py:237": [
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  },
+  "notes": {
+   "finance.py:236-237": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)",
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  }
+ },
+ "Price_SI_ON": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:236": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)"
+   ],
+   "src/aisim/scalar/finance.py:237": [
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  },
+  "notes": {
+   "finance.py:236-237": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)",
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  }
+ },
+ "Price_BQ": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:236": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)"
+   ],
+   "src/aisim/scalar/finance.py:237": [
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  },
+  "notes": {
+   "finance.py:236-237": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)",
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  }
+ },
+ "PriceMult_OIT": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:236": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)"
+   ],
+   "src/aisim/scalar/finance.py:237": [
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  },
+  "notes": {
+   "finance.py:236-237": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)",
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  }
+ },
+ "PriceMult_GSI": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:236": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)"
+   ],
+   "src/aisim/scalar/finance.py:237": [
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  },
+  "notes": {
+   "finance.py:236-237": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)",
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  }
+ },
+ "PriceMult_BQ": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:236": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)"
+   ],
+   "src/aisim/scalar/finance.py:237": [
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  },
+  "notes": {
+   "finance.py:236-237": [
+    "BaseRev = sum(Delivered[u] * pr[\"Price_\" + u] * pr[\"PriceMult_\" + v] for u in vu)",
+    "BasePriceAvg = sum(UnitIn[u] * pr[\"Price_\" + u] for u in vu) * pr[\"PriceMult_\" + v] / sum(UnitIn[u] for u in vu)"
+   ]
+  }
+ },
+ "GSIOffshore": {
+  "evidence": {
+   "src/aisim/scalar/workforce.py:89": [
+    "\"SI_IN\": pr[\"GSIOffshore\"],"
+   ],
+   "src/aisim/scalar/workforce.py:90": [
+    "\"SI_ON\": 1 - pr[\"GSIOffshore\"],"
+   ]
+  },
+  "notes": {
+   "workforce.py:89-90": [
+    "\"SI_IN\": pr[\"GSIOffshore\"],",
+    "\"SI_ON\": 1 - pr[\"GSIOffshore\"],"
+   ]
+  }
+ },
+ "VisaFeePerHire": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:242": [
+    "sum(hires[\"OV\"][l] for l in LEVELS) * pr[\"VisaFeePerHire\"]"
+   ]
+  },
+  "notes": {
+   "finance.py:242": [
+    "sum(hires[\"OV\"][l] for l in LEVELS) * pr[\"VisaFeePerHire\"]"
+   ]
+  }
+ },
+ "VisaComplianceCost": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:243": [
+    "+ sum(H[\"OV\"][l] for l in LEVELS) * pr[\"VisaComplianceCost\"]"
+   ]
+  },
+  "notes": {
+   "finance.py:243": [
+    "+ sum(H[\"OV\"][l] for l in LEVELS) * pr[\"VisaComplianceCost\"]"
+   ]
+  }
+ },
+ "AICost2024": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "src/aisim/scalar/finance.py:151": [
+    "AICostPerUnit = pr[\"AICost2024\"] * (1 - pr[\"AICostDecline\"]) ** (y - 2024) * AIShockNow"
+   ]
+  },
+  "notes": {
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ]
+  }
+ },
+ "AICostDecline": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:111": [
+    "CreditCostPB = pr[\"CreditCost2024\"] * (1 - pr[\"AICostDecline\"]) ** (y - 2024) * AIShockNow"
+   ],
+   "src/aisim/scalar/finance.py:151": [
+    "AICostPerUnit = pr[\"AICost2024\"] * (1 - pr[\"AICostDecline\"]) ** (y - 2024) * AIShockNow"
+   ]
+  },
+  "notes": {
+   "finance.py:151": [
+    "AICostPerUnit = pr[\"AICost2024\"] * (1 - pr[\"AICostDecline\"]) ** (y - 2024) * AIShockNow"
+   ],
+   "consumer.py:111": [
+    "CreditCostPB = pr[\"CreditCost2024\"] * (1 - pr[\"AICostDecline\"]) ** (y - 2024) * AIShockNow"
+   ],
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "consumer.py:112": [
+    "CEc = clamp((pr[\"CreditCost2024\"] / CreditCostPB) ** pr[\"CostAdoptElast\"], pr[\"CEMin\"], pr[\"CEMax\"])"
+   ]
+  }
+ },
+ "AIShockMult": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:146": [
+    "AIShockNow = pr[\"AIShockMult\"] if pr[\"AIShockStart\"] <= y < pr[\"AIShockEnd\"] else 1.0"
+   ]
+  },
+  "notes": {
+   "finance.py:146": [
+    "AIShockNow = pr[\"AIShockMult\"] if pr[\"AIShockStart\"] <= y < pr[\"AIShockEnd\"] else 1.0"
+   ],
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "consumer.py:112": [
+    "CEc = clamp((pr[\"CreditCost2024\"] / CreditCostPB) ** pr[\"CostAdoptElast\"], pr[\"CEMin\"], pr[\"CEMax\"])"
+   ]
+  }
+ },
+ "AIShockStart": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:146": [
+    "AIShockNow = pr[\"AIShockMult\"] if pr[\"AIShockStart\"] <= y < pr[\"AIShockEnd\"] else 1.0"
+   ]
+  },
+  "notes": {
+   "finance.py:146": [
+    "AIShockNow = pr[\"AIShockMult\"] if pr[\"AIShockStart\"] <= y < pr[\"AIShockEnd\"] else 1.0"
+   ]
+  }
+ },
+ "AIShockEnd": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:146": [
+    "AIShockNow = pr[\"AIShockMult\"] if pr[\"AIShockStart\"] <= y < pr[\"AIShockEnd\"] else 1.0"
+   ]
+  },
+  "notes": {
+   "finance.py:146": [
+    "AIShockNow = pr[\"AIShockMult\"] if pr[\"AIShockStart\"] <= y < pr[\"AIShockEnd\"] else 1.0"
+   ]
+  }
+ },
+ "OverheadRate_OIT": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:111": [
+    "st[\"Overhead\"][v] += d * (pr[\"OverheadRate_\" + v] * f.Revenue - st[\"Overhead\"][v]) / pr[\"OverheadAdjTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:111": [
+    "st[\"Overhead\"][v] += d * (pr[\"OverheadRate_\" + v] * f.Revenue - st[\"Overhead\"][v]) / pr[\"OverheadAdjTime\"]"
+   ]
+  }
+ },
+ "OverheadRate_GSI": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:111": [
+    "st[\"Overhead\"][v] += d * (pr[\"OverheadRate_\" + v] * f.Revenue - st[\"Overhead\"][v]) / pr[\"OverheadAdjTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:111": [
+    "st[\"Overhead\"][v] += d * (pr[\"OverheadRate_\" + v] * f.Revenue - st[\"Overhead\"][v]) / pr[\"OverheadAdjTime\"]"
+   ]
+  }
+ },
+ "OverheadRate_BQ": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:111": [
+    "st[\"Overhead\"][v] += d * (pr[\"OverheadRate_\" + v] * f.Revenue - st[\"Overhead\"][v]) / pr[\"OverheadAdjTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:111": [
+    "st[\"Overhead\"][v] += d * (pr[\"OverheadRate_\" + v] * f.Revenue - st[\"Overhead\"][v]) / pr[\"OverheadAdjTime\"]"
+   ]
+  }
+ },
+ "OverheadAdjTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:111": [
+    "st[\"Overhead\"][v] += d * (pr[\"OverheadRate_\" + v] * f.Revenue - st[\"Overhead\"][v]) / pr[\"OverheadAdjTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:111": [
+    "st[\"Overhead\"][v] += d * (pr[\"OverheadRate_\" + v] * f.Revenue - st[\"Overhead\"][v]) / pr[\"OverheadAdjTime\"]"
+   ]
+  }
+ },
+ "PassThrough": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:201": [
+    "Anchor = (1 / (CP * (1 + pr[\"PriceHorizon\"] * PU))) ** pr[\"PassThrough\"]  # clients price in the trend"
+   ]
+  },
+  "notes": {
+   "finance.py:201": [
+    "Anchor = (1 / (CP * (1 + pr[\"PriceHorizon\"] * PU))) ** pr[\"PassThrough\"]  # clients price in the trend"
+   ]
+  }
+ },
+ "ClientPerceptionTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:103": [
+    "st[\"ClientP\"][e] += d * (Pe[e] - st[\"ClientP\"][e]) / pr[\"ClientPerceptionTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:103": [
+    "st[\"ClientP\"][e] += d * (Pe[e] - st[\"ClientP\"][e]) / pr[\"ClientPerceptionTime\"]"
+   ]
+  }
+ },
+ "PriceShock_OIT": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:198": [
+    "shock = pr[\"PriceShock_\" + v] if y >= pr[\"PriceShockYear\"] else 0.0"
+   ]
+  },
+  "notes": {
+   "finance.py:198": [
+    "shock = pr[\"PriceShock_\" + v] if y >= pr[\"PriceShockYear\"] else 0.0"
+   ]
+  }
+ },
+ "PriceShock_GSI": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:198": [
+    "shock = pr[\"PriceShock_\" + v] if y >= pr[\"PriceShockYear\"] else 0.0"
+   ]
+  },
+  "notes": {
+   "finance.py:198": [
+    "shock = pr[\"PriceShock_\" + v] if y >= pr[\"PriceShockYear\"] else 0.0"
+   ]
+  }
+ },
+ "PriceShock_BQ": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:198": [
+    "shock = pr[\"PriceShock_\" + v] if y >= pr[\"PriceShockYear\"] else 0.0"
+   ]
+  },
+  "notes": {
+   "finance.py:198": [
+    "shock = pr[\"PriceShock_\" + v] if y >= pr[\"PriceShockYear\"] else 0.0"
+   ]
+  }
+ },
+ "PriceShockYear": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:198": [
+    "shock = pr[\"PriceShock_\" + v] if y >= pr[\"PriceShockYear\"] else 0.0"
+   ]
+  },
+  "notes": {
+   "finance.py:198": [
+    "shock = pr[\"PriceShock_\" + v] if y >= pr[\"PriceShockYear\"] else 0.0"
+   ]
+  }
+ },
+ "ViabilityTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:112": [
+    "st[\"Viab\"][v] += d * (b.Margin - st[\"Viab\"][v]) / pr[\"ViabilityTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:112": [
+    "st[\"Viab\"][v] += d * (b.Margin - st[\"Viab\"][v]) / pr[\"ViabilityTime\"]"
+   ]
+  }
+ },
+ "Deadband": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:211": [
+    "(dev - pr[\"Deadband\"])"
+   ],
+   "src/aisim/scalar/finance.py:212": [
+    "if dev > pr[\"Deadband\"]"
+   ],
+   "src/aisim/scalar/finance.py:213": [
+    "else ((dev + pr[\"Deadband\"]) if dev < -pr[\"Deadband\"] else 0.0)"
+   ]
+  },
+  "notes": {
+   "finance.py:211-213": [
+    "(dev - pr[\"Deadband\"])",
+    "else ((dev + pr[\"Deadband\"]) if dev < -pr[\"Deadband\"] else 0.0)"
+   ]
+  }
+ },
+ "ExitThreshold": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:106": [
+    "0.0, pr[\"ExitThreshold\"] - VF[v].Vi"
+   ]
+  },
+  "notes": {
+   "sourcing.py:106": [
+    "0.0, pr[\"ExitThreshold\"] - VF[v].Vi"
+   ]
+  }
+ },
+ "NormalMargin_OIT": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:208": [
+    "nm = pr[\"NormalMargin_\" + v]"
+   ]
+  },
+  "notes": {
+   "finance.py:208": [
+    "nm = pr[\"NormalMargin_\" + v]"
+   ],
+   "finance.py:330": [
+    "Uvend = pr[\"VendSens\"] * (Profit - f.nm) / f.nm"
+   ],
+   "finance.py:336": [
+    "Afford = clamp(f.Vi / f.nm, 0.0, 1.0)"
+   ]
+  }
+ },
+ "NormalMargin_GSI": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:208": [
+    "nm = pr[\"NormalMargin_\" + v]"
+   ]
+  },
+  "notes": {
+   "finance.py:208": [
+    "nm = pr[\"NormalMargin_\" + v]"
+   ],
+   "finance.py:330": [
+    "Uvend = pr[\"VendSens\"] * (Profit - f.nm) / f.nm"
+   ],
+   "finance.py:336": [
+    "Afford = clamp(f.Vi / f.nm, 0.0, 1.0)"
+   ]
+  }
+ },
+ "NormalMargin_BQ": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:208": [
+    "nm = pr[\"NormalMargin_\" + v]"
+   ]
+  },
+  "notes": {
+   "finance.py:208": [
+    "nm = pr[\"NormalMargin_\" + v]"
+   ],
+   "finance.py:330": [
+    "Uvend = pr[\"VendSens\"] * (Profit - f.nm) / f.nm"
+   ],
+   "finance.py:336": [
+    "Afford = clamp(f.Vi / f.nm, 0.0, 1.0)"
+   ]
+  }
+ },
+ "CostProgramSens": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:340": [
+    "CostProgTarget = clamp(pr[\"CostProgramSens\"] * max(0.0, -f.DevEff), 0.0, pr[\"MaxSavings\"])"
+   ]
+  },
+  "notes": {
+   "finance.py:340": [
+    "CostProgTarget = clamp(pr[\"CostProgramSens\"] * max(0.0, -f.DevEff), 0.0, pr[\"MaxSavings\"])"
+   ]
+  }
+ },
+ "MaxSavings": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:340": [
+    "CostProgTarget = clamp(pr[\"CostProgramSens\"] * max(0.0, -f.DevEff), 0.0, pr[\"MaxSavings\"])"
+   ]
+  },
+  "notes": {
+   "finance.py:340": [
+    "CostProgTarget = clamp(pr[\"CostProgramSens\"] * max(0.0, -f.DevEff), 0.0, pr[\"MaxSavings\"])"
+   ]
+  }
+ },
+ "CostProgramTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:113": [
+    "st[\"CostProg\"][v] += d * (b.CostProgTarget - st[\"CostProg\"][v]) / pr[\"CostProgramTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:113": [
+    "st[\"CostProg\"][v] += d * (b.CostProgTarget - st[\"CostProg\"][v]) / pr[\"CostProgramTime\"]"
+   ]
+  }
+ },
+ "WagesEndogenous": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:371": [
+    "if pr[\"WagesEndogenous\"] >= 0.5:"
+   ]
+  },
+  "notes": {
+   "finance.py:371": [
+    "if pr[\"WagesEndogenous\"] >= 0.5:"
+   ]
+  }
+ },
+ "WageElasticity": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:373": [
+    "tight = (pr[\"NormalUnempRate_\" + rgn] / max(st[\"PUS\"][rgn], 1e-6)) ** pr[\"WageElasticity\"]"
+   ]
+  },
+  "notes": {
+   "finance.py:373": [
+    "tight = (pr[\"NormalUnempRate_\" + rgn] / max(st[\"PUS\"][rgn], 1e-6)) ** pr[\"WageElasticity\"]"
+   ]
+  }
+ },
+ "WageRestraint": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:375": [
+    "restraint = (1 - pr[\"WageRestraint\"] * max(0.0, -VF[e].DevEff)) if e in VENDORS else 1.0"
+   ]
+  },
+  "notes": {
+   "finance.py:375": [
+    "restraint = (1 - pr[\"WageRestraint\"] * max(0.0, -VF[e].DevEff)) if e in VENDORS else 1.0"
+   ]
+  }
+ },
+ "WageAdjTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:124": [
+    "st[\"WI\"][u] += d * (WITarget[u] - st[\"WI\"][u]) / pr[\"WageAdjTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:124": [
+    "st[\"WI\"][u] += d * (WITarget[u] - st[\"WI\"][u]) / pr[\"WageAdjTime\"]"
+   ]
+  }
+ },
+ "WageMin": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:376": [
+    "WITarget[u] = clamp(tight * restraint, pr[\"WageMin\"], pr[\"WageMax\"])"
+   ]
+  },
+  "notes": {
+   "labour_market.py:148": [
+    "((pr[\"Wage_\" + dst] * WI[dst]) / (pr[\"Wage_\" + src] * WI[src])) ** pr[\"SwitchElasticity\"],"
+   ]
+  }
+ },
+ "WageMax": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:376": [
+    "WITarget[u] = clamp(tight * restraint, pr[\"WageMin\"], pr[\"WageMax\"])"
+   ]
+  },
+  "notes": {
+   "finance.py:376": [
+    "WITarget[u] = clamp(tight * restraint, pr[\"WageMin\"], pr[\"WageMax\"])"
+   ]
+  }
+ },
+ "BaseDur_FP": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ],
+   "src/aisim/scalar/finance.py:230": [
+    "ExpLeg = {k: Leg[k] / pr[\"BaseDur_\" + k] for k in TYPES}"
+   ]
+  },
+  "notes": {
+   "finance.py:230": [
+    "ExpLeg = {k: Leg[k] / pr[\"BaseDur_\" + k] for k in TYPES}"
+   ],
+   "finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ]
+  }
+ },
+ "BaseDur_TM": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ],
+   "src/aisim/scalar/finance.py:230": [
+    "ExpLeg = {k: Leg[k] / pr[\"BaseDur_\" + k] for k in TYPES}"
+   ]
+  },
+  "notes": {
+   "finance.py:230": [
+    "ExpLeg = {k: Leg[k] / pr[\"BaseDur_\" + k] for k in TYPES}"
+   ],
+   "finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ]
+  }
+ },
+ "BaseDur_MS": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ],
+   "src/aisim/scalar/finance.py:230": [
+    "ExpLeg = {k: Leg[k] / pr[\"BaseDur_\" + k] for k in TYPES}"
+   ]
+  },
+  "notes": {
+   "finance.py:230": [
+    "ExpLeg = {k: Leg[k] / pr[\"BaseDur_\" + k] for k in TYPES}"
+   ],
+   "finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ]
+  }
+ },
+ "BaseDur_SA": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ],
+   "src/aisim/scalar/finance.py:230": [
+    "ExpLeg = {k: Leg[k] / pr[\"BaseDur_\" + k] for k in TYPES}"
+   ]
+  },
+  "notes": {
+   "finance.py:230": [
+    "ExpLeg = {k: Leg[k] / pr[\"BaseDur_\" + k] for k in TYPES}"
+   ],
+   "finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ]
+  }
+ },
+ "BaseDur_OB": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ],
+   "src/aisim/scalar/finance.py:230": [
+    "ExpLeg = {k: Leg[k] / pr[\"BaseDur_\" + k] for k in TYPES}"
+   ]
+  },
+  "notes": {
+   "finance.py:230": [
+    "ExpLeg = {k: Leg[k] / pr[\"BaseDur_\" + k] for k in TYPES}"
+   ],
+   "finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ]
+  }
+ },
+ "MinDur": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ]
+  },
+  "notes": {
+   "finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ]
+  }
+ },
+ "DurPUSens": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ]
+  },
+  "notes": {
+   "finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ]
+  }
+ },
+ "DurPowerElast": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ]
+  },
+  "notes": {
+   "finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ]
+  }
+ },
+ "TrendTime": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:200": [
+    "PU = max(0.0, (CP - st[\"ClientPRef\"][v]) / (st[\"ClientPRef\"][v] * pr[\"TrendTime\"]))"
+   ],
+   "src/aisim/scalar/integrate.py:105": [
+    "st[\"ClientPRef\"][e] += d * (st[\"ClientP\"][e] - st[\"ClientPRef\"][e]) / pr[\"TrendTime\"]"
+   ]
+  },
+  "notes": {
+   "finance.py:200": [
+    "PU = max(0.0, (CP - st[\"ClientPRef\"][v]) / (st[\"ClientPRef\"][v] * pr[\"TrendTime\"]))"
+   ],
+   "integrate.py:105": [
+    "st[\"ClientPRef\"][e] += d * (st[\"ClientP\"][e] - st[\"ClientPRef\"][e]) / pr[\"TrendTime\"]"
+   ]
+  }
+ },
+ "MSGlideShare": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:194": [
+    "Pass = {\"FP\": 0.0, \"TM\": 1.0, \"MS\": pr[\"MSGlideShare\"], \"SA\": 1.0, \"OB\": pr[\"OBGainShare\"]}"
+   ]
+  },
+  "notes": {
+   "finance.py:194": [
+    "Pass = {\"FP\": 0.0, \"TM\": 1.0, \"MS\": pr[\"MSGlideShare\"], \"SA\": 1.0, \"OB\": pr[\"OBGainShare\"]}"
+   ]
+  }
+ },
+ "OBGainShare": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:194": [
+    "Pass = {\"FP\": 0.0, \"TM\": 1.0, \"MS\": pr[\"MSGlideShare\"], \"SA\": 1.0, \"OB\": pr[\"OBGainShare\"]}"
+   ]
+  },
+  "notes": {
+   "finance.py:194": [
+    "Pass = {\"FP\": 0.0, \"TM\": 1.0, \"MS\": pr[\"MSGlideShare\"], \"SA\": 1.0, \"OB\": pr[\"OBGainShare\"]}"
+   ]
+  }
+ },
+ "ConsSens": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:323": [
+    "Ucons = -pr[\"ConsSens\"] * (1 - Pass[k]) * PU * D / 2"
+   ],
+   "src/aisim/scalar/finance.py:325": [
+    "Ucons -= pr[\"ConsSens\"] * pr[\"EffortDistrust\"] * (1 - 1 / ClientP[v])"
+   ]
+  },
+  "notes": {
+   "finance.py:323": [
+    "Ucons = -pr[\"ConsSens\"] * (1 - Pass[k]) * PU * D / 2"
+   ],
+   "finance.py:325": [
+    "Ucons -= pr[\"ConsSens\"] * pr[\"EffortDistrust\"] * (1 - 1 / ClientP[v])"
+   ]
+  }
+ },
+ "EffortDistrust": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:325": [
+    "Ucons -= pr[\"ConsSens\"] * pr[\"EffortDistrust\"] * (1 - 1 / ClientP[v])"
+   ]
+  },
+  "notes": {
+   "finance.py:325": [
+    "Ucons -= pr[\"ConsSens\"] * pr[\"EffortDistrust\"] * (1 - 1 / ClientP[v])"
+   ]
+  }
+ },
+ "VendSens": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:330": [
+    "Uvend = pr[\"VendSens\"] * (Profit - f.nm) / f.nm"
+   ]
+  },
+  "notes": {
+   "finance.py:330": [
+    "Uvend = pr[\"VendSens\"] * (Profit - f.nm) / f.nm"
+   ]
+  }
+ },
+ "SATTFSens": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:327": [
+    "Ucons += pr[\"SATTFSens\"] * clamp(TTFratio[\"ON\"] - 1, -1.0, 2.0)"
+   ]
+  },
+  "notes": {
+   "finance.py:327": [
+    "Ucons += pr[\"SATTFSens\"] * clamp(TTFratio[\"ON\"] - 1, -1.0, 2.0)"
+   ]
+  }
+ },
+ "BargainW0": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:317": [
+    "wv = clamp(pr[\"BargainW0\"] * f.Power, 0.1, 0.9)"
+   ]
+  },
+  "notes": {
+   "finance.py:317": [
+    "wv = clamp(pr[\"BargainW0\"] * f.Power, 0.1, 0.9)"
+   ]
+  }
+ },
+ "PowerSens": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:215": [
+    "Power = clamp(1 + pr[\"PowerSens\"] * dev, pr[\"PowerMin\"], pr[\"PowerMax\"])"
+   ]
+  },
+  "notes": {
+   "finance.py:215": [
+    "Power = clamp(1 + pr[\"PowerSens\"] * dev, pr[\"PowerMin\"], pr[\"PowerMax\"])"
+   ]
+  }
+ },
+ "PowerMin": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:215": [
+    "Power = clamp(1 + pr[\"PowerSens\"] * dev, pr[\"PowerMin\"], pr[\"PowerMax\"])"
+   ]
+  },
+  "notes": {
+   "finance.py:221": [
+    "k: max(pr[\"MinDur\"], pr[\"BaseDur_\" + k] / (1 + pr[\"DurPUSens\"] * PU) * Power ** pr[\"DurPowerElast\"])"
+   ],
+   "finance.py:215": [
+    "Power = clamp(1 + pr[\"PowerSens\"] * dev, pr[\"PowerMin\"], pr[\"PowerMax\"])"
+   ]
+  }
+ },
+ "PowerMax": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:215": [
+    "Power = clamp(1 + pr[\"PowerSens\"] * dev, pr[\"PowerMin\"], pr[\"PowerMax\"])"
+   ]
+  },
+  "notes": {
+   "finance.py:215": [
+    "Power = clamp(1 + pr[\"PowerSens\"] * dev, pr[\"PowerMin\"], pr[\"PowerMax\"])"
+   ]
+  }
+ },
+ "SalesCostRate": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:313": [
+    "SalesCost = pr[\"SalesCostRate\"] * f.Revenue * SignRate"
+   ]
+  },
+  "notes": {
+   "finance.py:313": [
+    "SalesCost = pr[\"SalesCostRate\"] * f.Revenue * SignRate"
+   ]
+  }
+ },
+ "IHReviewTime": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:66": [
+    "IHTurn = IHW[x] / pr[\"IHReviewTime\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:66": [
+    "IHTurn = IHW[x] / pr[\"IHReviewTime\"]"
+   ]
+  }
+ },
+ "GCCReviewTime": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:67": [
+    "GCCTurn = GCCW[x] / pr[\"GCCReviewTime\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:67": [
+    "GCCTurn = GCCW[x] / pr[\"GCCReviewTime\"]"
+   ]
+  }
+ },
+ "Contest": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:43": [
+    "st[\"IHW\"][x] += d * (s_.Contested * st[\"SrcPerc\"][x][\"IH\"] - pr[\"Contest\"] * s_.IHTurn)"
+   ],
+   "src/aisim/scalar/integrate.py:44": [
+    "st[\"GCCW\"][x] += d * (s_.Contested * st[\"SrcPerc\"][x][\"GCC\"] - pr[\"Contest\"] * s_.GCCTurn)"
+   ],
+   "src/aisim/scalar/sourcing.py:69": [
+    "Contested = pr[\"Contest\"] * (IHTurn + GCCTurn + sum(VExp.values()))"
+   ],
+   "src/aisim/scalar/sourcing.py:70": [
+    "SignS[x] = {v: (1 - pr[\"Contest\"]) * VExp[v] + Contested * SrcPerc[x][v] for v in VENDORS}"
+   ]
+  },
+  "notes": {
+   "sourcing.py:69-70": [
+    "Contested = pr[\"Contest\"] * (IHTurn + GCCTurn + sum(VExp.values()))",
+    "SignS[x] = {v: (1 - pr[\"Contest\"]) * VExp[v] + Contested * SrcPerc[x][v] for v in VENDORS}"
+   ],
+   "integrate.py:43-44": [
+    "st[\"IHW\"][x] += d * (s_.Contested * st[\"SrcPerc\"][x][\"IH\"] - pr[\"Contest\"] * s_.IHTurn)",
+    "st[\"GCCW\"][x] += d * (s_.Contested * st[\"SrcPerc\"][x][\"GCC\"] - pr[\"Contest\"] * s_.GCCTurn)"
+   ]
+  }
+ },
+ "SrcPerceptionTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:48": [
+    "st[\"SrcPerc\"][x][e] += d * (SrcTarget[x][e] - st[\"SrcPerc\"][x][e]) / pr[\"SrcPerceptionTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:48": [
+    "st[\"SrcPerc\"][x][e] += d * (SrcTarget[x][e] - st[\"SrcPerc\"][x][e]) / pr[\"SrcPerceptionTime\"]"
+   ]
+  }
+ },
+ "SrcCostSens": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:141": [
+    "- pr[\"SrcCostSens\"] * CostOpt[e] / pr[\"CostRef\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:141": [
+    "- pr[\"SrcCostSens\"] * CostOpt[e] / pr[\"CostRef\"]"
+   ]
+  }
+ },
+ "GCCOverhead": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:391": [
+    "ServicesSpend = LabourCost[\"IH\"] + LabourCost[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) + RevenueTot + AICostCons"
+   ],
+   "src/aisim/scalar/sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  },
+  "notes": {
+   "finance.py:391": [
+    "ServicesSpend = LabourCost[\"IH\"] + LabourCost[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) + RevenueTot + AICostCons"
+   ],
+   "sourcing.py:97": [
+    "\"GCC\": pr[\"BaseWage_GCC\"] * WI[\"GCC\"] * AvgWM[\"GCC\"] * (1 + pr[\"GCCOverhead\"]) / (AvgW[\"GCC\"] * ClientP[\"GCC\"])"
+   ]
+  }
+ },
+ "CostRef": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:141": [
+    "- pr[\"SrcCostSens\"] * CostOpt[e] / pr[\"CostRef\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:141": [
+    "- pr[\"SrcCostSens\"] * CostOpt[e] / pr[\"CostRef\"]"
+   ]
+  }
+ },
+ "ViabSens": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:105": [
+    "RiskOpt[v] = pr[\"ViabSens\"] * min(0.0, VF[v].DevEff) - pr[\"ExitPenalty\"] * max("
+   ]
+  },
+  "notes": {
+   "sourcing.py:105": [
+    "RiskOpt[v] = pr[\"ViabSens\"] * min(0.0, VF[v].DevEff) - pr[\"ExitPenalty\"] * max("
+   ]
+  }
+ },
+ "ExitPenalty": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:105": [
+    "RiskOpt[v] = pr[\"ViabSens\"] * min(0.0, VF[v].DevEff) - pr[\"ExitPenalty\"] * max("
+   ]
+  },
+  "notes": {
+   "sourcing.py:105": [
+    "RiskOpt[v] = pr[\"ViabSens\"] * min(0.0, VF[v].DevEff) - pr[\"ExitPenalty\"] * max("
+   ]
+  }
+ },
+ "VisaRiskSens": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:108": [
+    "RiskOpt[\"OIT\"] -= pr[\"VisaRiskSens\"] * max(0.0, st[\"TightPerc\"] - pr[\"VTBase\"])"
+   ]
+  },
+  "notes": {
+   "sourcing.py:108": [
+    "RiskOpt[\"OIT\"] -= pr[\"VisaRiskSens\"] * max(0.0, st[\"TightPerc\"] - pr[\"VTBase\"])"
+   ]
+  }
+ },
+ "CapSens": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:143": [
+    "- pr[\"CapSens\"] * max(0.0, TTFratio[EMP_POOL[e]] - 1)"
+   ]
+  },
+  "notes": {
+   "sourcing.py:143": [
+    "- pr[\"CapSens\"] * max(0.0, TTFratio[EMP_POOL[e]] - 1)"
+   ]
+  }
+ },
+ "GCCAppealEnd": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:129": [
+    "ramp(y, pr[\"GCCRampStart\"], pr[\"GCCRampEnd\"], 0.0, pr[\"GCCAppealEnd\"])"
+   ],
+   "src/aisim/scalar/consumer.py:131": [
+    "else ramp(y, pr[\"GCCRampEnd\"], pr[\"GCCFadeEnd\"], pr[\"GCCAppealEnd\"], pr[\"GCCAppealEnd\"] * pr[\"GCCAppealKeep\"])"
+   ]
+  },
+  "notes": {
+   "consumer.py:129": [
+    "ramp(y, pr[\"GCCRampStart\"], pr[\"GCCRampEnd\"], 0.0, pr[\"GCCAppealEnd\"])"
+   ],
+   "consumer.py:131": [
+    "else ramp(y, pr[\"GCCRampEnd\"], pr[\"GCCFadeEnd\"], pr[\"GCCAppealEnd\"], pr[\"GCCAppealEnd\"] * pr[\"GCCAppealKeep\"])"
+   ]
+  }
+ },
+ "ShareRefTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:115": [
+    "st[\"ShareRef\"][v] += d * (b.VShare - st[\"ShareRef\"][v]) / pr[\"ShareRefTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:115": [
+    "st[\"ShareRef\"][v] += d * (b.VShare - st[\"ShareRef\"][v]) / pr[\"ShareRefTime\"]"
+   ]
+  }
+ },
+ "ShareLossSens": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:338": [
+    "pr[\"ShareLossSens\"] * ShareLoss * Afford + pr[\"RivalSens\"] * max(0.0, f.DevEff), 0.0, pr[\"MaxDisc\"]"
+   ]
+  },
+  "notes": {
+   "finance.py:338": [
+    "pr[\"ShareLossSens\"] * ShareLoss * Afford + pr[\"RivalSens\"] * max(0.0, f.DevEff), 0.0, pr[\"MaxDisc\"]"
+   ]
+  }
+ },
+ "RivalSens": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:338": [
+    "pr[\"ShareLossSens\"] * ShareLoss * Afford + pr[\"RivalSens\"] * max(0.0, f.DevEff), 0.0, pr[\"MaxDisc\"]"
+   ]
+  },
+  "notes": {
+   "finance.py:338": [
+    "pr[\"ShareLossSens\"] * ShareLoss * Afford + pr[\"RivalSens\"] * max(0.0, f.DevEff), 0.0, pr[\"MaxDisc\"]"
+   ]
+  }
+ },
+ "MaxDisc": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:338": [
+    "pr[\"ShareLossSens\"] * ShareLoss * Afford + pr[\"RivalSens\"] * max(0.0, f.DevEff), 0.0, pr[\"MaxDisc\"]"
+   ]
+  },
+  "notes": {
+   "finance.py:338": [
+    "pr[\"ShareLossSens\"] * ShareLoss * Afford + pr[\"RivalSens\"] * max(0.0, f.DevEff), 0.0, pr[\"MaxDisc\"]"
+   ]
+  }
+ },
+ "DiscAdjTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:114": [
+    "st[\"Disc\"][v] += d * (b.DiscTarget - st[\"Disc\"][v]) / pr[\"DiscAdjTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:114": [
+    "st[\"Disc\"][v] += d * (b.DiscTarget - st[\"Disc\"][v]) / pr[\"DiscAdjTime\"]"
+   ]
+  }
+ },
+ "CostAdoptElast": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "src/aisim/scalar/consumer.py:112": [
+    "CEc = clamp((pr[\"CreditCost2024\"] / CreditCostPB) ** pr[\"CostAdoptElast\"], pr[\"CEMin\"], pr[\"CEMax\"])"
+   ]
+  },
+  "notes": {
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ],
+   "consumer.py:112": [
+    "CEc = clamp((pr[\"CreditCost2024\"] / CreditCostPB) ** pr[\"CostAdoptElast\"], pr[\"CEMin\"], pr[\"CEMax\"])"
+   ]
+  }
+ },
+ "CEMin": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:57": [
+    "pr[\"CEMin\"],"
+   ],
+   "src/aisim/scalar/consumer.py:112": [
+    "CEc = clamp((pr[\"CreditCost2024\"] / CreditCostPB) ** pr[\"CostAdoptElast\"], pr[\"CEMin\"], pr[\"CEMax\"])"
+   ]
+  },
+  "notes": {
+   "adoption.py:57": [
+    "pr[\"CEMin\"],"
+   ],
+   "consumer.py:112": [
+    "CEc = clamp((pr[\"CreditCost2024\"] / CreditCostPB) ** pr[\"CostAdoptElast\"], pr[\"CEMin\"], pr[\"CEMax\"])"
+   ]
+  }
+ },
+ "CEMax": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:58": [
+    "pr[\"CEMax\"],"
+   ],
+   "src/aisim/scalar/consumer.py:112": [
+    "CEc = clamp((pr[\"CreditCost2024\"] / CreditCostPB) ** pr[\"CostAdoptElast\"], pr[\"CEMin\"], pr[\"CEMax\"])"
+   ]
+  },
+  "notes": {
+   "adoption.py:58": [
+    "pr[\"CEMax\"],"
+   ],
+   "consumer.py:112": [
+    "CEc = clamp((pr[\"CreditCost2024\"] / CreditCostPB) ** pr[\"CostAdoptElast\"], pr[\"CEMin\"], pr[\"CEMax\"])"
+   ]
+  }
+ },
+ "pC": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:197": [
+    "AdoptC = min((pr[\"pC\"] + pr[\"qC\"] * AC) * kC * (1 - AC), (1 - AC) / pr[\"MinAdoptionTime\"]) if ai_on else 0.0"
+   ]
+  },
+  "notes": {
+   "consumer.py:197": [
+    "AdoptC = min((pr[\"pC\"] + pr[\"qC\"] * AC) * kC * (1 - AC), (1 - AC) / pr[\"MinAdoptionTime\"]) if ai_on else 0.0"
+   ]
+  }
+ },
+ "qC": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:197": [
+    "AdoptC = min((pr[\"pC\"] + pr[\"qC\"] * AC) * kC * (1 - AC), (1 - AC) / pr[\"MinAdoptionTime\"]) if ai_on else 0.0"
+   ]
+  },
+  "notes": {
+   "consumer.py:197": [
+    "AdoptC = min((pr[\"pC\"] + pr[\"qC\"] * AC) * kC * (1 - AC), (1 - AC) / pr[\"MinAdoptionTime\"]) if ai_on else 0.0"
+   ]
+  }
+ },
+ "AC0": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:189": [
+    "AIexp = max(0.0, AC * LOBAuto - pr[\"AC0\"] * pr[\"aL_2024\"]) if ai_on else 0.0"
+   ],
+   "src/aisim/scalar/consumer.py:224": [
+    "((pr[\"BuildRate\"] * (AdoptC - pr[\"AdoptC0\"]) + pr[\"RunRate\"] * (AC - pr[\"AC0\"])) if ai_on else 0.0)"
+   ],
+   "src/aisim/scalar/sourcing.py:147": [
+    "value += GCCAppeal + (pr[\"GCCAISens\"] * (AC - pr[\"AC0\"]) if ai_on else 0.0)"
+   ]
+  },
+  "notes": {
+   "consumer.py:189": [
+    "AIexp = max(0.0, AC * LOBAuto - pr[\"AC0\"] * pr[\"aL_2024\"]) if ai_on else 0.0"
+   ],
+   "consumer.py:224": [
+    "((pr[\"BuildRate\"] * (AdoptC - pr[\"AdoptC0\"]) + pr[\"RunRate\"] * (AC - pr[\"AC0\"])) if ai_on else 0.0)"
+   ],
+   "sourcing.py:147": [
+    "value += GCCAppeal + (pr[\"GCCAISens\"] * (AC - pr[\"AC0\"]) if ai_on else 0.0)"
+   ]
+  }
+ },
+ "aL_2024": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:106": [
+    "LOBAuto = max(0.0, pr[\"aL_max\"] - (pr[\"aL_max\"] - pr[\"aL_2024\"]) * (1 - pr[\"g\"]) ** (y - 2024))"
+   ],
+   "src/aisim/scalar/consumer.py:189": [
+    "AIexp = max(0.0, AC * LOBAuto - pr[\"AC0\"] * pr[\"aL_2024\"]) if ai_on else 0.0"
+   ]
+  },
+  "notes": {
+   "consumer.py:106": [
+    "LOBAuto = max(0.0, pr[\"aL_max\"] - (pr[\"aL_max\"] - pr[\"aL_2024\"]) * (1 - pr[\"g\"]) ** (y - 2024))"
+   ],
+   "consumer.py:189": [
+    "AIexp = max(0.0, AC * LOBAuto - pr[\"AC0\"] * pr[\"aL_2024\"]) if ai_on else 0.0"
+   ]
+  }
+ },
+ "aL_max": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:106": [
+    "LOBAuto = max(0.0, pr[\"aL_max\"] - (pr[\"aL_max\"] - pr[\"aL_2024\"]) * (1 - pr[\"g\"]) ** (y - 2024))"
+   ]
+  },
+  "notes": {
+   "consumer.py:106": [
+    "LOBAuto = max(0.0, pr[\"aL_max\"] - (pr[\"aL_max\"] - pr[\"aL_2024\"]) * (1 - pr[\"g\"]) ** (y - 2024))"
+   ]
+  }
+ },
+ "LOBAdjTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:37": [
+    "st[\"LOB\"][x] += d * (c.LOBTarget - st[\"LOB\"][x]) / pr[\"LOBAdjTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:37": [
+    "st[\"LOB\"][x] += d * (c.LOBTarget - st[\"LOB\"][x]) / pr[\"LOBAdjTime\"]"
+   ]
+  }
+ },
+ "CreditCost2024": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:111": [
+    "CreditCostPB = pr[\"CreditCost2024\"] * (1 - pr[\"AICostDecline\"]) ** (y - 2024) * AIShockNow"
+   ],
+   "src/aisim/scalar/consumer.py:112": [
+    "CEc = clamp((pr[\"CreditCost2024\"] / CreditCostPB) ** pr[\"CostAdoptElast\"], pr[\"CEMin\"], pr[\"CEMax\"])"
+   ]
+  },
+  "notes": {
+   "consumer.py:112": [
+    "CEc = clamp((pr[\"CreditCost2024\"] / CreditCostPB) ** pr[\"CostAdoptElast\"], pr[\"CEMin\"], pr[\"CEMax\"])"
+   ]
+  }
+ },
+ "ReinvestFrac": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "src/aisim/scalar/consumer.py:208": [
+    "Budget = pr[\"Budget0_\" + x] * BudgetGrowth + pr[\"ReinvestFrac\"] * max(0.0, NetSavings)"
+   ]
+  },
+  "notes": {
+   "consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "consumer.py:208": [
+    "Budget = pr[\"Budget0_\" + x] * BudgetGrowth + pr[\"ReinvestFrac\"] * max(0.0, NetSavings)"
+   ]
+  }
+ },
+ "ReinvestAdoptSens": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ]
+  },
+  "notes": {
+   "consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ]
+  }
+ },
+ "RegScenario": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  },
+  "notes": {
+   "consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  }
+ },
+ "RegStart": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:113": [
+    "RegRamp = ramp(y, pr[\"RegStart\"], pr[\"RegEnd\"], 0.0, 1.0)"
+   ]
+  },
+  "notes": {
+   "consumer.py:113": [
+    "RegRamp = ramp(y, pr[\"RegStart\"], pr[\"RegEnd\"], 0.0, 1.0)"
+   ]
+  }
+ },
+ "RegEnd": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:113": [
+    "RegRamp = ramp(y, pr[\"RegStart\"], pr[\"RegEnd\"], 0.0, 1.0)"
+   ]
+  },
+  "notes": {
+   "consumer.py:113": [
+    "RegRamp = ramp(y, pr[\"RegStart\"], pr[\"RegEnd\"], 0.0, 1.0)"
+   ]
+  }
+ },
+ "AppLife": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:201": [
+    "NewApps0 = Port0 / pr[\"AppLife\"]"
+   ],
+   "src/aisim/scalar/consumer.py:203": [
+    "Retire = st[\"Port\"][x] / pr[\"AppLife\"] * (1 + pr[\"RetireAccel\"] * AIexp)"
+   ]
+  },
+  "notes": {
+   "consumer.py:201": [
+    "NewApps0 = Port0 / pr[\"AppLife\"]"
+   ],
+   "consumer.py:203": [
+    "Retire = st[\"Port\"][x] / pr[\"AppLife\"] * (1 + pr[\"RetireAccel\"] * AIexp)"
+   ],
+   "consumer.py:214": [
+    "* ((1 - pr[\"NewAppWeight\"]) * pr0 + pr[\"NewAppWeight\"] * NewApps / NewApps0)"
+   ],
+   "consumer.py:217": [
+    "\"DATA\": WTMix[\"DATA\"] * ((1 - pr[\"MigWeight\"]) + pr[\"MigWeight\"] * Retire / NewApps0) * Jev * Approval,"
+   ]
+  }
+ },
+ "AppDisplacement": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:202": [
+    "NewApps = NewApps0 * (1 - pr[\"AppDisplacement\"] * AIexp)"
+   ]
+  },
+  "notes": {
+   "consumer.py:202": [
+    "NewApps = NewApps0 * (1 - pr[\"AppDisplacement\"] * AIexp)"
+   ]
+  }
+ },
+ "RetireAccel": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:203": [
+    "Retire = st[\"Port\"][x] / pr[\"AppLife\"] * (1 + pr[\"RetireAccel\"] * AIexp)"
+   ]
+  },
+  "notes": {
+   "consumer.py:203": [
+    "Retire = st[\"Port\"][x] / pr[\"AppLife\"] * (1 + pr[\"RetireAccel\"] * AIexp)"
+   ]
+  }
+ },
+ "NewAppWeight": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:214": [
+    "* ((1 - pr[\"NewAppWeight\"]) * pr0 + pr[\"NewAppWeight\"] * NewApps / NewApps0)"
+   ]
+  },
+  "notes": {
+   "consumer.py:214": [
+    "* ((1 - pr[\"NewAppWeight\"]) * pr0 + pr[\"NewAppWeight\"] * NewApps / NewApps0)"
+   ]
+  }
+ },
+ "MigWeight": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:217": [
+    "\"DATA\": WTMix[\"DATA\"] * ((1 - pr[\"MigWeight\"]) + pr[\"MigWeight\"] * Retire / NewApps0) * Jev * Approval,"
+   ]
+  },
+  "notes": {
+   "consumer.py:217": [
+    "\"DATA\": WTMix[\"DATA\"] * ((1 - pr[\"MigWeight\"]) + pr[\"MigWeight\"] * Retire / NewApps0) * Jev * Approval,"
+   ]
+  }
+ },
+ "SupPortShare": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:220": [
+    "\"SUP\": WTMix[\"SUP\"] * ((1 - pr[\"SupPortShare\"]) + pr[\"SupPortShare\"] * pr0),"
+   ]
+  },
+  "notes": {
+   "consumer.py:220": [
+    "\"SUP\": WTMix[\"SUP\"] * ((1 - pr[\"SupPortShare\"]) + pr[\"SupPortShare\"] * pr0),"
+   ]
+  }
+ },
+ "SeatAdjTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:39": [
+    "st[\"SeatsB\"][x] += d * (c.Seats - st[\"SeatsB\"][x]) / pr[\"SeatAdjTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:39": [
+    "st[\"SeatsB\"][x] += d * (c.Seats - st[\"SeatsB\"][x]) / pr[\"SeatAdjTime\"]"
+   ]
+  }
+ },
+ "BaseSeatPrice": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:205": [
+    "SeatSpend = st[\"SeatsB\"][x] * (pr[\"BaseSeatPrice\"] + Att * pr[\"AISeatPrice\"])"
+   ]
+  },
+  "notes": {
+   "consumer.py:205": [
+    "SeatSpend = st[\"SeatsB\"][x] * (pr[\"BaseSeatPrice\"] + Att * pr[\"AISeatPrice\"])"
+   ]
+  }
+ },
+ "AISeatPrice": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:205": [
+    "SeatSpend = st[\"SeatsB\"][x] * (pr[\"BaseSeatPrice\"] + Att * pr[\"AISeatPrice\"])"
+   ]
+  },
+  "notes": {
+   "consumer.py:205": [
+    "SeatSpend = st[\"SeatsB\"][x] * (pr[\"BaseSeatPrice\"] + Att * pr[\"AISeatPrice\"])"
+   ]
+  }
+ },
+ "pAtt": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:116": [
+    "AttAdopt = min((pr[\"pAtt\"] + pr[\"qAtt\"] * Att) * (1 - Att), (1 - Att) / pr[\"MinAdoptionTime\"]) if ai_on else 0.0"
+   ]
+  },
+  "notes": {
+   "consumer.py:116": [
+    "AttAdopt = min((pr[\"pAtt\"] + pr[\"qAtt\"] * Att) * (1 - Att), (1 - Att) / pr[\"MinAdoptionTime\"]) if ai_on else 0.0"
+   ]
+  }
+ },
+ "qAtt": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:116": [
+    "AttAdopt = min((pr[\"pAtt\"] + pr[\"qAtt\"] * Att) * (1 - Att), (1 - Att) / pr[\"MinAdoptionTime\"]) if ai_on else 0.0"
+   ]
+  },
+  "notes": {
+   "consumer.py:116": [
+    "AttAdopt = min((pr[\"pAtt\"] + pr[\"qAtt\"] * Att) * (1 - Att), (1 - Att) / pr[\"MinAdoptionTime\"]) if ai_on else 0.0"
+   ]
+  }
+ },
+ "CloudPerBFY": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:127": [
+    "CloudPB = pr[\"CloudPerBFY\"] * (1 + pr[\"CloudAISens\"] * (1 - 1 / P_all))"
+   ]
+  },
+  "notes": {
+   "consumer.py:127": [
+    "CloudPB = pr[\"CloudPerBFY\"] * (1 + pr[\"CloudAISens\"] * (1 - 1 / P_all))"
+   ]
+  }
+ },
+ "CloudAISens": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:127": [
+    "CloudPB = pr[\"CloudPerBFY\"] * (1 + pr[\"CloudAISens\"] * (1 - 1 / P_all))"
+   ]
+  },
+  "notes": {
+   "consumer.py:127": [
+    "CloudPB = pr[\"CloudPerBFY\"] * (1 + pr[\"CloudAISens\"] * (1 - 1 / P_all))"
+   ]
+  }
+ },
+ "BuildRate": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:224": [
+    "((pr[\"BuildRate\"] * (AdoptC - pr[\"AdoptC0\"]) + pr[\"RunRate\"] * (AC - pr[\"AC0\"])) if ai_on else 0.0)"
+   ]
+  },
+  "notes": {
+   "consumer.py:224": [
+    "((pr[\"BuildRate\"] * (AdoptC - pr[\"AdoptC0\"]) + pr[\"RunRate\"] * (AC - pr[\"AC0\"])) if ai_on else 0.0)"
+   ]
+  }
+ },
+ "RunRate": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:224": [
+    "((pr[\"BuildRate\"] * (AdoptC - pr[\"AdoptC0\"]) + pr[\"RunRate\"] * (AC - pr[\"AC0\"])) if ai_on else 0.0)"
+   ]
+  },
+  "notes": {
+   "consumer.py:224": [
+    "((pr[\"BuildRate\"] * (AdoptC - pr[\"AdoptC0\"]) + pr[\"RunRate\"] * (AC - pr[\"AC0\"])) if ai_on else 0.0)"
+   ]
+  }
+ },
+ "GovRegSens": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:219": [
+    "\"GOVN\": WTMix[\"GOVN\"] * (1 + (pr[\"GovRegSens\"] * RegDrag * AC if ai_on else 0.0)),"
+   ]
+  },
+  "notes": {
+   "consumer.py:219": [
+    "\"GOVN\": WTMix[\"GOVN\"] * (1 + (pr[\"GovRegSens\"] * RegDrag * AC if ai_on else 0.0)),"
+   ]
+  }
+ },
+ "CostPerceptionTime": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:50": [
+    "st[\"CostPerc\"] += d * (s.drivers.CostIdx6 - st[\"CostPerc\"]) / pr[\"CostPerceptionTime\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:50": [
+    "st[\"CostPerc\"] += d * (s.drivers.CostIdx6 - st[\"CostPerc\"]) / pr[\"CostPerceptionTime\"]"
+   ]
+  }
+ },
+ "CostPerBFY0": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:117": [
+    "CostIdx6 = (ServicesSpend / max(Completion, 1e-9)) / pr[\"CostPerBFY0\"]"
+   ]
+  },
+  "notes": {
+   "consumer.py:117": [
+    "CostIdx6 = (ServicesSpend / max(Completion, 1e-9)) / pr[\"CostPerBFY0\"]"
+   ]
+  }
+ },
+ "ApprovalSens": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:209": [
+    "Approval = clamp(1 - pr[\"ApprovalSens\"] * max(0.0, st[\"SpendRatio\"][x] - 1), pr[\"MinApproval\"], 1.0)"
+   ]
+  },
+  "notes": {
+   "consumer.py:209": [
+    "Approval = clamp(1 - pr[\"ApprovalSens\"] * max(0.0, st[\"SpendRatio\"][x] - 1), pr[\"MinApproval\"], 1.0)"
+   ]
+  }
+ },
+ "MinApproval": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:209": [
+    "Approval = clamp(1 - pr[\"ApprovalSens\"] * max(0.0, st[\"SpendRatio\"][x] - 1), pr[\"MinApproval\"], 1.0)"
+   ]
+  },
+  "notes": {
+   "consumer.py:209": [
+    "Approval = clamp(1 - pr[\"ApprovalSens\"] * max(0.0, st[\"SpendRatio\"][x] - 1), pr[\"MinApproval\"], 1.0)"
+   ]
+  }
+ },
+ "BudgetCycle": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:40": [
+    "st[\"SpendRatio\"][x] += d * (c.Committed / c.Budget - st[\"SpendRatio\"][x]) / pr[\"BudgetCycle\"]"
+   ]
+  },
+  "notes": {
+   "integrate.py:40": [
+    "st[\"SpendRatio\"][x] += d * (c.Committed / c.Budget - st[\"SpendRatio\"][x]) / pr[\"BudgetCycle\"]"
+   ]
+  }
+ },
+ "ITBudgetGrowth": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:122": [
+    "* (1 + pr[\"ITBudgetGrowth\"]) ** (y - 2024)"
+   ]
+  },
+  "notes": {
+   "consumer.py:122": [
+    "* (1 + pr[\"ITBudgetGrowth\"]) ** (y - 2024)"
+   ],
+   "integrate.py:40": [
+    "st[\"SpendRatio\"][x] += d * (c.Committed / c.Budget - st[\"SpendRatio\"][x]) / pr[\"BudgetCycle\"]"
+   ]
+  }
+ },
+ "BudgetShock": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:123": [
+    "* (1 - (pr[\"BudgetShock\"] if pr[\"BudgetShockStart\"] <= y < pr[\"BudgetShockEnd\"] else 0.0))"
+   ]
+  },
+  "notes": {
+   "integrate.py:40": [
+    "st[\"SpendRatio\"][x] += d * (c.Committed / c.Budget - st[\"SpendRatio\"][x]) / pr[\"BudgetCycle\"]"
+   ],
+   "consumer.py:123": [
+    "* (1 - (pr[\"BudgetShock\"] if pr[\"BudgetShockStart\"] <= y < pr[\"BudgetShockEnd\"] else 0.0))"
+   ]
+  }
+ },
+ "BudgetShockStart": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:123": [
+    "* (1 - (pr[\"BudgetShock\"] if pr[\"BudgetShockStart\"] <= y < pr[\"BudgetShockEnd\"] else 0.0))"
+   ]
+  },
+  "notes": {
+   "consumer.py:123": [
+    "* (1 - (pr[\"BudgetShock\"] if pr[\"BudgetShockStart\"] <= y < pr[\"BudgetShockEnd\"] else 0.0))"
+   ]
+  }
+ },
+ "BudgetShockEnd": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:123": [
+    "* (1 - (pr[\"BudgetShock\"] if pr[\"BudgetShockStart\"] <= y < pr[\"BudgetShockEnd\"] else 0.0))"
+   ]
+  },
+  "notes": {
+   "consumer.py:123": [
+    "* (1 - (pr[\"BudgetShock\"] if pr[\"BudgetShockStart\"] <= y < pr[\"BudgetShockEnd\"] else 0.0))"
+   ]
+  }
+ },
+ "CyberEnd": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:114": [
+    "CyberMult = ramp(y, pr[\"CyberStart\"], pr[\"CyberRampEnd\"], 1.0, pr[\"CyberEnd\"])"
+   ]
+  },
+  "notes": {
+   "consumer.py:114": [
+    "CyberMult = ramp(y, pr[\"CyberStart\"], pr[\"CyberRampEnd\"], 1.0, pr[\"CyberEnd\"])"
+   ],
+   "consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  }
+ },
+ "CyberStart": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:114": [
+    "CyberMult = ramp(y, pr[\"CyberStart\"], pr[\"CyberRampEnd\"], 1.0, pr[\"CyberEnd\"])"
+   ]
+  },
+  "notes": {
+   "consumer.py:114": [
+    "CyberMult = ramp(y, pr[\"CyberStart\"], pr[\"CyberRampEnd\"], 1.0, pr[\"CyberEnd\"])"
+   ]
+  }
+ },
+ "CyberRampEnd": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:114": [
+    "CyberMult = ramp(y, pr[\"CyberStart\"], pr[\"CyberRampEnd\"], 1.0, pr[\"CyberEnd\"])"
+   ]
+  },
+  "notes": {
+   "consumer.py:114": [
+    "CyberMult = ramp(y, pr[\"CyberStart\"], pr[\"CyberRampEnd\"], 1.0, pr[\"CyberEnd\"])"
+   ]
+  }
+ },
+ "AdoptMult_IH": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  },
+  "notes": {
+   "adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  }
+ },
+ "AdoptMult_GCC": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  },
+  "notes": {
+   "adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  }
+ },
+ "AdoptMult_OIT": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  },
+  "notes": {
+   "adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  }
+ },
+ "AdoptMult_GSI": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  },
+  "notes": {
+   "adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  }
+ },
+ "AdoptMult_BQ": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  },
+  "notes": {
+   "adoption.py:65": [
+    "(pr[\"p\"] * pr[\"AdoptMult_\" + e] + pr[\"q\"] * Ae) * CEe[e] * brake[e] * push[e] * (1 - Ae),"
+   ]
+  }
+ },
+ "TMBrake": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:60": [
+    "brake[e] = (1 - pr[\"TMBrake\"] * VB[e].EffortShare) if e in VENDORS else 1.0"
+   ]
+  },
+  "notes": {
+   "adoption.py:60": [
+    "brake[e] = (1 - pr[\"TMBrake\"] * VB[e].EffortShare) if e in VENDORS else 1.0"
+   ]
+  }
+ },
+ "PushSens": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:61": [
+    "push[e] = (1 + pr[\"PushSens\"] * VB[e].ShareLoss) if e in VENDORS else 1.0"
+   ]
+  },
+  "notes": {
+   "adoption.py:61": [
+    "push[e] = (1 + pr[\"PushSens\"] * VB[e].ShareLoss) if e in VENDORS else 1.0"
+   ]
+  }
+ },
+ "RegFitSens": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:144": [
+    "- (pr[\"RegFitSens\"] * RegDrag[x] * AC * OffExp[e] if ai_on else 0.0)"
+   ]
+  },
+  "notes": {
+   "sourcing.py:144": [
+    "- (pr[\"RegFitSens\"] * RegDrag[x] * AC * OffExp[e] if ai_on else 0.0)"
+   ]
+  }
+ },
+ "GCCAISens": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:147": [
+    "value += GCCAppeal + (pr[\"GCCAISens\"] * (AC - pr[\"AC0\"]) if ai_on else 0.0)"
+   ]
+  },
+  "notes": {
+   "sourcing.py:147": [
+    "value += GCCAppeal + (pr[\"GCCAISens\"] * (AC - pr[\"AC0\"]) if ai_on else 0.0)"
+   ]
+  }
+ },
+ "FreezeSourcing": {
+  "evidence": {
+   "src/aisim/scalar/integrate.py:41": [
+    "if pr[\"FreezeSourcing\"] < 0.5:"
+   ]
+  },
+  "notes": {
+   "integrate.py:41": [
+    "if pr[\"FreezeSourcing\"] < 0.5:"
+   ]
+  }
+ },
+ "DemandGrowth": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:73": [
+    "dgl = pr[\"DemandGrowth\"] if demand_growth_late is None else demand_growth_late"
+   ],
+   "src/aisim/scalar/capability.py:74": [
+    "G = (1 + pr[\"DemandGrowth\"]) ** (min(y, pr[\"LateYear\"]) - 2024) * (1 + dgl) ** max(0.0, y - pr[\"LateYear\"])"
+   ]
+  },
+  "notes": {
+   "capability.py:74": [
+    "G = (1 + pr[\"DemandGrowth\"]) ** (min(y, pr[\"LateYear\"]) - 2024) * (1 + dgl) ** max(0.0, y - pr[\"LateYear\"])"
+   ],
+   "consumer.py:204": [
+    "Seats = st[\"LOB\"][x] + ConsIT * CS[x] / (G if pr[\"Burn\"] >= 0.5 else 1.0)"
+   ],
+   "integrate.py:40": [
+    "st[\"SpendRatio\"][x] += d * (c.Committed / c.Budget - st[\"SpendRatio\"][x]) / pr[\"BudgetCycle\"]"
+   ],
+   "capability.py:73": [
+    "dgl = pr[\"DemandGrowth\"] if demand_growth_late is None else demand_growth_late"
+   ]
+  }
+ },
+ "Verif": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:67": [
+    "VerifNow = pr[\"Verif\"] * (1 - pr[\"VerifDecline\"]) ** (y - 2024)"
+   ],
+   "src/aisim/scalar/capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:67": [
+    "VerifNow = pr[\"Verif\"] * (1 - pr[\"VerifDecline\"]) ** (y - 2024)"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "AdoptC0": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:224": [
+    "((pr[\"BuildRate\"] * (AdoptC - pr[\"AdoptC0\"]) + pr[\"RunRate\"] * (AC - pr[\"AC0\"])) if ai_on else 0.0)"
+   ]
+  },
+  "notes": {
+   "consumer.py:224": [
+    "((pr[\"BuildRate\"] * (AdoptC - pr[\"AdoptC0\"]) + pr[\"RunRate\"] * (AC - pr[\"AC0\"])) if ai_on else 0.0)"
+   ]
+  }
+ },
+ "PriceHorizon": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:201": [
+    "Anchor = (1 / (CP * (1 + pr[\"PriceHorizon\"] * PU))) ** pr[\"PassThrough\"]  # clients price in the trend"
+   ]
+  },
+  "notes": {
+   "finance.py:201": [
+    "Anchor = (1 / (CP * (1 + pr[\"PriceHorizon\"] * PU))) ** pr[\"PassThrough\"]  # clients price in the trend"
+   ]
+  }
+ },
+ "GCCMomentum": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:139": [
+    "p = p.with_overrides(**overrides)"
+   ]
+  },
+  "notes": {
+   "engine.py:139": [
+    "p = p.with_overrides(**overrides)"
+   ]
+  }
+ },
+ "GCCFadeEnd": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:131": [
+    "else ramp(y, pr[\"GCCRampEnd\"], pr[\"GCCFadeEnd\"], pr[\"GCCAppealEnd\"], pr[\"GCCAppealEnd\"] * pr[\"GCCAppealKeep\"])"
+   ]
+  },
+  "notes": {
+   "consumer.py:131": [
+    "else ramp(y, pr[\"GCCRampEnd\"], pr[\"GCCFadeEnd\"], pr[\"GCCAppealEnd\"], pr[\"GCCAppealEnd\"] * pr[\"GCCAppealKeep\"])"
+   ]
+  }
+ },
+ "GCCAppealKeep": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:131": [
+    "else ramp(y, pr[\"GCCRampEnd\"], pr[\"GCCFadeEnd\"], pr[\"GCCAppealEnd\"], pr[\"GCCAppealEnd\"] * pr[\"GCCAppealKeep\"])"
+   ]
+  },
+  "notes": {
+   "consumer.py:131": [
+    "else ramp(y, pr[\"GCCRampEnd\"], pr[\"GCCFadeEnd\"], pr[\"GCCAppealEnd\"], pr[\"GCCAppealEnd\"] * pr[\"GCCAppealKeep\"])"
+   ]
+  }
+ },
+ "VerifDecline": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:67": [
+    "VerifNow = pr[\"Verif\"] * (1 - pr[\"VerifDecline\"]) ** (y - 2024)"
+   ]
+  },
+  "notes": {
+   "capability.py:67": [
+    "VerifNow = pr[\"Verif\"] * (1 - pr[\"VerifDecline\"]) ** (y - 2024)"
+   ]
+  }
+ },
+ "DemandGrowthLate": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:141": [
+    "demand_growth_late = p.scalars[\"DemandGrowthLate\"]"
+   ]
+  },
+  "notes": {
+   "engine.py:141": [
+    "demand_growth_late = p.scalars[\"DemandGrowthLate\"]"
+   ],
+   "capability.py:74": [
+    "G = (1 + pr[\"DemandGrowth\"]) ** (min(y, pr[\"LateYear\"]) - 2024) * (1 + dgl) ** max(0.0, y - pr[\"LateYear\"])"
+   ]
+  }
+ },
+ "LateYear": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:74": [
+    "G = (1 + pr[\"DemandGrowth\"]) ** (min(y, pr[\"LateYear\"]) - 2024) * (1 + dgl) ** max(0.0, y - pr[\"LateYear\"])"
+   ]
+  },
+  "notes": {
+   "capability.py:74": [
+    "G = (1 + pr[\"DemandGrowth\"]) ** (min(y, pr[\"LateYear\"]) - 2024) * (1 + dgl) ** max(0.0, y - pr[\"LateYear\"])"
+   ]
+  }
+ },
+ "Burn": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:204": [
+    "Seats = st[\"LOB\"][x] + ConsIT * CS[x] / (G if pr[\"Burn\"] >= 0.5 else 1.0)"
+   ],
+   "src/aisim/scalar/labour_market.py:175": [
+    "VisaCap = pr[\"BaseVisaCap\"] * (1 - VisaTight) * (G if pr[\"Burn\"] >= 0.5 else 1.0)"
+   ]
+  },
+  "notes": {
+   "labour_market.py:175": [
+    "VisaCap = pr[\"BaseVisaCap\"] * (1 - VisaTight) * (G if pr[\"Burn\"] >= 0.5 else 1.0)"
+   ],
+   "consumer.py:204": [
+    "Seats = st[\"LOB\"][x] + ConsIT * CS[x] / (G if pr[\"Burn\"] >= 0.5 else 1.0)"
+   ]
+  }
+ },
+ "LOB0_FIN": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  }
+ },
+ "Port0_FIN": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ],
+   "consumer.py:211": [
+    "pr0 = st[\"Port\"][x] / Port0  # portfolio relative to 2024"
+   ],
+   "consumer.py:214": [
+    "* ((1 - pr[\"NewAppWeight\"]) * pr0 + pr[\"NewAppWeight\"] * NewApps / NewApps0)"
+   ],
+   "consumer.py:217": [
+    "\"DATA\": WTMix[\"DATA\"] * ((1 - pr[\"MigWeight\"]) + pr[\"MigWeight\"] * Retire / NewApps0) * Jev * Approval,"
+   ]
+  }
+ },
+ "Seats0_FIN": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  },
+  "notes": {
+   "consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "Budget0_FIN": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "src/aisim/scalar/consumer.py:208": [
+    "Budget = pr[\"Budget0_\" + x] * BudgetGrowth + pr[\"ReinvestFrac\"] * max(0.0, NetSavings)"
+   ]
+  },
+  "notes": {
+   "consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "integrate.py:40": [
+    "st[\"SpendRatio\"][x] += d * (c.Committed / c.Budget - st[\"SpendRatio\"][x]) / pr[\"BudgetCycle\"]"
+   ]
+  }
+ },
+ "LOB0_LEG": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  }
+ },
+ "Port0_LEG": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ],
+   "consumer.py:211": [
+    "pr0 = st[\"Port\"][x] / Port0  # portfolio relative to 2024"
+   ],
+   "consumer.py:214": [
+    "* ((1 - pr[\"NewAppWeight\"]) * pr0 + pr[\"NewAppWeight\"] * NewApps / NewApps0)"
+   ],
+   "consumer.py:217": [
+    "\"DATA\": WTMix[\"DATA\"] * ((1 - pr[\"MigWeight\"]) + pr[\"MigWeight\"] * Retire / NewApps0) * Jev * Approval,"
+   ]
+  }
+ },
+ "Seats0_LEG": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  },
+  "notes": {
+   "consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "Budget0_LEG": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "src/aisim/scalar/consumer.py:208": [
+    "Budget = pr[\"Budget0_\" + x] * BudgetGrowth + pr[\"ReinvestFrac\"] * max(0.0, NetSavings)"
+   ]
+  },
+  "notes": {
+   "consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "integrate.py:40": [
+    "st[\"SpendRatio\"][x] += d * (c.Committed / c.Budget - st[\"SpendRatio\"][x]) / pr[\"BudgetCycle\"]"
+   ]
+  }
+ },
+ "LOB0_MED": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  }
+ },
+ "Port0_MED": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ],
+   "consumer.py:211": [
+    "pr0 = st[\"Port\"][x] / Port0  # portfolio relative to 2024"
+   ],
+   "consumer.py:214": [
+    "* ((1 - pr[\"NewAppWeight\"]) * pr0 + pr[\"NewAppWeight\"] * NewApps / NewApps0)"
+   ],
+   "consumer.py:217": [
+    "\"DATA\": WTMix[\"DATA\"] * ((1 - pr[\"MigWeight\"]) + pr[\"MigWeight\"] * Retire / NewApps0) * Jev * Approval,"
+   ]
+  }
+ },
+ "Seats0_MED": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  },
+  "notes": {
+   "consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "Budget0_MED": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "src/aisim/scalar/consumer.py:208": [
+    "Budget = pr[\"Budget0_\" + x] * BudgetGrowth + pr[\"ReinvestFrac\"] * max(0.0, NetSavings)"
+   ]
+  },
+  "notes": {
+   "consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "integrate.py:40": [
+    "st[\"SpendRatio\"][x] += d * (c.Committed / c.Budget - st[\"SpendRatio\"][x]) / pr[\"BudgetCycle\"]"
+   ]
+  }
+ },
+ "LOB0_GOV": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  }
+ },
+ "Port0_GOV": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ],
+   "consumer.py:211": [
+    "pr0 = st[\"Port\"][x] / Port0  # portfolio relative to 2024"
+   ],
+   "consumer.py:214": [
+    "* ((1 - pr[\"NewAppWeight\"]) * pr0 + pr[\"NewAppWeight\"] * NewApps / NewApps0)"
+   ],
+   "consumer.py:217": [
+    "\"DATA\": WTMix[\"DATA\"] * ((1 - pr[\"MigWeight\"]) + pr[\"MigWeight\"] * Retire / NewApps0) * Jev * Approval,"
+   ]
+  }
+ },
+ "Seats0_GOV": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  },
+  "notes": {
+   "consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "Budget0_GOV": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "src/aisim/scalar/consumer.py:208": [
+    "Budget = pr[\"Budget0_\" + x] * BudgetGrowth + pr[\"ReinvestFrac\"] * max(0.0, NetSavings)"
+   ]
+  },
+  "notes": {
+   "consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "integrate.py:40": [
+    "st[\"SpendRatio\"][x] += d * (c.Committed / c.Budget - st[\"SpendRatio\"][x]) / pr[\"BudgetCycle\"]"
+   ]
+  }
+ },
+ "LOB0_MFG": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  }
+ },
+ "Port0_MFG": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ],
+   "consumer.py:211": [
+    "pr0 = st[\"Port\"][x] / Port0  # portfolio relative to 2024"
+   ],
+   "consumer.py:214": [
+    "* ((1 - pr[\"NewAppWeight\"]) * pr0 + pr[\"NewAppWeight\"] * NewApps / NewApps0)"
+   ],
+   "consumer.py:217": [
+    "\"DATA\": WTMix[\"DATA\"] * ((1 - pr[\"MigWeight\"]) + pr[\"MigWeight\"] * Retire / NewApps0) * Jev * Approval,"
+   ]
+  }
+ },
+ "Seats0_MFG": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  },
+  "notes": {
+   "consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "Budget0_MFG": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "src/aisim/scalar/consumer.py:208": [
+    "Budget = pr[\"Budget0_\" + x] * BudgetGrowth + pr[\"ReinvestFrac\"] * max(0.0, NetSavings)"
+   ]
+  },
+  "notes": {
+   "consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "integrate.py:40": [
+    "st[\"SpendRatio\"][x] += d * (c.Committed / c.Budget - st[\"SpendRatio\"][x]) / pr[\"BudgetCycle\"]"
+   ]
+  }
+ },
+ "LOB0_LOG": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  }
+ },
+ "Port0_LOG": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ],
+   "consumer.py:211": [
+    "pr0 = st[\"Port\"][x] / Port0  # portfolio relative to 2024"
+   ],
+   "consumer.py:214": [
+    "* ((1 - pr[\"NewAppWeight\"]) * pr0 + pr[\"NewAppWeight\"] * NewApps / NewApps0)"
+   ],
+   "consumer.py:217": [
+    "\"DATA\": WTMix[\"DATA\"] * ((1 - pr[\"MigWeight\"]) + pr[\"MigWeight\"] * Retire / NewApps0) * Jev * Approval,"
+   ]
+  }
+ },
+ "Seats0_LOG": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  },
+  "notes": {
+   "consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "Budget0_LOG": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "src/aisim/scalar/consumer.py:208": [
+    "Budget = pr[\"Budget0_\" + x] * BudgetGrowth + pr[\"ReinvestFrac\"] * max(0.0, NetSavings)"
+   ]
+  },
+  "notes": {
+   "consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "integrate.py:40": [
+    "st[\"SpendRatio\"][x] += d * (c.Committed / c.Budget - st[\"SpendRatio\"][x]) / pr[\"BudgetCycle\"]"
+   ]
+  }
+ },
+ "LOB0_RET": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:190": [
+    "LOB0 = pr[\"LOB0_\" + x]"
+   ]
+  }
+ },
+ "Port0_RET": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ]
+  },
+  "notes": {
+   "consumer.py:200": [
+    "Port0 = pr[\"Port0_\" + x]"
+   ],
+   "consumer.py:211": [
+    "pr0 = st[\"Port\"][x] / Port0  # portfolio relative to 2024"
+   ],
+   "consumer.py:214": [
+    "* ((1 - pr[\"NewAppWeight\"]) * pr0 + pr[\"NewAppWeight\"] * NewApps / NewApps0)"
+   ],
+   "consumer.py:217": [
+    "\"DATA\": WTMix[\"DATA\"] * ((1 - pr[\"MigWeight\"]) + pr[\"MigWeight\"] * Retire / NewApps0) * Jev * Approval,"
+   ]
+  }
+ },
+ "Seats0_RET": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  },
+  "notes": {
+   "consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "Budget0_RET": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "src/aisim/scalar/consumer.py:208": [
+    "Budget = pr[\"Budget0_\" + x] * BudgetGrowth + pr[\"ReinvestFrac\"] * max(0.0, NetSavings)"
+   ]
+  },
+  "notes": {
+   "consumer.py:195": [
+    "ReinvEff = 1 + pr[\"ReinvestAdoptSens\"] * clamp(pr[\"ReinvestFrac\"] * NetSavings / pr[\"Budget0_\" + x], 0.0, 1.0)"
+   ],
+   "integrate.py:40": [
+    "st[\"SpendRatio\"][x] += d * (c.Committed / c.Budget - st[\"SpendRatio\"][x]) / pr[\"BudgetCycle\"]"
+   ]
+  }
+ },
+ "LabourCostPB0_IH": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ]
+  },
+  "notes": {
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ]
+  }
+ },
+ "SrcASC_FIN_IH": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_LEG_IH": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_MED_IH": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_GOV_IH": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_MFG_IH": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_LOG_IH": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_RET_IH": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "LabourCostPB0_GCC": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ]
+  },
+  "notes": {
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ]
+  }
+ },
+ "SrcASC_FIN_GCC": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_LEG_GCC": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_MED_GCC": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_GOV_GCC": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_MFG_GCC": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_LOG_GCC": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_RET_GCC": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "LabourCostPB0_OIT": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ]
+  },
+  "notes": {
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ]
+  }
+ },
+ "SrcASC_FIN_OIT": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_LEG_OIT": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_MED_OIT": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_GOV_OIT": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_MFG_OIT": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_LOG_OIT": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_RET_OIT": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "LabourCostPB0_GSI": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ]
+  },
+  "notes": {
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ]
+  }
+ },
+ "SrcASC_FIN_GSI": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_LEG_GSI": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_MED_GSI": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_GOV_GSI": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_MFG_GSI": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_LOG_GSI": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_RET_GSI": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "LabourCostPB0_BQ": {
+  "evidence": {
+   "src/aisim/scalar/adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ]
+  },
+  "notes": {
+   "adoption.py:56": [
+    "((labpb[e] / pr[\"LabourCostPB0_\" + e]) * (pr[\"AICost2024\"] / AICostPerUnit)) ** pr[\"CostAdoptElast\"],"
+   ]
+  }
+ },
+ "SrcASC_FIN_BQ": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_LEG_BQ": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_MED_BQ": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_GOV_BQ": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_MFG_BQ": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_LOG_BQ": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "SrcASC_RET_BQ": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  },
+  "notes": {
+   "sourcing.py:140": [
+    "pr[f\"SrcASC_{x}_{e}\"]"
+   ]
+  }
+ },
+ "TypeASC_OIT_FP": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_OIT_TM": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_OIT_MS": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_OIT_SA": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_OIT_OB": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_GSI_FP": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_GSI_TM": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_GSI_MS": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_GSI_SA": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_GSI_OB": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_BQ_FP": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_BQ_TM": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_BQ_MS": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_BQ_SA": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "TypeASC_BQ_OB": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  },
+  "notes": {
+   "finance.py:331": [
+    "Score[k] = pr[f\"TypeASC_{v}_{k}\"] + wc * Ucons + wv * Uvend"
+   ]
+  }
+ },
+ "AnnuityShare": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:206": [
+    "EffMult_TM = (1 - pr[\"AnnuityShare\"]) + pr[\"AnnuityShare\"] * Anchor ** pr[\"AnnuityAnchorW\"]"
+   ]
+  },
+  "notes": {
+   "finance.py:206": [
+    "EffMult_TM = (1 - pr[\"AnnuityShare\"]) + pr[\"AnnuityShare\"] * Anchor ** pr[\"AnnuityAnchorW\"]"
+   ]
+  }
+ },
+ "AnnuityAnchorW": {
+  "evidence": {
+   "src/aisim/scalar/finance.py:206": [
+    "EffMult_TM = (1 - pr[\"AnnuityShare\"]) + pr[\"AnnuityShare\"] * Anchor ** pr[\"AnnuityAnchorW\"]"
+   ]
+  },
+  "notes": {
+   "finance.py:206": [
+    "EffMult_TM = (1 - pr[\"AnnuityShare\"]) + pr[\"AnnuityShare\"] * Anchor ** pr[\"AnnuityAnchorW\"]"
+   ]
+  }
+ },
+ "OpeningsContinuous": {
+  "evidence": {
+   "src/aisim/scalar/labour_market.py:206": [
+    "if pr[\"OpeningsContinuous\"] >= 0.5:"
+   ]
+  }
+ },
+ "SectorShare[FIN]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "src/aisim/scalar/engine.py:262": [
+    "adoption=ado,"
+   ],
+   "src/aisim/scalar/record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ],
+   "src/aisim/scalar/work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ]
+  },
+  "notes": {
+   "consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ],
+   "record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ]
+  }
+ },
+ "SectorShare[LEG]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "src/aisim/scalar/engine.py:262": [
+    "adoption=ado,"
+   ],
+   "src/aisim/scalar/record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ],
+   "src/aisim/scalar/work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ]
+  },
+  "notes": {
+   "consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ],
+   "record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ]
+  }
+ },
+ "SectorShare[MED]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "src/aisim/scalar/engine.py:262": [
+    "adoption=ado,"
+   ],
+   "src/aisim/scalar/record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ],
+   "src/aisim/scalar/work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ]
+  },
+  "notes": {
+   "consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ],
+   "record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ]
+  }
+ },
+ "SectorShare[GOV]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "src/aisim/scalar/engine.py:262": [
+    "adoption=ado,"
+   ],
+   "src/aisim/scalar/record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ],
+   "src/aisim/scalar/work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ]
+  },
+  "notes": {
+   "consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ],
+   "record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ]
+  }
+ },
+ "SectorShare[MFG]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "src/aisim/scalar/engine.py:262": [
+    "adoption=ado,"
+   ],
+   "src/aisim/scalar/record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ],
+   "src/aisim/scalar/work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ]
+  },
+  "notes": {
+   "consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ],
+   "record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ]
+  }
+ },
+ "SectorShare[LOG]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "src/aisim/scalar/engine.py:262": [
+    "adoption=ado,"
+   ],
+   "src/aisim/scalar/record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ],
+   "src/aisim/scalar/work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ]
+  },
+  "notes": {
+   "consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ],
+   "record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ]
+  }
+ },
+ "SectorShare[RET]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "src/aisim/scalar/engine.py:262": [
+    "adoption=ado,"
+   ],
+   "src/aisim/scalar/record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ],
+   "src/aisim/scalar/work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ]
+  },
+  "notes": {
+   "consumer.py:210": [
+    "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
+   ],
+   "work.py:86": [
+    "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
+   ],
+   "record.py:53": [
+    "\"year\": round(s.y, 4),"
+   ]
+  }
+ },
+ "LOBWage[FIN]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  },
+  "notes": {
+   "consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  }
+ },
+ "LOBWage[LEG]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  },
+  "notes": {
+   "consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  }
+ },
+ "LOBWage[MED]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  },
+  "notes": {
+   "consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  }
+ },
+ "LOBWage[GOV]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  },
+  "notes": {
+   "consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  }
+ },
+ "LOBWage[MFG]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  },
+  "notes": {
+   "consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  }
+ },
+ "LOBWage[LOG]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  },
+  "notes": {
+   "consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  }
+ },
+ "LOBWage[RET]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  },
+  "notes": {
+   "consumer.py:194": [
+    "NetSavings = (LOB0 - st[\"LOB\"][x]) * LOBWage[x] - CreditSpend"
+   ]
+  }
+ },
+ "RegDragLevel[FIN]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  },
+  "notes": {
+   "consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  }
+ },
+ "RegDragLevel[LEG]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  },
+  "notes": {
+   "consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  }
+ },
+ "RegDragLevel[MED]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  },
+  "notes": {
+   "consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  }
+ },
+ "RegDragLevel[GOV]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  },
+  "notes": {
+   "consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  }
+ },
+ "RegDragLevel[MFG]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  },
+  "notes": {
+   "consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  }
+ },
+ "RegDragLevel[LOG]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  },
+  "notes": {
+   "consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  }
+ },
+ "RegDragLevel[RET]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:180": [
+    "SectorShare, LOBWage, RegDragLevel = tb[\"SectorShare\"], tb[\"LOBWage\"], tb[\"RegDragLevel\"]"
+   ],
+   "src/aisim/scalar/consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  },
+  "notes": {
+   "consumer.py:188": [
+    "RegDrag = min(0.95, pr[\"RegScenario\"] * RegDragLevel[x] * RegRamp)"
+   ]
+  }
+ },
+ "WTMix[APP]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:181": [
+    "WTMix, BuildMix = tb[\"WTMix\"], tb[\"BuildMix\"]"
+   ],
+   "src/aisim/scalar/consumer.py:213": [
+    "\"APP\": WTMix[\"APP\"]"
+   ]
+  },
+  "notes": {
+   "consumer.py:213-221": [
+    "\"APP\": WTMix[\"APP\"]",
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "WTMix[DATA]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:181": [
+    "WTMix, BuildMix = tb[\"WTMix\"], tb[\"BuildMix\"]"
+   ],
+   "src/aisim/scalar/consumer.py:217": [
+    "\"DATA\": WTMix[\"DATA\"] * ((1 - pr[\"MigWeight\"]) + pr[\"MigWeight\"] * Retire / NewApps0) * Jev * Approval,"
+   ]
+  },
+  "notes": {
+   "consumer.py:213-221": [
+    "\"APP\": WTMix[\"APP\"]",
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "WTMix[SEC]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:181": [
+    "WTMix, BuildMix = tb[\"WTMix\"], tb[\"BuildMix\"]"
+   ],
+   "src/aisim/scalar/consumer.py:218": [
+    "\"SEC\": WTMix[\"SEC\"] * drv.CyberMult,"
+   ]
+  },
+  "notes": {
+   "consumer.py:213-221": [
+    "\"APP\": WTMix[\"APP\"]",
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "WTMix[GOVN]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:181": [
+    "WTMix, BuildMix = tb[\"WTMix\"], tb[\"BuildMix\"]"
+   ],
+   "src/aisim/scalar/consumer.py:219": [
+    "\"GOVN\": WTMix[\"GOVN\"] * (1 + (pr[\"GovRegSens\"] * RegDrag * AC if ai_on else 0.0)),"
+   ]
+  },
+  "notes": {
+   "consumer.py:213-221": [
+    "\"APP\": WTMix[\"APP\"]",
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "WTMix[SUP]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:181": [
+    "WTMix, BuildMix = tb[\"WTMix\"], tb[\"BuildMix\"]"
+   ],
+   "src/aisim/scalar/consumer.py:220": [
+    "\"SUP\": WTMix[\"SUP\"] * ((1 - pr[\"SupPortShare\"]) + pr[\"SupPortShare\"] * pr0),"
+   ]
+  },
+  "notes": {
+   "consumer.py:213-221": [
+    "\"APP\": WTMix[\"APP\"]",
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "WTMix[EUS]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:181": [
+    "WTMix, BuildMix = tb[\"WTMix\"], tb[\"BuildMix\"]"
+   ],
+   "src/aisim/scalar/consumer.py:221": [
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  },
+  "notes": {
+   "consumer.py:213-221": [
+    "\"APP\": WTMix[\"APP\"]",
+    "\"EUS\": WTMix[\"EUS\"] * st[\"SeatsB\"][x] / pr[\"Seats0_\" + x],"
+   ]
+  }
+ },
+ "a2024[APP]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ],
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "src/aisim/scalar/capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "a2024[DATA]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ],
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "src/aisim/scalar/capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "a2024[SEC]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ],
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "src/aisim/scalar/capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "a2024[GOVN]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ],
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "src/aisim/scalar/capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "a2024[SUP]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ],
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "src/aisim/scalar/capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "a2024[EUS]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ],
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "src/aisim/scalar/capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "amax[APP]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ],
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "capability.py:68": [
+    "PAI = {w: 1 / ((1 - aW[w]) + aW[w] / speed_up[w] + aW[w] * VerifNow) for w in WTYPES}"
+   ]
+  }
+ },
+ "amax[DATA]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ],
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "capability.py:68": [
+    "PAI = {w: 1 / ((1 - aW[w]) + aW[w] / speed_up[w] + aW[w] * VerifNow) for w in WTYPES}"
+   ]
+  }
+ },
+ "amax[SEC]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ],
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "capability.py:68": [
+    "PAI = {w: 1 / ((1 - aW[w]) + aW[w] / speed_up[w] + aW[w] * VerifNow) for w in WTYPES}"
+   ]
+  }
+ },
+ "amax[GOVN]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ],
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "capability.py:68": [
+    "PAI = {w: 1 / ((1 - aW[w]) + aW[w] / speed_up[w] + aW[w] * VerifNow) for w in WTYPES}"
+   ]
+  }
+ },
+ "amax[SUP]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ],
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "capability.py:68": [
+    "PAI = {w: 1 / ((1 - aW[w]) + aW[w] / speed_up[w] + aW[w] * VerifNow) for w in WTYPES}"
+   ]
+  }
+ },
+ "amax[EUS]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ],
+   "src/aisim/scalar/capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "capability.py:63": [
+    "aW = {w: max(0.0, amax[w] - (amax[w] - a2024[w]) * (1 - pr[\"g\"]) ** (y - 2024)) for w in WTYPES}"
+   ],
+   "capability.py:68": [
+    "PAI = {w: 1 / ((1 - aW[w]) + aW[w] / speed_up[w] + aW[w] * VerifNow) for w in WTYPES}"
+   ]
+  }
+ },
+ "SpeedUp[APP]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ]
+  },
+  "notes": {
+   "capability.py:68": [
+    "PAI = {w: 1 / ((1 - aW[w]) + aW[w] / speed_up[w] + aW[w] * VerifNow) for w in WTYPES}"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "SpeedUp[DATA]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ]
+  },
+  "notes": {
+   "capability.py:68": [
+    "PAI = {w: 1 / ((1 - aW[w]) + aW[w] / speed_up[w] + aW[w] * VerifNow) for w in WTYPES}"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "SpeedUp[SEC]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ]
+  },
+  "notes": {
+   "capability.py:68": [
+    "PAI = {w: 1 / ((1 - aW[w]) + aW[w] / speed_up[w] + aW[w] * VerifNow) for w in WTYPES}"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "SpeedUp[GOVN]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ]
+  },
+  "notes": {
+   "capability.py:68": [
+    "PAI = {w: 1 / ((1 - aW[w]) + aW[w] / speed_up[w] + aW[w] * VerifNow) for w in WTYPES}"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "SpeedUp[SUP]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ]
+  },
+  "notes": {
+   "capability.py:68": [
+    "PAI = {w: 1 / ((1 - aW[w]) + aW[w] / speed_up[w] + aW[w] * VerifNow) for w in WTYPES}"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "SpeedUp[EUS]": {
+  "evidence": {
+   "src/aisim/scalar/capability.py:58": [
+    "amax, a2024, speed_up = tb[\"amax\"], tb[\"a2024\"], tb[\"SpeedUp\"]"
+   ]
+  },
+  "notes": {
+   "capability.py:68": [
+    "PAI = {w: 1 / ((1 - aW[w]) + aW[w] / speed_up[w] + aW[w] * VerifNow) for w in WTYPES}"
+   ],
+   "capability.py:71": [
+    "PAI0 = {w: 1 / ((1 - a2024[w]) + a2024[w] / speed_up[w] + a2024[w] * pr[\"Verif\"]) for w in WTYPES}"
+   ]
+  }
+ },
+ "BuildMix[APP]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:181": [
+    "WTMix, BuildMix = tb[\"WTMix\"], tb[\"BuildMix\"]"
+   ],
+   "src/aisim/scalar/consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  }
+ },
+ "BuildMix[DATA]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:181": [
+    "WTMix, BuildMix = tb[\"WTMix\"], tb[\"BuildMix\"]"
+   ],
+   "src/aisim/scalar/consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  }
+ },
+ "BuildMix[SEC]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:181": [
+    "WTMix, BuildMix = tb[\"WTMix\"], tb[\"BuildMix\"]"
+   ],
+   "src/aisim/scalar/consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  }
+ },
+ "BuildMix[GOVN]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:181": [
+    "WTMix, BuildMix = tb[\"WTMix\"], tb[\"BuildMix\"]"
+   ],
+   "src/aisim/scalar/consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  }
+ },
+ "BuildMix[SUP]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:181": [
+    "WTMix, BuildMix = tb[\"WTMix\"], tb[\"BuildMix\"]"
+   ],
+   "src/aisim/scalar/consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  }
+ },
+ "BuildMix[EUS]": {
+  "evidence": {
+   "src/aisim/scalar/consumer.py:181": [
+    "WTMix, BuildMix = tb[\"WTMix\"], tb[\"BuildMix\"]"
+   ],
+   "src/aisim/scalar/consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  },
+  "notes": {
+   "consumer.py:228": [
+    "Demand[x] = {w: base * max(0.0, dm[w] + AIBuild * BuildMix[w]) for w in WTYPES}"
+   ]
+  }
+ },
+ "OffExp[IH]": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:132": [
+    "OffExp = tb[\"OffExp\"]"
+   ],
+   "src/aisim/scalar/sourcing.py:144": [
+    "- (pr[\"RegFitSens\"] * RegDrag[x] * AC * OffExp[e] if ai_on else 0.0)"
+   ]
+  },
+  "notes": {
+   "sourcing.py:144": [
+    "- (pr[\"RegFitSens\"] * RegDrag[x] * AC * OffExp[e] if ai_on else 0.0)"
+   ]
+  }
+ },
+ "OffExp[GCC]": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:132": [
+    "OffExp = tb[\"OffExp\"]"
+   ],
+   "src/aisim/scalar/sourcing.py:144": [
+    "- (pr[\"RegFitSens\"] * RegDrag[x] * AC * OffExp[e] if ai_on else 0.0)"
+   ]
+  },
+  "notes": {
+   "sourcing.py:144": [
+    "- (pr[\"RegFitSens\"] * RegDrag[x] * AC * OffExp[e] if ai_on else 0.0)"
+   ]
+  }
+ },
+ "OffExp[OIT]": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:132": [
+    "OffExp = tb[\"OffExp\"]"
+   ],
+   "src/aisim/scalar/sourcing.py:144": [
+    "- (pr[\"RegFitSens\"] * RegDrag[x] * AC * OffExp[e] if ai_on else 0.0)"
+   ]
+  },
+  "notes": {
+   "sourcing.py:144": [
+    "- (pr[\"RegFitSens\"] * RegDrag[x] * AC * OffExp[e] if ai_on else 0.0)"
+   ]
+  }
+ },
+ "OffExp[GSI]": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:132": [
+    "OffExp = tb[\"OffExp\"]"
+   ],
+   "src/aisim/scalar/sourcing.py:144": [
+    "- (pr[\"RegFitSens\"] * RegDrag[x] * AC * OffExp[e] if ai_on else 0.0)"
+   ]
+  },
+  "notes": {
+   "sourcing.py:144": [
+    "- (pr[\"RegFitSens\"] * RegDrag[x] * AC * OffExp[e] if ai_on else 0.0)"
+   ]
+  }
+ },
+ "OffExp[BQ]": {
+  "evidence": {
+   "src/aisim/scalar/sourcing.py:132": [
+    "OffExp = tb[\"OffExp\"]"
+   ],
+   "src/aisim/scalar/sourcing.py:144": [
+    "- (pr[\"RegFitSens\"] * RegDrag[x] * AC * OffExp[e] if ai_on else 0.0)"
+   ]
+  },
+  "notes": {
+   "sourcing.py:144": [
+    "- (pr[\"RegFitSens\"] * RegDrag[x] * AC * OffExp[e] if ai_on else 0.0)"
+   ]
+  }
+ },
+ "Mix0[OIT][FP]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[OIT][TM]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[OIT][MS]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[OIT][SA]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[OIT][OB]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[GSI][FP]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[GSI][TM]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[GSI][MS]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[GSI][SA]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[GSI][OB]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[BQ][FP]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[BQ][TM]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[BQ][MS]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[BQ][SA]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Mix0[BQ][OB]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[FIN][IH]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[FIN][GCC]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[FIN][OIT]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[FIN][GSI]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[FIN][BQ]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[LEG][IH]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[LEG][GCC]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[LEG][OIT]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[LEG][GSI]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[LEG][BQ]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[MED][IH]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[MED][GCC]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[MED][OIT]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[MED][GSI]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[MED][BQ]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[GOV][IH]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[GOV][GCC]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[GOV][OIT]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[GOV][GSI]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[GOV][BQ]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[MFG][IH]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[MFG][GCC]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[MFG][OIT]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[MFG][GSI]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[MFG][BQ]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[LOG][IH]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[LOG][GCC]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[LOG][OIT]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[LOG][GSI]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[LOG][BQ]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[RET][IH]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[RET][GCC]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[RET][OIT]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[RET][GSI]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ },
+ "Src0[RET][BQ]": {
+  "evidence": {
+   "src/aisim/scalar/engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  },
+  "notes": {
+   "engine.py:72": [
+    "\"\"\"The tables ``run()`` reads. ``Mix0`` and ``Src0`` only describe the 2024 state.\"\"\""
+   ]
+  }
+ }
+}
