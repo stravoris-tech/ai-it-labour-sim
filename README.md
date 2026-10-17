@@ -6,7 +6,7 @@ simulations under chosen scenario levers and uncertainty.
 
 ## Status
 
-Model selector and pricing groundwork built; calibration slice next. The frozen Python prototype is in
+Phase 8 model built; docs and public release next. The frozen Python prototype is in
 [`reference/`](reference/README.md).
 
 ## Asking a question
@@ -146,21 +146,61 @@ if __name__ == "__main__":
 
 ## Models
 
-- **Choosing a model.** `Experiment.model` and `Params.baseline(model=...)` name the calibrated baseline every run
-  starts from. Only `phase7`, the prototype's calibrated model and the default, is registered today; any other name
-  raises.
-- **Phase 8 is not here yet.** Phase 8 is contract pricing in which part of new T&M work is annuity work that carries
-  the client price anchor. It will be defined, together with a recalibration, in a calibration slice.
-- **Pricing what-ifs on phase 7.** The pricing parameters can already be used as overrides or sampled levers:
+Three models are registered. `Experiment.model`, `Params.baseline(model=...)` and `BatchParams.baseline(n, model=...)`
+name the calibrated baseline every run starts from; any other name raises.
+
+| Model | What it is |
+| --- | --- |
+| `phase7` | The prototype's calibrated model, bit for bit. **The default**, until the public release |
+| `phase8` | Continuous openings, the slice 8 pricing design and a full robust refit |
+| `phase8_highadoption` | `phase8` refitted with the adoption parameter `p` fixed at Phase 7's 0.044: the adoption-speed alternative |
+
+- **What `phase8` changes.** Three things, each switched on in its baseline file
+  (`src/aisim/data/baseline_phase8.json`):
+  - **The openings fix.** In Phase 7, new openings drop to 0 the moment a unit-level is overstaffed, so the flow jumps
+    where the surplus changes sign. That jump made the calibration loss discontinuous and stalled the optimiser. With
+    the extension switch `OpeningsContinuous` on, openings follow one formula for every surplus, so they taper to 0
+    as overstaffing grows. Layoffs are unchanged.
+  - **The pricing design.** `PassThrough` 0.75, `AnnuityShare` 0.3 and `AnnuityAnchorW` 0.4: part of new T&M work is
+    annuity work that carries the client price anchor.
+  - **A robust refit.** All 11 calibrated parameters from a 32-start fit (`tools/calibrate.py --starts 32`), with
+    `PriceHorizon` at most 7. 29 of the 32 starts land within 5% of the best loss (0.000423, against Phase 7's
+    0.000800).
+- **What moves, at 2030 in Base.**
+
+  | Quantity | Fix | Recalibration | Pricing | Total |
+  | --- | --- | --- | --- | --- |
+  | `HeadTotal` | -0.03% | +3.50% | -0.10% | +3.37% |
+  | `RevenueTot` | -0.03% | +4.38% | +0.32% | +4.68% |
+
+  The fix itself barely moves the headlines. Pricing moves the effort-billed shares: OIT -5.1 points and BQ -8.1
+  points.
+- **What the recalibration means.** The 2025-2026 adoption data favour a higher innovation rate `p`: the loss falls
+  steadily from `p` 0.02 to 0.25 when the other parameters are refitted at each value. Phase 7's adoption path (`p`
+  0.044) was an optimiser stall on the hiring discontinuity, not a best fit. `phase8` adopts faster early and
+  saturates sooner: `A_mean` 0.800 in 2028 and 0.904 in 2030.
+- **`phase8_highadoption`.** The data identify the early adoption path, not its speed after 2026, so this model keeps
+  Phase 7's `p` and refits the rest (loss 0.000748). Its adoption runs higher later: `A_mean` 0.853 in 2028 and 0.957
+  in 2030. For a question that depends on adoption speed, compare the two models rather than sampling `p`. `p` and
+  the 2024 levels it moves cannot change under `perturb_from`, so the comparison has to be between models.
+- **The core 4 band.** One of the pricing checks is the OIT book price drift, the `AvgIdx_OIT` CAGR over 2026-2030.
+  Its band is [-3.5%, -2%] a year. It was widened from [-3%, -2%] by an operator ruling on 2026-10-16, made after
+  recon 09's results were seen. The evidence is HCLTech's 2-3% a year for its own portfolio and Kotak's 3.5% base
+  case for Indian IT. `phase8` gives -2.96% a year, inside both bands; `phase8_highadoption` gives -3.23%.
+- **A known behaviour: hiring and layoffs together.** Under continuous openings, a unit-level can have openings and
+  layoffs in the same step. This happens for onshore seniors after 2030. On Phase 7's values with the switch on it
+  peaks at 1.5% of staff a year in Base and 4.0% in Fast AI; in `phase8` it is absent in Base and peaks at 2.9% in
+  Fast AI. No calibration target sees it.
+- **Pricing what-ifs.** The pricing parameters can be used as overrides or sampled levers on any model:
   - `AnnuityShare`: the annuity share of new T&M signings, which carries `Anchor ** AnnuityAnchorW`;
   - `AnnuityAnchorW`: the weight of the anchor on that share;
   - `PassThrough`: the share of the trend clients pass into prices.
 
-  `AnnuityShare` and `AnnuityAnchorW` default to 0, which reproduces phase 7 exactly. Under `perturb_from` they act
-  from Y, like any lever.
-- **A known limitation.** Phase 7's fit is weak in two ways. Its optimiser stalls on a discontinuity in junior hiring,
-  and its AI adoption path after 2026 is weakly identified. Results that depend on adoption after 2026 carry that
-  caveat. Both are the calibration slice's subject.
+  On `phase7`, `AnnuityShare` and `AnnuityAnchorW` default to 0, which reproduces Phase 7 exactly; in `phase8` they
+  are calibrated. Under `perturb_from` they act from Y, like any lever.
+- **How a model is built.** `tools/calibrate.py` fits it and `tools/build_model.py` writes its baseline file from
+  `tools/models/<name>/spec.json` and `fit.json`. A model is never written by hand. Each baseline file reproduces its
+  fit's loss bit for bit, and its 2024 state is Phase 7's.
 
 ## Charts and reports
 

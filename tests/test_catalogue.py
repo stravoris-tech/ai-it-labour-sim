@@ -35,7 +35,7 @@ def test_domains_cover_every_scalar_and_table_entry_in_order() -> None:
         "level_2024",
     ]
     assert list(df["name"]) == expect
-    assert len(df) == 438
+    assert len(df) == 439
 
 
 def test_domain_classes_and_bounds() -> None:

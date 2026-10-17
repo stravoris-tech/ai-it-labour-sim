@@ -1,0 +1,12 @@
+{
+ "model": "phase8_highadoption",
+ "set": {
+  "OpeningsContinuous": 1.0,
+  "PassThrough": 0.75,
+  "AnnuityShare": 0.3,
+  "AnnuityAnchorW": 0.4,
+  "p": 0.044
+ },
+ "fit": "tools/models/phase8_highadoption/fit.json",
+ "note": "The adoption-speed alternative to phase8 (slice 9): phase8's fixed values with p at Phase 7's 0.044 and the other 10 FIT parameters refitted (8 starts plus a warm start from phase8); recon 09b F2b."
+}

@@ -99,7 +99,7 @@ class Experiment:
     - ``noise``: process noise by channel (``aisim.noise.CHANNELS``), off by default; it needs ``perturb_from`` and a
       ``noise_seed``. No amplitude is built in.
     - ``model``: the named model (``aisim.state.BASELINE_FILES``) whose baseline every run starts from: ``"phase7"``
-      (the default, and today the only shipped model).
+      (the default), ``"phase8"`` or ``"phase8_highadoption"``.
     """
 
     scenario: str | None = None

@@ -1,10 +1,10 @@
-"""The model selector (slice 8): named baselines in one registry, ``phase7`` the default and only shipped model, and
-the extension parameters.
+"""The model selector (slice 8): named baselines in one registry, ``phase7`` the default beside the shipped ``phase8``
+and ``phase8_highadoption`` (slice 9), and the extension parameters.
 
 - ``model="phase7"``, explicit or by default, is today's model bit for bit; ``baseline.json`` keeps its bytes.
 - The extension parameters live in code (``EXTENSION_DEFAULTS``), not in ``baseline.json``, and ``parameters.csv``
   classes exactly them as ``extension``.
-- An unknown model, ``"phase8"`` included, raises everywhere: ``ValueError`` from the loaders, one ``ValidationError``
+- An unknown model raises everywhere: ``ValueError`` from the loaders, one ``ValidationError``
   from the experiment API.
 - A second model comes from the ``register_model`` fixture (``tests/conftest.py``), registered in
   ``aisim.state.BASELINE_FILES``: every site that takes a model (fixed parameters, phase 1, validation, the tornado
@@ -53,8 +53,9 @@ def test_baseline_json_is_byte_identical_to_main() -> None:
 
 
 def test_models_and_extension_defaults() -> None:
-    assert models() == ("phase7",) and list(BASELINE_FILES) == ["phase7"]
-    assert dict(EXTENSION_DEFAULTS) == {"AnnuityShare": 0.0, "AnnuityAnchorW": 0.0}
+    shipped = ["phase7", "phase8", "phase8_highadoption"]
+    assert models() == tuple(shipped) and list(BASELINE_FILES) == shipped
+    assert dict(EXTENSION_DEFAULTS) == {"AnnuityShare": 0.0, "AnnuityAnchorW": 0.0, "OpeningsContinuous": 0.0}
     p = Params.baseline()
     assert p == Params.baseline("phase7")
     names = list(p.scalars)
@@ -120,9 +121,9 @@ def test_experiment_model_phase7_is_the_default() -> None:
         assert (a.series[k] == b.series[k]).all(), k
 
 
-@pytest.mark.parametrize("name", ["phase9", "phase8"])
+@pytest.mark.parametrize("name", ["phase9", "phase6"])
 def test_unknown_model_raises(name: str) -> None:
-    """``phase8`` is not shipped (slice 8 close-out), so it is as unknown as any other name."""
+    """A name that is not registered is unknown to every loader."""
     for call in (
         lambda: baseline_data(name),
         lambda: Params.baseline(name),
@@ -133,7 +134,7 @@ def test_unknown_model_raises(name: str) -> None:
             call()
 
 
-@pytest.mark.parametrize("name", ["phase9", "phase8"])
+@pytest.mark.parametrize("name", ["phase9", "phase6"])
 def test_unknown_model_joins_the_single_validation_error(name: str) -> None:
     """The model violation is reported with every other violation, checked against phase 7."""
     with pytest.raises(ValidationError) as info:
@@ -154,7 +155,7 @@ def test_registered_model_is_seen_by_every_check(register_model: RegisterModel) 
     model to the state loaders, ``runner.known_model``, ``validate`` and ``tornado_levers``, and it is gone from all of
     them when the test ends (``monkeypatch``)."""
     p = register_model(SECOND_MODEL, FIXTURE_CHANGES)
-    assert models() == ("phase7", SECOND_MODEL)
+    assert models() == ("phase7", "phase8", "phase8_highadoption", SECOND_MODEL)
     assert baseline_data(SECOND_MODEL)["params"][LEVEL_2024_CHANGE] == FIXTURE_CHANGES[LEVEL_2024_CHANGE]
     exp = Experiment(model=SECOND_MODEL)
     assert known_model(exp) is exp
