@@ -16,6 +16,7 @@ There is no prototype for them, so the scalar engine is the oracle and batch-sca
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 
 import numpy as np
@@ -28,7 +29,7 @@ from aisim.noise import ou_factors
 from aisim.perturb import run_batch_from, run_from, start_step_of
 from aisim.scenarios import EXTREME, SCENARIOS
 from aisim.state import BASELINE_FILES, baseline_data
-from tests.helpers import annual, people
+from tests.helpers import TOL, annual, assert_close, people, phase8_platform_matches
 from tests.test_batch_parity import compare_run
 from tests.test_integrity import MIN_STOCK
 from tests.test_noise import assert_bit_identical, scalar_noise
@@ -72,14 +73,21 @@ def test_baseline_is_build_model_output(model: str, monkeypatch: pytest.MonkeyPa
 
 
 def test_baseline_reproduces_its_fit_loss(model: str) -> None:
-    """The model's own baseline gives its fit's loss and target values bit for bit: every value the fit evaluated,
-    derived constants included (``AdoptC0``), is in the file."""
+    """The model's own baseline gives its fit's loss and target values: every value the fit evaluated, derived
+    constants included (``AdoptC0``), is in the file. Bit for bit on the platform the fits were made on (the phase 8
+    golden manifest's); within ``TOL`` elsewhere, where the C library may round the last ulp differently."""
     fit = fit_of(model)
     obj = Objective(model, [], {}, load_targets())
-    assert loss(obj.evaluate([[]])[0]) == fit["loss"]
+    fresh_loss, fresh_values = loss(obj.evaluate([[]])[0]), obj.values([[]])[0]
     targets = fit["targets"]
-    assert isinstance(targets, list)
-    assert obj.values([[]])[0] == [t["model"] for t in targets]
+    assert isinstance(targets, list) and isinstance(fit["loss"], float)
+    stored = [t["model"] for t in targets]
+    if phase8_platform_matches():
+        assert fresh_loss == fit["loss"]
+        assert fresh_values == stored
+    else:
+        assert math.isclose(fresh_loss, fit["loss"], rel_tol=TOL, abs_tol=TOL)
+        assert_close(fresh_values, stored, TOL, TOL)
 
 
 def test_spec_and_fit_agree(model: str) -> None:

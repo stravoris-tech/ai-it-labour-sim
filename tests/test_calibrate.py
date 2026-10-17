@@ -14,6 +14,7 @@ from __future__ import annotations
 import ast
 import inspect
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -24,6 +25,7 @@ from scipy.optimize import least_squares
 from aisim import Params
 from aisim.params import EXTENSION_DEFAULTS
 from aisim.state import baseline_data
+from tests.helpers import phase8_platform_matches
 from tests.test_openings import C2
 from tools.build_model import build, main
 from tools.calibrate import (
@@ -124,13 +126,24 @@ def test_scipy_tol_is_least_squares_default() -> None:
 
 
 def test_starts_zero_reproduces_the_phase7_fit_bit_for_bit() -> None:
-    """``--starts 0`` is the single fit from ``X0``: it lands on recon 08 C2's values (the tool's Phase 7 fit before
-    multi-start) bit for bit, with the same evaluation counts, and records its one start."""
+    """``--starts 0`` is the single fit from ``X0``: on every platform it equals a live default fit bit for bit, and
+    records its one start. On the platform the phase 8 fits were made on it lands on recon 08 C2's values (the tool's
+    Phase 7 fit before multi-start) bit for bit, with the same evaluation counts; elsewhere the optimiser amplifies
+    the last-ulp differences of the C library (2.9e-12 relative on Linux x86-64), so C2 is matched at 1e-9 relative,
+    the slow reproduction test's loss tolerance."""
     names = [n for n, _, _ in FIT_BOUNDS]
-    out, _ = run(["--model", "phase7", "--fit", ",".join(names), "--starts", "0", "--out", "unused.json"])
-    assert out["fitted"] == C2
-    assert out["loss"] == 0.0008007856055132186
-    assert (out["status"], out["nfev"], out["njev"], out["runs"], out["batches"]) == (3, 18, 8, 107, 27)
+    argv = ["--model", "phase7", "--fit", ",".join(names), "--out", "unused.json"]
+    out, _ = run([*argv, "--starts", "0"])
+    default, _ = run(argv)
+    same = ("fitted", "loss", "targets", "nfev", "njev", "status", "message", "runs", "batches", "best_start")
+    assert {k: out[k] for k in same} == {k: default[k] for k in same}
+    if phase8_platform_matches():
+        assert out["fitted"] == C2
+        assert out["loss"] == 0.0008007856055132186
+        assert (out["status"], out["nfev"], out["njev"], out["runs"], out["batches"]) == (3, 18, 8, 107, 27)
+    else:
+        assert all(math.isclose(out["fitted"][k], v, rel_tol=1e-9) for k, v in C2.items()), out["fitted"]
+        assert math.isclose(out["loss"], 0.0008007856055132186, rel_tol=1e-9)
     assert [r["start"] for r in out["starts"]] == [0] and out["best_start"] == 0
     assert out["starts"][0]["x0"] == [min(max(x, lo), hi) for x, (_, lo, hi) in zip(X0, FIT_BOUNDS, strict=True)]
     assert out["settings"] == {

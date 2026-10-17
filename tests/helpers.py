@@ -176,3 +176,14 @@ FIXTURE_CHANGES: Mapping[str, float] = {**PRICING_CHANGES, LEVEL_2024_CHANGE: 1.
 
 RegisterModel = Callable[[str, Mapping[str, float]], Params]
 """The ``register_model`` fixture: ``register(name, changes)`` registers a model and returns its baseline."""
+
+
+PHASE8_MANIFEST = Path(__file__).resolve().parent / "data" / "goldens" / "phase8" / "MANIFEST.json"
+"""The phase 8 golden manifest. The phase 8 fits (``tools/models/``) were made on the same machine, so its platform is
+the one on which fit-derived values are bit-exact."""
+
+
+def phase8_platform_matches() -> bool:
+    """True on the platform the phase 8 goldens and fits were generated on."""
+    env: dict[str, str] = json.loads(PHASE8_MANIFEST.read_text(encoding="utf-8"))["environment"]
+    return golden_platform_matches(env)
