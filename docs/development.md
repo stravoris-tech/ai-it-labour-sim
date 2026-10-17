@@ -228,7 +228,10 @@ Monte Carlo golden was regenerated, because its levers moved.
   fails on a stale cite and `--fix` re-anchors one only by a unique exact match, never by guessing.
 - Code is MIT and documentation and data CC BY 4.0, with `pyproject.toml` declaring `MIT AND CC-BY-4.0`.
 
-**Held or deferred.** Making the repository public, Zenodo and the release are operator steps after the merge.
+**Held or deferred.**
+- Making the repository public, Zenodo and the release are operator steps after the merge.
+- 247 citations with aptness not verified by `tools/cites.py --apt` (mostly multi-suffix names); a later pass could
+  teach `--apt` those names.
 
 ## Analyses
 
