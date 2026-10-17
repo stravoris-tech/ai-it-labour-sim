@@ -27,7 +27,7 @@ RESULTS = load_json(GOLDENS / "phase7_results.json")
 @pytest.mark.parametrize(("ai_on", "golden_file"), [(True, "base.json"), (False, "ai_off.json")])
 def test_matches_run_golden(ai_on: bool, golden_file: str) -> None:
     golden = load_json(GOLDENS / golden_file)
-    fresh = port_dict(run(ai_on=ai_on, record_every=0.25))
+    fresh = port_dict(run(Params.baseline("phase7"), ai_on=ai_on, record_every=0.25))
     assert len(fresh["rows"]) == len(golden["rows"])
     assert_close(fresh, golden, TOL, TOL)
 
@@ -35,7 +35,7 @@ def test_matches_run_golden(ai_on: bool, golden_file: str) -> None:
 @pytest.mark.parametrize("name", list(SCENARIOS))
 def test_scenario_matches_results_golden(name: str) -> None:
     stored = RESULTS["scenarios"][name]["ann"]
-    ann = annual(run(Params.baseline().with_overrides(**SCENARIOS[name]), record_every=1.0).rows)
+    ann = annual(run(Params.baseline("phase7").with_overrides(**SCENARIOS[name]), record_every=1.0).rows)
     fresh = {year: {k: ann[int(year)][k] for k in keys} for year, keys in stored.items()}
     assert len(stored) == 17
     assert_close(fresh, stored, TOL, TOL)

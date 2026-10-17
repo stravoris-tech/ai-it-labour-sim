@@ -66,7 +66,7 @@ def register_model(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Iterator[
     from aisim.experiment import validate
 
     def register(name: str, changes: Mapping[str, float]) -> Params:
-        data = baseline_data()
+        data = baseline_data("phase7")
         params = {**data["params"], **EXTENSION_DEFAULTS}
         unknown = sorted(set(changes) - set(params))
         if unknown:

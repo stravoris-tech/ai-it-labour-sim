@@ -40,7 +40,7 @@ from aisim.charts._base import (
     year_axis,
     ylabel_for,
 )
-from aisim.charts.colours import GREY, INK, LOWERS, RAISES, key_colours, scenario_colour
+from aisim.charts.colours import GREY, INK, LOWERS, RAISES, key_colours, key_styles, scenario_colour, scenario_style
 from aisim.experiment.derived import ratio_to_base
 from aisim.experiment.results import ExperimentResult
 from aisim.experiment.scenarios import ScenarioResult, scenario_label
@@ -100,6 +100,7 @@ def bands(
         fig = figure_of(ax)
     entries = _entries(keys, labels)
     colours = key_colours([name for name, _, _ in entries])
+    styles = key_styles([name for name, _, _ in entries])
     qs = (q[0], 0.5, q[1])
     for name, label, src in entries:
         b = result.bands(src, q=qs, ratio_to=ratio_to, years=window)
@@ -107,7 +108,7 @@ def bands(
         c = colours[name]
         ax.fill_between(x, b[q[0]].to_numpy(), b[q[1]].to_numpy(), color=c, alpha=BAND_ALPHA, lw=0, gid=f"band:{name}")
         median = b[0.5].to_numpy()
-        ax.plot(x, median, color=c, lw=2, gid=f"median:{name}")
+        ax.plot(x, median, color=c, lw=2, ls=styles[name], gid=f"median:{name}")
         if baseline is not None and isinstance(src, str):
             y = baseline.single(src)
             if ratio_to is not None:
@@ -167,32 +168,36 @@ def scenarios(
     share = layout == "small_multiples" or len(units) == 1
     fig, axes = new_figure(nrows, ncols, figsize=(4.6 * ncols + 2.2, 3.4 * nrows + 0.6), sharex=True, sharey=share)
     qs = (q[0], 0.5, q[1])
-    handles: list[tuple[str, str]] = []
+    handles: list[tuple[str, str, str]] = []
 
-    def draw(ax: Axes, res: ExperimentResult, key: str, colour: str, gid: str) -> None:
+    def draw(ax: Axes, res: ExperimentResult, key: str, colour: str, style: str, gid: str) -> None:
         b = res.bands(key, q=qs, ratio_to=ratio_to, years=window)
         x = b.index.to_numpy(dtype=np.float64)
         if res.n > 1:
             ax.fill_between(
                 x, b[q[0]].to_numpy(), b[q[1]].to_numpy(), color=colour, alpha=BAND_ALPHA, lw=0, gid=f"band:{gid}"
             )
-        ax.plot(x, b[0.5].to_numpy(), color=colour, lw=2, gid=f"median:{gid}")
+        ax.plot(x, b[0.5].to_numpy(), color=colour, lw=2, ls=style, gid=f"median:{gid}")
 
     if layout == "small_multiples":
-        colours = key_colours(names)
+        colours, styles = key_colours(names), key_styles(names)
         for ax, s in zip(axes, scen_result.scenarios, strict=False):
             ax.set_gid(f"scenario:{scenario_label(s)}")
             for k in names:
-                draw(ax, scen_result[s], k, colours[k], k)
+                draw(ax, scen_result[s], k, colours[k], styles[k], k)
             ax.set_title(scenario_label(s), fontsize=FONT_SIZE + 1)
-        handles = [(lab.get(k, k), colours[k]) for k in names]
+        handles = [(lab.get(k, k), colours[k], styles[k]) for k in names]
     else:
         for ax, k in zip(axes, names, strict=False):
             ax.set_gid(f"key:{k}")
             for i, s in enumerate(scen_result.scenarios):
-                draw(ax, scen_result[s], k, scenario_colour(scenario_label(s), i), f"{k}@{scenario_label(s)}")
+                name = scenario_label(s)
+                draw(ax, scen_result[s], k, scenario_colour(name, i), scenario_style(name, i), f"{k}@{name}")
             ax.set_title(lab.get(k, k), fontsize=FONT_SIZE + 1)
-        handles = [(scenario_label(s), scenario_colour(scenario_label(s), i)) for i, s in enumerate(scen_result)]
+        handles = [
+            (scenario_label(s), scenario_colour(scenario_label(s), i), scenario_style(scenario_label(s), i))
+            for i, s in enumerate(scen_result)
+        ]
     label = ylabel if ylabel is not None else ylabel_for(names, ratio_to)
     y0 = perturb_year(scen_result.meta)
     for i, ax in enumerate(axes):
@@ -215,7 +220,7 @@ def scenarios(
 
 def _figure_legend(
     fig: Figure,
-    handles: Sequence[tuple[str, str]],
+    handles: Sequence[tuple[str, str, str]],
     scen_result: ScenarioResult,
     q: tuple[float, float],
     shade: bool,
@@ -226,7 +231,7 @@ def _figure_legend(
 
     from aisim.charts._base import SHADE_ALPHA
 
-    items: list[Any] = [Line2D([], [], color=c, lw=2, label=text) for text, c in handles]
+    items: list[Any] = [Line2D([], [], color=c, lw=2, ls=style, label=text) for text, c, style in handles]
     first = scen_result[scen_result.scenarios[0]]
     if first.n > 1:
         items.append(Patch(color=INK, alpha=BAND_ALPHA, label=_band_label(q, first.n) + " per scenario"))
@@ -273,13 +278,13 @@ def lines(
     else:
         fig = figure_of(ax)
     keep = np.ones(len(xs), dtype=np.bool_) if x is not None else _in_window(xs, window)
-    colours = key_colours(names)
+    colours, styles = key_colours(names), key_styles(names)
     lab = labels or {}
     for k in names:
         y = data[k]
         if y.shape != xs.shape:
             raise ValueError(f"{k}: {y.shape} values for {xs.shape} x values")
-        ax.plot(xs[keep], y[keep], color=colours[k], lw=2, gid=f"line:{k}")
+        ax.plot(xs[keep], y[keep], color=colours[k], lw=2, ls=styles[k], gid=f"line:{k}")
         end_label(ax, float(xs[keep][-1]), float(y[keep][-1]), lab.get(k, k), colours[k], f"label:{k}")
     if x is None:
         if shade:

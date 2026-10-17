@@ -6,7 +6,7 @@ simulations under chosen scenario levers and uncertainty.
 
 ## Status
 
-Phase 8 model built; docs and public release next. The frozen Python prototype is in
+The first public release, 0.1.0. The default model is `phase8` ("Models" below). The frozen Python prototype is in
 [`reference/`](reference/README.md).
 
 ## Asking a question
@@ -14,7 +14,8 @@ Phase 8 model built; docs and public release next. The frozen Python prototype i
 A question combines the baseline, an optional named scenario (`aisim.SCENARIOS`), fixed overrides and sampled
 uncertain levers. `run_experiment` validates it, runs it across cores and returns the results as numpy arrays with
 pandas views. This example asks how onshore IT headcount moves relative to 2024 under the Fast AI scenario, with 1,000
-runs sampling the junior cut per unit of adoption `JuniorCut` and the T&M brake on vendor adoption `TMBrake`:
+runs sampling the junior cut per unit of adoption `JuniorCut` over the default model's tornado range and the T&M brake
+on vendor adoption `TMBrake`:
 
 ```python
 from aisim import Experiment, Uniform, run_experiment
@@ -23,7 +24,7 @@ from aisim import Experiment, Uniform, run_experiment
 def main() -> None:
     exp = Experiment(
         scenario="Fast AI",
-        sample={"JuniorCut": Uniform(0.29, 0.87), "TMBrake": Uniform(0.2, 0.6)},
+        sample={"JuniorCut": Uniform(0.38, 1.14), "TMBrake": Uniform(0.2, 0.6)},
         n=1000,
         seed=2024,
     )
@@ -107,6 +108,9 @@ if __name__ == "__main__":
 - **The tornado levers depend on Y.** `tornado_levers(perturb_from=...)` drops every lever whose range fails these
   checks at that Y: all 14 without a perturb year, 13 at 2026.5 (`Verif` is a 2024 level) and 12 at 2027
   (`DemandGrowthLate` too: its window opens at 2026.5, before Y).
+- **The tornado ranges depend on the model.** `tornado_levers(model=...)` sets the `Verif` and `JuniorCut` ranges
+  from that model's own values, at the prototype's ratios (x0.7 to x1.3 and x0.5 to x1.5); every other range is the
+  same in every model. `aisim.scenarios.TORNADO` stays the Phase 7 tornado.
 - **AI off.** `ai_on=False` with a perturb year is an error: the AI-off counterfactual runs from 2024.
 
 ## Process noise
@@ -141,18 +145,19 @@ if __name__ == "__main__":
 - **Amplitudes.** None is built in: choose `sigma` and `tau` per channel and justify them. The only year-to-year
   series in the model's sources is Gartner's IT services growth (+5.6%, +3.8% and +5.3% for 2024-2026), with a
   year-to-year sd of about 1 point. The sd of the one-year change in a factor is `sigma sqrt(2 (1 - exp(-1 / tau)))`,
-  so with `tau` = 1 year that point corresponds to a `demand` `sigma` of about 0.009. `sigma = 0.05` is about 5 times
+  so with `tau` = 1 year that point corresponds to a `demand` `sigma` of about 0.009. `sigma = 0.05` is about 6 times
   that. Nothing in the repo sets the other channels.
 
 ## Models
 
 Three models are registered. `Experiment.model`, `Params.baseline(model=...)` and `BatchParams.baseline(n, model=...)`
-name the calibrated baseline every run starts from; any other name raises.
+name the calibrated baseline every run starts from; any other name raises. With no model named, runs use `phase8`
+(`aisim.state.DEFAULT_MODEL`).
 
 | Model | What it is |
 | --- | --- |
-| `phase7` | The prototype's calibrated model, bit for bit. **The default**, until the public release |
-| `phase8` | Continuous openings, the slice 8 pricing design and a full robust refit |
+| `phase7` | The prototype's calibrated model, bit for bit, kept as the prototype-parity reference |
+| `phase8` | Continuous openings, the slice 8 pricing design and a full robust refit. **The default** |
 | `phase8_highadoption` | `phase8` refitted with the adoption parameter `p` fixed at Phase 7's 0.044: the adoption-speed alternative |
 
 - **What `phase8` changes.** Three things, each switched on in its baseline file
@@ -177,20 +182,13 @@ name the calibrated baseline every run starts from; any other name raises.
   points.
 - **What the recalibration means.** The 2025-2026 adoption data favour a higher innovation rate `p`: the loss falls
   steadily from `p` 0.02 to 0.25 when the other parameters are refitted at each value. Phase 7's adoption path (`p`
-  0.044) was an optimiser stall on the hiring discontinuity, not a best fit. `phase8` adopts faster early and
-  saturates sooner: `A_mean` 0.800 in 2028 and 0.904 in 2030.
+  0.044) was an optimiser stall on the hiring discontinuity, not a best fit. `phase8` adopts more slowly than
+  `phase7`: `A_mean` 0.800 in 2028 and 0.904 in 2030, against 0.853 and 0.957, and it first reaches 0.99 in 2035
+  rather than 2032.
 - **`phase8_highadoption`.** The data identify the early adoption path, not its speed after 2026, so this model keeps
   Phase 7's `p` and refits the rest (loss 0.000748). Its adoption runs higher later: `A_mean` 0.853 in 2028 and 0.957
   in 2030. For a question that depends on adoption speed, compare the two models rather than sampling `p`. `p` and
   the 2024 levels it moves cannot change under `perturb_from`, so the comparison has to be between models.
-- **The core 4 band.** One of the pricing checks is the OIT book price drift, the `AvgIdx_OIT` CAGR over 2026-2030.
-  Its band is [-3.5%, -2%] a year. It was widened from [-3%, -2%] by an operator ruling on 2026-10-16, made after
-  recon 09's results were seen. The evidence is HCLTech's 2-3% a year for its own portfolio and Kotak's 3.5% base
-  case for Indian IT. `phase8` gives -2.96% a year, inside both bands; `phase8_highadoption` gives -3.23%.
-- **A known behaviour: hiring and layoffs together.** Under continuous openings, a unit-level can have openings and
-  layoffs in the same step. This happens for onshore seniors after 2030. On Phase 7's values with the switch on it
-  peaks at 1.5% of staff a year in Base and 4.0% in Fast AI; in `phase8` it is absent in Base and peaks at 2.9% in
-  Fast AI. No calibration target sees it.
 - **Pricing what-ifs.** The pricing parameters can be used as overrides or sampled levers on any model:
   - `AnnuityShare`: the annuity share of new T&M signings, which carries `Anchor ** AnnuityAnchorW`;
   - `AnnuityAnchorW`: the weight of the anchor on that share;
@@ -239,7 +237,8 @@ if __name__ == "__main__":
 - **Charts.** `bands` (median and band per key, optional dashed baseline run), `scenarios` (small multiples or an
   overlay), `lines` (one-run results, or any x such as a parameter sweep) and `drivers` (rank-correlation bars). The
   window is 2024-2040 unless `window=` says otherwise; y-labels come from the catalogue units, and colours are fixed
-  per vendor, contract type, scenario and so on. `charts.save(fig, "chart.svg")` writes PNG, SVG or PDF.
+  per vendor, contract type, scenario and so on. Past 10 series the colours repeat with dashed and then dotted lines,
+  and each scenario has its own colour and line style. `charts.save(fig, "chart.svg")` writes PNG, SVG or PDF.
 - **The calibration period.** The years 2024-2026 are shaded as the calibration period: the model is fitted to data
   for those years, but the runs already disagree there, because levers act from 2024. The bands in that period show
   the lever uncertainty applied from 2024. A result run with `perturb_from` shades 2024 to Y instead, labelled
@@ -248,6 +247,46 @@ if __name__ == "__main__":
   `to_markdown(dir)` writes `report.md` and PNG files. `aisim.report.to_markdown_table(df)` formats a table for
   markdown notes. [`examples/q01_contract_mix.py`](examples/q01_contract_mix.py) rebuilds the Q01 analysis in about
   100 lines.
+
+### Temporary shocks
+
+Compute shock (2027 to mid-2029) and Downturn (2027 to 2029) are temporary. Over the shock window plus five years,
+Compute shock costs about 21,900 person-years (model units) of IT employment against Base (3.5% of Base over that
+span) and Downturn about 10,200 (1.8%). Headcount is back at Base by about 2032 in both, then rises above it for a few
+years before settling. When demand returns, the backlog of work builds faster than hiring can follow, and hiring then
+catches up past the need. This hiring-delay loop is part of the model's design, but its size depends on two adjustment
+times (`TargetClearanceTime` and `HireAdjTime`) that no calibration target constrains, so read the rebound's size as
+illustrative. Compute shock acts mainly through client budgets.
+
+## Limitations
+
+1. **Adoption speed is not in the uncertainty bands.** `p` and the `level_2024` parameters it moves cannot change
+   after the perturb year. Compare `phase8` with `phase8_highadoption` instead (`A_mean` 2030: 0.904 against 0.957).
+2. **`PriceHorizon` sits at its fit bound of 7.** Refitting with it above 7 lowers the loss steadily (0.9% at 7.5,
+   7.5% at 12, no minimum up to 12), and every core target still passes. Headcount moves by under 0.3%, and revenue
+   is up to 2.1% lower in 2040, but the 2040 revenue-weighted effort-billed share rises from 0.297 to 0.355. The bound
+   is a modelling choice, and effort-share results depend on it.
+3. **The size of the post-shock rebound is not validated** (see "Temporary shocks").
+4. **Hire and fire together.** Under continuous openings, a unit-level can have openings and layoffs in the same
+   step. `phase8` Base has no step with both. In Fast AI, onshore seniors see both after 2030, at up to 2.85% of staff
+   a year. On Phase 7's values with the switch on, onshore seniors see both at up to 1.53% of staff a year in Base,
+   all after 2030 (peak at 2031.75), and up to 4.05% in Fast AI (peak at 2031.375), where 21 of the 96 steps with
+   both are before 2030. No calibration target sees it.
+5. **Missed targets.** `phase8` misses two of the pricing evidence targets of the
+   [pricing research report](docs/research/ai-pricing-automation-analogues.md):
+   - **The renewal step-down on annuity contracts**, about 20% (HCLTech: a deal that would have been $100M now closes
+     at about $80M; Persistent: clients ask for the same work for 25-30% less). `phase8` gives 4.3% at 2030 (OIT, the
+     price step on expiring MS and TM work, weighted by expiring volume). No model meets it: in the model, effort
+     volume falls continuously rather than at renewal.
+   - **The per-unit discount**, 25-40% within 3-5 years once a usable output proxy exists (translation, 2014-2026;
+     medium confidence for the direction, low for the size in IT). `phase8` gives 21.7% at 2030 (one minus OIT's new
+     fixed-price signing price), where `phase7` gives 33.4%.
+6. **The core 4 band.** One of the pricing checks is the OIT book price drift, the `AvgIdx_OIT` CAGR over 2026-2030.
+   Its band is [-3.5%, -2%] a year. It was widened from [-3%, -2%] by an operator ruling on 2026-10-16, made after
+   recon 09's results were seen. The evidence is HCLTech's 2-3% a year for its own portfolio and Kotak's 3.5% base
+   case for Indian IT. `phase8` gives -2.96% a year, inside both bands; `phase8_highadoption` gives -3.23%.
+7. **Lever ranges were set by hand in the prototype,** with no cited evidence. `Verif` and `JuniorCut` scale with
+   each model's value. `JevonsEps` is one-sided from 0, and `PriceHorizon` sits at 0.75 of its range on `phase8`.
 
 ## Reproducibility
 
@@ -263,13 +302,27 @@ if __name__ == "__main__":
   `NPY_DISABLE_CPU_FEATURES="X86_V4 AVX512_ICL AVX512_SPR"`. CI does. The list is for x86-64 builds of numpy only (it
   names numpy 2.5's x86 targets); do not set it on ARM64 or macOS. `uv run python tools/numerics_probe.py` reports
   whether this machine's kernels match.
+- This repository starts with a fresh history. Commit ids recorded in its files (`git_commit` in each
+  `tools/models/<name>/fit.json`, the golden manifests and the docs) refer to the private development repository.
+
+## Development
+
+- [`docs/development.md`](docs/development.md): how the model was built, slice by slice, with each slice's gate,
+  test count and key decisions.
+- [`docs/analyses/`](docs/analyses/): the four analyses (Q01-Q04) asked of the model during development.
+- [`docs/research/`](docs/research/): the research report on AI pricing and automation analogues behind the pricing
+  design.
 
 ## Licence
 
-- Code is under the MIT licence ([`LICENSE`](LICENSE)): all code under `src/` except `src/aisim/data/`, `tests/`,
-  `tools/`, `scripts/`, `examples/`, `.claude/` and `reference/prototype/code/`.
-- Documentation and data are under CC BY 4.0 ([`LICENSE-DOCS`](LICENSE-DOCS)): `docs/`, `reference/prototype/spec/`,
-  `reference/prototype/data/`, `reference/goldens/`, `src/aisim/data/` and the text of this README.
+The split is exhaustive:
+
+- **MIT** ([`LICENSE`](LICENSE)): everything not listed below, including the code blocks inside the documentation.
+- **CC BY 4.0** ([`LICENSE-DOCS`](LICENSE-DOCS)): `docs/`, `reference/prototype/spec/`, `reference/prototype/data/`,
+  `reference/goldens/`, `src/aisim/data/`, `tests/data/`, `tools/models/`, `tools/calibration_targets.csv` and the
+  prose of this README.
+
+The package metadata declares `MIT AND CC-BY-4.0`, with both licence files.
 
 ## How to cite
 

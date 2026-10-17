@@ -110,7 +110,8 @@ def test_experiment_errors() -> None:
 
 def test_derived_identities_on_the_base_run() -> None:
     res = run_experiment(
-        Experiment(), outputs=["OnshoreTotal", "HeadLoc_ON", "IndiaPeople_ConsIndia", "IndiaPeople_VendIndia"]
+        Experiment(model="phase7"),
+        outputs=["OnshoreTotal", "HeadLoc_ON", "IndiaPeople_ConsIndia", "IndiaPeople_VendIndia"],
     )
     assert np.allclose(res.series["OnshoreTotal"], res.series["HeadLoc_ON"], rtol=1e-12, atol=0)
     j = int(np.flatnonzero(res.years == 2040.0)[0])

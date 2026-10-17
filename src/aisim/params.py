@@ -1,10 +1,11 @@
 """Model parameters: the calibrated scalars and tables, loading and overrides.
 
-``Params.baseline()`` is the calibrated Phase 7 parameter set from ``data/baseline.json``: the scalars exactly as
-``phase7_runs.py`` assembles them from ``calib7.json`` and the module ``P``, and the module-level tables of
-``phase7_sim.py`` (``SEC6``, ``WT6``, ``EMPS6``, ``MIX0``, ``SRC0``), plus the model extensions at their neutral
-``EXTENSION_DEFAULTS``. ``Params.baseline(model)`` reads another registered model's file
-(``aisim.state.BASELINE_FILES``; today only ``phase7``). ``data/parameters.csv`` classifies every scalar.
+``Params.baseline(model)`` reads a registered model's baseline file (``aisim.state.BASELINE_FILES``); with no
+argument it is the default model, ``phase8`` (``aisim.state.DEFAULT_MODEL``). ``Params.baseline("phase7")`` is the
+calibrated Phase 7 parameter set from ``data/baseline.json``: the scalars exactly as ``phase7_runs.py`` assembles
+them from ``calib7.json`` and the module ``P``, and the module-level tables of ``phase7_sim.py`` (``SEC6``,
+``WT6``, ``EMPS6``, ``MIX0``, ``SRC0``), plus the model extensions at their neutral ``EXTENSION_DEFAULTS``.
+``data/parameters.csv`` classifies every scalar.
 
 Two conventions differ from the prototype:
 
@@ -21,7 +22,7 @@ from dataclasses import dataclass
 from types import MappingProxyType
 from typing import Any, Final, Literal, overload
 
-from aisim.state import baseline_data
+from aisim.state import DEFAULT_MODEL, baseline_data
 
 Table1D = Mapping[str, float]
 Table2D = Mapping[str, Mapping[str, float]]
@@ -97,7 +98,7 @@ class Params:
         object.__setattr__(self, "tables", MappingProxyType(tables))
 
     @classmethod
-    def baseline(cls, model: str = "phase7") -> Params:
+    def baseline(cls, model: str = DEFAULT_MODEL) -> Params:
         """Return the calibrated baseline parameters of ``model`` (``aisim.state.BASELINE_FILES``).
 
         ``phase7`` is ``data/baseline.json``. ``EXTENSION_DEFAULTS`` fill any extension the file does not carry,

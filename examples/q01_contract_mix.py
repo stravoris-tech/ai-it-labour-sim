@@ -24,7 +24,7 @@ import aisim
 from aisim import charts
 from aisim.experiment import dims, drivers, keys, run_scenarios
 from aisim.report import Report
-from aisim.scenarios import TORNADO
+from aisim.scenarios import tornado_levers
 
 SEED = 20261012
 WINDOW = (2024.0, 2032.0)
@@ -50,9 +50,9 @@ def main(n: int, out: Path) -> Path:
     fp = keys(family="contract mix (book)", type="FP")
     outputs = list(dict.fromkeys([*book, *fp, EFFORT]))
 
-    # The 14 tornado levers, sampled by Latin hypercube; every scenario runs on the same draws, and pins the levers it
-    # sets (Slow and Fast AI set g and VerifDecline, Jevons rebound sets JevonsEps).
-    sample = {name: aisim.Uniform(lo, hi) for name, lo, hi, _ in TORNADO}
+    # The default model's 14 tornado levers, by Latin hypercube; every scenario runs on the same draws, and pins the
+    # levers it sets (Slow and Fast AI set g and VerifDecline, Jevons rebound sets JevonsEps).
+    sample = tornado_levers()
     exp = aisim.Experiment(sample=sample, n=n, method="lhs", seed=SEED)
     scen = run_scenarios(exp, SCENARIOS, outputs=outputs)
     mc = scen[None]

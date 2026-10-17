@@ -161,7 +161,7 @@ def test_unvalidated_noise_still_needs_seed_and_perturb_from() -> None:
 def test_tornado_levers() -> None:
     """All 14 tornado ranges as ``Uniform``; the set depends on the perturb year: 13 at 2026.5 (``Verif``, a 2024
     level, out) and 12 at 2027.0 (``DemandGrowthLate`` out too: its window opens at ``LateYear``, 2026.5)."""
-    full = tornado_levers()
+    full = tornado_levers(model="phase7")
     assert list(full) == [name for name, *_ in TORNADO]
     assert all(
         isinstance(d, Uniform) and (d.lo, d.hi) == (lo, hi)

@@ -234,7 +234,7 @@ def test_baseline_and_every_scenario_pass() -> None:
 
 
 def test_adoptc0_kept_bit_equal_unless_inputs_change() -> None:
-    base = Params.baseline().scalars
+    base = Params.baseline("phase7").scalars
     shipped = Params.float_of(base, "AdoptC0")
     pC, qC, AC0 = (Params.float_of(base, k) for k in ("pC", "qC", "AC0"))
     assert shipped != (pC + qC * AC0) * (1 - AC0)  # the shipped value is 4e-6 off its formula
@@ -242,10 +242,10 @@ def test_adoptc0_kept_bit_equal_unless_inputs_change() -> None:
     assert len(untouched) == 14
     for name in [None, *untouched]:
         for exp in (
-            Experiment(scenario=name),
-            Experiment(scenario=name, overrides={}),
-            Experiment(scenario=name, sample={"g": Uniform(0.06, 0.15)}, n=5, seed=3),
-            Experiment(scenario=name, samples=pd.DataFrame({"JuniorCut": [0.3, 0.6]})),
+            Experiment(scenario=name, model="phase7"),
+            Experiment(scenario=name, overrides={}, model="phase7"),
+            Experiment(scenario=name, sample={"g": Uniform(0.06, 0.15)}, n=5, seed=3, model="phase7"),
+            Experiment(scenario=name, samples=pd.DataFrame({"JuniorCut": [0.3, 0.6]}), model="phase7"),
         ):
             fixed, _ = fixed_params(exp)
             assert fixed.scalars["AdoptC0"] == shipped
@@ -254,8 +254,8 @@ def test_adoptc0_kept_bit_equal_unless_inputs_change() -> None:
             scalars, _, _ = batch_arrays(fixed, sampled, len(samples))
             assert (scalars["AdoptC0"] == shipped).all()
     # Overriding or sampling an input recomputes it.
-    fixed, _ = fixed_params(Experiment(overrides={"pC": pC}))
+    fixed, _ = fixed_params(Experiment(overrides={"pC": pC}, model="phase7"))
     assert fixed.scalars["AdoptC0"] == (pC + qC * AC0) * (1 - AC0)
-    scalars, _, _ = batch_arrays(Params.baseline(), {"qC": np.array([qC, qC * 2])}, 2)
+    scalars, _, _ = batch_arrays(Params.baseline("phase7"), {"qC": np.array([qC, qC * 2])}, 2)
     assert scalars["AdoptC0"][0] == (pC + qC * AC0) * (1 - AC0)
     assert scalars["AdoptC0"][1] == (pC + qC * 2 * AC0) * (1 - AC0)

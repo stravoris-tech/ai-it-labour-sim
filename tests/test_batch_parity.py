@@ -65,7 +65,7 @@ class Case:
     record_every: float = 1.0
 
     def params(self) -> Params:
-        return Params.baseline().with_overrides(**self.overrides)
+        return Params.baseline("phase7").with_overrides(**self.overrides)
 
     def state(self) -> State:
         return init_state(self.init_edits)

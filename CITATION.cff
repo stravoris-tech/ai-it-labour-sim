@@ -7,5 +7,20 @@ authors:
     family-names: Gandhi Mohan
     affiliation: Stravoris
 version: 0.1.0
-license: MIT
+license:
+  - MIT
+  - CC-BY-4.0
 repository-code: "https://github.com/stravoris-tech/ai-it-labour-sim"
+abstract: >-
+  A System Dynamics model of AI's impact on IT employment, contract mix and vendor viability, for India and onshore
+  (North America and Europe), 2024-2040. It is a Python port of a prototype model, built as a tool for running many
+  simulations under chosen scenario levers and uncertainty.
+keywords:
+  - system dynamics
+  - simulation
+  - artificial intelligence
+  - IT services
+  - labour market
+  - employment
+  - India
+  - Monte Carlo

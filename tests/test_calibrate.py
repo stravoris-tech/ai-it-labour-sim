@@ -264,9 +264,9 @@ def test_build_model_derives_adoptc0_as_with_overrides(tmp_path: Path) -> None:
     spec = tmp_path / "spec.json"
     spec.write_text(json.dumps({"model": "test", "set": SET, "fit": fit.as_posix(), "note": "test"}), "utf-8")
     data = json.loads(build(spec))
-    expect = Params.baseline().with_overrides(**SET, qC=0.25, PriceHorizon=7.0).scalars
-    assert data["params"]["AdoptC0"] == expect["AdoptC0"] != Params.baseline().scalars["AdoptC0"]
+    expect = Params.baseline("phase7").with_overrides(**SET, qC=0.25, PriceHorizon=7.0).scalars
+    assert data["params"]["AdoptC0"] == expect["AdoptC0"] != Params.baseline("phase7").scalars["AdoptC0"]
     assert data["meta"]["derived"] == {"AdoptC0": expect["AdoptC0"]}
     assert {k: v for k, v in data["params"].items() if v != expect[k]} == {}
     plain = json.loads(build(write_spec(tmp_path)))
-    assert plain["meta"]["derived"] == {} and plain["params"]["AdoptC0"] == Params.baseline().scalars["AdoptC0"]
+    assert plain["meta"]["derived"] == {} and plain["params"]["AdoptC0"] == Params.baseline("phase7").scalars["AdoptC0"]

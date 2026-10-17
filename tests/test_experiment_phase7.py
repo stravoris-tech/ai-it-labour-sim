@@ -91,7 +91,7 @@ def mc_draws() -> list[dict[str, float]]:
 
 def tornado_rows() -> list[dict[str, float | None]]:
     """The base run and the 28 one-at-a-time runs, every tornado parameter given (None: DemandGrowthLate's baseline)."""
-    base = Params.baseline().scalars
+    base = Params.baseline("phase7").scalars
     cases: list[dict[str, float]] = [{}]
     cases += [{p: value} for p, lo, hi, _ in TORNADO for value in (lo, hi)]
     return [{p: case.get(p, base[p]) for p in NAMES} for case in cases]
@@ -122,20 +122,20 @@ def manifest_env() -> dict[str, str]:
 
 @pytest.fixture(scope="module")
 def api_mc() -> ExperimentResult:
-    return run_experiment(Experiment(samples=pd.DataFrame(mc_draws())), outputs=list(KEYS), workers=1)
+    return run_experiment(Experiment(samples=pd.DataFrame(mc_draws()), model="phase7"), outputs=list(KEYS), workers=1)
 
 
 @pytest.fixture(scope="module")
 def api_tornado() -> ExperimentResult:
     # A None DemandGrowthLate is NaN in an explicit design.
     samples = pd.DataFrame(tornado_rows(), dtype=np.float64)
-    return run_experiment(Experiment(samples=samples), outputs=list(OUTS), workers=1)
+    return run_experiment(Experiment(samples=samples, model="phase7"), outputs=list(OUTS), workers=1)
 
 
 @pytest.fixture(scope="module")
 def direct_mc() -> list[Ann]:
     draws = mc_draws()
-    bp = BatchParams.baseline(300, **{p: [d[p] for d in draws] for p in NAMES})
+    bp = BatchParams.baseline(300, model="phase7", **{p: [d[p] for d in draws] for p in NAMES})
     res = run_batch(bp, record_every=1.0, outputs=KEYS)
     assert res.finite.all()
     return anns(res)
@@ -144,7 +144,7 @@ def direct_mc() -> list[Ann]:
 @pytest.fixture(scope="module")
 def direct_tornado() -> list[Ann]:
     rows = tornado_rows()
-    bp = BatchParams.baseline(len(rows), **{p: [r[p] for r in rows] for p in NAMES})
+    bp = BatchParams.baseline(len(rows), model="phase7", **{p: [r[p] for r in rows] for p in NAMES})
     res = run_batch(bp, record_every=1.0, outputs=OUTS)
     years = [round(float(y)) for y in res.years]
     return [{yv: {k: float(res.series[k][i, j]) for k in OUTS} for j, yv in enumerate(years)} for i in range(len(rows))]

@@ -53,7 +53,7 @@ def test_case_count() -> None:
 @pytest.mark.parametrize("kwargs", [kw for _, kw in CASES], ids=[name for name, _ in CASES])
 # Any: as for cases(), the keyword arguments mix bool and float values.
 def test_bit_identical(kwargs: dict[str, Any]) -> None:
-    diff, where = parity(run(**kwargs), run_base(**kwargs))
+    diff, where = parity(run(Params.baseline("phase7"), **kwargs), run_base(**kwargs))
     assert diff <= MAX_REL_DIFF, f"max rel diff {diff:.3e} at {where}"
 
 
@@ -63,9 +63,9 @@ def test_parity_detects_a_one_ulp_change() -> None:
     ``AICost2024`` multiplies straight into ``AICostPerUnit``. (A one-ulp nudge of ``g`` would not do: ``g`` only enters
     as ``1 - g``, which rounds to the same double.)
     """
-    cost = Params.baseline().scalars["AICost2024"]
+    cost = Params.baseline("phase7").scalars["AICost2024"]
     assert cost is not None
-    nudged = run(record_every=1.0, AICost2024=math.nextafter(cost, math.inf))
+    nudged = run(Params.baseline("phase7"), record_every=1.0, AICost2024=math.nextafter(cost, math.inf))
     diff, where = parity(nudged, run_base(record_every=1.0))
     assert diff > 0.0, where
 
@@ -81,7 +81,9 @@ def test_coverage_case_names() -> None:
 def test_coverage_case_bit_identical(name: str) -> None:
     """The guard-coverage cases (recon 03 B3) bind the 39 sites the 23 cases miss; the port matches the prototype."""
     case = COVERAGE[name]
-    port = run(Params.baseline().with_overrides(**case.overrides), init_state(case.init_edits), record_every=1.0)
+    port = run(
+        Params.baseline("phase7").with_overrides(**case.overrides), init_state(case.init_edits), record_every=1.0
+    )
     # Any: run_base takes parameter overrides through **kwargs next to its typed run options.
     overrides: dict[str, Any] = dict(case.overrides)
     proto = run_base(record_every=1.0, init_edits=case.init_edits, **overrides)

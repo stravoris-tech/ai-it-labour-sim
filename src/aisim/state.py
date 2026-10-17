@@ -100,6 +100,9 @@ class State(TypedDict):
     """Perceived cost index of IT services."""
 
 
+DEFAULT_MODEL: Final = "phase8"
+"""The model every library default and unknown-model fallback names: ``phase8``."""
+
 BASELINE_FILES: Final[dict[str, Traversable]] = {
     "phase7": files("aisim").joinpath("data", "baseline.json"),
     "phase8": files("aisim").joinpath("data", "baseline_phase8.json"),
@@ -107,8 +110,9 @@ BASELINE_FILES: Final[dict[str, Traversable]] = {
 }
 """The model registry: each named model's baseline file.
 
-- ``phase7`` (``data/baseline.json``, the prototype's calibrated model) is the default.
-- ``phase8`` adds continuous openings and the slice 8 pricing design, with a full multi-start refit.
+- ``phase7`` (``data/baseline.json``) is the prototype's calibrated model, kept as the prototype-parity reference.
+- ``phase8`` adds continuous openings and the slice 8 pricing design, with a full multi-start refit. It is the
+  default (``DEFAULT_MODEL``).
 - ``phase8_highadoption`` is the same refitted with ``p`` at Phase 7's 0.044, the adoption-speed alternative.
 
 The phase 8 files are written by ``tools/build_model.py`` from ``tools/models/<name>/spec.json`` and ``fit.json``.
@@ -124,7 +128,7 @@ def models() -> tuple[str, ...]:
     return tuple(BASELINE_FILES)
 
 
-def baseline_data(model: str = "phase7") -> dict[str, Any]:
+def baseline_data(model: str = DEFAULT_MODEL) -> dict[str, Any]:
     """Return the parsed baseline file of ``model`` (a fresh object on every call).
 
     ``phase7`` reads ``data/baseline.json``. Raises ``ValueError`` for a model not in ``BASELINE_FILES``. ``Any``:

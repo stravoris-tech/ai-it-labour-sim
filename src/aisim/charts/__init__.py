@@ -10,22 +10,34 @@ Figures are drawn on the Agg canvas without ``pyplot``.
   with ``perturb_from = Y`` shades 2024 to Y instead, labelled "calibrated baseline until <Y>".
 - Y-labels come from ``catalogue().unit``, with " (unit inferred)" where the catalogue inferred it; ``ylabel=``
   overrides.
-- Colours are fixed per dimension value and scenario (``aisim.charts.colours``), colour-blind safe.
+- Colours and line styles are fixed per dimension value and scenario (``aisim.charts.colours``), colour-blind safe;
+  past 10 series the colours repeat, dashed and then dotted.
 - Every artist has a ``gid`` (``median:<key>``, ``band:<key>``, ``baseline:<key>``, ``shade:calibration``, ...).
 """
 
-from aisim.charts.colours import DIMENSION_COLOURS, SCENARIO_COLOURS, key_colours, scenario_colour
+from aisim.charts.colours import (
+    DIMENSION_COLOURS,
+    SCENARIO_COLOURS,
+    SCENARIO_STYLES,
+    key_colours,
+    key_styles,
+    scenario_colour,
+    scenario_style,
+)
 from aisim.charts.core import bands, drivers, lines, scenarios
 from aisim.charts.output import save
 
 __all__ = [
     "DIMENSION_COLOURS",
     "SCENARIO_COLOURS",
+    "SCENARIO_STYLES",
     "bands",
     "drivers",
     "key_colours",
+    "key_styles",
     "lines",
     "save",
     "scenario_colour",
+    "scenario_style",
     "scenarios",
 ]
