@@ -50,13 +50,13 @@ def main(n: int, out: Path) -> Path:
     fp = keys(family="contract mix (book)", type="FP")
     outputs = list(dict.fromkeys([*book, *fp, EFFORT]))
 
-    # The default model's 14 tornado levers, by Latin hypercube; every scenario runs on the same draws, and pins the
-    # levers it sets (Slow and Fast AI set g and VerifDecline, Jevons rebound sets JevonsEps).
-    sample = tornado_levers()
-    exp = aisim.Experiment(sample=sample, n=n, method="lhs", seed=SEED)
+    # On phase7, as Q01 ran: its 14 tornado levers, by Latin hypercube; every scenario runs on the same draws, and pins
+    # the levers it sets (Slow and Fast AI set g and VerifDecline, Jevons rebound sets JevonsEps).
+    sample = tornado_levers(model="phase7")
+    exp = aisim.Experiment(sample=sample, n=n, method="lhs", seed=SEED, model="phase7")
     scen = run_scenarios(exp, SCENARIOS, outputs=outputs)
     mc = scen[None]
-    base = aisim.run_experiment(aisim.Experiment(), outputs=outputs)
+    base = aisim.run_experiment(aisim.Experiment(model="phase7"), outputs=outputs)
 
     report = Report(f"Q01: the {VENDOR} contract book by type, 2024-2032")
     report.add_text(

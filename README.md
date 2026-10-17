@@ -246,7 +246,7 @@ if __name__ == "__main__":
 - **Reports.** `Report.to_html(path)` writes one file with the charts as inline SVG and nothing loaded from outside;
   `to_markdown(dir)` writes `report.md` and PNG files. `aisim.report.to_markdown_table(df)` formats a table for
   markdown notes. [`examples/q01_contract_mix.py`](examples/q01_contract_mix.py) rebuilds the Q01 analysis in about
-  100 lines.
+  100 lines. It runs on `phase7`, to reproduce [`docs/analyses/q01-contract-mix.md`](docs/analyses/q01-contract-mix.md).
 
 ### Temporary shocks
 
