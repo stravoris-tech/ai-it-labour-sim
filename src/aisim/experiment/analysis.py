@@ -11,13 +11,20 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+from types import MappingProxyType
+from typing import Final
 
 import numpy as np
 import pandas as pd
 
 from aisim.batch.util import F
 from aisim.experiment.results import ExperimentResult
-from aisim.scenarios import TORNADO
+from aisim.scenarios import STRUCTURAL_LEVERS, TORNADO
+
+LABELS: Final[Mapping[str, str]] = MappingProxyType(
+    {name: label for name, _, _, label in (*TORNADO, *(row for rows in STRUCTURAL_LEVERS.values() for row in rows))}
+)
+"""Lever name to its label, from ``TORNADO`` and every model's ``STRUCTURAL_LEVERS`` table (one label per name)."""
 
 
 def average_ranks(a: F) -> F:
@@ -54,8 +61,9 @@ def spearman(x: F, y: F) -> F:
 def drivers(result: ExperimentResult, targets: Sequence[str], year: float) -> pd.DataFrame:
     """Spearman rho of every sampled lever with each target at ``year``, over the valid runs.
 
-    Columns: ``lever``, ``label`` (the ``TORNADO`` label, else the lever name), then one per target. Rows are sorted by
-    the absolute rho with the first target, largest first; a lever that does not vary gives NaN and sorts last.
+    Columns: ``lever``, ``label`` (the ``TORNADO`` or ``STRUCTURAL_LEVERS`` label, ``LABELS``, else the lever name),
+    then one per target. Rows are sorted by the absolute rho with the first target, largest first; a lever that does
+    not vary gives NaN and sorts last.
     """
     if not targets:
         raise ValueError("drivers() needs at least one target")
@@ -70,8 +78,7 @@ def drivers(result: ExperimentResult, targets: Sequence[str], year: float) -> pd
     x = result.samples.to_numpy(dtype=np.float64)[ok]
     y = np.column_stack([result.series[t][ok, j] for t in targets])
     rho = spearman(x, y)
-    labels = {name: label for name, _, _, label in TORNADO}
-    df = pd.DataFrame({"lever": levers, "label": [labels.get(name, name) for name in levers]})
+    df = pd.DataFrame({"lever": levers, "label": [LABELS.get(name, name) for name in levers]})
     for i, t in enumerate(targets):
         df[t] = rho[:, i]
     order = np.argsort(-np.abs(rho[:, 0]), kind="stable")

@@ -15,9 +15,10 @@ from scipy.stats import spearmanr
 
 from aisim import SCENARIOS, Choice, Experiment, ExperimentResult, Params, Uniform, run_experiment
 from aisim.experiment import ScenarioResult, auto_chunk_size, dims, drivers, keys, run_scenarios, shift_share
+from aisim.experiment.analysis import LABELS
 from aisim.experiment.runner import design
-from aisim.scenarios import TORNADO
-from aisim.state import baseline_data
+from aisim.scenarios import STRUCTURAL_LEVERS, TORNADO, _tornado
+from aisim.state import baseline_data, models
 from tests.test_experiment import assert_identical
 
 RANGES = {name: (lo, hi) for name, lo, hi, _ in TORNADO}
@@ -193,13 +194,13 @@ def test_auto_chunking_is_bit_identical(n: int) -> None:
 # ---- 4. keys() by dimension and dims() -------------------------------------------------------------------------------
 
 F1 = {
-    "type;vendor": 90,
+    "type;vendor": 105,
     "sector": 70,
     "employer;sector": 70,
-    "vendor": 75,
+    "vendor": 78,
     "employer": 40,
     "unit": 32,
-    "level;region": 8,
+    "level;region": 14,
     "worktype": 6,
     "region": 6,
 }
@@ -217,7 +218,7 @@ def test_dimension_combinations() -> None:
 
 def test_keys_filter() -> None:
     assert keys(family="contract mix (book)", vendor="OIT") == [f"Mix_OIT_{t}" for t in ("FP", "TM", "MS", "SA", "OB")]
-    assert len(keys(vendor="OIT", type="FP")) == 90 // 15
+    assert len(keys(vendor="OIT", type="FP")) == 105 // 15
     assert len(keys(sector="FIN")) == (70 + 70) // 7
     assert keys() == list(pd.read_csv(Path("src/aisim/data/catalogue.csv"), dtype=str)["key"])
     assert dims("Mix_OIT_FP") == {"vendor": "OIT", "type": "FP"} and dims("HeadTotal") == {}
@@ -330,6 +331,30 @@ def test_drivers_constant_lever_sorts_last() -> None:
     )
     df = drivers(res, ["HeadTotal"], 2030)
     assert list(df["lever"]) == ["g", "TMBrake"] and np.isnan(df["HeadTotal"].iloc[1])
+
+
+def test_drivers_labels_the_structural_levers() -> None:
+    """A ``phase9`` design sampling two structural strengths: ``drivers`` labels them from ``STRUCTURAL_LEVERS``, not
+    with their bare names (recon 13 E3)."""
+    exp = Experiment(
+        model="phase9",
+        sample={"kR7": Uniform(0.15, 0.75), "AIDiscCeil": Uniform(0.20, 0.45)},
+        n=8,
+        method="lhs",
+        seed=3,
+    )
+    df = drivers(run_experiment(exp, outputs=["HeadTotal"], workers=1), ["HeadTotal"], 2030)
+    table = {name: label for name, _, _, label in STRUCTURAL_LEVERS["phase9"]}
+    assert dict(zip(df["lever"], df["label"], strict=True)) == {"kR7": table["kR7"], "AIDiscCeil": table["AIDiscCeil"]}
+
+
+def test_every_lever_name_has_one_label() -> None:
+    """Across every model's tornado and structural tables, each lever name carries one label, the one in ``LABELS``."""
+    rows = {(name, label) for name, _, _, label in TORNADO}
+    for model in models():
+        rows |= {(name, label) for name, _, _, label in (*_tornado(model), *STRUCTURAL_LEVERS.get(model, ()))}
+    assert len(rows) == len({name for name, _ in rows})
+    assert dict(rows) == dict(LABELS)
 
 
 # ---- 9. shift-share --------------------------------------------------------------------------------------------------

@@ -4,8 +4,11 @@
 - ``TORNADO``: the 14 one-at-a-time sensitivity ranges of ``TORNADO`` (lines 32-47), as ``(name, low, high, label)``.
   The ``Verif`` and ``JuniorCut`` ranges are relative to their baseline values, as in the prototype.
 - ``EXTREME``: the overrides of integrity test T4 in ``tests()`` (lines 98-99), which exercise abandonment and layoffs.
+- ``STRESS_SCENARIOS``: named stress sets outside ``SCENARIOS``, an explicit opt-in like ``EXTREME`` (slice 13): today
+  "Fast AI + OIT price shock", in which every ``phase9`` loop acts. ``ALL_SCENARIOS`` is ``SCENARIOS`` and
+  ``STRESS_SCENARIOS`` in one read-only view, the names ``run_experiment`` and ``run_scenarios`` accept.
 - ``STRUCTURAL_LEVERS``: per model, the strengths of the model's structural feedback loops with their evidence
-  ranges (today ``phase9`` only, the eight loop strengths of slice 12).
+  ranges (today ``phase9`` and ``phase9_highadoption``, the eight loop strengths of slice 12).
 - ``tornado_levers(perturb_from, model)``: the tornado ranges, then the model's structural levers, as ``Uniform``
   distributions for a Monte Carlo. The set depends on the perturb year: it drops every lever whose range cannot act
   from that year (``Verif`` from 2026.5; also ``DemandGrowthLate`` from 2027).
@@ -75,26 +78,27 @@ def _tornado(model: str) -> tuple[tuple[str, float, float, str], ...]:
     )
 
 
+_PHASE9_LEVERS: Final = (
+    ("kR7", 0.15, 0.75, "R7 GCC scale-learning strength"),
+    ("R6Theta", 0.65, 0.92, "R6 relative-viability threshold"),
+    ("R6e", 0.002, 0.012, "R6 capacity exit per margin point"),
+    ("kViab", 0.0, 10.6511, "R6 client-flight strength"),
+    ("PriceFloor", 0.85, 1.08, "R6 new-bid price floor (x expected cost)"),
+    ("AIDiscCeil", 0.20, 0.45, "R6 AI-discount ceiling"),
+    ("R10rc", 0.0748, 0.3223, "R10 replacement cost per excess voluntary exit (years of wage)"),
+    ("R4a", 0.0, 0.25, "R4 skill-erosion strength (onshore)"),
+)
+
 STRUCTURAL_LEVERS: Final[Mapping[str, tuple[tuple[str, float, float, str], ...]]] = MappingProxyType(
-    {
-        "phase9": (
-            ("kR7", 0.15, 0.75, "R7 GCC scale-learning strength"),
-            ("R6Theta", 0.65, 0.92, "R6 relative-viability threshold"),
-            ("R6e", 0.002, 0.012, "R6 capacity exit per margin point"),
-            ("kViab", 0.0, 10.6511, "R6 client-flight strength"),
-            ("PriceFloor", 0.85, 1.08, "R6 new-bid price floor (x expected cost)"),
-            ("AIDiscCeil", 0.20, 0.45, "R6 AI-discount ceiling"),
-            ("R10rc", 0.0748, 0.3223, "R10 replacement cost per excess voluntary exit (years of wage)"),
-            ("R4a", 0.0, 0.25, "R4 skill-erosion strength (onshore)"),
-        ),
-    }
+    {"phase9": _PHASE9_LEVERS, "phase9_highadoption": _PHASE9_LEVERS}
 )
 """Per model, the structural levers ``tornado_levers`` appends after the tornado: ``(name, low, high, label)``.
 
 A model is listed here only if its structure has strengths that the calibration data do not pin, so that their
 uncertainty enters a Monte Carlo through these ranges. Today that is ``phase9``, whose eight loop strengths (slice 12;
 ``docs/model-changes-phase9.md``) come with the low and high values of the loop-strength evidence report
-(``docs/research/loop-strength-evidence.md``) by section:
+(``docs/research/loop-strength-evidence.md``) by section, and ``phase9_highadoption`` (slice 13), which has the same
+loops at the same base values and so the same eight rows:
 
 - ``kR7`` 0.15-0.75: section R7 ("Translating share drift into kR7"), the low 0.15 and base 0.4; the high is 0.75, not
   the report's 0.8, so that the stability measure ``kR7 x (1 - WS_2024)`` stays below the report's 0.7 ("Divestitures
@@ -176,3 +180,20 @@ EXTREME: Final[Mapping[str, float]] = MappingProxyType(
     }
 )
 """The overrides of integrity test T4 (extreme case)."""
+
+
+STRESS_SCENARIOS: Final[Mapping[str, Mapping[str, float]]] = MappingProxyType(
+    {
+        # Q05 B3: the smallest override set in which all seven phase9 terms act (R7, C2, C4, C5, C6, R10, R4). Fast AI
+        # plus a 20% OIT price shock from PriceShockYear (2028). Validates on phase8, phase9 and phase9_highadoption,
+        # with or without perturb_from=2026.5.
+        "Fast AI + OIT price shock": _frozen({"g": 0.20, "VerifDecline": 0.10, "PriceShock_OIT": 0.2}),
+    }
+)
+"""Named stress sets: name to parameter overrides. Not in ``SCENARIOS``, so no scenario count, golden or default
+chart changes; ``run_experiment`` and ``run_scenarios`` accept these names too (``ALL_SCENARIOS``)."""
+
+assert not set(SCENARIOS) & set(STRESS_SCENARIOS)
+ALL_SCENARIOS: Final[Mapping[str, Mapping[str, float]]] = MappingProxyType({**SCENARIOS, **STRESS_SCENARIOS})
+"""Every named override set that ``run_experiment`` and ``run_scenarios`` accept: ``SCENARIOS``, then
+``STRESS_SCENARIOS``."""

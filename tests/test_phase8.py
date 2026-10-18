@@ -41,9 +41,9 @@ pytestmark = pytest.mark.usefixtures("numpy_kernels_match_libm")
 
 ROOT = Path(__file__).resolve().parent.parent
 MODELS = ("phase8", "phase8_highadoption")
-BUILT_MODELS = (*MODELS, "phase9")
-"""Every shipped model built by ``tools/build_model.py`` (slice 12 adds ``phase9``): the two build checks below run on
-each; the rest of this module covers the phase 8 models."""
+BUILT_MODELS = (*MODELS, "phase9", "phase9_highadoption")
+"""Every shipped model built by ``tools/build_model.py`` (slice 12 adds ``phase9``, slice 13 ``phase9_highadoption``):
+the two build checks below run on each; the rest of this module covers the phase 8 models."""
 DESIGN = {"OpeningsContinuous": 1.0, "PassThrough": 0.75, "AnnuityShare": 0.3, "AnnuityAnchorW": 0.4}
 """The phase 8 design: continuous openings and the slice 8 pricing values."""
 KEYS = ("HeadTotal", "RevenueTot", "A_mean", "AvgIdx_OIT", "EffortShare_OIT", "HireJ_ON")

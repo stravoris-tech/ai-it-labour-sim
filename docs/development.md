@@ -233,7 +233,7 @@ Monte Carlo golden was regenerated, because its levers moved.
 - 247 citations with aptness not verified by `tools/cites.py --apt` (mostly multi-suffix names); a later pass could
   teach `--apt` those names.
 
-## Slice 12: the phase 9 model, four feedback loops from outside evidence
+## Slice 12: the phase 9 model, four feedback loops from outside evidence (PR #11, merged 2026-10-18, `9d7eee4`)
 
 **Basis.** Recon 11 (the gap review: the loops the specification names but the engine leaves open, and prototypes
 showing the calibration data constrain none of their strengths), recon 12 (the four loops in their evidence forms,
@@ -265,6 +265,39 @@ unchanged.
 2024-anchored rates under `perturb_from` is still deferred. Line references in catalogue.csv descriptions and the
 scalar/record.py docstring that the new code moved; to be removed with slice 10 (model documentation), as its plan
 already intends.
+
+## Slice 13: phase 9 completion
+
+**Basis.** Recon 13 (the R7 cap's role and stakes, the Fast AI price-rule result, a trial `phase9_highadoption`, the
+stress set's placement, and the small fixes), the Q05 first look at `phase9` (loop activity, the stress set, persistent
+client flight) and recon 13g (recon 11's gaps checked against `phase9`: no Build candidate, so every open row is
+documented, not built).
+
+**Purpose.** Finish `phase9` before the default changes: the small fixes Q05 found, recorded outputs for when the price
+rules bind and for R4's multiplier, the like-for-like adoption alternative `phase9_highadoption`, the Q05 stress set
+in code, and the documentation of the R7 cap and of the Fast AI price-rule result. The library default stays `phase8`.
+
+**Gate at the build.** Exit 0, 562 tests (519 before), 12 slow deselected; the slow suite passed. The 27 parity
+cases are bit-identical to `main` in both engines (rows, the 43 families, mins), and every existing baseline file and
+golden is unchanged.
+
+**Key decisions.**
+- The R7 cap stays at 1.0 and is documented: a design judgement with no evidence range, not a stability device in
+  the log form, binding from about 2032 and worth about 1% on the 2040 headlines at base strength.
+- Three extras families, 24 keys: `PriceFloorBinds_<v>_<k>` (C5, by vendor and type, the shape of `PNew_<v>_<k>`),
+  `AIDiscCeilBinds_<v>` (C6) and `SkillErosionMult_<r>_<l>` (R4). Each reads a value the step already computes; R4's
+  multiplier was split out of the seeker exit with the same operations in the same order.
+- `phase9_highadoption` uses `phase9`'s fit settings with `p` fixed at 0.044, and passed a STOP check set in advance,
+  including a like-for-like test: its adoption effect is within 1 point of `phase8_highadoption`'s on the four
+  headlines.
+- The stress set is `STRESS_SCENARIOS`, outside `SCENARIOS` (the `EXTREME` precedent), so no scenario count or
+  golden moves; `run_experiment` and `run_scenarios` accept its names, and it has its own chart colour.
+- A perturbed run that records no row after Y now raises a clear `ValueError` in `execute`, with or without
+  validation, instead of a bare `KeyError`.
+- `drivers` labels the structural levers from `STRUCTURAL_LEVERS`.
+
+**Held or deferred.** The default flip to `phase9`, the README story and the limitations, for slice 14.
+`run_batch_from` called directly still returns an empty series when phase 2 records no row.
 
 ## Analyses
 

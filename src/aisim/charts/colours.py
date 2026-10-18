@@ -9,7 +9,8 @@ of ``employer``; ``unit`` reuses BQ, GCC and IH) share their colour.
 **Beyond ten series** the colours repeat with a different line style: series 1-10 are solid, 11-20 dashed and 21-30
 dotted, so the (colour, style) pairs stay unique up to 30 series (``key_colours`` with ``key_styles``).
 
-Scenarios: each of the 15 labels (14 scenarios and the baseline) has its own (colour, style) pair. The baseline is
+Scenarios: each of the 16 labels (14 scenarios, the baseline and the stress set of ``STRESS_SCENARIOS``) has its
+own (colour, style) pair. The baseline is
 black (and the ``Base`` scenario, the same run, black dashed); Baseline, Fast AI and Slow AI are solid; the
 scenarios of each contrast pair (Fast / Slow AI, Strict / Light regulation, Compute shock / Downturn, Visa crackdown /
 relaxation, GCC wave persists / fades, Demand boom / stalls) differ in colour.
@@ -136,6 +137,7 @@ _SCENARIO_LINES: Final = {
     "Demand boom": (ORANGE, DASHED),
     "GCC wave persists": (SKY_BLUE, DASHED),
     "GCC wave fades": (VERMILLION, DASHED),
+    "Fast AI + OIT price shock": (VERMILLION, DOTTED),
 }
 
 SCENARIO_COLOURS: Final[Mapping[str, str]] = MappingProxyType({k: c for k, (c, _) in _SCENARIO_LINES.items()})
@@ -143,7 +145,7 @@ SCENARIO_COLOURS: Final[Mapping[str, str]] = MappingProxyType({k: c for k, (c, _
 the baseline: black too, but dashed."""
 
 SCENARIO_STYLES: Final[Mapping[str, str]] = MappingProxyType({k: s for k, (_, s) in _SCENARIO_LINES.items()})
-"""Scenario label to line style. With ``SCENARIO_COLOURS``, each of the 15 labels has its own pair."""
+"""Scenario label to line style. With ``SCENARIO_COLOURS``, each of the 16 labels has its own pair."""
 
 
 def scenario_colour(label: str, position: int = 0) -> str:

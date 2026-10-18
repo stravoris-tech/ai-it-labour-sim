@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import pandas as pd
 import pytest
 from matplotlib.artist import Artist
 from matplotlib.axes import Axes
@@ -22,6 +23,7 @@ from matplotlib.text import Text
 from aisim import Experiment, ExperimentResult, Uniform, catalogue, charts, run_experiment
 from aisim.charts import DIMENSION_COLOURS, scenario_colour
 from aisim.experiment import ScenarioResult, drivers, keys, run_scenarios
+from aisim.scenarios import STRUCTURAL_LEVERS, TORNADO
 
 INFERRED = str(catalogue().query("unit_inferred and kind == 'row'")["key"].iloc[0])
 BOOK_OIT = keys(family="contract mix (book)", vendor="OIT")
@@ -212,6 +214,21 @@ def test_drivers_chart(mc: ExperimentResult) -> None:
     first = axes_of(fig)[0]
     labels = [t.get_text() for t in first.get_yticklabels()]
     assert labels == list(df["label"])
+
+
+def test_drivers_chart_shows_the_longest_label_unclipped() -> None:
+    """Every tornado and ``phase9`` structural label, the longest 62 characters, lies inside the figure."""
+    rows = [*TORNADO, *STRUCTURAL_LEVERS["phase9"]]
+    assert max(len(label) for *_, label in rows) == 62
+    df = pd.DataFrame({"lever": [r[0] for r in rows], "label": [r[3] for r in rows]})
+    df["HeadTotal"] = np.linspace(-0.9, 0.9, len(rows))
+    fig = charts.drivers(df)
+    fig.draw_without_rendering()  # the constrained layout runs, as on save
+    ticks = axes_of(fig)[0].get_yticklabels()
+    assert [t.get_text() for t in ticks] == list(df["label"])
+    for t in ticks:
+        box = t.get_window_extent()
+        assert fig.bbox.x0 <= box.x0 and box.x1 <= fig.bbox.x1, t.get_text()
 
 
 # ---- text, saving and the import -------------------------------------------------------------------------------------

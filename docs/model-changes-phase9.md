@@ -66,6 +66,22 @@ asks that `kR7 x (1 - WS_2024)` stay below 0.7, so no sweep lands near tipping: 
 it is 0.676. Values above 1.0 are rejected by validation, as the report rejects them. In `phase9`'s Base run the cap
 binds from 2032.
 
+**The cap.** `R7Lcap` 1.0 is a design judgement with no evidence range. The report asks for a cap "to reflect
+talent-pool and wage-inflation limits" but calls its level "a design judgement, not a sourced number" (recon 13, A1).
+- **It is not a stability device in the log form.** The loop gain `kR7 x (1 - WS)` is largest at the 2024 share,
+  where the cap never binds: 0.676 at `kR7` 0.75, inside the report's 0.7. It falls as the share rises, and the
+  uncapped term is bounded anyway, by `kR7 x ln(1 / WS_2024)` = 2.32 x `kR7` (recon 13, A1).
+- **It binds from about 2032:** from 2031.4 to 2033.6, by scenario and strength (recon 13, A2).
+- **At base strength it trims little.** It cuts the 2040 term from 0.474 to 0.400 logit units, about 1% on the 2040
+  headlines in Base: lifting it moves VendorHead by -0.89%, Head_GCC by +1.44% and RevenueTot by -0.94% (recon 13,
+  A2).
+- **At the high strength it matters more.** At `kR7` 0.75, lifting it would move 2040 VendorHead by 3.6% in Base and
+  by 6.6% in GCC wave persists (recon 13, A2).
+- **It leaves the calibration window alone.** Every row to 2030 is bit-identical across caps from 1.0 to 10, and the
+  calibration loss at `phase9`'s fitted values is the same at every cap (recon 13, A3).
+- **It barely moves the Monte Carlo.** A cap of 1.25 moves the 2040 medians by at most 2.3%, and caps of 1.5 and above
+  are within 0.1% of no cap (recon 13, A4).
+
 ### R6: vendor stress
 
 All four R6 terms read **relative viability**, `Vrel = VMarg / NormalMargin`: the vendor's margin smoothed over 0.75
@@ -81,7 +97,12 @@ viability index the engine already had is unchanged for its existing uses.
   (2 years). The fade means clients stop leaving once the distress is habituated: under constant distress the term
   decays. `kViab` 0 / 5.8562 / 10.6511 reproduces Atos's bookings: OIT's signings at its viability trough fall 21.5%
   against the run without the term (Atos's book-to-bill fell from 93% to 73% while renewals held at 88%), at troughs
-  of 0.25 (base) and 0.47 (high). `C4Cap` (0 = no cap) remains for stress tests of persistent client flight.
+  of 0.25 (base) and 0.47 (high). `C4Cap` (0 = no cap) limits the size of client flight, and `C4FadeTime` sets its
+  persistence. In the stress set (Fast AI plus a 20% OIT price shock), the term peaks at 2.07 logit units. A cap of
+  1.0 lessens the loss (OIT at 0.946 / 0.876 / 0.954 of its no-distress revenue after 2, 5 and 12 years, against
+  0.939 / 0.852 / 0.944 with no cap), and a cap of 2.0 or more changes nothing. With the fade made inert
+  (`C4FadeTime` 1,000 years), the loss persists: 0.938 / 0.755 / 0.545. A stress test of persistent client flight
+  therefore lengthens `C4FadeTime`, not the cap.
 - **C5, price floor.** Each new-bid price is at least `PriceFloor` times the vendor's expected delivery cost per unit
   (its cost index smoothed over the book's duration): 0.85 / 1.00 / 1.08.
 - **C6, AI-discount ceiling.** The AI discount a client can extract, `1 - Anchor`, is at most `AIDiscCeil`: 0.20 /
@@ -156,7 +177,8 @@ year.
 - **B8, political pressure on visa policy.** It stays a scenario input: visa tightness is an exogenous index whose
   path the visa scenarios set, as the specification's policy lever does.
 - **A cap on client flight.** A cap alone limits the speed of client flight but not its duration, so a sustained
-  shortfall still compounds. The fade alone is used, with the cap kept as a parameter (`C4Cap`, off) for stress tests.
+  shortfall still compounds. The fade alone is used. The cap stays as a parameter (`C4Cap`, off) that limits the size
+  of client flight; persistence is set by `C4FadeTime`.
 - **Sector-specific R7 strengths.** One national driver and one strength, since the data cannot separate them.
 
 ## The refit
@@ -195,6 +217,100 @@ Base, against `phase8`:
   same run without the distress terms is 0.79 (BQ) and 0.93 (OIT) two years after distress begins, 0.66 and 0.85
   after five, and 0.94 and 0.88 in 2040. Without the fade, the same shock took BQ to about a tenth.
 
+## The Fast AI price-rule result
+
+In the model's fastest-AI scenario, vendor margins rise rather than fall, but only if clients cannot extract more than
+about a 30% AI discount on new contracts. OIT's 2040 margin is about 25% at a 30% ceiling, 27% at 20%, and 19-20% at
+45%, which is no higher than with no ceiling at all. Across 1,000 uncertain runs from mid-2026 it is 18-27% (p10-p90,
+median 23%), and the ceiling binds by 2035 in about 6 runs in 10. The ceiling also shifts vendor books toward
+fixed-price work (an effort-billed revenue share of about 17% against 24%), while moving little work to GCCs or
+in-house teams (recon 13, B5).
+
+**The result rests on the ceiling's value.** `AIDiscCeil` 0.30 comes from current client asks (20-30%), not from
+calibration data, which do not pin the loop strengths (see "Limitations"). In Fast AI the ceiling first binds in 2030.
+
+**How it works** (recon 13, B1).
+- **The ceiling holds the anchor up.** As AI raises client productivity, the anchor that new prices follow falls. C6
+  holds it at 0.70 (`1 - AIDiscCeil`), so new fixed prices stay higher (OIT's FP price 0.630 against 0.567 without
+  the ceiling in 2040).
+- **That shifts the book toward fixed-price work.** Fixed types become more profitable to sign, so the effort-billed
+  share of new signings falls from 0.445 to 0.324, and the book follows.
+- **C6 alone accounts for it.** With C6 off, the effort share returns to `phase8`'s; with C5 off it barely moves.
+
+**By ceiling value.** Deterministic runs from 2024 on `phase9`, Fast AI, 2040, with no refit (recon 13, B2). The bold
+row is `phase9` as shipped.
+
+| `AIDiscCeil` | `PriceFloor` | Margin OIT / GSI / BQ | Effort share (revenue-weighted) | `RevenueTot` (USD bn) | `VendorHead` | C6 first binds (OIT) |
+| --- | --- | --- | --- | --- | --- | --- |
+| 0.20 | 0.85 | 0.274 / 0.254 / 0.226 | 0.101 | 4.043 | 25,413 | 2028.06 |
+| 0.20 | 1.00 | 0.273 / 0.254 / 0.224 | 0.138 | 3.989 | 25,105 | 2028.06 |
+| 0.20 | 1.08 | 0.273 / 0.254 / 0.223 | 0.181 | 3.967 | 24,985 | 2028.06 |
+| 0.30 | 0.85 | 0.251 / 0.226 / 0.196 | 0.162 | 3.842 | 24,876 | 2030.38 |
+| **0.30** | **1.00** | **0.251 / 0.227 / 0.197** | **0.166** | **3.865** | **25,023** | **2030.38** |
+| 0.30 | 1.08 | 0.245 / 0.221 / 0.201 | 0.207 | 4.020 | 26,187 | 2030.38 |
+| 0.45 | 0.85 | 0.188 / 0.200 / 0.170 | 0.239 | 3.694 | 24,754 | never |
+| 0.45 | 1.00 | 0.191 / 0.201 / 0.170 | 0.237 | 3.749 | 25,284 | never |
+| 0.45 | 1.08 | 0.201 / 0.192 / 0.172 | 0.255 | 4.027 | 27,197 | never |
+
+- **The ceiling sets the margin;** the floor moves it by at most 0.013. At 0.45 the ceiling never binds, and OIT's
+  margin is within 0.007 of `phase8`'s 0.195.
+- **The floor moves the effort share** (+0.02-0.04 at 1.08 against 1.00) and, at 1.08, revenue and vendor headcount.
+- **In Slow AI neither rule binds** at any of these values.
+
+**The Monte Carlo band.** `run_scenarios` on the 1,000-run design of the structural levers' Monte Carlo (Latin
+hypercube, seed 20261017, from 2026.5, 21 levers), with the Fast AI block pinning `g` and `VerifDecline`, 0 invalid
+runs (recon 13, B3):
+
+| Quantity (2040) | Baseline p10 / median / p90 | Fast AI p10 / median / p90 |
+| --- | --- | --- |
+| `Margin_OIT` | 0.166 / 0.189 / 0.232 | 0.175 / 0.226 / 0.266 |
+| `Margin_GSI` | 0.166 / 0.192 / 0.219 | 0.187 / 0.218 / 0.245 |
+| `Margin_BQ` | 0.156 / 0.164 / 0.188 | 0.168 / 0.187 / 0.214 |
+| Effort share (revenue-weighted) | 0.205 / 0.278 / 0.327 | 0.133 / 0.197 / 0.247 |
+| `RevenueTot` (USD bn) | 3.64 / 4.55 / 5.84 | 3.28 / 4.05 / 5.07 |
+| `VendorHead` | 25,878 / 32,027 / 40,330 | 21,899 / 26,943 / 32,939 |
+
+- **How often C6 binds:** for some vendor by 2035 in 59.2% of the Fast AI runs, and by 2040 in 70.6%. The extras
+  `AIDiscCeilBinds_<v>` record it.
+- **`AIDiscCeil` decides it.** Its Spearman rho with the 2040 margins is -0.81 to -0.95, and with binding by 2035 it is
+  -0.83. The next is `PriceHorizon` (+0.12), and every other lever is under 0.07 in absolute value.
+
+## The stress set
+
+`aisim.scenarios.STRESS_SCENARIOS` holds one named override set, "Fast AI + OIT price shock": Fast AI (`g` 0.20,
+`VerifDecline` 0.10) plus a 20% price shock on OIT from `PriceShockYear` (2028). It is an explicit opt-in, like
+`EXTREME`: it is not in `SCENARIOS`, so no scenario count, chart default or golden changes. `run_experiment` and
+`run_scenarios` accept its name like a scenario's.
+
+**What it is for.** It is the smallest set of overrides in which all seven phase 9 terms act (Q05, B3). No scenario
+does so alone: Fast AI has C5 and C6 but not C2 or C4, and a price shock has C2 and C4 but not C5 or C6. A regression
+test pins every term's onset in it (`tests/test_loops.py`). The onsets, on `phase9` from 2024, are:
+
+| Term | Onset | Active | Vendors |
+| --- | --- | --- | --- |
+| R7 | 2024.06 | to 2040; at the cap 2032-2040 | economy-wide |
+| R10 | 2024.06 | to 2040 | all |
+| R4 | 2024.75 | to 2040 | IN and ON pools |
+| C5 | 2028.0 | to 2040 | GSI, BQ |
+| C2 | 2028.25 | to 2039.06 | OIT |
+| C4 | 2028.25 | to 2034.94 | OIT |
+| C6 | 2030.375 | to 2040 | OIT, GSI, BQ |
+
+**Headlines against Base** (`phase9`, deterministic from 2024; Q05, B3):
+
+| Quantity | 2026 | 2030 | 2035 | 2040 |
+| --- | --- | --- | --- | --- |
+| `HeadTotal` | -1.6% | -13.2% | -19.9% | -20.6% |
+| `VendorHead` | -1.8% | -14.5% | -26.6% | -25.2% |
+| `Head_GCC` | -0.6% | -10.8% | -14.7% | -19.8% |
+| `RevenueTot` | -1.0% | -16.0% | -18.7% | -16.6% |
+| `Head_OIT` | -1.4% | -18.9% | -46.2% | -44.0% |
+
+- **Most of the gap is the scenario's own inputs.** Faster AI and the price shock drive it. The loops together offset
+  about a quarter of the revenue gap and a twelfth of the vendor headcount gap, and add about an eighth to the GCC gap.
+- **OIT's distress stays inside the envelope.** OIT's revenue against the run without C2 and C4 is 0.939, 0.852 and
+  0.944 two, five and twelve years after distress begins, inside recon 12b's [0.48, 1.0].
+
 ## The structural levers
 
 The strengths are not pinned by the calibration data, so their uncertainty enters a Monte Carlo through structural
@@ -217,6 +333,50 @@ In the loop recon's measurement the eight strengths explained none of the band w
 about 7% of the GCC headcount band (mostly `kR7`), and 14-21% of the bands of the effort share and the vendor margins
 (mostly `AIDiscCeil`).
 
+## `phase9_highadoption`
+
+**What it is.** `phase9` with the adoption parameter `p` fixed at Phase 7's 0.044, and the other 10 calibrated
+parameters refitted (`tools/models/phase9_highadoption/`). It is to `phase9` what `phase8_highadoption` is to
+`phase8`: the like-for-like adoption-speed alternative. It has the same loops at the same base values, and so the same
+eight structural levers.
+
+**Its fit.** `phase9`'s settings: 32 Latin hypercube starts (seed 20261016), tolerance 1e-10, difference step 1e-3,
+`PriceHorizon` in [0, 7], and `phase9`'s fixed values plus `p`.
+- **Loss** 0.000748, 0.9992 of `phase8_highadoption`'s. 31 of the 32 starts land within 5% of the best.
+- **What absorbs the loops**, against `phase8_highadoption`: as in `phase9`, `GCCAppealEnd` falls 11.8% (2.865 to
+  2.528), `SeekerExitRate` falls 1.5% and `AICost2024` rises 0.9%. Every other parameter moves less than 0.3%.
+- **Checks.** The four calibration cores stay in band (OIT's book price drift -3.23% a year, as
+  `phase8_highadoption`). `A_mean` is 0.853 in 2028 and 0.957 in 2030, as `phase8_highadoption`. The 2024 row
+  differs from `phase9`'s only through the refitted parameters. Integrity holds in Base and `EXTREME`, and with every
+  strength at its high value (T1 0.0089 and 0.0091).
+
+**Like-for-like.** The adoption effect is each high-adoption model against its own base model, in 2040 (% for levels,
+points for shares; deterministic from 2024; recon 13, C3):
+
+| Scenario | Quantity | `phase8_highadoption` - `phase8` | `phase9_highadoption` - `phase9` | `phase8_highadoption` - `phase9` |
+| --- | --- | --- | --- | --- |
+| Base | `HeadTotal` | +0.27% | +0.25% | +0.30% |
+| Base | `VendorHead` | -1.92% | -2.21% | +1.36% |
+| Base | `Head_GCC` | +4.96% | +5.03% | -0.57% |
+| Base | `Head_OIT` | -2.75% | -3.27% | +1.45% |
+| Base | `RevenueTot` | -2.58% | -2.84% | +0.76% |
+| Base | `WorkShare_GCC` | +1.39 pt | +1.50 pt | -0.60 pt |
+| Fast AI | `VendorHead` | -1.42% | -1.33% | +0.81% |
+| Fast AI | `RevenueTot` | -2.09% | -2.21% | -3.45% |
+| Fast AI | `Margin_OIT` | +0.31 pt | +0.17 pt | -5.28 pt |
+| Slow AI | `VendorHead` | -2.53% | -3.11% | +0.69% |
+| Slow AI | `Head_OIT` | -3.95% | -5.45% | -0.11% |
+| any | `A_mean` 2030 | +5.34 pt | +5.35 pt | |
+
+- **Within each pair the adoption effect agrees** in sign and nearly in size: the gaps are 0.02-0.6 points, and 1.5
+  points for Slow AI's `Head_OIT`.
+- **Across the pairs it does not.** `phase8_highadoption` against `phase9` mixes the adoption effect with the loops'
+  effect: it has the wrong sign for `VendorHead`, `Head_GCC` and revenue in Base, and a 5.3-point margin gap in Fast AI.
+
+**When to use it.** For a question that depends on adoption speed under `phase9`, compare `phase9` with
+`phase9_highadoption`, never with `phase8_highadoption`. `p` and the 2024 levels it moves cannot change under
+`perturb_from`, so the comparison has to be between models, as it is for `phase8`.
+
 ## Limitations
 
 - **The strengths come from translations, not estimates.** No econometric estimate of any of these parameters
@@ -226,8 +386,11 @@ about 7% of the GCC headcount band (mostly `kR7`), and 14-21% of the bands of th
   or off, so the base values are the evidence's, and their uncertainty enters only through the structural levers.
   With `perturb_from`, the levers act from the perturb year; before it, every run is at the base values.
 - **Several terms are quiet in Base.** C2, C4, C5 and C6 never act in `phase9`'s Base run: OIT's relative viability
-  bottoms at 0.82, above the 0.80 threshold, and neither price rule binds. R10 and R4 are small. They matter under stress (price shocks, attrition spikes, deep AI deflation), which is what they
-  are for.
+  bottoms at 0.82, above the 0.80 threshold, and neither price rule binds. R10 and R4 are small. They matter under
+  stress (price shocks, attrition spikes, deep AI deflation), which is what they are for.
+  - **That holds at the base values.** Within their ranges the price rules can act in Base: C6 at `AIDiscCeil` 0.20
+    (from 2031.25, when it lifts OIT's 2040 margin to 0.228) and C5 at `PriceFloor` 1.08 (from 2026.44) (recon 13,
+    B2).
 - **Fast exits are out of reach.** Satyam's months-scale exodus needs a renewal channel that a sourcing logit on
   contested turnover cannot give.
 - **R7's high is set by a stability rule,** not by the evidence's own high, and the term binds at its cap from the

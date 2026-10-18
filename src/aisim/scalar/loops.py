@@ -154,17 +154,25 @@ def dur(pr: Mapping[str, float], st: State, hires: Mat, r: str, l: str) -> float
     return U / den if den > 0 else 0.0
 
 
-def seek_exit(pr: Mapping[str, float], st: State, hires: Mat, r: str, l: str, base: float) -> float:
-    """R4: the seeker exit ``x (1 + a x clamp((Dur - 0.5) / 0.5, 0, 1))`` over its 2024 value, at most ``U /
-    MinSeekTime``; ``base`` where the region's strength is 0."""
+def r4mult(pr: Mapping[str, float], st: State, hires: Mat, r: str, l: str) -> float:
+    """R4's multiplier ``(1 + a x clamp((Dur - 0.5) / 0.5, 0, 1))`` over its 2024 value; 1.0 where the region's
+    strength is 0."""
     a = pr["R4aIN"] if r == "IN" else pr["R4a"]
     if a == 0.0:
-        return base
+        return 1.0
     D = dur(pr, st, hires, r, l)
     D0 = st["Dur0"][r][l]
     if D0 <= 0.0:
         D0 = D
-    m = (1 + a * clamp((D - 0.5) / 0.5, 0.0, 1.0)) / (1 + a * clamp((D0 - 0.5) / 0.5, 0.0, 1.0))
+    return (1 + a * clamp((D - 0.5) / 0.5, 0.0, 1.0)) / (1 + a * clamp((D0 - 0.5) / 0.5, 0.0, 1.0))
+
+
+def seek_exit(pr: Mapping[str, float], st: State, r: str, l: str, base: float, m: float) -> float:
+    """R4: the seeker exit ``base x m`` (``m`` from ``r4mult``), at most ``U / MinSeekTime``; ``base`` where the
+    region's strength is 0."""
+    a = pr["R4aIN"] if r == "IN" else pr["R4a"]
+    if a == 0.0:
+        return base
     return min(base * m, st["U"][r][l] / pr["MinSeekTime"])
 
 

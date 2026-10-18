@@ -132,6 +132,7 @@ BASELINE_FILES: Final[dict[str, Traversable]] = {
     "phase8": files("aisim").joinpath("data", "baseline_phase8.json"),
     "phase8_highadoption": files("aisim").joinpath("data", "baseline_phase8_highadoption.json"),
     "phase9": files("aisim").joinpath("data", "baseline_phase9.json"),
+    "phase9_highadoption": files("aisim").joinpath("data", "baseline_phase9_highadoption.json"),
 }
 """The model registry: each named model's baseline file.
 
@@ -141,6 +142,8 @@ BASELINE_FILES: Final[dict[str, Traversable]] = {
 - ``phase8_highadoption`` is the same refitted with ``p`` at Phase 7's 0.044, the adoption-speed alternative.
 - ``phase9`` is ``phase8`` plus the four feedback loops of slice 12 (R7, R6, R10, R4) at their evidence base values,
   with a full multi-start refit (``docs/model-changes-phase9.md``). It is registered, not the default.
+- ``phase9_highadoption`` is ``phase9`` refitted with ``p`` at Phase 7's 0.044 (slice 13): the like-for-like
+  adoption-speed alternative to ``phase9``, as ``phase8_highadoption`` is to ``phase8``.
 
 The phase 8 and phase 9 files are written by ``tools/build_model.py`` from ``tools/models/<name>/spec.json`` and
 ``fit.json``.

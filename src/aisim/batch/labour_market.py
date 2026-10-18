@@ -88,12 +88,14 @@ class TimeToFill:
 
 @dataclass(frozen=True, slots=True)
 class Pools:
-    """S8f intermediates: ``pool`` ``(N, region, level, 5)``; ``Enrol``, ``Grad``, ``TTFratio`` ``(N, region)``."""
+    """S8f intermediates: ``pool`` ``(N, region, level, 5)``; ``Enrol``, ``Grad``, ``TTFratio`` ``(N, region)``;
+    ``R4Mult`` ``(N, region, level)``."""
 
     pool: F
     Enrol: F
     Grad: F
     TTFratio: F
+    R4Mult: F
 
 
 def unemployment(pr: BatchParams, st: BatchState) -> Unemployment:
@@ -222,11 +224,12 @@ def pools(pr: BatchParams, st: BatchState, G: F, unemp: Unemployment, TTFr: F, h
     seek_retire = np.zeros_like(U)
     rec_retire[:, :, 2] = R[:, :, 2] * pr["RetireRate_S"][:, None]
     seek_retire[:, :, 2] = U[:, :, 2] * pr["RetireRate_S"][:, None]
+    R4Mult = loops.r4mult(pr, st, hires)
     pool = np.stack(
         [
             rec_out * (1 - lf),
             rec_out * lf,
-            loops.seek_exit(pr, st, hires, U * pr["SeekerExitRate"][:, None, None] * LeaveEffect),  # R4
+            loops.seek_exit(pr, st, U * pr["SeekerExitRate"][:, None, None] * LeaveEffect, R4Mult),  # R4
             rec_retire,
             seek_retire,
         ],
@@ -235,4 +238,4 @@ def pools(pr: BatchParams, st: BatchState, G: F, unemp: Unemployment, TTFr: F, h
     Enrol = pr.fam("BaseEnrolment_", REGIONS) * G[:, None] * unemp.EnrolEffect
     Grad = st.Pipeline / pr["StudyTime"][:, None]
     TTFratio = TTFr[:, :, 1] / pr.fam("NormalTTF_", REGIONS, LEVELS)[:, :, 1]
-    return Pools(pool=pool, Enrol=Enrol, Grad=Grad, TTFratio=TTFratio)
+    return Pools(pool=pool, Enrol=Enrol, Grad=Grad, TTFratio=TTFratio, R4Mult=R4Mult)

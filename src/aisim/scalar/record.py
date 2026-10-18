@@ -31,6 +31,14 @@ never a new calculation:
   - ``GCCScaleTerm``: the R7 term added to every sector's GCC value, S13d ``GCCScaleTerm``, logit units (0 while
     ``kR7`` is 0).
   - ``VoluntaryAttrition_{v}``: voluntary exits per head over their 2024 value, S11b ``VolAttr``, ratio (1 at 2024).
+- When the loop rules bind (slice 13), recorded for every model:
+  - ``PriceFloorBinds_{v}_{k}``: 1.0 at a step where the R6 C5 price floor raises the new-bid price of vendor and
+    type, S10 ``FloorBinds`` (the floored ``PNew`` differs from the price before the floor), else 0.0 (0 while
+    ``PriceFloor`` is 0).
+  - ``AIDiscCeilBinds_{v}``: 1.0 at a step where the R6 C6 ceiling raises the vendor's anchor (the anchor after the
+    noise is below ``1 - AIDiscCeil``), S10 ``CeilBinds``, else 0.0 (0 while ``AIDiscCeil`` is 0).
+  - ``SkillErosionMult_{r}_{l}``: R4's seeker-exit multiplier by region and level, S8f ``R4Mult``
+    (``aisim.scalar.loops.r4mult``), ratio (1 at 2024, and 1 while the region's strength is 0).
 """
 
 from __future__ import annotations
@@ -187,6 +195,15 @@ def record_extras(st: State, s: Step) -> dict[str, float]:
     out["GCCScaleTerm"] = s.targets.GCCScaleTerm
     for v in VENDORS:
         out["VoluntaryAttrition_" + v] = VB[v].VolAttr
+    for v in VENDORS:
+        for k in TYPES:
+            out[f"PriceFloorBinds_{v}_{k}"] = VF[v].FloorBinds[k]
+    for v in VENDORS:
+        out["AIDiscCeilBinds_" + v] = VF[v].CeilBinds
+    R4Mult = s.pools.R4Mult
+    for r in REGIONS:
+        for l in LEVELS:
+            out[f"SkillErosionMult_{r}_{l}"] = R4Mult[r][l]
     return out
 
 
@@ -204,8 +221,12 @@ def _extra_keys() -> tuple[str, ...]:
     keys += ["ClientFlight_" + v for v in VENDORS]
     keys += ["GCCScaleTerm"]
     keys += ["VoluntaryAttrition_" + v for v in VENDORS]
+    keys += [f"PriceFloorBinds_{v}_{k}" for v in VENDORS for k in TYPES]
+    keys += ["AIDiscCeilBinds_" + v for v in VENDORS]
+    keys += [f"SkillErosionMult_{r}_{l}" for r in REGIONS for l in LEVELS]
     return tuple(keys)
 
 
 EXTRA_KEYS: Final = _extra_keys()
-"""The 106 extras keys, in ``record_extras`` order: the 96 of slices 4-9, then the 10 loop outputs of slice 12."""
+"""The 130 extras keys, in ``record_extras`` order: the 96 of slices 4-9, the 10 loop outputs of slice 12, then the
+24 binding outputs of slice 13."""

@@ -150,7 +150,7 @@ if __name__ == "__main__":
 
 ## Models
 
-Four models are registered. `Experiment.model`, `Params.baseline(model=...)` and `BatchParams.baseline(n, model=...)`
+Five models are registered. `Experiment.model`, `Params.baseline(model=...)` and `BatchParams.baseline(n, model=...)`
 name the calibrated baseline every run starts from; any other name raises. With no model named, runs use `phase8`
 (`aisim.state.DEFAULT_MODEL`).
 
@@ -160,6 +160,7 @@ name the calibrated baseline every run starts from; any other name raises. With 
 | `phase8` | Continuous openings, the slice 8 pricing design and a full robust refit. **The default** |
 | `phase8_highadoption` | `phase8` refitted with the adoption parameter `p` fixed at Phase 7's 0.044: the adoption-speed alternative |
 | `phase9` | `phase8` plus four feedback loops from outside evidence, with a full refit. Registered, not yet the default |
+| `phase9_highadoption` | `phase9` refitted with `p` fixed at Phase 7's 0.044: the like-for-like adoption-speed alternative to `phase9` |
 
 - **What `phase8` changes.** Three things, each switched on in its baseline file
   (`src/aisim/data/baseline_phase8.json`):
@@ -205,6 +206,11 @@ name the calibrated baseline every run starts from; any other name raises. With 
   `tornado_levers(model="phase9")` adds them as eight structural levers with their evidence ranges. Every loop is
   off at strength 0, so the other models are unchanged. A first-look analysis comes before any change of default.
   The design, forms, ranges and limitations are in [`docs/model-changes-phase9.md`](docs/model-changes-phase9.md).
+  `aisim.STRESS_SCENARIOS` holds "Fast AI + OIT price shock", a named stress set outside `SCENARIOS` in which every
+  loop acts, accepted by name by `run_experiment` and `run_scenarios`.
+- **`phase9_highadoption`.** It is to `phase9` what `phase8_highadoption` is to `phase8` (loss 0.000748, `A_mean`
+  0.957 in 2030), so an adoption-speed question under `phase9` compares `phase9` with it, not with
+  `phase8_highadoption`.
 - **How a model is built.** `tools/calibrate.py` fits it and `tools/build_model.py` writes its baseline file from
   `tools/models/<name>/spec.json` and `fit.json`. A model is never written by hand. Each baseline file reproduces its
   fit's loss bit for bit, and its 2024 state is Phase 7's.

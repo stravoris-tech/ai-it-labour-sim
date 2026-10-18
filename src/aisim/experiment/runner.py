@@ -1,9 +1,10 @@
 """The experiment API: ``Experiment`` (the question) and ``run_experiment`` (many runs across cores).
 
 A question combines four layers, applied lowest to highest: the baseline, an optional named scenario
-(``aisim.scenarios.SCENARIOS``), fixed ``overrides`` (and ``tables``), and sampled or explicit per-run values. A
-parameter both fixed and sampled is an error, whether ``overrides`` or the scenario fixes it. An override may replace a
-scenario's value. To compare scenarios on the same samples, use ``aisim.experiment.scenarios.run_scenarios``.
+(``aisim.scenarios.SCENARIOS``, or a stress set of ``STRESS_SCENARIOS``), fixed ``overrides`` (and ``tables``), and
+sampled or explicit per-run values. A parameter both fixed and sampled is an error, whether ``overrides`` or the
+scenario fixes it. An override may replace a scenario's value. To compare scenarios on the same samples, use
+``aisim.experiment.scenarios.run_scenarios``.
 
 - **Seeding.** Every sample is drawn in the parent from one ``np.random.default_rng(seed)``, in the order the levers
   are declared (``aisim.experiment.sampling``).
@@ -51,8 +52,8 @@ from aisim.experiment.sampling import Distribution, Method, draw
 from aisim.experiment.validate import support_errors, validate
 from aisim.noise import Noise, Runs, active, ou_factors
 from aisim.params import Params, Table
-from aisim.perturb import Phase1, phase1, run_batch_from
-from aisim.scenarios import SCENARIOS
+from aisim.perturb import Phase1, phase1, run_batch_from, start_step_of
+from aisim.scenarios import ALL_SCENARIOS
 from aisim.state import BASELINE_FILES, DEFAULT_MODEL, load_initial_state
 
 MEMORY_WARN_BYTES: Final = 4 * 2**30
@@ -85,7 +86,8 @@ def auto_chunk_size(n: int, workers: int) -> int:
 class Experiment:
     """A question: the scenario, fixed overrides, fixed table overrides and sampled levers, and the run count.
 
-    - ``scenario``: a name in ``aisim.scenarios.SCENARIOS``, or None for the baseline.
+    - ``scenario``: a name in ``aisim.scenarios.SCENARIOS`` or ``STRESS_SCENARIOS`` (``ALL_SCENARIOS``), or None for
+      the baseline.
     - ``overrides``: fixed scalar values; ``tables``: fixed table overrides (``Params.with_table``).
     - ``sample``: sampled levers, drawn in declared order; ``correlation``: Spearman targets between them.
     - ``n``, ``method`` (``"random"`` or ``"lhs"``) and ``seed`` (required whenever ``sample`` is not empty).
@@ -99,7 +101,8 @@ class Experiment:
     - ``noise``: process noise by channel (``aisim.noise.CHANNELS``), off by default; it needs ``perturb_from`` and a
       ``noise_seed``. No amplitude is built in.
     - ``model``: the named model (``aisim.state.BASELINE_FILES``) whose baseline every run starts from: ``"phase8"``
-      (the default, ``aisim.state.DEFAULT_MODEL``), ``"phase7"`` or ``"phase8_highadoption"``.
+      (the default, ``aisim.state.DEFAULT_MODEL``), ``"phase7"``, ``"phase8_highadoption"``, ``"phase9"`` or
+      ``"phase9_highadoption"``.
     """
 
     scenario: str | None = None
@@ -217,9 +220,9 @@ def fixed_params(exp: Experiment) -> tuple[Params, dict[str, float | None]]:
     p = Params.baseline(exp.model)
     set_on_top: dict[str, float | None] = {}
     if exp.scenario is not None:
-        if exp.scenario not in SCENARIOS:
-            raise KeyError(f"unknown scenario {exp.scenario!r}; scenarios: {list(SCENARIOS)}")
-        scenario = dict(SCENARIOS[exp.scenario])
+        if exp.scenario not in ALL_SCENARIOS:
+            raise KeyError(f"unknown scenario {exp.scenario!r}; scenarios: {list(ALL_SCENARIOS)}")
+        scenario = dict(ALL_SCENARIOS[exp.scenario])
         if scenario:
             p = p.with_overrides(**scenario)
         set_on_top.update(scenario)
@@ -326,8 +329,8 @@ def execute(
     conflict = sorted(set(exp.overrides) & varied)
     if conflict:
         raise ValueError(f"parameter(s) both fixed and sampled: {conflict}")
-    if exp.scenario is not None and exp.scenario in SCENARIOS:
-        conflict = sorted(set(SCENARIOS[exp.scenario]) & varied)
+    if exp.scenario is not None and exp.scenario in ALL_SCENARIOS:
+        conflict = sorted(set(ALL_SCENARIOS[exp.scenario]) & varied)
         if conflict:
             raise ValueError(
                 f"parameter(s) both fixed and sampled: {conflict} (set by scenario {exp.scenario!r}); sample other "
@@ -356,6 +359,14 @@ def execute(
 
     steps = round(stop / dt)
     rk = max(1, round(record_every / dt))
+    if exp.perturb_from is not None:
+        # Phase 2 records the global steps from Y that are multiples of rk; with none, its series would be empty.
+        k = start_step_of(exp.perturb_from, dt)
+        if steps // rk < -(-k // rk):
+            raise ValueError(
+                f"record_every={record_every:g} records no row from perturb_from={exp.perturb_from:g} to 2024 + stop = "
+                f"{2024 + stop:g}: phase 2 needs at least one recorded step; lengthen stop or shorten record_every"
+            )
     n_years = steps // rk + 1
     need = estimated_bytes(n, n_years, len(record) + len(derived))
     if need > MEMORY_WARN_BYTES:

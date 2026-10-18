@@ -141,15 +141,27 @@ def dur(pr: BatchParams, st: BatchState, hires: F) -> F:
     return d
 
 
-def seek_exit(pr: BatchParams, st: BatchState, hires: F, base: F) -> F:
-    """R4: ``(N, region, level)`` seeker exit; ``base`` where the region's strength is 0."""
+def r4mult(pr: BatchParams, st: BatchState, hires: F) -> F:
+    """R4's ``(N, region, level)`` multiplier (see ``aisim.scalar.loops.r4mult``); 1.0 where the region's strength
+    is 0."""
+    a = np.stack([pr["R4aIN"], pr["R4a"]], axis=1)[:, :, None]  # REGIONS = (IN, ON)
+    on = a != 0.0
+    if not np.any(on):
+        return np.ones_like(st.U)
+    D = dur(pr, st, hires)
+    D0 = np.where(st.Dur0 <= 0.0, D, st.Dur0)
+    m = (1 + a * clamp((D - 0.5) / 0.5, 0.0, 1.0)) / (1 + a * clamp((D0 - 0.5) / 0.5, 0.0, 1.0))
+    out: F = np.where(on, m, 1.0)
+    return out
+
+
+def seek_exit(pr: BatchParams, st: BatchState, base: F, m: F) -> F:
+    """R4: ``(N, region, level)`` seeker exit ``base x m`` (``m`` from ``r4mult``), at most ``U / MinSeekTime``;
+    ``base`` where the region's strength is 0."""
     a = np.stack([pr["R4aIN"], pr["R4a"]], axis=1)[:, :, None]  # REGIONS = (IN, ON)
     on = a != 0.0
     if not np.any(on):
         return base
-    D = dur(pr, st, hires)
-    D0 = np.where(st.Dur0 <= 0.0, D, st.Dur0)
-    m = (1 + a * clamp((D - 0.5) / 0.5, 0.0, 1.0)) / (1 + a * clamp((D0 - 0.5) / 0.5, 0.0, 1.0))
     x = np.minimum(base * m, st.U / pr["MinSeekTime"][:, None, None])
     out: F = np.where(on, x, base)
     return out

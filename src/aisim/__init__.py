@@ -39,13 +39,14 @@ from aisim.experiment import (
 )
 from aisim.params import Params
 from aisim.scalar.engine import RunResult, run
-from aisim.scenarios import SCENARIOS
+from aisim.scenarios import SCENARIOS, STRESS_SCENARIOS
 from aisim.state import State, load_initial_state
 
 __version__ = "0.1.0"
 
 __all__ = [
     "SCENARIOS",
+    "STRESS_SCENARIOS",
     "BatchParams",
     "BatchResult",
     "BatchState",
