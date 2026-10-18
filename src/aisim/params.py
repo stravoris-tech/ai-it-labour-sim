@@ -1,7 +1,7 @@
 """Model parameters: the calibrated scalars and tables, loading and overrides.
 
 ``Params.baseline(model)`` reads a registered model's baseline file (``aisim.state.BASELINE_FILES``); with no
-argument it is the default model, ``phase8`` (``aisim.state.DEFAULT_MODEL``). ``Params.baseline("phase7")`` is the
+argument it is the default model, ``phase9`` (``aisim.state.DEFAULT_MODEL``). ``Params.baseline("phase7")`` is the
 calibrated Phase 7 parameter set from ``data/baseline.json``: the scalars exactly as ``phase7_runs.py`` assembles
 them from ``calib7.json`` and the module ``P``, and the module-level tables of ``phase7_sim.py`` (``SEC6``,
 ``WT6``, ``EMPS6``, ``MIX0``, ``SRC0``), plus the model extensions at their neutral ``EXTENSION_DEFAULTS``.

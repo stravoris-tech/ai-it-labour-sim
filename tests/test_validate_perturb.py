@@ -168,8 +168,10 @@ def test_tornado_levers() -> None:
         for (_, lo, hi, _), d in zip(TORNADO, full.values(), strict=True)
     )
     assert len(full) == 14
-    assert list(tornado_levers(2026.5)) == [name for name in full if name != "Verif"]
-    assert list(tornado_levers(2027.0)) == [name for name in full if name not in ("Verif", "DemandGrowthLate")]
+    assert list(tornado_levers(2026.5, model="phase7")) == [name for name in full if name != "Verif"]
+    assert list(tornado_levers(2027.0, model="phase7")) == [
+        name for name in full if name not in ("Verif", "DemandGrowthLate")
+    ]
 
 
 def test_anchored_rates_raise() -> None:

@@ -129,7 +129,14 @@ def test_y_2024_equals_the_default() -> None:
 def test_zero_width_before_y() -> None:
     """The Q01 design with the 13 levers that may act from 2026.5: before Y every recorded key has a p10-p90 width
     (and a max-min range) of exactly 0; after Y the levers act."""
-    exp = Experiment(sample=tornado_levers(2026.5), n=1000, method="lhs", seed=20261012, perturb_from=2026.5)
+    exp = Experiment(
+        sample=tornado_levers(2026.5, model="phase8"),
+        n=1000,
+        method="lhs",
+        seed=20261012,
+        perturb_from=2026.5,
+        model="phase8",
+    )
     assert len(exp.sample) == 13 and "Verif" not in exp.sample
     res = run_experiment(exp, outputs="all", record_every=0.25, stop=4.0)
     assert res.valid.all()

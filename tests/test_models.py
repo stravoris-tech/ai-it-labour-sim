@@ -1,5 +1,5 @@
-"""The model selector (slice 8): named baselines in one registry, ``phase8`` the default (slice 7,
-``DEFAULT_MODEL``) beside ``phase7`` and ``phase8_highadoption`` (slice 9), and the extension parameters.
+"""The model selector (slice 8): named baselines in one registry, ``phase9`` the default (slice 14,
+``DEFAULT_MODEL``) beside ``phase7``, ``phase8`` and the high-adoption models, and the extension parameters.
 
 - ``model="phase7"``, named explicitly, is the prototype's model bit for bit; ``baseline.json`` keeps its bytes.
 - The extension parameters live in code (``EXTENSION_DEFAULTS``), not in ``baseline.json``, and ``parameters.csv``
@@ -76,7 +76,7 @@ def test_models_and_extension_defaults() -> None:
         "MinSeekTime": 0.25,
     }
     p = Params.baseline("phase7")
-    assert Params.baseline() == Params.baseline("phase8")
+    assert Params.baseline() == Params.baseline("phase9")
     names = list(p.scalars)
     assert names[: -len(EXTENSION_DEFAULTS)] == list(baseline_data("phase7")["params"])
     assert names[-len(EXTENSION_DEFAULTS) :] == list(EXTENSION_DEFAULTS)
@@ -104,7 +104,7 @@ def test_build_baseline_reproduces_the_committed_data() -> None:
 
 
 def test_batch_params_model_argument() -> None:
-    a, b = BatchParams.baseline(3), BatchParams.baseline(3, model="phase8")
+    a, b = BatchParams.baseline(3), BatchParams.baseline(3, model="phase9")
     assert list(a.scalars) == list(b.scalars)
     assert all((a.scalars[k] == b.scalars[k]).all() for k in a.scalars if k != "DemandGrowthLate")
 
@@ -132,10 +132,10 @@ def test_explicit_phase7_is_bit_identical_on_the_27_cases() -> None:
         assert_scalar_identical(default_run, explicit_run)
 
 
-def test_experiment_model_phase8_is_the_default() -> None:
+def test_experiment_model_phase9_is_the_default() -> None:
     exp = Experiment(scenario="Fast AI", perturb_from=2026.5)
     a = run_experiment(exp, outputs=KEYS, workers=1)
-    b = run_experiment(replace(exp, model="phase8"), outputs=KEYS, workers=1)
+    b = run_experiment(replace(exp, model="phase9"), outputs=KEYS, workers=1)
     for k in KEYS:
         assert (a.series[k] == b.series[k]).all(), k
 
@@ -179,7 +179,7 @@ def test_registered_model_is_seen_by_every_check(register_model: RegisterModel) 
     exp = Experiment(model=SECOND_MODEL)
     assert known_model(exp) is exp
     validation.validate(p, model=SECOND_MODEL)
-    assert set(tornado_levers(2026.5, model=SECOND_MODEL)) == set(tornado_levers(2026.5))
+    assert set(tornado_levers(2026.5, model=SECOND_MODEL)) == set(tornado_levers(2026.5, model="phase7"))
 
 
 def test_model_baseline_2024_row_equals_phase7(register_model: RegisterModel) -> None:
@@ -283,8 +283,8 @@ def test_meta_and_report_record_the_model(register_model: RegisterModel) -> None
     """``meta["experiment"]["model"]`` names the model, in ``run_experiment``, every ``run_scenarios`` block and the
     combined meta; the meta survives ``json.dumps``; the report settings show a "model" row."""
     default = run_experiment(Experiment(), outputs=KEYS, workers=1)
-    assert default.meta["experiment"]["model"] == "phase8"
-    assert dict(settings_rows(default))["model"] == "phase8"
+    assert default.meta["experiment"]["model"] == "phase9"
+    assert dict(settings_rows(default))["model"] == "phase9"
     register_model(SECOND_MODEL, FIXTURE_CHANGES)
     scen = run_scenarios(Experiment(model=SECOND_MODEL), [None, "Fast AI"], outputs=KEYS, workers=1)
     metas = [scen.meta, *(scen[s].meta for s in scen.scenarios)]

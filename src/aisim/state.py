@@ -124,8 +124,8 @@ is exact. They are advanced even when every loop is off, and then never read bac
 """
 
 
-DEFAULT_MODEL: Final = "phase8"
-"""The model every library default and unknown-model fallback names: ``phase8``."""
+DEFAULT_MODEL: Final = "phase9"
+"""The model every library default and unknown-model fallback names: ``phase9``."""
 
 BASELINE_FILES: Final[dict[str, Traversable]] = {
     "phase7": files("aisim").joinpath("data", "baseline.json"),
@@ -137,11 +137,11 @@ BASELINE_FILES: Final[dict[str, Traversable]] = {
 """The model registry: each named model's baseline file.
 
 - ``phase7`` (``data/baseline.json``) is the prototype's calibrated model, kept as the prototype-parity reference.
-- ``phase8`` adds continuous openings and the slice 8 pricing design, with a full multi-start refit. It is the
-  default (``DEFAULT_MODEL``).
+- ``phase8`` adds continuous openings and the slice 8 pricing design, with a full multi-start refit. It was the
+  default until slice 14 and is kept as the earlier, loop-free structure.
 - ``phase8_highadoption`` is the same refitted with ``p`` at Phase 7's 0.044, the adoption-speed alternative.
 - ``phase9`` is ``phase8`` plus the four feedback loops of slice 12 (R7, R6, R10, R4) at their evidence base values,
-  with a full multi-start refit (``docs/model-changes-phase9.md``). It is registered, not the default.
+  with a full multi-start refit (``docs/model-changes-phase9.md``). It is the default (``DEFAULT_MODEL``).
 - ``phase9_highadoption`` is ``phase9`` refitted with ``p`` at Phase 7's 0.044 (slice 13): the like-for-like
   adoption-speed alternative to ``phase9``, as ``phase8_highadoption`` is to ``phase8``.
 
