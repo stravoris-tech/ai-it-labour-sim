@@ -348,7 +348,7 @@ eight structural levers.
 - **What absorbs the loops**, against `phase8_highadoption`: as in `phase9`, `GCCAppealEnd` falls 11.8% (2.865 to
   2.528), `SeekerExitRate` falls 1.5% and `AICost2024` rises 0.9%. Every other parameter moves less than 0.3%.
 - **Checks.** The four calibration cores stay in band (OIT's book price drift -3.23% a year, as
-  `phase8_highadoption`). `A_mean` is 0.853 in 2028 and 0.957 in 2030, as `phase8_highadoption`. The 2024 row
+  `phase8_highadoption`). `A_mean` is 0.853 in 2028 and 0.958 in 2030 (`phase8_highadoption`: 0.853 and 0.957). The 2024 row
   differs from `phase9`'s only through the refitted parameters. Integrity holds in Base and `EXTREME`, and with every
   strength at its high value (T1 0.0089 and 0.0091).
 
