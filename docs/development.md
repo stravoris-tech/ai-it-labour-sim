@@ -245,7 +245,7 @@ share, R10 on total voluntary exits, client flight with a fade; the proof batter
 `phase8` with every loop at its evidence base value and a full 32-start refit. The library default stays `phase8`.
 The design note is [`model-changes-phase9.md`](model-changes-phase9.md).
 
-**Gate at the build.** Exit 0, 517 tests (477 before), 12 slow deselected; the slow suite passed. With every loop off,
+**Gate at the build.** Exit 0, 519 tests (477 before), 12 slow deselected; the slow suite passed. With every loop off,
 the 27 parity cases are bit-identical to `main` in both engines, and every existing baseline file and golden is
 unchanged.
 

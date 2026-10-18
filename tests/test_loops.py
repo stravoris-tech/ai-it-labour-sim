@@ -7,8 +7,8 @@
   to off, and a restart at 2026.5 bit-exact against an uninterrupted run, in both engines. A loop is run under a stress
   in which its base value acts: in Base, C2 and C4 (relative viability stays above 0.8 for every vendor) and C5 and
   C6 (the floor and the ceiling do not bind) never act on ``phase8`` (recon 12b E1).
-- **All loops on, as ``phase9``**: parity, the restart, integrity in Base and ``EXTREME``, and T1 with every strength
-  at its high value.
+- **All loops on, as ``phase9``**: parity, the restart, integrity (T1 in Base; T2 and no negative stocks in Base and
+  ``EXTREME``), and T1 with every strength at its high value.
 - **Calibrations** (recon 12b C3, D): Atos's signings, no single-vendor collapse, and R10's margin cost.
 """
 
@@ -232,13 +232,15 @@ def t1(params: Params) -> float:
 
 
 def test_phase9_integrity() -> None:
-    """T1 (AI-off growth path), T2 (people conservation) and no negative stocks, in Base and ``EXTREME``."""
+    """T1 (the AI-off growth path) in Base only: it is defined on the AI-off growth path, which ``EXTREME``'s
+    overrides leave. T2 (people conservation) and no negative stocks in Base and ``EXTREME``."""
     params = Params.baseline("phase9")
     assert t1(params) < 0.012
-    result = run(params, record_every=1 / 16)
-    inflow = sum((x["Grad_total"] + x["Ext_total"]) / 16 for x in result.rows[:-1])
-    total = people(result.final_state)
-    assert abs(total - people(load_initial_state()) - inflow) <= 1e-9 * total
+    for over in ({}, dict(EXTREME)):
+        result = run(params.with_overrides(**over), record_every=1 / 16)
+        inflow = sum((x["Grad_total"] + x["Ext_total"]) / 16 for x in result.rows[:-1])
+        total = people(result.final_state)
+        assert abs(total - people(load_initial_state()) - inflow) <= 1e-9 * total
     for over in ({}, dict(EXTREME)):
         mins = run(params.with_overrides(**over), record_every=1.0).mins
         worst = min(mins, key=lambda k: mins[k])

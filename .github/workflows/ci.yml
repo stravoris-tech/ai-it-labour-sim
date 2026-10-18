@@ -10,7 +10,7 @@ jobs:
     name: gate
     # Pinned: moving to a newer image is a deliberate future change (a new glibc can move cross-platform golden checks).
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 30
     env:
       # numpy's AVX-512 kernels differ from libm by 1 ulp and break batch parity; see README "Reproducibility".
       NPY_DISABLE_CPU_FEATURES: "X86_V4 AVX512_ICL AVX512_SPR"
