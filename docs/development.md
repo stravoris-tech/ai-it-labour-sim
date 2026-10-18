@@ -262,7 +262,9 @@ unchanged.
   model.
 
 **Held or deferred.** The default flip, after a first-look analysis (Q05). B8 stays a scenario input. Re-anchoring the
-2024-anchored rates under `perturb_from` is still deferred.
+2024-anchored rates under `perturb_from` is still deferred. Line references in catalogue.csv descriptions and the
+scalar/record.py docstring that the new code moved; to be removed with slice 10 (model documentation), as its plan
+already intends.
 
 ## Analyses
 
