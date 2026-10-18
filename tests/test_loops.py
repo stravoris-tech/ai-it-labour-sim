@@ -29,11 +29,11 @@ from aisim.batch.engine import run_batch
 from aisim.batch.params import BatchParams
 from aisim.batch.record import EXTRA_KEYS
 from aisim.batch.state import STATE_AXES, BatchState, pack
-from aisim.dims import TYPES, VENDORS
+from aisim.dims import LEVELS, REGIONS, TYPES, VENDORS
 from aisim.experiment.metadata import domains
 from aisim.experiment.validate import ValidationError, validate
 from aisim.params import EXTENSION_DEFAULTS, LEGACY_EXTENSIONS
-from aisim.scenarios import EXTREME, STRUCTURAL_LEVERS, TORNADO, tornado_levers
+from aisim.scenarios import EXTREME, STRESS_SCENARIOS, STRUCTURAL_LEVERS, TORNADO, tornado_levers
 from aisim.state import LOOP_FAMILIES, State, baseline_data
 from tests.helpers import annual, people
 from tests.test_batch_parity import ALL_CASES, compare_run, run_cases
@@ -57,6 +57,14 @@ DOCUMENTED_EXTRAS = (
     *(f"VoluntaryAttrition_{v}" for v in VENDORS),
 )
 """The ten loop extras of slice 12, after the 96 earlier extras."""
+
+DOCUMENTED_EXTRAS_13 = (
+    *(f"PriceFloorBinds_{v}_{k}" for v in VENDORS for k in TYPES),
+    *(f"AIDiscCeilBinds_{v}" for v in VENDORS),
+    *(f"SkillErosionMult_{r}_{lv}" for r in REGIONS for lv in LEVELS),
+)
+"""The 24 binding extras of slice 13 (C5 by vendor and type, C6 by vendor, R4's multiplier by region and level),
+after the 106 earlier extras."""
 
 STRENGTHS = ("kR7", "R6e", "kViab", "PriceFloor", "AIDiscCeil", "R10rc", "R4a", "R4aIN")
 SHAPES = {"R7Lcap": 0.5, "R6Theta": 0.9, "R6Cap": 0.15, "R6MargTime": 1.5, "C4FadeTime": 3.0, "C4Cap": 2.0}
@@ -105,9 +113,15 @@ def test_loop_families_are_the_documented_six() -> None:
 
 
 def test_extras_are_the_earlier_96_and_the_documented_ten() -> None:
-    assert EXTRA_KEYS[96:] == DOCUMENTED_EXTRAS and len(EXTRA_KEYS) == 106
+    assert EXTRA_KEYS[96:106] == DOCUMENTED_EXTRAS and len(EXTRA_KEYS) == 130
     assert not set(EXTRA_KEYS[:96]) & set(DOCUMENTED_EXTRAS)
     assert EXTRA_KEYS[95] == "CapE_BQ"
+
+
+def test_extras_after_106_are_the_documented_24() -> None:
+    assert EXTRA_KEYS[106:] == DOCUMENTED_EXTRAS_13 and len(DOCUMENTED_EXTRAS_13) == 24
+    assert not set(EXTRA_KEYS[:106]) & set(DOCUMENTED_EXTRAS_13)
+    assert EXTRA_KEYS[105] == "VoluntaryAttrition_BQ"
 
 
 @pytest.mark.parametrize("model", ["phase7", "phase8", "phase9"])
@@ -255,6 +269,37 @@ def test_t1_with_every_strength_at_its_high_value() -> None:
     assert t1(Params.baseline("phase9").with_overrides(**high)) < 0.012
 
 
+STRESS_ONSETS = {
+    "R7": 2024.0625, "R10": 2024.0625, "R4": 2024.75, "C5": 2028.0, "C2": 2028.25, "C4": 2028.25, "C6": 2030.375,
+}  # fmt: skip
+"""Q05 B3's onsets of the seven terms in the stress set (``phase9``, deterministic from 2024)."""
+
+
+def test_every_phase9_loop_acts_in_the_stress_set() -> None:
+    """``STRESS_SCENARIOS["Fast AI + OIT price shock"]`` on ``phase9``: every one of the seven terms acts, at Q05 B3's
+    onsets, by Q05 B1's activity definitions. R7 ``GCCScaleTerm != 0``; C2 ``Vrel < R6Theta`` and C4
+    ``ClientFlight > 0`` (with ``R6e``, ``kViab`` > 0); R10 ``VoluntaryAttrition > 1`` (``R10rc`` > 0); C5, C6 and R4
+    from the binding extras of slice 13: a price floored, an anchor raised, a seeker-exit multiplier off 1."""
+    p = Params.baseline("phase9").with_overrides(**STRESS_SCENARIOS["Fast AI + OIT price shock"])
+    r6e, theta, kviab, r10rc = (Params.float_of(p.scalars, k) for k in ("R6e", "R6Theta", "kViab", "R10rc"))
+    res = scalar_run(p)
+    years, x = [r["year"] for r in res.rows], res.extras
+
+    def onset(flags: list[bool]) -> float:
+        return next(y for y, f in zip(years, flags, strict=True) if f)
+
+    got = {
+        "R7": onset([e["GCCScaleTerm"] != 0.0 for e in x]),
+        "C2": onset([r6e > 0 and any(e[f"Vrel_{v}"] < theta for v in VENDORS) for e in x]),
+        "C4": onset([kviab > 0 and any(e[f"ClientFlight_{v}"] > 0.0 for v in VENDORS) for e in x]),
+        "R10": onset([r10rc > 0 and any(e[f"VoluntaryAttrition_{v}"] > 1.0 for v in VENDORS) for e in x]),
+        "C5": onset([any(e[f"PriceFloorBinds_{v}_{k}"] == 1.0 for v in VENDORS for k in TYPES) for e in x]),
+        "C6": onset([any(e[f"AIDiscCeilBinds_{v}"] == 1.0 for v in VENDORS) for e in x]),
+        "R4": onset([any(e[f"SkillErosionMult_{r}_{lv}"] != 1.0 for r in REGIONS for lv in LEVELS) for e in x]),
+    }
+    assert got == STRESS_ONSETS
+
+
 # ---- R7: the in-step work share is the recorded one ------------------------------------------------------------------
 
 
@@ -363,7 +408,7 @@ def test_phase9_levers() -> None:
         ("kR7", 0.15, 0.75), ("R6Theta", 0.65, 0.92), ("R6e", 0.002, 0.012), ("kViab", 0.0, 10.6511),
         ("PriceFloor", 0.85, 1.08), ("AIDiscCeil", 0.20, 0.45), ("R10rc", 0.0748, 0.3223), ("R4a", 0.0, 0.25),
     ]  # fmt: skip
-    assert list(STRUCTURAL_LEVERS) == ["phase9"]
+    assert list(STRUCTURAL_LEVERS) == ["phase9", "phase9_highadoption"]
     full = tornado_levers(model="phase9")
     assert list(full) == [*(t[0] for t in TORNADO), *(t[0] for t in table)]
     from_y = tornado_levers(Y, model="phase9")

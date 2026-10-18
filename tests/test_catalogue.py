@@ -83,7 +83,7 @@ def test_catalogue_keys_kinds_and_units() -> None:
     assert list(df.columns) == ["key", "family", "dims", "unit", "description", "spec_ref", "kind", "unit_inferred"]
     assert list(df["key"]) == [*ROW_KEYS, *EXTRA_KEYS, *DERIVED]
     assert list(df["kind"]) == ["row"] * 317 + ["extra"] * len(EXTRA_KEYS) + ["derived"] * len(DERIVED)
-    assert len(EXTRA_KEYS) == 106
+    assert len(EXTRA_KEYS) == 130
     assert int(df["unit_inferred"].sum()) == 46
     assert (df["unit"] != "").all()
     derived = df.set_index("key").loc[list(DERIVED)]

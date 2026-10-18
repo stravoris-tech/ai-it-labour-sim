@@ -64,6 +64,8 @@ class VendorTerms:
     VisaCost: float
     VLab: float
     LabRaw: float
+    CeilBinds: float
+    FloorBinds: Vec
 
 
 @dataclass(frozen=True, slots=True)
@@ -208,7 +210,9 @@ def contracts(
         Anchor = (1 / (CP * (1 + pr["PriceHorizon"] * PU))) ** pr["PassThrough"]  # clients price in the trend
         if nz is not None and "anchor" in nz:
             Anchor = Anchor * nz["anchor"]
-        if pr["AIDiscCeil"] != 0.0:  # R6 C6: AI-discount ceiling
+        # R6 C6: AI-discount ceiling; CeilBinds is 1.0 when it raises the anchor (read by the extras)
+        CeilBinds = 1.0 if (pr["AIDiscCeil"] != 0.0 and Anchor < 1 - pr["AIDiscCeil"]) else 0.0
+        if pr["AIDiscCeil"] != 0.0:
             Anchor = loops.ceil(pr, Anchor)
         # E2a annuity term (neutral at AnnuityShare 0): the annuity share of new TM signings carries Anchor ** w.
         # At AnnuityShare 0 it is exactly 1.0 (Anchor ** w is finite, 0 x it is 0.0): PNew_TM is Phase 7's bit for bit.
@@ -235,8 +239,11 @@ def contracts(
             k: (EffMult_TM * (1 - Disc) if k == "TM" else (1 - Disc) if k in EFFORT else Anchor * (1 - Disc))
             for k in TYPES
         }
-        if pr["PriceFloor"] != 0.0:  # R6 C5: new-bid price floor
+        FloorBinds = dict.fromkeys(TYPES, 0.0)
+        if pr["PriceFloor"] != 0.0:  # R6 C5: new-bid price floor; FloorBinds is 1.0 where it raises a price
+            PNew0 = PNew
             PNew = loops.floor(pr, st, v, Pe[v], PNew)
+            FloorBinds = {k: 1.0 if PNew[k] != PNew0[k] else 0.0 for k in TYPES}
         AvgP = {k: (NP[k] / NV[k] if NV[k] > 1e-12 else PNew[k]) for k in TYPES}
         ExpLeg = {k: Leg[k] / pr["BaseDur_" + k] for k in TYPES}
         ExpNew = {k: NV[k] / AvgDur[k] for k in TYPES}
@@ -287,6 +294,8 @@ def contracts(
             VisaCost=VisaCost,
             VLab=VLab,
             LabRaw=sum(LabourCost[u] for u in vu),
+            CeilBinds=CeilBinds,
+            FloorBinds=FloorBinds,
         )
     return Contracts(Pass=Pass, VF=VF)
 

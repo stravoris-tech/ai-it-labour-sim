@@ -81,6 +81,8 @@ class VendorTerms:
     VisaCost: F
     VLab: F
     LabRaw: F
+    CeilBinds: F
+    FloorBinds: F
 
 
 @dataclass(frozen=True, slots=True)
@@ -195,7 +197,9 @@ def contracts(
     Anchor = pw(1 / (CP * (1 + pr["PriceHorizon"][:, None] * PU)), pr["PassThrough"][:, None])
     if nz is not None and "anchor" in nz:
         Anchor = Anchor * nz["anchor"][:, None]
-    if np.any(pr["AIDiscCeil"] != 0.0):  # R6 C6: AI-discount ceiling
+    # R6 C6: AI-discount ceiling; CeilBinds is 1.0 where it raises the anchor (read by the extras)
+    CeilBinds = np.where((pr["AIDiscCeil"] != 0.0)[:, None] & (Anchor < (1 - pr["AIDiscCeil"])[:, None]), 1.0, 0.0)
+    if np.any(pr["AIDiscCeil"] != 0.0):
         Anchor = np.where((pr["AIDiscCeil"] != 0.0)[:, None], loops.ceil(pr, Anchor), Anchor)
     # E2a annuity term (neutral at AnnuityShare 0), as the scalar engine: exactly 1.0 at AnnuityShare 0.
     a_ann = pr["AnnuityShare"][:, None]
@@ -221,8 +225,11 @@ def contracts(
     Disc_k = (1 - Disc)[:, :, None]
     PNew = np.where(EFFORT_TYPE[None, None, :], Disc_k, Anchor[:, :, None] * Disc_k)
     PNew[:, :, TYPE_IX["TM"]] = EffMult_TM * Disc_k[:, :, 0]
-    if np.any(pr["PriceFloor"] != 0.0):  # R6 C5: new-bid price floor
+    FloorBinds = np.zeros_like(PNew)
+    if np.any(pr["PriceFloor"] != 0.0):  # R6 C5: new-bid price floor; FloorBinds is 1.0 where it raises a price
+        PNew0 = PNew
         PNew = np.where((pr["PriceFloor"] != 0.0)[:, None, None], loops.floor(pr, st, Pe, PNew), PNew)
+        FloorBinds = np.where(PNew != PNew0, 1.0, 0.0)
     AvgP = np.where(NV > 1e-12, NP / NV, PNew)
     ExpLeg = Leg / BaseDur
     ExpNew = NV / AvgDur
@@ -278,6 +285,8 @@ def contracts(
         VisaCost=VisaCost,
         VLab=VLab,
         LabRaw=LabRaw,
+        CeilBinds=CeilBinds,
+        FloorBinds=FloorBinds,
     )
     return Contracts(Pass=Pass, VF=VF)
 

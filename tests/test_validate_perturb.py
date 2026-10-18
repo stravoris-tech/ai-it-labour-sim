@@ -192,3 +192,16 @@ def test_anchored_rates_raise() -> None:
     assert all("anchored at 2024 and is not re-anchored" in v.rule and "perturb_from=None" in v.rule for v in found)
     assert runs(replace(exp, perturb_from=None)).valid.all()
     assert runs(replace(exp, perturb_from=2024.0)).valid.all()
+
+
+def test_phase2_without_a_recorded_row_raises() -> None:
+    """With ``perturb_from`` set, a ``record_every`` that records no step from Y to the stop raises a clear
+    ``ValueError`` in ``execute``, with or without validation (it was a bare ``KeyError``); a recording grid that
+    reaches Y still runs."""
+    exp = Experiment(sample={"g": Uniform(0.06, 0.15)}, n=2, seed=1, perturb_from=2026.5)
+    with pytest.raises(ValueError, match="records no row"):
+        run_experiment(exp, outputs=["HeadTotal"], stop=2.5625, record_every=1.0, workers=1)
+    with pytest.raises(ValueError, match="records no row"):
+        run_experiment(exp, outputs=["HeadTotal"], stop=2.5625, record_every=1.0, workers=1, validate=False)
+    ok = run_experiment(exp, outputs=["HeadTotal"], stop=2.5625, record_every=0.25, workers=1)
+    assert ok.years[-1] == 2026.5

@@ -28,7 +28,7 @@ import pandas as pd
 from aisim.experiment.meta import experiment_dict
 from aisim.experiment.results import ExperimentResult
 from aisim.experiment.runner import Experiment, check_supports, design, execute, fixed_params, known_model
-from aisim.scenarios import SCENARIOS
+from aisim.scenarios import ALL_SCENARIOS
 
 BASELINE_LABEL = "Baseline"
 """The label of the baseline (scenario None) in charts and tables."""
@@ -104,10 +104,10 @@ def run_scenarios(
     repeated = sorted({str(s) for s in names if names.count(s) > 1})
     if repeated:
         raise ValueError(f"scenario(s) repeated: {repeated}")
-    unknown = [s for s in names if s is not None and s not in SCENARIOS]
+    unknown = [s for s in names if s is not None and s not in ALL_SCENARIOS]
     if unknown:
-        raise KeyError(f"unknown scenario(s) {unknown}; scenarios: {list(SCENARIOS)}")
-    clashes = {s: sorted(set(SCENARIOS[s]) & set(exp.overrides)) for s in names if s is not None}
+        raise KeyError(f"unknown scenario(s) {unknown}; scenarios: {list(ALL_SCENARIOS)}")
+    clashes = {s: sorted(set(ALL_SCENARIOS[s]) & set(exp.overrides)) for s in names if s is not None}
     clashes = {s: c for s, c in clashes.items() if c}
     if clashes:
         params = sorted({p for c in clashes.values() for p in c})
@@ -128,13 +128,13 @@ def run_scenarios(
     # (baseline, or an override's) elsewhere. NaN in DemandGrowthLate means None.
     extra: list[str] = []
     for s in names:
-        for p in SCENARIOS[s] if s is not None else ():
+        for p in ALL_SCENARIOS[s] if s is not None else ():
             if p not in sampled and p not in extra:
                 extra.append(p)
     blocks = []
     pinned: dict[str | None, list[str]] = {}
     for s in names:
-        own = dict(SCENARIOS[s]) if s is not None else {}
+        own = dict(ALL_SCENARIOS[s]) if s is not None else {}
         block = base.copy()
         for p in extra:
             v = own.get(p, fixed.scalars[p])

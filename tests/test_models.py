@@ -53,7 +53,7 @@ def test_baseline_json_is_byte_identical_to_main() -> None:
 
 
 def test_models_and_extension_defaults() -> None:
-    shipped = ["phase7", "phase8", "phase8_highadoption", "phase9"]
+    shipped = ["phase7", "phase8", "phase8_highadoption", "phase9", "phase9_highadoption"]
     assert models() == tuple(shipped) and list(BASELINE_FILES) == shipped
     assert dict(EXTENSION_DEFAULTS) == {
         "AnnuityShare": 0.0,
@@ -174,7 +174,7 @@ def test_registered_model_is_seen_by_every_check(register_model: RegisterModel) 
     model to the state loaders, ``runner.known_model``, ``validate`` and ``tornado_levers``, and it is gone from all of
     them when the test ends (``monkeypatch``)."""
     p = register_model(SECOND_MODEL, FIXTURE_CHANGES)
-    assert models() == ("phase7", "phase8", "phase8_highadoption", "phase9", SECOND_MODEL)
+    assert models() == ("phase7", "phase8", "phase8_highadoption", "phase9", "phase9_highadoption", SECOND_MODEL)
     assert baseline_data(SECOND_MODEL)["params"][LEVEL_2024_CHANGE] == FIXTURE_CHANGES[LEVEL_2024_CHANGE]
     exp = Experiment(model=SECOND_MODEL)
     assert known_model(exp) is exp

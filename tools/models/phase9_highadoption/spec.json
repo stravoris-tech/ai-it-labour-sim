@@ -1,0 +1,27 @@
+{
+ "model": "phase9_highadoption",
+ "set": {
+  "OpeningsContinuous": 1.0,
+  "PassThrough": 0.75,
+  "AnnuityShare": 0.3,
+  "AnnuityAnchorW": 0.4,
+  "kR7": 0.4,
+  "R7Lcap": 1.0,
+  "R6Theta": 0.8,
+  "R6e": 0.005,
+  "R6Cap": 0.08,
+  "R6MargTime": 0.75,
+  "kViab": 5.8562,
+  "C4FadeTime": 2.0,
+  "C4Cap": 0.0,
+  "PriceFloor": 1.0,
+  "AIDiscCeil": 0.3,
+  "R10rc": 0.1816,
+  "R4a": 0.1,
+  "R4aIN": 0.1,
+  "MinSeekTime": 0.25,
+  "p": 0.044
+ },
+ "fit": "tools/models/phase9_highadoption/fit.json",
+ "note": "The like-for-like adoption-speed alternative to phase9 (slice 13): phase9's fixed values (phase8's design and the four loops at their evidence base values) with p at Phase 7's 0.044 and the other 10 FIT parameters refitted with phase9's settings (32 starts, seed 20261016, tol 1e-10, diff_step 1e-3, PriceHorizon in [0, 7]); recon 13 C, docs/model-changes-phase9.md."
+}

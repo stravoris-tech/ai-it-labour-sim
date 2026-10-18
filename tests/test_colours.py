@@ -13,12 +13,12 @@ from matplotlib.figure import Figure
 from matplotlib.legend import Legend
 from matplotlib.lines import Line2D
 
-from aisim import SCENARIOS, Experiment, ExperimentResult, charts, run_experiment
+from aisim import SCENARIOS, STRESS_SCENARIOS, Experiment, ExperimentResult, charts, run_experiment
 from aisim.charts import SCENARIO_COLOURS, SCENARIO_STYLES, key_colours, key_styles, scenario_colour, scenario_style
 from aisim.charts.colours import BLACK, DASHED, DOTTED, INDIGO, LINE_STYLES, PALETTE, SOLID, WINE, YELLOW
 from aisim.experiment import ScenarioResult, run_scenarios
 
-LABELS = ["Baseline", *SCENARIOS]
+LABELS = ["Baseline", *SCENARIOS, *STRESS_SCENARIOS]
 """The 15 scenario labels: the baseline (None) and the 14 scenarios, ``Base`` among them."""
 
 CONTRAST_PAIRS = [
@@ -66,7 +66,7 @@ def test_dimension_colours_stay_solid() -> None:
 def test_every_scenario_label_has_a_unique_pair() -> None:
     assert set(SCENARIO_COLOURS) == set(SCENARIO_STYLES) == set(LABELS)
     pairs = [(SCENARIO_COLOURS[k], SCENARIO_STYLES[k]) for k in LABELS]
-    assert len(LABELS) == 15 and len(set(pairs)) == 15
+    assert len(LABELS) == 16 and len(set(pairs)) == 16
     assert (SCENARIO_COLOURS["Base"], SCENARIO_STYLES["Base"]) == (BLACK, DASHED)
     assert all(SCENARIO_STYLES[k] == SOLID for k in ("Baseline", "Fast AI", "Slow AI"))
     assert SCENARIO_COLOURS["Baseline"] == BLACK

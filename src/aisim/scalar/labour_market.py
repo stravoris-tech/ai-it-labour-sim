@@ -100,6 +100,7 @@ class Pools:
     Enrol: Vec
     Grad: Vec
     TTFratio: Vec
+    R4Mult: Mat
 
 
 def unemployment(pr: Mapping[str, float], st: State) -> Unemployment:
@@ -310,21 +311,25 @@ def pools(pr: Mapping[str, float], st: State, G: float, unemp: Unemployment, TTF
       ``StudyTime`` into the junior seeker pool.
     - ``TTFratio`` is the mid-level time to fill over its normal value.
     - R4 skill erosion (``R4a`` onshore, ``R4aIN`` India, off at 0): the seeker exit rises with the spell length
-      over its 2024 value, capped at ``U / MinSeekTime`` (``aisim.scalar.loops.seek_exit``).
+      over its 2024 value (the multiplier ``R4Mult``, ``aisim.scalar.loops.r4mult``), capped at ``U / MinSeekTime``
+      (``aisim.scalar.loops.seek_exit``).
     """
     R, U = st["R"], st["U"]
     LeaveEffect = unemp.LeaveEffect
     pool: dict[str, dict[str, PoolFlows]] = {r: {} for r in REGIONS}
+    R4Mult: Mat = {r: {} for r in REGIONS}
+    r4_on = pr["R4a"] != 0.0 or pr["R4aIN"] != 0.0
     for r in REGIONS:
         for l in LEVELS:
             rec_out = R[r][l] / pr["RecoveryTime"]
             lf = clamp(pr["BaseLeaveFrac_" + l] * LeaveEffect[r], 0.0, 0.9)
+            R4Mult[r][l] = loops.r4mult(pr, st, hires, r, l) if r4_on else 1.0
             pool[r][l] = PoolFlows(
                 rec_to_seek=rec_out * (1 - lf),
                 rec_to_left=rec_out * lf,
                 seek_exit=(  # R4: skill erosion
-                    loops.seek_exit(pr, st, hires, r, l, U[r][l] * pr["SeekerExitRate"] * LeaveEffect[r])
-                    if (pr["R4a"] != 0.0 or pr["R4aIN"] != 0.0)
+                    loops.seek_exit(pr, st, r, l, U[r][l] * pr["SeekerExitRate"] * LeaveEffect[r], R4Mult[r][l])
+                    if r4_on
                     else U[r][l] * pr["SeekerExitRate"] * LeaveEffect[r]
                 ),
                 rec_retire=R[r][l] * pr["RetireRate_S"] if l == "S" else 0.0,
@@ -333,4 +338,4 @@ def pools(pr: Mapping[str, float], st: State, G: float, unemp: Unemployment, TTF
     Enrol = {r: pr["BaseEnrolment_" + r] * G * unemp.EnrolEffect[r] for r in REGIONS}
     Grad = {r: st["Pipeline"][r] / pr["StudyTime"] for r in REGIONS}
     TTFratio = {r: TTFr[r]["M"] / pr[f"NormalTTF_{r}_M"] for r in REGIONS}
-    return Pools(pool=pool, Enrol=Enrol, Grad=Grad, TTFratio=TTFratio)
+    return Pools(pool=pool, Enrol=Enrol, Grad=Grad, TTFratio=TTFratio, R4Mult=R4Mult)

@@ -1,0 +1,28 @@
+{
+ "model": "phase9_highadoption",
+ "baseline": {
+  "path": "src/aisim/data/baseline_phase9_highadoption.json",
+  "sha256": "5191cec4f2be5cf874417e44de27f828820a74620373e447352664376293365e"
+ },
+ "goldens": {
+  "base.json": "16d1e467a55a886794f11365e235c968dcc9b9bca8588fa407efa3ddcab9759a",
+  "ai_off.json": "88aa61177e02b158cd61a67293147b9992705f639be36905171edc9bfaa681a5",
+  "results.json": "ff03a09864a382eab7099afae647e19324eafc1f76f57f1c27b60811f5e13d00"
+ },
+ "environment": {
+  "python_version": "3.12.10",
+  "python_implementation": "CPython",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "machine": "ARM64",
+  "uv_version": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-pc-windows-msvc)"
+ },
+ "generated_utc": "2026-10-18T18:26:49+00:00",
+ "command": "uv run python tools/generate_goldens_phase9.py phase9_highadoption",
+ "git_commit": "9d7eee45cec2986bfb5661ee7f1d13adbf371edd",
+ "git_dirty": true,
+ "wall_time_s": {
+  "base": 0.312,
+  "ai_off": 0.326,
+  "results": 161.031
+ }
+}
