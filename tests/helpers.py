@@ -13,7 +13,7 @@ import pytest
 
 from aisim import Params, RunResult
 from aisim.dims import LEVELS, REGIONS, UNITS
-from aisim.state import State, copy_state, load_initial_state
+from aisim.state import LOOP_FAMILIES, State, copy_state, load_initial_state
 from tools.reference_runner import InitEdit, apply_init_edits, iter_numeric_pairs, max_rel_diff, rel_diff
 from tools.reference_runner import RunResult as ProtoResult
 
@@ -67,6 +67,15 @@ def port_dict(result: RunResult) -> dict[str, Any]:
 
 
 # Any: the parts are rows (a list), the final state (a nested dict) and mins (a dict), as in the goldens.
+def existing_families(parts: dict[str, Any]) -> dict[str, Any]:
+    """``parts`` with its final state restricted to the prototype's 37 families: the comparisons with the prototype
+    and with the goldens stored before slice 12 cover the existing families exactly (slice 12, sanctioned edit (b)
+    and ruling O2). ``tests/test_loops.py`` pins the six loop families (``aisim.state.LOOP_FAMILIES``)."""
+    state = {k: v for k, v in parts["final_state"].items() if k not in LOOP_FAMILIES}
+    return {**parts, "final_state": state}
+
+
+# Any: the parts are rows (a list), the final state (a nested dict) and mins (a dict), as in the goldens.
 def proto_dict(result: ProtoResult) -> dict[str, Any]:
     """Name the parts of a prototype run result as the goldens do."""
     rows, final_state, mins = result
@@ -74,11 +83,12 @@ def proto_dict(result: ProtoResult) -> dict[str, Any]:
 
 
 def parity(port: RunResult, proto: ProtoResult) -> tuple[float, str]:
-    """Return the largest relative difference over all row keys, the final state and ``mins``, and where it occurs.
+    """Return the largest relative difference over all row keys, the final state (its 37 existing families) and
+    ``mins``, and where it occurs.
 
     Raises ``ValueError`` if keys or lengths differ, and fails the test if any row's keys are in a different order.
     """
-    a, b = port_dict(port), proto_dict(proto)
+    a, b = existing_families(port_dict(port)), existing_families(proto_dict(proto))
     for i, (ra, rb) in enumerate(zip(a["rows"], b["rows"], strict=True)):
         if list(ra) != list(rb):
             pytest.fail(f"row {i}: keys differ in name or order")

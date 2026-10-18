@@ -11,6 +11,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 
 from aisim.dims import EMP_POOL, EMPLOYERS, LEVELS, SECTORS, VENDORS
+from aisim.scalar import loops
 from aisim.scalar.finance import VendorTerms
 from aisim.state import Mat, State, Vec
 from aisim.util import softmax
@@ -42,6 +43,10 @@ class OptionCosts:
     AvgW: Vec
     CostOpt: Vec
     RiskOpt: Vec
+    Vrel: Vec
+    """Relative viability on the 0.75-year margin signal (R6; 1 at 2024)."""
+    ClientFlight: Vec
+    """The C4 client-flight term after the fade and the cap (0 while ``kViab`` is 0)."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -50,6 +55,8 @@ class SourcingTargets:
 
     Val: Mat
     SrcTarget: Mat
+    GCCScaleTerm: float
+    """The R7 term added to every sector's GCC value (0 while ``kR7`` is 0, and on step 0)."""
 
 
 def sourcing_flows(pr: Mapping[str, float], st: State, VF: Mapping[str, VendorTerms]) -> SourcingFlows:
@@ -87,6 +94,8 @@ def option_costs(
     - Vendor cost: the average unit price times the client price anchor, net of discount and any price shock.
     - Vendor risk: margin shortfall below the deadband (``ViabSens``; loop R6, vendor death spiral) and viability
       below ``ExitThreshold``; OIT also carries visa risk from perceived tightness.
+    - R6 C4 client flight (``kViab``, off at 0): a vendor below ``R6Theta`` in relative viability loses sourcing
+      value (``aisim.scalar.loops.client_flight``). ``Vrel`` and ``ClientFlight`` are recorded for every model.
     """
     WI, ClientP = st["WI"], st["ClientP"]
     AvgWM = {e: sum(ShareL[e][l] * pr["WageMult_" + l] for l in LEVELS) for e in ("IH", "GCC")}
@@ -106,7 +115,12 @@ def option_costs(
             0.0, pr["ExitThreshold"] - VF[v].Vi
         )
     RiskOpt["OIT"] -= pr["VisaRiskSens"] * max(0.0, st["TightPerc"] - pr["VTBase"])
-    return OptionCosts(AvgWM=AvgWM, AvgW=AvgW, CostOpt=CostOpt, RiskOpt=RiskOpt)
+    Vrel = {v: loops.vrel(pr, st, v) for v in VENDORS}
+    ClientFlight = {v: loops.client_flight(pr, st, v) for v in VENDORS}
+    if pr["kViab"] != 0.0:  # R6 C4: client flight
+        for v in VENDORS:
+            RiskOpt[v] -= ClientFlight[v]
+    return OptionCosts(AvgWM=AvgWM, AvgW=AvgW, CostOpt=CostOpt, RiskOpt=RiskOpt, Vrel=Vrel, ClientFlight=ClientFlight)
 
 
 def sourcing_targets(
@@ -118,6 +132,7 @@ def sourcing_targets(
     GCCAppeal: float,
     TTFratio: Vec,
     opt: OptionCosts,
+    CS: Vec,
 ) -> SourcingTargets:
     """S13d: sourcing values and targets per sector (the sourcing part of the prototype's S13c loop).
 
@@ -125,13 +140,15 @@ def sourcing_targets(
     its risk, less a capacity penalty when its pool's time to fill is above normal, less a regulatory-fit penalty on
     offshore exposure. GCC adds the GCC appeal and a term rising with consumer AI adoption. ``SrcTarget`` is the logit.
 
-    Loops: B3 (insourcing) acts through the in-house cost term, R7 (captive learning) through the GCC terms (the
-    code does not close R7, recon H), B12 and R6 through vendor cost and risk.
+    Loops: B3 (insourcing) acts through the in-house cost term, R7 (captive learning) through the GCC terms, B12 and
+    R6 through vendor cost and risk. R7 GCC scale learning (``kR7``, off at 0) closes R7: every sector's GCC value
+    gains ``aisim.scalar.loops.r7`` on the economy-wide GCC work share from the completion shares ``CS``.
     """
     CostOpt, RiskOpt = opt.CostOpt, opt.RiskOpt
     OffExp = tb["OffExp"]
     Val: Mat = {}
     SrcTarget: Mat = {}
+    GCCScaleTerm = loops.r7(pr, st, loops.ws(st, CS)) if pr["kR7"] != 0.0 else 0.0
     for x in SECTORS:
         AC = st["AC"][x]
         values: Vec = {}
@@ -145,7 +162,9 @@ def sourcing_targets(
             )
             if e == "GCC":
                 value += GCCAppeal + (pr["GCCAISens"] * (AC - pr["AC0"]) if ai_on else 0.0)
+                if pr["kR7"] != 0.0:  # R7: GCC scale learning
+                    value += GCCScaleTerm
             values[e] = value
         Val[x] = values
         SrcTarget[x] = softmax(values)
-    return SourcingTargets(Val=Val, SrcTarget=SrcTarget)
+    return SourcingTargets(Val=Val, SrcTarget=SrcTarget, GCCScaleTerm=GCCScaleTerm)

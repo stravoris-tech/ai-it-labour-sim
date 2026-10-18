@@ -23,7 +23,7 @@ import pytest
 from scipy.optimize import least_squares
 
 from aisim import Params
-from aisim.params import EXTENSION_DEFAULTS
+from aisim.params import EXTENSION_DEFAULTS, LEGACY_EXTENSIONS
 from aisim.state import baseline_data
 from tests.helpers import phase8_platform_matches
 from tests.test_openings import C2
@@ -241,8 +241,9 @@ def test_build_model_differs_from_phase7_only_in_the_spec_and_fit_keys(tmp_path:
     spec = write_spec(tmp_path)
     data = json.loads(build(spec))
     p7 = Params.baseline("phase7")
-    assert list(data["params"]) == list(p7.scalars)
-    assert {k for k in p7.scalars if p7.scalars[k] != data["params"][k]} == {*SET, "PriceHorizon"}
+    unnamed = set(EXTENSION_DEFAULTS) - set(LEGACY_EXTENSIONS)  # slice 12 (ruling O1): written only when named
+    assert list(data["params"]) == [k for k in p7.scalars if k not in unnamed]
+    assert {k for k in data["params"] if p7.scalars[k] != data["params"][k]} == {*SET, "PriceHorizon"}
     assert {k: data["params"][k] for k in [*SET, "PriceHorizon"]} == {**SET, "PriceHorizon": 7.0}
     assert {k: p7.scalars[k] for k in EXTENSION_DEFAULTS} == dict(EXTENSION_DEFAULTS)
     assert data["tables"] == baseline_data("phase7")["tables"]

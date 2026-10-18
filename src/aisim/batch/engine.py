@@ -252,7 +252,7 @@ def _sections(
     emit("S8d", hi)
     ttf = time_to_fill(pr, st, hi.hires, vac.promo, swi.sw)
     emit("S8e", ttf)
-    pl = pools(pr, st, cap.G, unemp, ttf.TTFr)
+    pl = pools(pr, st, cap.G, unemp, ttf.TTFr, hi.hires)
     emit("S8f", pl)
     cst = costs(pr, st, y, W, wk.CompE, wk.EffStaffE, reanchor=reanchor, nz=nz)
     emit("S9", cst)
@@ -260,7 +260,7 @@ def _sections(
     emit("S10", con)
     flo = sourcing_flows(pr, st, con.VF)
     emit("S11a", flo)
-    bks = vendor_books(pr, st, wk.Pe, wk.CompS, wk.CS, pl.TTFratio, flo.SignS, con)
+    bks = vendor_books(pr, st, wk.Pe, wk.CompS, wk.CS, pl.TTFratio, flo.SignS, con, ex.fl, swi.sw, cst.Wage)
     emit("S11b", bks)
     wag = wage_targets(pr, st, con.VF)
     emit("S11c", wag)
@@ -287,7 +287,7 @@ def _sections(
     emit("S13b", opt)
     csm = consumer(pr, st, y, ai, cap.G, wk.CS, wk.CompS, spd.ServicesSpend, drv, nz=nz)
     emit("S13c", csm)
-    tgt = sourcing_targets(pr, st, ai, csm.cons.RegDrag, drv.GCCAppeal, pl.TTFratio, opt)
+    tgt = sourcing_targets(pr, st, ai, csm.cons.RegDrag, drv.GCCAppeal, pl.TTFratio, opt, wk.CS)
     emit("S13d", tgt)
     return Step(
         y=y,

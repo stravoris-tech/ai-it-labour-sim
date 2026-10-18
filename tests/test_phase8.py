@@ -41,6 +41,9 @@ pytestmark = pytest.mark.usefixtures("numpy_kernels_match_libm")
 
 ROOT = Path(__file__).resolve().parent.parent
 MODELS = ("phase8", "phase8_highadoption")
+BUILT_MODELS = (*MODELS, "phase9")
+"""Every shipped model built by ``tools/build_model.py`` (slice 12 adds ``phase9``): the two build checks below run on
+each; the rest of this module covers the phase 8 models."""
 DESIGN = {"OpeningsContinuous": 1.0, "PassThrough": 0.75, "AnnuityShare": 0.3, "AnnuityAnchorW": 0.4}
 """The phase 8 design: continuous openings and the slice 8 pricing values."""
 KEYS = ("HeadTotal", "RevenueTot", "A_mean", "AvgIdx_OIT", "EffortShare_OIT", "HireJ_ON")
@@ -63,6 +66,7 @@ def fit_of(model: str) -> dict[str, object]:
 # ---- built by the tools ----------------------------------------------------------------------------------------------
 
 
+@pytest.mark.parametrize("model", BUILT_MODELS)
 def test_baseline_is_build_model_output(model: str, monkeypatch: pytest.MonkeyPatch) -> None:
     """The shipped file is byte for byte what ``build_model.py`` writes from the committed spec and fit."""
     monkeypatch.chdir(ROOT)
@@ -72,6 +76,7 @@ def test_baseline_is_build_model_output(model: str, monkeypatch: pytest.MonkeyPa
     assert out.read_bytes() == text.encode("utf-8")
 
 
+@pytest.mark.parametrize("model", BUILT_MODELS)
 def test_baseline_reproduces_its_fit_loss(model: str) -> None:
     """The model's own baseline gives its fit's loss and target values: every value the fit evaluated, derived
     constants included (``AdoptC0``), is in the file. Bit for bit on the platform the fits were made on (the phase 8

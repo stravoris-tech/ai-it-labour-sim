@@ -1,10 +1,12 @@
 """Generate a model's baseline file from the Phase 7 baseline, a spec and a fit.
 
 The new parameter set is the Phase 7 set (``src/aisim/data/baseline.json``) plus the model extensions at
-``EXTENSION_DEFAULTS``, with three kinds of change: the values the spec sets (its ``set``), the values its fit found
-(the fit JSON's ``fitted``, written by ``tools/calibrate.py``) and the derived constants those move (``AdoptC0`` when
-``pC``, ``qC`` or ``AC0`` changes), computed by ``Params.with_overrides`` as the fit computed them, so that the file
-reproduces its fit's loss bit for bit. Every key is written explicitly, in Phase 7's order. The tables and the 2024
+``EXTENSION_DEFAULTS`` (the ``LEGACY_EXTENSIONS`` always, a later extension only when the spec or the fit names it;
+``Params.baseline`` fills in the others at their defaults, so the phase 8 files stay byte-identical), with three kinds
+of change: the values the spec sets (its ``set``), the values its fit found (the fit JSON's ``fitted``, written by
+``tools/calibrate.py``) and the derived constants those move (``AdoptC0`` when ``pC``, ``qC`` or ``AC0`` changes),
+computed by ``Params.with_overrides`` as the fit computed them, so that the file reproduces its fit's loss bit for
+bit. Every key is written explicitly, in Phase 7's order. The tables and the 2024
 state are Phase 7's: the extensions add no stock.
 
 The spec is a JSON object: ``model`` (a free label, copied into the output's meta), ``set`` (name to value), ``fit``
@@ -34,7 +36,7 @@ from typing import Any, Final
 # Run as a script, Python puts tools/ on sys.path; the repository root is needed to import the tools package.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from aisim.params import EXTENSION_DEFAULTS, Params
+from aisim.params import EXTENSION_DEFAULTS, LEGACY_EXTENSIONS, Params
 
 ROOT: Final = Path(__file__).resolve().parent.parent
 BASELINE: Final = ROOT / "src" / "aisim" / "data" / "baseline.json"
@@ -69,11 +71,12 @@ def build(spec_path: Path, out_path: Path | None = None) -> str:
     spec: dict[str, Any] = json.loads(spec_bytes)
     fit_bytes = _resolve(spec["fit"]).read_bytes()
     fit: dict[str, Any] = json.loads(fit_bytes)
-    params: dict[str, float | None] = dict(base["params"])
-    for name, value in EXTENSION_DEFAULTS.items():
-        params.setdefault(name, value)
     set_values: dict[str, float] = {k: float(v) for k, v in spec["set"].items()}
     fitted: dict[str, float] = {k: float(v) for k, v in fit["fitted"].items()}
+    params: dict[str, float | None] = dict(base["params"])
+    for name, value in EXTENSION_DEFAULTS.items():
+        if name in LEGACY_EXTENSIONS or name in set_values or name in fitted:
+            params.setdefault(name, value)
     if {k: float(v) for k, v in fit["fixed"].items()} != set_values:
         raise ValueError(f"the fit was made at {fit['fixed']}, not at the spec's values {set_values}")
     if set(set_values) & set(fitted):

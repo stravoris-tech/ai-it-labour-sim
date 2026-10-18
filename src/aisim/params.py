@@ -29,7 +29,26 @@ Table2D = Mapping[str, Mapping[str, float]]
 Table = Table1D | Table2D
 
 EXTENSION_DEFAULTS: Final[Mapping[str, float]] = MappingProxyType(
-    {"AnnuityShare": 0.0, "AnnuityAnchorW": 0.0, "OpeningsContinuous": 0.0}
+    {
+        "AnnuityShare": 0.0,
+        "AnnuityAnchorW": 0.0,
+        "OpeningsContinuous": 0.0,
+        "kR7": 0.0,
+        "R7Lcap": 1.0,
+        "R6Theta": 0.8,
+        "R6e": 0.0,
+        "R6Cap": 0.08,
+        "R6MargTime": 0.75,
+        "kViab": 0.0,
+        "C4FadeTime": 2.0,
+        "C4Cap": 0.0,
+        "PriceFloor": 0.0,
+        "AIDiscCeil": 0.0,
+        "R10rc": 0.0,
+        "R4a": 0.0,
+        "R4aIN": 0.0,
+        "MinSeekTime": 0.25,
+    }
 )
 """Model extensions: parameters the prototype does not have, at values that reproduce Phase 7 bit for bit.
 
@@ -37,7 +56,19 @@ They are not in ``data/baseline.json`` (whose bytes stay the prototype's); ``Par
 ``AnnuityShare`` is the annuity share of new TM signings and ``AnnuityAnchorW`` the weight of the client price anchor
 on their price (the E2a annuity pricing term, slice 8). ``OpeningsContinuous`` is a switch (on when ``>= 0.5``): new
 openings follow one formula for every surplus, so the flow is continuous where the surplus changes sign (slice 9).
+
+The rest are the feedback loops of slice 12 (``aisim.scalar.loops``; ``docs/model-changes-phase9.md``). Each loop has
+a strength that turns it on, off at its default 0: ``kR7`` (R7 GCC scale learning), ``R6e`` (R6 C2 capacity exit),
+``kViab`` (C4 client flight), ``PriceFloor`` (C5 price floor), ``AIDiscCeil`` (C6 AI-discount ceiling), ``R10rc``
+(R10 attrition cost), ``R4a`` and ``R4aIN`` (R4 skill erosion, onshore and India). The shape parameters hold their
+base values (``R7Lcap``, ``R6Theta``, ``R6Cap``, ``R6MargTime``, ``C4FadeTime``, ``MinSeekTime``) or 0 for none
+(``C4Cap``), and are inert while their strength is 0.
 """
+
+LEGACY_EXTENSIONS: Final = ("AnnuityShare", "AnnuityAnchorW", "OpeningsContinuous")
+"""The extensions every model file written by ``tools/build_model.py`` carries (those that existed when the phase 8
+files were built). A later extension is written only when the model's spec or fit names it; ``Params.baseline``
+fills in the rest at their defaults, so the phase 8 files stay byte-identical (slice 12, ruling O1)."""
 
 NULLABLE = frozenset({"DemandGrowthLate"})
 """The only scalar that may be ``None``."""

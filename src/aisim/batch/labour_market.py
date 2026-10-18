@@ -13,6 +13,7 @@ from typing import Final
 
 import numpy as np
 
+from aisim.batch import loops
 from aisim.batch.axes import (
     POOL_IX,
     POOL_MASK,
@@ -211,7 +212,7 @@ def time_to_fill(pr: BatchParams, st: BatchState, hires: F, promo: F, sw: F) -> 
     return TimeToFill(TTFr=TTFr, ext=ext)
 
 
-def pools(pr: BatchParams, st: BatchState, G: F, unemp: Unemployment, TTFr: F) -> Pools:
+def pools(pr: BatchParams, st: BatchState, G: F, unemp: Unemployment, TTFr: F, hires: F) -> Pools:
     """S8f: pool flows, enrolment and graduation (see ``aisim.scalar.labour_market.pools``)."""
     R, U = st.R, st.U
     LeaveEffect = unemp.LeaveEffect[:, :, None]
@@ -225,7 +226,7 @@ def pools(pr: BatchParams, st: BatchState, G: F, unemp: Unemployment, TTFr: F) -
         [
             rec_out * (1 - lf),
             rec_out * lf,
-            U * pr["SeekerExitRate"][:, None, None] * LeaveEffect,
+            loops.seek_exit(pr, st, hires, U * pr["SeekerExitRate"][:, None, None] * LeaveEffect),  # R4
             rec_retire,
             seek_retire,
         ],

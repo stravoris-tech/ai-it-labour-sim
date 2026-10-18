@@ -11,6 +11,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from aisim.batch import loops
 from aisim.batch.axes import EMP_IX, EMP_POOL_IX, VEND_IX, VENDOR_EMP_IX
 from aisim.batch.finance import VendorTerms
 from aisim.batch.params import BatchParams
@@ -45,6 +46,10 @@ class OptionCosts:
     AvgW: F
     CostOpt: F
     RiskOpt: F
+    Vrel: F
+    """``(N, vendor)`` relative viability on the 0.75-year margin signal."""
+    ClientFlight: F
+    """``(N, vendor)`` C4 client-flight term after the fade and the cap."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -53,6 +58,8 @@ class SourcingTargets:
 
     Val: F
     SrcTarget: F
+    GCCScaleTerm: F
+    """``(N,)`` R7 term added to every sector's GCC value."""
 
 
 def sourcing_flows(pr: BatchParams, st: BatchState, VF: VendorTerms) -> SourcingFlows:
@@ -87,13 +94,17 @@ def option_costs(pr: BatchParams, st: BatchState, W: F, ShareL: F, AICostPerUnit
     )
     oit = VEND_IX["OIT"]
     risk_v[:, oit] = risk_v[:, oit] - pr["VisaRiskSens"] * np.maximum(0.0, st.TightPerc - pr["VTBase"])
+    Vrel = loops.vrel(pr, st)
+    ClientFlight = loops.client_flight(pr, st)
+    if np.any(pr["kViab"] != 0.0):  # R6 C4: client flight
+        risk_v = np.where((pr["kViab"] != 0.0)[:, None], risk_v - ClientFlight, risk_v)
     zero = np.zeros((st.n, 1))
     RiskOpt = np.concatenate([zero, zero, risk_v], axis=1)
-    return OptionCosts(AvgWM=AvgWM, AvgW=AvgW, CostOpt=CostOpt, RiskOpt=RiskOpt)
+    return OptionCosts(AvgWM=AvgWM, AvgW=AvgW, CostOpt=CostOpt, RiskOpt=RiskOpt, Vrel=Vrel, ClientFlight=ClientFlight)
 
 
 def sourcing_targets(
-    pr: BatchParams, st: BatchState, ai: B, RegDrag: F, GCCAppeal: F, TTFratio: F, opt: OptionCosts
+    pr: BatchParams, st: BatchState, ai: B, RegDrag: F, GCCAppeal: F, TTFratio: F, opt: OptionCosts, CS: F
 ) -> SourcingTargets:
     """S13d: sourcing values and targets per sector (see ``aisim.scalar.sourcing.sourcing_targets``)."""
     CostOpt, RiskOpt = opt.CostOpt[:, None, :], opt.RiskOpt[:, None, :]
@@ -111,5 +122,9 @@ def sourcing_targets(
     gcc = EMP_IX["GCC"]
     gcc_ai = np.where(ai[:, None], pr["GCCAISens"][:, None] * (st.AC - pr["AC0"][:, None]), 0.0)
     Val[:, :, gcc] = Val[:, :, gcc] + (GCCAppeal[:, None] + gcc_ai)
+    on7 = pr["kR7"] != 0.0
+    GCCScaleTerm = np.where(on7, loops.r7(pr, st, loops.ws(st, CS)), 0.0)
+    if np.any(on7):  # R7: GCC scale learning
+        Val[:, :, gcc] = np.where(on7[:, None], Val[:, :, gcc] + GCCScaleTerm[:, None], Val[:, :, gcc])
     SrcTarget = softmax(Val)
-    return SourcingTargets(Val=Val, SrcTarget=SrcTarget)
+    return SourcingTargets(Val=Val, SrcTarget=SrcTarget, GCCScaleTerm=GCCScaleTerm)

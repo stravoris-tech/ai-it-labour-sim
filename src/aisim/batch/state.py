@@ -1,8 +1,9 @@
 """The state of N runs: one array per stock family, with a leading run axis.
 
-``BatchState`` mirrors ``aisim.state.State``: the same 37 families, each an ``(N, ...)`` array whose other axes are the
-family's dimensions in ``dims`` order (recon 03 D1); the three plain-float stocks are ``(N,)``. ``pack`` and ``unpack``
-convert to and from scalar ``State`` dicts exactly (float64 holds every value of a Python float).
+``BatchState`` mirrors ``aisim.state.State``: the same 43 families (the prototype's 37, then the six loop families of
+``aisim.state.LOOP_FAMILIES``), each an ``(N, ...)`` array whose other axes are the family's dimensions in ``dims``
+order (recon 03 D1); the four plain-float stocks (the prototype's three and ``WS0``) are ``(N,)``. ``pack`` and
+``unpack`` convert to and from scalar ``State`` dicts exactly (float64 holds every value of a Python float).
 """
 
 from __future__ import annotations
@@ -57,6 +58,12 @@ STATE_AXES: Final[Mapping[str, tuple[tuple[str, ...], ...]]] = MappingProxyType(
         "SpendRatio": (SECTORS,),
         "Att": (),
         "CostPerc": (),
+        "WS0": (),
+        "VMarg": (VENDORS,),
+        "ECost": (VENDORS,),
+        "Attr0": (VENDORS,),
+        "Dur0": (REGIONS, LEVELS),
+        "C4Hab": (VENDORS,),
     }
 )
 """The axes of every stock family, in ``State`` order."""
@@ -64,7 +71,7 @@ STATE_AXES: Final[Mapping[str, tuple[tuple[str, ...], ...]]] = MappingProxyType(
 
 @dataclass(frozen=True, slots=True)
 class BatchState:
-    """The 37 stock families of N runs. The arrays are updated in place by the engine's integration step."""
+    """The 43 stock families of N runs. The arrays are updated in place by the engine's integration step."""
 
     BL: F
     A: F
@@ -103,6 +110,12 @@ class BatchState:
     SpendRatio: F
     Att: F
     CostPerc: F
+    WS0: F
+    VMarg: F
+    ECost: F
+    Attr0: F
+    Dur0: F
+    C4Hab: F
 
     @property
     def n(self) -> int:

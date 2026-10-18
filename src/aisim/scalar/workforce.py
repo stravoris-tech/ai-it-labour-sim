@@ -10,7 +10,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 
-from aisim.dims import EMP_OF, EMPLOYERS, LEVELS, UNITS
+from aisim.dims import EMP_OF, EMPLOYERS, LEVELS, UNITS, VENDORS
+from aisim.scalar import loops
 from aisim.state import Mat, State, Vec
 from aisim.util import clamp, ramp
 
@@ -74,6 +75,8 @@ def staffing(pr: Mapping[str, float], st: State, y: float, BLe: Vec, mix: LevelM
     - ``DesiredE``: the staff needed to clear the held backlog in ``TargetClearanceTime`` at perceived productivity.
       It is split to units by ``UnitIn`` and to levels by the level mix (``Desired``). Higher perceived productivity
       means fewer heads: loop B1 (productivity compression).
+    - R6 C2 capacity exit (``R6e``, off at 0): a vendor below ``R6Theta`` in relative viability cuts its desired
+      staff (``aisim.scalar.loops.cut``); the existing openings and layoffs logic executes the cut.
     """
     ShareL, denomE = mix.ShareL, mix.denomE
     VisaTight = ramp(y, pr["VTRampStart"], pr["VTRampEnd"], pr["VTBase"], pr["VTEnd"])
@@ -92,6 +95,9 @@ def staffing(pr: Mapping[str, float], st: State, y: float, BLe: Vec, mix: LevelM
     }
     PerceivedP = st["PerceivedP"]
     DesiredE = {e: BLe[e] / (pr["TargetClearanceTime"] * pr["WorkPerPerson"] * PerceivedP[e]) for e in EMPLOYERS}
+    if pr["R6e"] != 0.0:  # R6 C2: capacity exit
+        for v in VENDORS:
+            DesiredE[v] = DesiredE[v] * (1 - loops.cut(pr, st, v))
     Desired = {
         u: {l: DesiredE[EMP_OF[u]] * UnitIn[u] * ShareL[EMP_OF[u]][l] / denomE[EMP_OF[u]] for l in LEVELS}
         for u in UNITS

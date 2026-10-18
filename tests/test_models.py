@@ -53,9 +53,28 @@ def test_baseline_json_is_byte_identical_to_main() -> None:
 
 
 def test_models_and_extension_defaults() -> None:
-    shipped = ["phase7", "phase8", "phase8_highadoption"]
+    shipped = ["phase7", "phase8", "phase8_highadoption", "phase9"]
     assert models() == tuple(shipped) and list(BASELINE_FILES) == shipped
-    assert dict(EXTENSION_DEFAULTS) == {"AnnuityShare": 0.0, "AnnuityAnchorW": 0.0, "OpeningsContinuous": 0.0}
+    assert dict(EXTENSION_DEFAULTS) == {
+        "AnnuityShare": 0.0,
+        "AnnuityAnchorW": 0.0,
+        "OpeningsContinuous": 0.0,
+        "kR7": 0.0,
+        "R7Lcap": 1.0,
+        "R6Theta": 0.8,
+        "R6e": 0.0,
+        "R6Cap": 0.08,
+        "R6MargTime": 0.75,
+        "kViab": 0.0,
+        "C4FadeTime": 2.0,
+        "C4Cap": 0.0,
+        "PriceFloor": 0.0,
+        "AIDiscCeil": 0.0,
+        "R10rc": 0.0,
+        "R4a": 0.0,
+        "R4aIN": 0.0,
+        "MinSeekTime": 0.25,
+    }
     p = Params.baseline("phase7")
     assert Params.baseline() == Params.baseline("phase8")
     names = list(p.scalars)
@@ -121,7 +140,7 @@ def test_experiment_model_phase8_is_the_default() -> None:
         assert (a.series[k] == b.series[k]).all(), k
 
 
-@pytest.mark.parametrize("name", ["phase9", "phase6"])
+@pytest.mark.parametrize("name", ["phase10", "phase6"])
 def test_unknown_model_raises(name: str) -> None:
     """A name that is not registered is unknown to every loader."""
     for call in (
@@ -134,7 +153,7 @@ def test_unknown_model_raises(name: str) -> None:
             call()
 
 
-@pytest.mark.parametrize("name", ["phase9", "phase6"])
+@pytest.mark.parametrize("name", ["phase10", "phase6"])
 def test_unknown_model_joins_the_single_validation_error(name: str) -> None:
     """The model violation is reported with every other violation, checked against phase 7."""
     with pytest.raises(ValidationError) as info:
@@ -155,7 +174,7 @@ def test_registered_model_is_seen_by_every_check(register_model: RegisterModel) 
     model to the state loaders, ``runner.known_model``, ``validate`` and ``tornado_levers``, and it is gone from all of
     them when the test ends (``monkeypatch``)."""
     p = register_model(SECOND_MODEL, FIXTURE_CHANGES)
-    assert models() == ("phase7", "phase8", "phase8_highadoption", SECOND_MODEL)
+    assert models() == ("phase7", "phase8", "phase8_highadoption", "phase9", SECOND_MODEL)
     assert baseline_data(SECOND_MODEL)["params"][LEVEL_2024_CHANGE] == FIXTURE_CHANGES[LEVEL_2024_CHANGE]
     exp = Experiment(model=SECOND_MODEL)
     assert known_model(exp) is exp

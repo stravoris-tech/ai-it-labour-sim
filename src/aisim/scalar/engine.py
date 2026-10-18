@@ -189,7 +189,7 @@ def run(
         ttf = time_to_fill(pr, st, hi.hires, vac.promo, swi.sw)
         if trace is not None:
             trace(step, y, "S8e", ttf)
-        pl = pools(pr, st, cap.G, unemp, ttf.TTFr)
+        pl = pools(pr, st, cap.G, unemp, ttf.TTFr, hi.hires)
         if trace is not None:
             trace(step, y, "S8f", pl)
         cst = costs(pr, st, y, W, wk.CompE, wk.EffStaffE, reanchor=reanchor, nz=nz)
@@ -201,7 +201,7 @@ def run(
         flo = sourcing_flows(pr, st, con.VF)
         if trace is not None:
             trace(step, y, "S11a", flo)
-        bks = vendor_books(pr, st, wk.Pe, wk.CompS, wk.CS, pl.TTFratio, flo.SignS, con)
+        bks = vendor_books(pr, st, wk.Pe, wk.CompS, wk.CS, pl.TTFratio, flo.SignS, con, ex.fl, swi.sw, cst.Wage)
         if trace is not None:
             trace(step, y, "S11b", bks)
         wag = wage_targets(pr, st, con.VF)
@@ -235,7 +235,7 @@ def run(
         if trace is not None:
             trace(step, y, "S13c", csm)
         RegDrag = {x: c.RegDrag for x, c in csm.cons.items()}
-        tgt = sourcing_targets(pr, tb, st, ai_on, RegDrag, drv.GCCAppeal, pl.TTFratio, opt)
+        tgt = sourcing_targets(pr, tb, st, ai_on, RegDrag, drv.GCCAppeal, pl.TTFratio, opt, wk.CS)
         if trace is not None:
             trace(step, y, "S13d", tgt)
         s = Step(

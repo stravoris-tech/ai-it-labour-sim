@@ -19,12 +19,14 @@ from __future__ import annotations
 from collections.abc import Mapping
 
 from aisim.dims import EMPLOYERS, LEVELS, POOL, REGIONS, SECTORS, TYPES, UNITS, VENDORS, WTYPES
+from aisim.scalar import loops
 from aisim.scalar.step import Step
 from aisim.state import State
 
 
 def integrate(pr: Mapping[str, float], st: State, s: Step, d: float) -> None:
     """Advance every stock in ``st`` by one step of length ``d``, in place."""
+    sf = loops.pre(pr, st, s)  # the loops' 2024 references, filled on the first step
     Demand, cons = s.consumer.Demand, s.consumer.cons
     Comp, Aband = s.work.Comp, s.work.Aband
     Src, SignS = s.flows.Src, s.flows.SignS
@@ -122,6 +124,7 @@ def integrate(pr: Mapping[str, float], st: State, s: Step, d: float) -> None:
     WITarget = s.wages.WITarget
     for u in UNITS:
         st["WI"][u] += d * (WITarget[u] - st["WI"][u]) / pr["WageAdjTime"]
+    loops.post(pr, st, s, d, sf)  # the loops' smoothed signals, after every other stock
 
 
 def track_mins(st: State, mins: dict[str, float]) -> None:

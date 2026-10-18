@@ -26,7 +26,7 @@ import pytest
 from aisim import Experiment, ExperimentResult, Params, run, run_experiment
 from aisim.dims import VENDORS
 from aisim.state import BASELINE_FILES
-from tests.helpers import TOL, assert_close, port_dict
+from tests.helpers import TOL, assert_close, existing_families, port_dict
 from tests.test_experiment_phase7 import compare_golden, golden_mode
 from tools.generate_goldens_phase8 import (
     GOLDENS,
@@ -115,7 +115,7 @@ def test_manifest_names_the_current_baseline_and_goldens(model: str) -> None:
 @pytest.mark.parametrize("ai_on", [True, False], ids=["base", "ai_off"])
 def test_golden_base_and_ai_off(model: str, ai_on: bool) -> None:
     exact, _ = golden_mode(load(model, "MANIFEST.json")["environment"])
-    fresh = json_round_trip(port_dict(run(Params.baseline(model), ai_on=ai_on, record_every=0.25)))
+    fresh = json_round_trip(existing_families(port_dict(run(Params.baseline(model), ai_on=ai_on, record_every=0.25))))
     compare_run(fresh, load(model, "base.json" if ai_on else "ai_off.json"), exact)
 
 
@@ -182,7 +182,7 @@ def test_off_platform_path_on_the_goldens(model: str, ai_on: bool) -> None:
     """The off-platform comparison on the real goldens: a live run passes it, and so does the AI-off golden with the
     value CI run 38983175912 (Linux x86-64) produced in place of the stored 0.0 (``AICost_GSI``, row 60)."""
     gold = load(model, "base.json" if ai_on else "ai_off.json")
-    fresh = json_round_trip(port_dict(run(Params.baseline(model), ai_on=ai_on, record_every=0.25)))
+    fresh = json_round_trip(existing_families(port_dict(run(Params.baseline(model), ai_on=ai_on, record_every=0.25))))
     zero = compare_run(fresh, gold, exact=False)
     assert "WorkCheckMax" in zero
     if not ai_on:
