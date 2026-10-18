@@ -196,7 +196,7 @@ F1 = {
     "type;vendor": 90,
     "sector": 70,
     "employer;sector": 70,
-    "vendor": 66,
+    "vendor": 75,
     "employer": 40,
     "unit": 32,
     "level;region": 8,
@@ -207,7 +207,7 @@ F1 = {
 
 def test_dimension_combinations() -> None:
     combos = Counter(";".join(sorted(dims(k))) for k in keys())
-    assert combos.pop("") == 33
+    assert combos.pop("") == 34
     assert dict(combos) == F1
     for name in ("employer", "level", "region", "sector", "type", "unit", "vendor", "worktype"):
         with_name = [k for k in keys() if name in dims(k)]

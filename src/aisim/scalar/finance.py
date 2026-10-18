@@ -14,6 +14,7 @@ from dataclasses import dataclass
 
 from aisim.dims import EFFORT, EMP_OF, LEVELS, POOL, SECTORS, TYPES, UNITS, VENDORS
 from aisim.params import Reanchor
+from aisim.scalar import loops
 from aisim.state import Mat, State, Vec
 from aisim.util import clamp, softmax
 
@@ -91,6 +92,8 @@ class VendorBook:
     DiscTarget: float
     CostProgTarget: float
     EffortShare: float
+    VolAttr: float
+    """Voluntary exits per head over their 2024 value (R10; 1 at 2024)."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -188,6 +191,10 @@ def contracts(
       share of delivered work, visa fees and compliance (OIT only), and labour net of the cost programme.
 
     The noise factor ``nz["anchor"]`` (two-phase runs, ``aisim.perturb``) multiplies ``Anchor``.
+
+    Loop R6's price rules, each off at 0: the AI-discount ceiling (``AIDiscCeil``, C6) holds ``Anchor`` at or above
+    ``1 - AIDiscCeil`` after the noise, and the price floor (``PriceFloor``, C5) holds each new-bid price at or above
+    ``PriceFloor`` times the vendor's expected cost (``aisim.scalar.loops.ceil`` and ``floor``).
     """
     H = st["H"]
     Delivered, LabourCost, AICostPerUnit = cost.Delivered, cost.LabourCost, cost.AICostPerUnit
@@ -201,6 +208,8 @@ def contracts(
         Anchor = (1 / (CP * (1 + pr["PriceHorizon"] * PU))) ** pr["PassThrough"]  # clients price in the trend
         if nz is not None and "anchor" in nz:
             Anchor = Anchor * nz["anchor"]
+        if pr["AIDiscCeil"] != 0.0:  # R6 C6: AI-discount ceiling
+            Anchor = loops.ceil(pr, Anchor)
         # E2a annuity term (neutral at AnnuityShare 0): the annuity share of new TM signings carries Anchor ** w.
         # At AnnuityShare 0 it is exactly 1.0 (Anchor ** w is finite, 0 x it is 0.0): PNew_TM is Phase 7's bit for bit.
         EffMult_TM = (1 - pr["AnnuityShare"]) + pr["AnnuityShare"] * Anchor ** pr["AnnuityAnchorW"]
@@ -226,6 +235,8 @@ def contracts(
             k: (EffMult_TM * (1 - Disc) if k == "TM" else (1 - Disc) if k in EFFORT else Anchor * (1 - Disc))
             for k in TYPES
         }
+        if pr["PriceFloor"] != 0.0:  # R6 C5: new-bid price floor
+            PNew = loops.floor(pr, st, v, Pe[v], PNew)
         AvgP = {k: (NP[k] / NV[k] if NV[k] > 1e-12 else PNew[k]) for k in TYPES}
         ExpLeg = {k: Leg[k] / pr["BaseDur_" + k] for k in TYPES}
         ExpNew = {k: NV[k] / AvgDur[k] for k in TYPES}
@@ -289,6 +300,9 @@ def vendor_books(
     TTFratio: Vec,
     SignS: Mat,
     con: Contracts,
+    fl: loops.Flows,
+    sw: loops.Switches,
+    Wage: Mat,
 ) -> VendorBooks:
     """S11b: vendor book turnover, sales cost, margin, type choice and competition.
 
@@ -301,6 +315,8 @@ def vendor_books(
     - ``ShareLoss`` against the reference share, and excess margin, set the discount target: loop B12 (price
       competition). Margin below normal sets the cost programme target: loop B6 (right-sizing).
     - ``EffortShare`` is the effort-billed share of the book (it brakes adoption in S12).
+    - R10 attrition cost (``R10rc``, off at 0): vendor cost gains the replacement cost of voluntary exits above the
+      2024 rate (``aisim.scalar.loops.r10cost``). ``VolAttr`` is recorded for every model.
     """
     Pass, VF = con.Pass, con.VF
     VW, ClientP = st["VW"], st["ClientP"]
@@ -312,6 +328,8 @@ def vendor_books(
         SignRate = signvol / vol if vol > 1e-9 else f.ExpRate
         SalesCost = pr["SalesCostRate"] * f.Revenue * SignRate
         VendorCost = f.VLab + f.VisaCost + f.AICost + st["Overhead"][v] + SalesCost
+        if pr["R10rc"] != 0.0:  # R10: attrition cost
+            VendorCost = VendorCost + loops.r10cost(pr, st, fl, sw, Wage, v)
         Margin = (f.Revenue - VendorCost) / max(f.Revenue, 1.0)
         CostIdx = (VendorCost / max(f.VendDel, 1e-9)) / max(f.BaseRev / max(f.VendDel, 1e-9), 1e-9)
         wv = clamp(pr["BargainW0"] * f.Power, 0.1, 0.9)
@@ -354,6 +372,7 @@ def vendor_books(
             DiscTarget=DiscTarget,
             CostProgTarget=CostProgTarget,
             EffortShare=EffortShare,
+            VolAttr=loops.vol_ratio(st, fl, sw, v),
         )
     return VendorBooks(VB=VB)
 

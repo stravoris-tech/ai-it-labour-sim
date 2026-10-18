@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+from aisim.batch import loops
 from aisim.batch.axes import EMP_IX, POOL_IX, REG_IX, UNIT_IX
 from aisim.batch.labour_market import LEVEL_FLOWS, POOL_FLOWS
 from aisim.batch.params import BatchParams
@@ -34,6 +35,7 @@ _OV, _OL, _IN = UNIT_IX["OV"], UNIT_IX["OL"], REG_IX["IN"]
 
 def integrate(pr: BatchParams, st: BatchState, s: Step, d: float, faults: Faults) -> None:
     """Advance every stock of every run by one step of length ``d``, in place."""
+    sf = loops.pre(pr, st, s)  # the loops' 2024 references, filled on the first step
     cons, Demand = s.consumer.cons, s.consumer.Demand
     Comp, Aband = s.work.Comp, s.work.Aband
     Src, SignS = s.flows.Src, s.flows.SignS
@@ -129,6 +131,7 @@ def integrate(pr: BatchParams, st: BatchState, s: Step, d: float, faults: Faults
     st.NewD[...] += d * (b.Sign * f.Dnew - st.NewV)
     st.NewP[...] += d * (b.Sign * f.PNew - f.ExpNew * f.AvgP - st.NewP * f.Glide)
     st.WI[...] += d * (s.wages.WITarget - st.WI) / col("WageAdjTime")
+    loops.post(pr, st, s, d, sf)  # the loops' smoothed signals, after every other stock
 
 
 MIN_FAMILIES = ("H", "O", "V", "R", "U", "IHW", "GCCW", "VW", "Leg", "NewV", "NewP", "NewD")

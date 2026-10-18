@@ -11,7 +11,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from aisim.batch.axes import EMP_OF_IX
+from aisim.batch import loops
+from aisim.batch.axes import EMP_OF_IX, VENDOR_EMP_IX
 from aisim.batch.params import BatchParams
 from aisim.batch.state import BatchState
 from aisim.batch.util import B, F, clamp, csum_axis, ramp
@@ -84,6 +85,10 @@ def staffing(pr: BatchParams, st: BatchState, y: float, BLe: F, mix: LevelMix) -
     )
     PerceivedP = st.PerceivedP
     DesiredE = BLe / ((pr["TargetClearanceTime"] * pr["WorkPerPerson"])[:, None] * PerceivedP)
+    if np.any(pr["R6e"] != 0.0):  # R6 C2: capacity exit
+        cut = DesiredE.copy()
+        cut[:, VENDOR_EMP_IX] = DesiredE[:, VENDOR_EMP_IX] * (1 - loops.cut(pr, st))
+        DesiredE = np.where((pr["R6e"] != 0.0)[:, None], cut, DesiredE)
     Desired = (
         DesiredE[:, EMP_OF_IX][:, :, None]
         * UnitIn[:, :, None]

@@ -3,7 +3,7 @@
 Built from the state before the step's integration and the step's intermediates, as the scalar row is. Sums are naive,
 in the scalar engine's term order.
 
-``record_extras`` records the 96 extras of ``aisim.scalar.record.EXTRA_KEYS`` (see its module docstring for each
+``record_extras`` records the 106 extras of ``aisim.scalar.record.EXTRA_KEYS`` (see its module docstring for each
 family, its source and its unit), each an ``(N,)`` array read from the state or an intermediate.
 """
 
@@ -204,8 +204,16 @@ def record_extras(st: BatchState, s: Step) -> dict[str, F]:
         out["WI_" + u] = st.WI[:, i]
     for e in EMPLOYERS:
         out["CapE_" + e] = s.work.CapE[:, EMP_IX[e]]
+    opt = s.options
+    for v in VENDORS:
+        out["Vrel_" + v] = opt.Vrel[:, VEND_IX[v]]
+    for v in VENDORS:
+        out["ClientFlight_" + v] = opt.ClientFlight[:, VEND_IX[v]]
+    out["GCCScaleTerm"] = s.targets.GCCScaleTerm
+    for v in VENDORS:
+        out["VoluntaryAttrition_" + v] = b.VolAttr[:, VEND_IX[v]]
     return out
 
 
 EXTRA_KEYS: Final = scalar_extra_keys
-"""The 96 extras keys, in ``record_extras`` order (the scalar engine's ``EXTRA_KEYS``)."""
+"""The 106 extras keys, in ``record_extras`` order (the scalar engine's ``EXTRA_KEYS``)."""

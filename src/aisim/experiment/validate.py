@@ -103,11 +103,23 @@ SMOOTHING_TIMES: Final = (
     "TargetClearanceTime",
     "HireAdjTime",
     "LayoffAdjTime",
+    "R6MargTime",
+    "C4FadeTime",
 )
-"""First-order delays and adjustment times (B1 "first-order delay"; the gap-closing times of S3 and S8): >= dt."""
+"""First-order delays and adjustment times (B1 "first-order delay"; the gap-closing times of S3 and S8; the two smoothed
+loop signals of slice 12): >= dt."""
 
-FLOORS: Final = ("MinCompletionTime", "MinLayoffTime", "MinAdoptionTime", "PromoFillTime", "MinFillTime", "MinDur")
-"""The "no faster than" floors (B1 "rate cap") and the new-contract duration floor: >= dt."""
+FLOORS: Final = (
+    "MinCompletionTime",
+    "MinLayoffTime",
+    "MinAdoptionTime",
+    "PromoFillTime",
+    "MinFillTime",
+    "MinDur",
+    "MinSeekTime",
+)
+"""The "no faster than" floors (B1 "rate cap"; slice 12's R4 seeker-exit cap) and the new-contract duration floor:
+>= dt."""
 
 OUTFLOW_RATES: Final = (
     "QuitRate_J",

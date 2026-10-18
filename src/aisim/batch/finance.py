@@ -13,6 +13,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from aisim.batch import loops
 from aisim.batch.axes import (
     EFFORT_TYPE,
     EMP_IX,
@@ -108,6 +109,8 @@ class VendorBook:
     DiscTarget: F
     CostProgTarget: F
     EffortShare: F
+    VolAttr: F
+    """``(N, vendor)`` voluntary exits per head over their 2024 value."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -192,6 +195,8 @@ def contracts(
     Anchor = pw(1 / (CP * (1 + pr["PriceHorizon"][:, None] * PU)), pr["PassThrough"][:, None])
     if nz is not None and "anchor" in nz:
         Anchor = Anchor * nz["anchor"][:, None]
+    if np.any(pr["AIDiscCeil"] != 0.0):  # R6 C6: AI-discount ceiling
+        Anchor = np.where((pr["AIDiscCeil"] != 0.0)[:, None], loops.ceil(pr, Anchor), Anchor)
     # E2a annuity term (neutral at AnnuityShare 0), as the scalar engine: exactly 1.0 at AnnuityShare 0.
     a_ann = pr["AnnuityShare"][:, None]
     EffMult_TM = (1 - a_ann) + a_ann * pw(Anchor, pr["AnnuityAnchorW"][:, None])
@@ -216,6 +221,8 @@ def contracts(
     Disc_k = (1 - Disc)[:, :, None]
     PNew = np.where(EFFORT_TYPE[None, None, :], Disc_k, Anchor[:, :, None] * Disc_k)
     PNew[:, :, TYPE_IX["TM"]] = EffMult_TM * Disc_k[:, :, 0]
+    if np.any(pr["PriceFloor"] != 0.0):  # R6 C5: new-bid price floor
+        PNew = np.where((pr["PriceFloor"] != 0.0)[:, None, None], loops.floor(pr, st, Pe, PNew), PNew)
     AvgP = np.where(NV > 1e-12, NP / NV, PNew)
     ExpLeg = Leg / BaseDur
     ExpNew = NV / AvgDur
@@ -276,7 +283,17 @@ def contracts(
 
 
 def vendor_books(
-    pr: BatchParams, st: BatchState, Pe: F, CompS: F, CS: F, TTFratio: F, SignS: F, con: Contracts
+    pr: BatchParams,
+    st: BatchState,
+    Pe: F,
+    CompS: F,
+    CS: F,
+    TTFratio: F,
+    SignS: F,
+    con: Contracts,
+    fl: F,
+    sw: F,
+    Wage: F,
 ) -> VendorBooks:
     """S11b: vendor book turnover, sales cost, margin, type choice and competition (see
     ``aisim.scalar.finance.vendor_books``)."""
@@ -287,6 +304,10 @@ def vendor_books(
     SignRate = np.where(vol > 1e-9, signvol / vol, f.ExpRate)
     SalesCost = pr["SalesCostRate"][:, None] * f.Revenue * SignRate
     VendorCost = f.VLab + f.VisaCost + f.AICost + st.Overhead + SalesCost
+    if np.any(pr["R10rc"] != 0.0):  # R10: attrition cost
+        VendorCost = np.where(
+            (pr["R10rc"] != 0.0)[:, None], VendorCost + loops.r10cost(pr, st, fl, sw, Wage), VendorCost
+        )
     Margin = (f.Revenue - VendorCost) / np.maximum(f.Revenue, 1.0)
     del_floor = np.maximum(f.VendDel, 1e-9)
     CostIdx = (VendorCost / del_floor) / np.maximum(f.BaseRev / del_floor, 1e-9)
@@ -340,6 +361,7 @@ def vendor_books(
         DiscTarget=DiscTarget,
         CostProgTarget=CostProgTarget,
         EffortShare=EffortShare,
+        VolAttr=loops.vol_ratio(st, fl, sw),
     )
     return VendorBooks(VB=VB)
 

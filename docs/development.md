@@ -233,6 +233,37 @@ Monte Carlo golden was regenerated, because its levers moved.
 - 247 citations with aptness not verified by `tools/cites.py --apt` (mostly multi-suffix names); a later pass could
   teach `--apt` those names.
 
+## Slice 12: the phase 9 model, four feedback loops from outside evidence
+
+**Basis.** Recon 11 (the gap review: the loops the specification names but the engine leaves open, and prototypes
+showing the calibration data constrain none of their strengths), recon 12 (the four loops in their evidence forms,
+a joint refit and the structural uncertainty) and recon 12b (the settled forms: R7 on the economy-wide GCC work
+share, R10 on total voluntary exits, client flight with a fade; the proof battery and the refits). The evidence is
+[`research/loop-strength-evidence.md`](research/loop-strength-evidence.md).
+
+**Purpose.** Close R7, R6, R10 and R4 as extension parameters in both engines, off by default, and register `phase9`:
+`phase8` with every loop at its evidence base value and a full 32-start refit. The library default stays `phase8`.
+The design note is [`model-changes-phase9.md`](model-changes-phase9.md).
+
+**Gate at the build.** Exit 0, 517 tests (477 before), 12 slow deselected; the slow suite passed. With every loop off,
+the 27 parity cases are bit-identical to `main` in both engines, and every existing baseline file and golden is
+unchanged.
+
+**Key decisions.**
+- The six loop references and signals are state families, filled on the first step or started from their 2024
+  values, so a restart at Y is exact; `mins` gain nothing.
+- Client flight uses the 2-year fade alone (`kViab` 5.8562 / 10.6511); the cap stays as `C4Cap`, off. R7's high is
+  0.75, inside the evidence's stability rule.
+- `tools/build_model.py` writes the three earlier extension keys always and a later one only when the spec or fit
+  names it, so the phase 8 baseline files stay byte-identical.
+- Structural levers are per model (`aisim.scenarios.STRUCTURAL_LEVERS`): `tornado_levers(model="phase9")` adds the
+  eight loop strengths; every other model's levers are unchanged.
+- Four loop extras (`Vrel_<v>`, `ClientFlight_<v>`, `GCCScaleTerm`, `VoluntaryAttrition_<v>`) are recorded for every
+  model.
+
+**Held or deferred.** The default flip, after a first-look analysis (Q05). B8 stays a scenario input. Re-anchoring the
+2024-anchored rates under `perturb_from` is still deferred.
+
 ## Analyses
 
 Four analyses were asked of the model during development, each in a throwaway workspace with nothing merged:

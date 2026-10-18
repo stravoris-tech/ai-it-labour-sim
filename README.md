@@ -150,7 +150,7 @@ if __name__ == "__main__":
 
 ## Models
 
-Three models are registered. `Experiment.model`, `Params.baseline(model=...)` and `BatchParams.baseline(n, model=...)`
+Four models are registered. `Experiment.model`, `Params.baseline(model=...)` and `BatchParams.baseline(n, model=...)`
 name the calibrated baseline every run starts from; any other name raises. With no model named, runs use `phase8`
 (`aisim.state.DEFAULT_MODEL`).
 
@@ -159,6 +159,7 @@ name the calibrated baseline every run starts from; any other name raises. With 
 | `phase7` | The prototype's calibrated model, bit for bit, kept as the prototype-parity reference |
 | `phase8` | Continuous openings, the slice 8 pricing design and a full robust refit. **The default** |
 | `phase8_highadoption` | `phase8` refitted with the adoption parameter `p` fixed at Phase 7's 0.044: the adoption-speed alternative |
+| `phase9` | `phase8` plus four feedback loops from outside evidence, with a full refit. Registered, not yet the default |
 
 - **What `phase8` changes.** Three things, each switched on in its baseline file
   (`src/aisim/data/baseline_phase8.json`):
@@ -196,6 +197,14 @@ name the calibrated baseline every run starts from; any other name raises. With 
 
   On `phase7`, `AnnuityShare` and `AnnuityAnchorW` default to 0, which reproduces Phase 7 exactly; in `phase8` they
   are calibrated. Under `perturb_from` they act from Y, like any lever.
+- **`phase9`.** It closes four feedback loops the specification names: R7 (GCC scale learning), R6 (vendor capacity
+  exit, client flight, a price floor and an AI-discount ceiling), R10 (attrition cost) and R4 (skill erosion), each
+  at the base strength of an outside evidence report, with all 11 calibrated parameters refitted (loss 0.000421,
+  against `phase8`'s 0.000423). Total headcount is unchanged; by 2040 work shifts from vendors to GCCs (`VendorHead`
+  -3.2%, `Head_GCC` +5.6% in Base). The calibration data do not pin the loop strengths, so
+  `tornado_levers(model="phase9")` adds them as eight structural levers with their evidence ranges. Every loop is
+  off at strength 0, so the other models are unchanged. A first-look analysis comes before any change of default.
+  The design, forms, ranges and limitations are in [`docs/model-changes-phase9.md`](docs/model-changes-phase9.md).
 - **How a model is built.** `tools/calibrate.py` fits it and `tools/build_model.py` writes its baseline file from
   `tools/models/<name>/spec.json` and `fit.json`. A model is never written by hand. Each baseline file reproduces its
   fit's loss bit for bit, and its 2024 state is Phase 7's.

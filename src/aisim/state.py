@@ -22,7 +22,8 @@ Mat = dict[str, dict[str, float]]
 
 
 class State(TypedDict):
-    """The 37 stock families (347 values) of the model."""
+    """The 43 stock families (366 values) of the model: the prototype's 37 (347 values), then the six of the feedback
+    loops (``LOOP_FAMILIES``)."""
 
     BL: Mat
     """Backlog of work by sector and work type."""
@@ -98,6 +99,29 @@ class State(TypedDict):
     """AI seat attach rate."""
     CostPerc: float
     """Perceived cost index of IT services."""
+    WS0: float
+    """R7: the 2024 economy-wide GCC work share (sentinel -1 until the first step fills it)."""
+    VMarg: Vec
+    """R6: vendor margin smoothed over ``R6MargTime`` (0.75 years), starting from ``Viab``."""
+    ECost: Vec
+    """R6 C5: the vendor's expected delivery cost, ``CostIdx`` smoothed at the book's expiry rate (sentinel -1)."""
+    Attr0: Vec
+    """R10: the vendor's 2024 voluntary exits per head (sentinel -1)."""
+    Dur0: Mat
+    """R4: the 2024 seeker spell length by region and level (sentinel -1)."""
+    C4Hab: Vec
+    """R6 C4: the habituated viability shortfall, smoothed over ``C4FadeTime``, starting at 0."""
+
+
+LOOP_FAMILIES: Final = ("WS0", "VMarg", "ECost", "Attr0", "Dur0", "C4Hab")
+"""The state families of the feedback loops (slice 12), after the prototype's 37.
+
+The four 2024 references (``WS0``, ``ECost``, ``Attr0``, ``Dur0``) start at the sentinel -1 and are filled at the
+start of ``integrate`` on the first step, so every term sees "no reference" on step 0 and is neutral there. The two
+smoothed signals start from their 2024 values (``VMarg`` = ``Viab``, so relative viability is exactly 1; ``C4Hab`` =
+0), since they are read before ``integrate`` on step 0. All six are carried through ``BatchState``, so a restart at Y
+is exact. They are advanced even when every loop is off, and then never read back.
+"""
 
 
 DEFAULT_MODEL: Final = "phase8"
@@ -107,6 +131,7 @@ BASELINE_FILES: Final[dict[str, Traversable]] = {
     "phase7": files("aisim").joinpath("data", "baseline.json"),
     "phase8": files("aisim").joinpath("data", "baseline_phase8.json"),
     "phase8_highadoption": files("aisim").joinpath("data", "baseline_phase8_highadoption.json"),
+    "phase9": files("aisim").joinpath("data", "baseline_phase9.json"),
 }
 """The model registry: each named model's baseline file.
 
@@ -114,8 +139,11 @@ BASELINE_FILES: Final[dict[str, Traversable]] = {
 - ``phase8`` adds continuous openings and the slice 8 pricing design, with a full multi-start refit. It is the
   default (``DEFAULT_MODEL``).
 - ``phase8_highadoption`` is the same refitted with ``p`` at Phase 7's 0.044, the adoption-speed alternative.
+- ``phase9`` is ``phase8`` plus the four feedback loops of slice 12 (R7, R6, R10, R4) at their evidence base values,
+  with a full multi-start refit (``docs/model-changes-phase9.md``). It is registered, not the default.
 
-The phase 8 files are written by ``tools/build_model.py`` from ``tools/models/<name>/spec.json`` and ``fit.json``.
+The phase 8 and phase 9 files are written by ``tools/build_model.py`` from ``tools/models/<name>/spec.json`` and
+``fit.json``.
 
 Every check reads this mapping at call time (``models()``), so it is the one list of models. A model registered at
 runtime (the test fixture ``register_model``) is visible in this process only, so use it with ``workers=1``; a shipped
@@ -149,8 +177,17 @@ def copy_state(state: State) -> State:
 def load_initial_state() -> State:
     """Return the calibrated 2024 state, a fresh copy on every call.
 
-    Every model starts from this state: the model extensions (``aisim.params.EXTENSION_DEFAULTS``) add no stock, so a
-    model's baseline file carries the same ``init``.
+    Every model starts from this state, and every model's baseline file carries the same ``init`` (the prototype's 37
+    families). The six loop families (``LOOP_FAMILIES``) are not in the files: they are added here, at their sentinels
+    and 2024 signals.
     """
+    from aisim.dims import LEVELS, REGIONS, VENDORS
+
     init: State = baseline_data()["init"]
+    init["WS0"] = -1.0
+    init["VMarg"] = dict(init["Viab"])
+    init["ECost"] = {v: -1.0 for v in VENDORS}
+    init["Attr0"] = {v: -1.0 for v in VENDORS}
+    init["Dur0"] = {r: {l: -1.0 for l in LEVELS} for r in REGIONS}
+    init["C4Hab"] = {v: 0.0 for v in VENDORS}
     return init

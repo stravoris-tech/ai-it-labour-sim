@@ -9,7 +9,7 @@ from typing import Any
 import pytest
 
 from aisim import SCENARIOS, Params, run
-from tests.helpers import TOL, annual, assert_close, port_dict
+from tests.helpers import TOL, annual, assert_close, existing_families, port_dict
 from tools.reference_runner import ROOT
 
 GOLDENS = ROOT / "reference" / "goldens"
@@ -27,7 +27,7 @@ RESULTS = load_json(GOLDENS / "phase7_results.json")
 @pytest.mark.parametrize(("ai_on", "golden_file"), [(True, "base.json"), (False, "ai_off.json")])
 def test_matches_run_golden(ai_on: bool, golden_file: str) -> None:
     golden = load_json(GOLDENS / golden_file)
-    fresh = port_dict(run(Params.baseline("phase7"), ai_on=ai_on, record_every=0.25))
+    fresh = existing_families(port_dict(run(Params.baseline("phase7"), ai_on=ai_on, record_every=0.25)))
     assert len(fresh["rows"]) == len(golden["rows"])
     assert_close(fresh, golden, TOL, TOL)
 

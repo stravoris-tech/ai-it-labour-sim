@@ -23,6 +23,14 @@ never a new calculation:
   sector, S13c (consumer.py:172, 182, 183), USD per year.
 - ``WI_{u}``: the wage index by unit (state ``WI``), 2024 = 1.
 - ``CapE_{e}``: delivery capacity by employer, S3 ``CapE`` (work.py:70), BFY per year.
+- The loop outputs of slice 12 (``aisim.scalar.loops``), recorded for every model:
+  - ``Vrel_{v}``: relative viability on the 0.75-year margin signal, S13b ``Vrel`` (``VMarg / NormalMargin``),
+    ratio (1 at 2024).
+  - ``ClientFlight_{v}``: the R6 C4 client-flight term after the fade and the cap, S13b ``ClientFlight``, logit units
+    (0 while ``kViab`` is 0).
+  - ``GCCScaleTerm``: the R7 term added to every sector's GCC value, S13d ``GCCScaleTerm``, logit units (0 while
+    ``kR7`` is 0).
+  - ``VoluntaryAttrition_{v}``: voluntary exits per head over their 2024 value, S11b ``VolAttr``, ratio (1 at 2024).
 """
 
 from __future__ import annotations
@@ -171,6 +179,14 @@ def record_extras(st: State, s: Step) -> dict[str, float]:
         out["WI_" + u] = st["WI"][u]
     for e in EMPLOYERS:
         out["CapE_" + e] = s.work.CapE[e]
+    opt, VB = s.options, s.books.VB
+    for v in VENDORS:
+        out["Vrel_" + v] = opt.Vrel[v]
+    for v in VENDORS:
+        out["ClientFlight_" + v] = opt.ClientFlight[v]
+    out["GCCScaleTerm"] = s.targets.GCCScaleTerm
+    for v in VENDORS:
+        out["VoluntaryAttrition_" + v] = VB[v].VolAttr
     return out
 
 
@@ -184,8 +200,12 @@ def _extra_keys() -> tuple[str, ...]:
         keys += [prefix + x for x in SECTORS]
     keys += ["WI_" + u for u in UNITS]
     keys += ["CapE_" + e for e in EMPLOYERS]
+    keys += ["Vrel_" + v for v in VENDORS]
+    keys += ["ClientFlight_" + v for v in VENDORS]
+    keys += ["GCCScaleTerm"]
+    keys += ["VoluntaryAttrition_" + v for v in VENDORS]
     return tuple(keys)
 
 
 EXTRA_KEYS: Final = _extra_keys()
-"""The 96 extras keys, in ``record_extras`` order."""
+"""The 106 extras keys, in ``record_extras`` order: the 96 of slices 4-9, then the 10 loop outputs of slice 12."""

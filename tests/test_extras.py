@@ -37,7 +37,7 @@ def batch_extras(cases: Sequence[Case]) -> dict[str, np.ndarray]:
 
 def test_extra_keys_agree() -> None:
     assert EXTRA_KEYS == SCALAR_EXTRA_KEYS
-    assert len(EXTRA_KEYS) == 96
+    assert len(EXTRA_KEYS) == 106
     assert not set(EXTRA_KEYS) & set(ROW_KEYS)
 
 

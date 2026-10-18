@@ -54,7 +54,7 @@ def csv_rows() -> list[dict[str, str]]:
 
 def test_baseline_shape() -> None:
     p = Params.baseline()
-    assert len(p.scalars) == 333
+    assert len(p.scalars) == 348
     assert set(p.tables) == set(TABLE_KEYS) | {"Mix0", "Src0"}
     for name, keys in TABLE_KEYS.items():
         assert tuple(p.table(name)) == keys, name
@@ -74,6 +74,21 @@ def test_baseline_values_equal_calibration() -> None:
         "AnnuityShare",
         "AnnuityAnchorW",
         "OpeningsContinuous",
+        "kR7",
+        "R7Lcap",
+        "R6Theta",
+        "R6e",
+        "R6Cap",
+        "R6MargTime",
+        "kViab",
+        "C4FadeTime",
+        "C4Cap",
+        "PriceFloor",
+        "AIDiscCeil",
+        "R10rc",
+        "R4a",
+        "R4aIN",
+        "MinSeekTime",
     }
     for k, v in calib.items():
         assert p.scalars[k] == v, k
@@ -137,7 +152,7 @@ def test_with_table_checks_keys() -> None:
 
 def test_parameters_csv() -> None:
     rows = csv_rows()
-    assert len(rows) == 333
+    assert len(rows) == 348
     assert list(rows[0]) == ["name", "value", "kind", "lever", "fitted"]
     assert {r["name"] for r in rows} == set(Params.baseline().scalars)
     assert {r["name"] for r in rows if r["fitted"] == "yes"} == FITTED
