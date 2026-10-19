@@ -1,0 +1,62 @@
+{
+ "border": 20,
+ "drawio": "29.0.3",
+ "png_scale": 2,
+ "views": {
+  "article-a1": {
+   "png": "65dfc4e921decea8a5a1dc9dcebf96df0e8321e7f24c8d44406be3caab152362",
+   "source": "67bc14cd6c0a15adbf91b154436b0065e53aaaa66ebe5958cf335f860d6ee179",
+   "svg": "b19ec7e277293c1349042ccb054713d9e13a0f9a0a3211bec9e1c69aed3ecd81"
+  },
+  "article-a2": {
+   "png": "1364a3d60b8f8263c14db8c9ae5b40f3c72883e9d547488945b577fcc55c388e",
+   "source": "8c3dc7dd47642f550b4e45b5fae718b3a18d39c59b732d3a6b0e7acc011811c2",
+   "svg": "90c41403c0c79a22781970a625a3c056d5e5a381f57ce076ed1e22e3a0ba4b52"
+  },
+  "article-a3": {
+   "png": "b4aedf76408b6e280e935c7a917eeb80ab12218826f33a42ac9d2c1070a3505f",
+   "source": "65894bed868d63ec1804635106935d866109202b8fb649153531261382f5d82d",
+   "svg": "5feeb692e566b0f86a29b336ea68a5befd7ee27ee7ee5765701b9b5b6a0d64e0"
+  },
+  "article-a4": {
+   "png": "950e0729fa858cbdcf4eb07fd94ad4745f6c504b7809fde814a9b8b352271673",
+   "source": "76f1b45cff075b5538aeded9bf0d67ead87764065bd7835fca3c3f37ea3d88b7",
+   "svg": "a46ba898696f90528f5c6814ec14b69fd26f79213109078127934a4b9354093e"
+  },
+  "article-a5": {
+   "png": "c1f45655bbceb05dd61f037e7b9973be6f5fc2a88e183c8002fad552a2a834c7",
+   "source": "865e1a21d8d281e448bf8a9fcc1aa52a7df94984fb185f740dc42495cc433d74",
+   "svg": "bcc985fe34195c3e6a1ed96d6c8d7729e49332e302016dc2459d2d1b7dbb1f07"
+  },
+  "overview": {
+   "png": "6a6eb6ea875146fba16d830f191901f8f6b7958db4ccd6ada73d58c08398061c",
+   "source": "3b7fceb6c087071c3324fd6f1daa205506ca642de601657211c638f7cfd7f5b9",
+   "svg": "b453a9617347e5ffef14170638f5c3806a83a9aefcf680039dd636ed9b338c8d"
+  },
+  "panel-demand": {
+   "png": "fc907a664c9d8701a6d3b853f39b2e85d8bddb2d0981d216e61c8bfa08453be0",
+   "source": "68068a71d626ab8e80c323246e1bca80ff183a12dc905d371c2beea1fde69980",
+   "svg": "e68296f77d9f3581cbc32749c681fbc1ea83f79e5ef091f4f106811df12385e6"
+  },
+  "panel-distress": {
+   "png": "0e591a1a5685cee57b609c21d4e4c499e5e1e1481f2712b5a369d12796d3c3a0",
+   "source": "026ec75400133fdda797044a75258e6aadfa848b62c24433839f0cba5b0b3dc7",
+   "svg": "c3b578bfb90f1614851cd6a86d8e9a143ba3312e8eb30aa23ecdb0c3d258c593"
+  },
+  "panel-labour": {
+   "png": "1548248b7c70a8f701d849f7163a0b81b8702da2b65e5aef4901d84c6aae1d5f",
+   "source": "50403aa186d94a471e56eb3d23a4b2ff127781332624ee4e61414425abbc89e7",
+   "svg": "719dac908173067adc202632c143a1bf17132dc3a69b2241643cadc6a4541a19"
+  },
+  "panel-pricing": {
+   "png": "c699c5a0a3f9623cd9dc22ad28aadeefb624adf9f6acb3153998e225523c7cb7",
+   "source": "b5df156ac3c14a08776f39917e6fadd7a904df1a79bef46e46c5872c9e72cbde",
+   "svg": "5767260c3f0fea44ce755dca91d80382f61838f1a18c8bc6f549de1c97fbd80d"
+  },
+  "panel-sourcing": {
+   "png": "273f5750826321988d2261b09bad5dff9980be6054310d27aecbc75ea042fbf3",
+   "source": "cfe32feae23fe6202398352fe268cb0b7d0874004e96704e6e22beb64fa92139",
+   "svg": "b45ad53de2de552b84c6308902bc2dbfcad8456df3728ec34dc49f43a5c4e11b"
+  }
+ }
+}

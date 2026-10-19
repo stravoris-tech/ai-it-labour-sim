@@ -1,0 +1,279 @@
+<mxfile host="aisim" type="device">
+  <diagram id="panel-labour" name="panel-labour">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1361" pageHeight="1084" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:A&gt;Desired" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A" target="Desired">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A&gt;PerceivedP" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A" target="PerceivedP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:BL&gt;BLe" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="BL" target="BLe">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:BLe&gt;DesiredE" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="BLe" target="DesiredE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Comp&gt;BL" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="Comp" target="BL">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Desired&gt;surplus" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="Desired" target="surplus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:DesiredE&gt;Desired" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="DesiredE" target="Desired">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:H&gt;Comp" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="H" target="Comp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:H&gt;UnempRate" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="H" target="UnempRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:H&gt;promo" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="H" target="promo">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="591.5" y="402.3" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:H&gt;surplus" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="H" target="surplus">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="584" y="459.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:IHW&gt;BLe" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="IHW" target="BLe">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:LabourCost&gt;A" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="LabourCost" target="A">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:LabourCost&gt;Viab" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="LabourCost" target="Viab">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:O&gt;H" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="O" target="H">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:PUL&gt;Pipeline" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="PUL" target="Pipeline">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:PUS&gt;WITarget" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="PUS" target="WITarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:PerceivedP&gt;DesiredE" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="PerceivedP" target="DesiredE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Pipeline&gt;U" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="Pipeline" target="U">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:R4Mult&gt;U" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="R4Mult" target="U">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="402.5" y="704.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:SrcPerc@IH&gt;IHW" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="SrcPerc@IH" target="IHW">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:TTFr&gt;SrcPerc@IH" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="TTFr" target="SrcPerc@IH">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:U&gt;R4Mult" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="U" target="R4Mult">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="386.5" y="732.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:U&gt;UnempRate" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="U" target="UnempRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:U&gt;hires" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="U" target="hires">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="484.8" y="733.9" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:UnempRate&gt;PUL" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="UnempRate" target="PUL">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:UnempRate&gt;PUS" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="UnempRate" target="PUS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:V&gt;TTFr" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="V" target="TTFr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:V&gt;hires" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="V" target="hires">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Viab&gt;WITarget" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="Viab" target="WITarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:WI&gt;H" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="WI" target="H">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:WI&gt;LabourCost" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="WI" target="LabourCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:WITarget&gt;WI" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="WITarget" target="WI">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:hires&gt;O" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="hires" target="O">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:hires&gt;R4Mult" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="hires" target="R4Mult">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:hires&gt;TTFr" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="hires" target="TTFr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:hires&gt;U" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="hires" target="U">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="493.7" y="703.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:promo&gt;H" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="promo" target="H">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="575.5" y="374.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:surplus&gt;H" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="surplus" target="H">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="584" y="427.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:surplus&gt;V" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="surplus" target="V">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A" value="Delivery AI&#10;adoption" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#D5ECFA;strokeColor=#56B4E9;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="822" y="92" width="95" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="BL" value="IT work backlog" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="998" y="320" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="BLe" value="Employer backlog" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="320" width="138" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="Comp" value="Work completion" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="804" y="320" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="Desired" value="Desired headcount" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="796" y="210" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="DesiredE" value="Desired effective&#10;staff" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="1176" y="202" width="145" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="H" value="Headcount" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="448" y="430" width="81" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="IHW" value="In-house work&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1194" y="532" width="109" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="LabourCost" value="Unit labour cost" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="420" y="100" width="138" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="O" value="Onboarding staff" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="424" y="650" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="PUL" value="Student-perceived&#10;unemployment" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="40" y="752" width="137" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="PUS" value="Worker-perceived&#10;unemployment" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="44" y="422" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="PerceivedP" value="Perceived&#10;productivity" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1008" y="92" width="102" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="Pipeline" value="Student pipeline" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="234" y="760" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="R4Mult" value="Skill erosion&#10;multiplier" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="432" y="752" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="SrcPerc@IH" value="In-house perceived&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1177" y="752" width="144" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="TTFr" value="Time to fill" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="815" y="650" width="108" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="U" value="Job seekers" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="252" y="650" width="95" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="UnempRate" value="IT unemployment&#10;rate" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="44" y="642" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="V" value="Vacancies" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="828" y="430" width="81" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="Viab" value="Vendor viability" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="234" y="100" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="WI" value="Wage index" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="445" y="210" width="88" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="WITarget" value="Wage index target" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="226" y="210" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="hires" value="Hires" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="651" y="760" width="56" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="promo" value="Promotions" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="632" y="320" width="93" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="surplus" value="Staff surplus" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="622" y="430" width="115" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="B1" value="B&#10;B1" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="938" y="362" width="52" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="B13" value="B&#10;B13" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="843" y="362" width="52" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="B4" value="B&#10;B4" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="748" y="472" width="52" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="B5" value="B&#10;B5" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="178" y="692" width="52" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="P-R4" value="B&#10;P-R4" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="460" y="802" width="58" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="R5" value="?&#10;R5" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="558" y="307" width="52" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="U2" value="B&#10;U2" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="938" y="472" width="52" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="U3" value="?&#10;U3" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="273" y="307" width="52" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Panel 1. Labour market and hiring" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="346" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Box: a stock. Bold text: an auxiliary. Colour: its module.&#10;+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop acting in Base.&#10;Dashed circle: weak in Base, or acting only in the stress set&#10;  'Fast AI + OIT price shock'.&#10;Grey circle: dormant in Base and in the stress set.&#10;? in a circle: the loop's sign depends on which path dominates.&#10;Dashed arrow: an open chain (no loop closes it).&#10;Faded arrow: every loop on it is dormant in Base.&#10;Hexagon: a limit on the link beside it." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="894" width="420" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="? R5: balancing through hiring and unemployment, reinforcing only through the ageing chain (E10)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="490" y="894" width="637" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:2" value="? U3: reinforcing on paper, with a gain near zero: switching keeps each pool's headcount." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="490" y="924" width="586" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:3" value="R4 (skill erosion) is replaced by its phase 9 term P-R4 and not drawn (E3)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="490" y="954" width="497" height="26" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

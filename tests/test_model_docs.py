@@ -169,13 +169,23 @@ def test_no_catalogue_description_carries_a_line_reference() -> None:
     assert hits == DERIVED_PROTOTYPE_CITES
 
 
+def test_tables_are_baseline_data_and_not_levers(inv: M.Inventory) -> None:
+    """The 11 tables are set baseline data, not levers; the two that ``run()`` never reads say so (slice 10b)."""
+    tables = [it for it in inv.items if it.kind == "table"]
+    assert len(tables) == 11
+    assert {(it.classification, it.lever) for it in tables} == {("set (baseline data)", "no")}
+    rows = {(r["name"], r["kind"]): r for r in M.read_csv(ROOT / M.DATA / "model_docs.csv")}
+    for name in ("Mix0", "Src0"):
+        assert "not read by run()" in rows[(name, "table")]["notes"]
+
+
 # ---- the errata ---------------------------------------------------------------------------------------------------
 
 
 def test_errata_spec_lines_exist() -> None:
     text = (ROOT / "docs" / "spec-errata.md").read_text(encoding="utf-8")
     entries = re.findall(r"^### (E\d+):", text, flags=re.M)
-    assert sorted(entries, key=lambda e: int(e[1:])) == [f"E{i}" for i in range(1, 35)]
+    assert sorted(entries, key=lambda e: int(e[1:])) == [f"E{i}" for i in range(1, 36)]
     cites = SPEC_CITE.findall(text)
     assert len(cites) >= 33
     for path, a, b in cites:

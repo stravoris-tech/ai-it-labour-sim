@@ -53,6 +53,22 @@ C3, which merges recon 11 and recon 12b's spec notes.
   brake and a share-loss push, and reads neither margin nor viability, so vendors keep adopting under stress
   (`src/aisim/scalar/adoption.py:63`; `docs/model-changes-phase9.md:150`)
 
+### E35: B2, the T&M paradox, is reinforcing in the code
+
+- **Spec:** `reference/prototype/spec/00_model_spec.md:131`
+- **The spec says:** "Under T&M, AI adoption cuts billable hours and revenue → vendors slow adoption; fixed-price share removes the brake"
+- **What is wrong:** The spec labels B2 balancing, through revenue: adoption cuts T&M revenue and vendors slow
+  adoption. The code has no link from revenue to the brake; the brake reads the effort-billed share of the book. The
+  one closed loop through the brake is reinforcing: adoption raises productivity, signings shift from effort billing to
+  fixed price, the effort-billed share falls and the brake weakens, so adoption speeds up (recon 10b B1).
+- **What the model does instead:** The chain `A -> Pew -> EffE -> Pe -> VB.TypeShare -> VB.Sign -> NewV ->
+  VB.EffortShare -> brake -> AdoptE -> A` (signs + - - - + + + - + +: four negative links, an even number, so the
+  loop is reinforcing), with a second path through client distrust of effort billing (`Pe -> ClientP ->
+  VB.TypeShare`). The revenue path (`Pe -> VF.IdxVol -> VF.AvgIdx -> VF.Revenue`) stops at revenue
+  (`src/aisim/scalar/capability.py:79`; `src/aisim/scalar/work.py:64-65`; `src/aisim/scalar/finance.py:355`;
+  `src/aisim/scalar/finance.py:360`; `src/aisim/scalar/integrate.py:120`; `src/aisim/scalar/finance.py:368`;
+  `src/aisim/scalar/adoption.py:60`; `src/aisim/scalar/adoption.py:65`; `src/aisim/scalar/integrate.py:103`)
+
 ## Client demand and consumer AI
 
 ### E1: R2 is an open chain
@@ -370,7 +386,7 @@ C3, which merges recon 11 and recon 12b's spec notes.
 | Module | Entries |
 | --- | --- |
 | AI capability | 2 |
-| Delivery AI adoption | 2 |
+| Delivery AI adoption | 3 |
 | Client demand and consumer AI | 7 |
 | Work and productivity | 2 |
 | Workforce planning | 3 |
@@ -378,4 +394,4 @@ C3, which merges recon 11 and recon 12b's spec notes.
 | Sourcing choice | 5 |
 | Vendor finance and contracts | 6 |
 | Whole model | 3 |
-| Total | 34 |
+| Total | 35 |
