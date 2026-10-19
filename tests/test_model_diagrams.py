@@ -149,7 +149,7 @@ def test_every_closed_loop_has_a_cycle_in_its_links(src: D.Sources) -> None:
 def test_article_links_have_a_signed_path_with_their_sign(src: D.Sources) -> None:
     signs = D.link_signs(src)
     links = [r for r in src.articles if r["part"] == "link"]
-    assert len(links) == 44
+    assert len(links) == 46
     for r in links:
         nodes = {n["id"]: D.split_items(n["items"]) for n in src.articles if n["part"] == "node"}
         path, path_signs = r["path"].split(" > "), r["path_signs"].split()
@@ -157,6 +157,31 @@ def test_article_links_have_a_signed_path_with_their_sign(src: D.Sources) -> Non
         assert D.path_sign(signs, path, path_signs) == r["sign"], r["id"]
         shortest = D.shortest_signed_path(signs, nodes[r["source"]], nodes[r["target"]], r["sign"])
         assert shortest is not None and len(shortest[0]) == len(path), r["id"]
+
+
+def test_bundled_article_nodes_connect_inside(src: D.Sources) -> None:
+    """Where an article loop enters a node at one item and leaves from another, ``loops.csv`` joins them with a +
+    path (Addendum A part 6)."""
+    assert D.bundle_problems(src) == []
+
+
+def test_bundle_check_fails_on_a_planted_bundle(tmp_path: Path) -> None:
+    for folder, files in (
+        (D.DATA, ("model_docs.csv", "model_modules.csv", "model_articles.csv")),
+        (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv")),
+    ):
+        (tmp_path / folder).mkdir(parents=True, exist_ok=True)
+        for name in files:
+            shutil.copyfile(ROOT / folder / name, tmp_path / folder / name)
+    assert D.bundle_problems(D.read_sources(tmp_path)) == []
+    p = tmp_path / D.DATA / "model_articles.csv"
+    text = p.read_bytes().decode("utf-8")
+    old = "A5.graduates>A5.unemployment,,,A5.graduates,A5.unemployment,+,Grad > U,+,"
+    assert text.count(old) == 1
+    text = text.replace(old, "A5.graduates>A5.unemployment,,,A5.graduates,A5.unemployment,+,AC > U,+,")
+    p.write_bytes(text.replace("A5.graduates,Graduates,Grad,", "A5.graduates,Graduates,Grad;AC,").encode("utf-8"))
+    problems = D.bundle_problems(D.read_sources(tmp_path))
+    assert problems and all("A5.graduates entered at Grad, left from AC" in x for x in problems)
 
 
 def test_article_loops_close_with_their_polarity(src: D.Sources) -> None:

@@ -1,6 +1,6 @@
 <mxfile host="aisim" type="device">
   <diagram id="overview" name="overview">
-    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1003" pageHeight="763" math="0" shadow="0">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1098" pageHeight="763" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -163,8 +163,8 @@
         <mxCell id="legend" value="Each arrow: the links from one module's stocks, flows and auxiliaries&#10;to items of another; its label and width give their number.&#10;Dashed: a single link. Parameters count with the module that reads them." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="40" y="669" width="478" height="54" as="geometry" />
         </mxCell>
-        <mxCell id="caption:1" value="8 modules, 27 module pairs, 118 links (docs/model/edges.csv)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="548" y="669" width="408" height="26" as="geometry" />
+        <mxCell id="caption:1" value="8 modules, 27 module pairs, 118 links between modules (docs/model/edges.csv)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="548" y="669" width="510" height="26" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

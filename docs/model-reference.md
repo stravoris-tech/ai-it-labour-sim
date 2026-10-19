@@ -56,31 +56,31 @@ Five small diagrams for a reader outside the project. Every node stands for name
 
 ![A1. Why total IT jobs hold while their employer changes](model/diagrams/svg/article-a1.svg)
 
-_AI raises output per worker, so fewer staff are needed for the same work. At the same time GCCs win work from vendors and their scale advantage feeds itself, so total IT staff moves less than the split between employers._
+_AI raises output per worker, so fewer staff are needed for the same work. Work that moves to a GCC still needs people, so the GCC hires as the vendor shrinks. At the same time GCCs win work from vendors and their scale advantage feeds itself, so total IT staff moves less than the split between employers._
 
 #### A2. The GCC scale loop
 
 ![A2. The GCC scale loop](model/diagrams/svg/article-a2.svg)
 
-_Every GCC that opens makes the next one easier; the work it takes comes out of vendors' books, and GCC hiring from vendors raises their costs. The advantage is capped: the loop feeds back until about 2032, then sits at its cap, a fixed shift with no further gain._
+_The more IT work GCCs hold, the stronger their scale advantage, and the more clients choose them; the work they take comes out of vendors' books, and GCC hiring from vendors raises their costs. The advantage is capped: the loop feeds back until about 2032, then sits at its cap, a fixed shift with no further gain._
 
 #### A3. Vendor distress and client flight
 
 ![A3. Vendor distress and client flight](model/diagrams/svg/article-a3.svg)
 
-_A vendor whose margin falls well below normal loses clients and cuts staff; lost clients cut its revenue and margin further. Clients get used to the distress, so the flight fades._
+_A vendor whose margin falls well below normal loses clients and cuts staff; lost clients cut its revenue and margin further. Over time clients get used to the distress, so the flight fades. In the model this acts only in the stress set 'Fast AI + OIT price shock', for the Indian IT vendors, in 2029-2031._
 
 #### A4. The pricing ceiling under fast AI
 
 ![A4. The pricing ceiling under fast AI](model/diagrams/svg/article-a4.svg)
 
-_Clients expect AI gains to show up as lower prices; a ceiling on the AI discount and a floor at cost limit how far prices fall, and vendors that lose share adopt AI faster. Both limits bind only under fast AI._
+_Clients expect AI gains to show up as lower prices; a ceiling on the AI discount and a floor at cost limit how far prices fall, and vendors that lose share adopt AI faster. In the model both limits bind only in the Fast AI scenario and the stress set 'Fast AI + OIT price shock': the floor from 2028, the ceiling from 2031._
 
 #### A5. Discouraged entry
 
 ![A5. Discouraged entry](model/diagrams/svg/article-a5.svg)
 
-_High IT unemployment puts students off IT; fewer graduates arrive years later, unemployment falls and prospects improve. Two delays, perception and study, can make it overshoot._
+_High IT unemployment puts students off IT; fewer graduates arrive years later, unemployment falls and prospects improve. Two delays, perception and study, mean the correction arrives years late._
 
 ## Stocks
 
@@ -190,7 +190,7 @@ _High IT unemployment puts students off IT; fewer graduates arrive years later, 
 | `Src.VExp` | Vendor work expiry | The share of each sector's work held by each vendor whose contracts expire each year. | fraction per year | sector x vendor | sourcing | reviewed |
 | `AdoptE` | Adoption rate | The yearly increase in each employer's delivery AI adoption, a Bass diffusion rate scaled by the cost, brake and push effects; zero with AI off. | fraction per year | employer | adoption | reviewed |
 | `AttAdopt` | AI seat attach | The yearly rise in the share of seats with an AI add-on, by Bass diffusion; zero with AI off. | fraction per year |  | consumer | reviewed |
-| `cons.AdoptC` | Consumer AI adoption | The yearly rise in each sector's consumer AI adoption, by Bass diffusion slowed by regulatory drag and sped by cost and reinvested savings. | fraction per year | sector | consumer | reviewed |
+| `cons.AdoptC` | Consumer AI adoption rate | The yearly rise in each sector's consumer AI adoption, by Bass diffusion slowed by regulatory drag and sped by cost and reinvested savings. | fraction per year | sector | consumer | reviewed |
 | `cons.NewApps` | New applications | Applications each sector adds to its portfolio a year, cut as AI agents displace new apps. | applications per year | sector | consumer | reviewed |
 | `cons.Retire` | Application retirements | Applications each sector retires a year, sped up by AI exposure; applications, not people retiring. | applications per year | sector | consumer | reviewed |
 | `Demand` | IT work demand | New IT work arriving each year by sector and work type, flowing into the backlog; not the output `Demand`, which is total demand. | BFY per year | sector x worktype | consumer | reviewed |
@@ -705,19 +705,19 @@ Five causal-loop panels drawn from the loop inventory: `docs/model/loops.csv` (o
 
 ![Panel 1. Labour market and hiring](model/diagrams/svg/panel-labour.svg)
 
-_Loops: B1, B13, B4, B5, P-R4, R4, R5, U2, U3. ? R5: balancing through hiring and unemployment, reinforcing only through the ageing chain (E10). ? U3: reinforcing on paper, with a gain near zero: switching keeps each pool's headcount. R4 (skill erosion) is replaced by its phase 9 term P-R4 and not drawn (E3)._
+_Loops: B1, B13, B4, B5, P-R4, R4, R5, U2, U3. ? R5: balancing through hiring and unemployment, reinforcing only through the ageing chain (E10). ? U3: reinforcing on paper, with a gain near zero: switching keeps each pool's headcount. R4 (skill erosion) is replaced by its phase 9 term P-R4 and not drawn (E3). P-R4 is balancing as built: more seekers mean longer spells and faster exits from IT, so fewer seekers._
 
 ### Panel 2. Vendor distress
 
 ![Panel 2. Vendor distress](model/diagrams/svg/panel-distress.svg)
 
-_Loops: B6, P-C2, P-C4, P-C5, P-C6, P-R10, R6. P-C2 has two labels on one path: balancing through labour cost (B), reinforcing through capacity (R). P-C4: client flight reinforces (R); clients getting used to the distress fade it (B). C5 and C6 are rules, not loops: limit markers on the links they cap, binding only in the stress set. Vendor staff groups vacancies, onboarding and headcount, which panel 1 shows apart._
+_Loops: B6, P-C2, P-C4, P-C5, P-C6, P-R10, R6. P-C2 has two labels on one path: balancing through labour cost (B), reinforcing through capacity (R). P-C4: client flight reinforces (R); clients getting used to the distress fade it (B). C5 and C6 are rules, not loops (limit markers). They bind only in the Fast AI scenario and the stress set: C5 (price floor) from 2028, C6 (AI-discount ceiling) from 2031. Vendor staff groups vacancies, onboarding and headcount, which panel 1 shows apart._
 
 ### Panel 3. Pricing and contracts
 
 ![Panel 3. Pricing and contracts](model/diagrams/svg/panel-pricing.svg)
 
-_Loops: B12, B2, R8, U1, U4. ? U1: closes through productivity (work over effort), where two parallel paths have opposite signs. B2 (T&M paradox) is reinforcing in the code, against the spec's balancing (E35). C6 caps the AI discount clients expect (limit marker); it binds only in the stress set._
+_Loops: B12, B2, R8, U1, U4. ? U1: closes through productivity (work over effort), where two parallel paths have opposite signs. B2 (T&M paradox) is reinforcing in the code, against the spec's balancing (E35). C6 caps the AI discount clients expect (limit marker). It binds only in the Fast AI scenario and the stress set, from 2031._
 
 ### Panel 4. Sourcing and GCC growth
 

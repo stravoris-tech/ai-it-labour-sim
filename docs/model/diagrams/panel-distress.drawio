@@ -86,7 +86,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:VMarg&gt;C4Hab" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;opacity=45;textOpacity=60;" edge="1" parent="1" source="VMarg" target="C4Hab">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry x="0.5" y="0" relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:VMarg&gt;ClientFlight" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="VMarg" target="ClientFlight">
           <mxGeometry relative="1" as="geometry" />
@@ -238,11 +238,11 @@
         <mxCell id="caption:2" value="P-C4: client flight reinforces (R); clients getting used to the distress fade it (B)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="490" y="910" width="561" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="caption:3" value="C5 and C6 are rules, not loops: limit markers on the links they cap, binding only in the stress set." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="490" y="940" width="656" height="26" as="geometry" />
+        <mxCell id="caption:3" value="C5 and C6 are rules, not loops (limit markers). They bind only in the Fast AI scenario and the stress set:&#10;C5 (price floor) from 2028, C6 (AI-discount ceiling) from 2031." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="490" y="940" width="695" height="40" as="geometry" />
         </mxCell>
         <mxCell id="caption:4" value="Vendor staff groups vacancies, onboarding and headcount, which panel 1 shows apart." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="490" y="970" width="548" height="26" as="geometry" />
+          <mxGeometry x="490" y="984" width="548" height="26" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

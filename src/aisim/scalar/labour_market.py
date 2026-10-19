@@ -108,7 +108,7 @@ def unemployment(pr: Mapping[str, float], st: State) -> Unemployment:
 
     - ``UnempRate[r]`` is recovering plus seeking people over the labour force of the pool.
     - ``LeaveEffect`` scales leaving the field with worker-perceived unemployment over its normal rate, within
-      0.5-3. Longer unemployment drives exits: loop R4 (skill erosion), as far as the code models it.
+      0.5-3. Longer unemployment drives exits; loop R4 (skill erosion) is replaced by its phase 9 term P-R4 (E3).
     - ``EnrolEffect`` cuts enrolment as student-perceived unemployment rises above normal, within 0.4-1.3: loop B5
       (discouraged entry), closed through ``Enrol`` in S8f.
     """

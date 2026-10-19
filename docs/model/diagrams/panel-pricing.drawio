@@ -184,8 +184,8 @@
         <mxCell id="caption:2" value="B2 (T&amp;M paradox) is reinforcing in the code, against the spec's balancing (E35)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="490" y="819" width="529" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="caption:3" value="C6 caps the AI discount clients expect (limit marker); it binds only in the stress set." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="490" y="849" width="574" height="26" as="geometry" />
+        <mxCell id="caption:3" value="C6 caps the AI discount clients expect (limit marker).&#10;It binds only in the Fast AI scenario and the stress set, from 2031." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="490" y="849" width="452" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

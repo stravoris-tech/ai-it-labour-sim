@@ -273,6 +273,9 @@
         <mxCell id="caption:3" value="R4 (skill erosion) is replaced by its phase 9 term P-R4 and not drawn (E3)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="490" y="954" width="497" height="26" as="geometry" />
         </mxCell>
+        <mxCell id="caption:4" value="P-R4 is balancing as built: more seekers mean longer spells and faster exits from IT, so fewer seekers." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="490" y="984" width="676" height="26" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>

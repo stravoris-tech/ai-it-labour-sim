@@ -3,9 +3,10 @@
 Every view is generated from the curated metadata (``src/aisim/data/model_docs.csv``, ``model_modules.csv`` and
 ``model_articles.csv``), the dependency edges (``docs/model/edges.csv``) and the loop inventory
 (``docs/model/loops.csv``, ``docs/model/loop_summary.csv``), with its positions from a geometry sidecar
-(``docs/model/diagrams/<view>.geometry.json``: cell id to ``[x, y, w, h]``, sorted keys). The ``.drawio`` file is a
-pure function of these, so regeneration is byte-identical. draw.io desktop is needed only to export SVG and PNG,
-locally; CI checks the exports against ``docs/model/diagrams/MANIFEST.json``.
+(``docs/model/diagrams/<view>.geometry.json``: cell id to ``[x, y, w, h]``, sorted keys; a link whose sign label is
+moved has ``e:<source>><target>`` to ``[position along the link from -1 to 1, offset in px, 0, 0]``). The ``.drawio``
+file is a pure function of these, so regeneration is byte-identical. draw.io desktop is needed only to export SVG and
+PNG, locally; CI checks the exports against ``docs/model/diagrams/MANIFEST.json``.
 
 - ``--write`` writes every ``.drawio``. It reports sidecar ids that no view uses (orphans) and cells with no position,
   which it places in a free column right of the drawn cells (not saved).
@@ -90,6 +91,7 @@ PANELS: Final = (
             "? R5: balancing through hiring and unemployment, reinforcing only through the ageing chain (E10).",
             "? U3: reinforcing on paper, with a gain near zero: switching keeps each pool's headcount.",
             "R4 (skill erosion) is replaced by its phase 9 term P-R4 and not drawn (E3).",
+            "P-R4 is balancing as built: more seekers mean longer spells and faster exits from IT, so fewer seekers.",
         ),
     ),
     PanelSpec(
@@ -100,7 +102,8 @@ PANELS: Final = (
         (
             "P-C2 has two labels on one path: balancing through labour cost (B), reinforcing through capacity (R).",
             "P-C4: client flight reinforces (R); clients getting used to the distress fade it (B).",
-            "C5 and C6 are rules, not loops: limit markers on the links they cap, binding only in the stress set.",
+            "C5 and C6 are rules, not loops (limit markers). They bind only in the Fast AI scenario and the stress set:"
+            "\nC5 (price floor) from 2028, C6 (AI-discount ceiling) from 2031.",
             STAFF_NOTE,
         ),
     ),
@@ -112,7 +115,8 @@ PANELS: Final = (
         (
             "? U1: closes through productivity (work over effort), where two parallel paths have opposite signs.",
             "B2 (T&M paradox) is reinforcing in the code, against the spec's balancing (E35).",
-            "C6 caps the AI discount clients expect (limit marker); it binds only in the stress set.",
+            "C6 caps the AI discount clients expect (limit marker)."
+            "\nIt binds only in the Fast AI scenario and the stress set, from 2031.",
         ),
     ),
     PanelSpec(
@@ -209,9 +213,6 @@ ROLE_LABELS: Final[Mapping[str, str]] = {
     "ShareL@junior": "Junior share of staff",
     "UnitIn@onshore": "Onshore unit work share",
 }
-LABEL_OVERRIDES: Final[Mapping[str, str]] = {"cons.AdoptC": "Consumer AI adoption rate"}
-"""Diagram labels for items whose model_docs.csv label repeats another item's on the same panel (the stock ``AC`` and
-its inflow share "Consumer AI adoption")."""
 STAFF: Final = ("V", "O", "H", "hires", "fl.onboard")
 """The vendor staff group of panels 2 and 3: the three hiring stocks and the flows between them."""
 STAFF_ID: Final = "staff@vendor"
@@ -427,7 +428,10 @@ def overview(src: Sources) -> View:
         "Dashed: a single link. Parameters count with the module that reads them.",
     )
     pairs = module_pairs(src)
-    captions = (f"{len(mods)} modules, {len(pairs)} module pairs, {sum(pairs.values())} links (docs/model/edges.csv).",)
+    captions = (
+        f"{len(mods)} modules, {len(pairs)} module pairs, {sum(pairs.values())} links between modules "
+        "(docs/model/edges.csv).",
+    )
     return View(
         "overview", "overview", (*cells, *chrome("Overview: the model's eight modules", legend, captions)), tuple(links)
     )
@@ -545,7 +549,7 @@ def panel(src: Sources, view: str) -> View:
             row, label, items = item_row(src, "H"), STAFF_LABEL, STAFF
         else:
             row = item_row(src, item)
-            label, items = ROLE_LABELS.get(n, LABEL_OVERRIDES.get(n, row["label"])), (item,)
+            label, items = ROLE_LABELS.get(n, row["label"]), (item,)
         colour = next(m["colour"] for m in src.modules if m["module"] == row["module"])
         kind = "stock" if n == STAFF_ID else src.kinds.get(item, row["kind"])
         cells.append(Cell(n, wrap(label), node_style(kind, colour), "node", items))
@@ -722,6 +726,26 @@ def path_sign(signs: Mapping[tuple[str, str], set[str]], path: Sequence[str], pa
     return "+" if neg % 2 == 0 else "-"
 
 
+def bundle_problems(src: Sources) -> list[str]:
+    """Article nodes that bundle items and that a loop enters at item X and leaves from item Y: the loop closes in the
+    code only if ``loops.csv`` has a path X to Y with sign +, no longer than any path with sign - (Addendum A)."""
+    signs = link_signs(src)
+    paths = {(r["source"], r["target"]): r["path"].split(" > ") for r in src.articles if r["part"] == "link"}
+    out = []
+    for r in (x for x in src.articles if x["part"] == "loop"):
+        cyc = r["path"].split(" > ")[:-1]
+        for i, b in enumerate(cyc):
+            a, c = cyc[i - 1], cyc[(i + 1) % len(cyc)]
+            x, y = paths[(a, b)][-1], paths[(b, c)][0]
+            if x == y:
+                continue
+            plus = shortest_signed_path(signs, [x], [y], "+")
+            minus = shortest_signed_path(signs, [x], [y], "-")
+            if plus is None or (minus is not None and len(minus[0]) < len(plus[0])):
+                out.append(f"{r['id']}: {b} entered at {x}, left from {y}: no + path at least as short as any - path")
+    return out
+
+
 # ---- geometry -------------------------------------------------------------------------------------------------------
 
 
@@ -778,8 +802,13 @@ def unplaced(view: View, geom: Mapping[str, Sequence[float]]) -> list[str]:
     return [c.id for c in view.cells if c.id not in geom]
 
 
+def edge_id(lk: Link) -> str:
+    return f"e:{lk.source}>{lk.target}"
+
+
 def orphans(view: View, geom: Mapping[str, Sequence[float]]) -> list[str]:
-    ids = {c.id for c in view.cells}
+    """Sidecar ids that are neither a cell nor a link of the view (a link's entry places its sign label)."""
+    ids = {c.id for c in view.cells} | {edge_id(lk) for lk in view.links}
     return sorted(k for k in geom if k not in ids)
 
 
@@ -805,7 +834,8 @@ def place_free(view: View, geom: Geometry, ids: Sequence[str]) -> Geometry:
 
 def view_geometry(root: Path, view: View) -> Geometry:
     """The sidecar's positions for the view's cells, with any unplaced cell in the free column."""
-    geom = {k: v for k, v in read_sidecar(root, view.name).items() if k in {c.id for c in view.cells}}
+    ids = {c.id for c in view.cells} | {edge_id(lk) for lk in view.links}
+    geom = {k: v for k, v in read_sidecar(root, view.name).items() if k in ids}
     return place_free(view, geom, unplaced(view, geom))
 
 
@@ -991,7 +1021,9 @@ def render(view: View, geom: Mapping[str, Sequence[float]]) -> bytes:
                 "target": lk.target,
             },
         )
-        g = ET.SubElement(c, "mxGeometry", {"relative": "1", "as": "geometry"})
+        label_at = geom.get(edge_id(lk))
+        attrs = {"x": _num(label_at[0]), "y": _num(label_at[1])} if label_at else {}
+        g = ET.SubElement(c, "mxGeometry", {**attrs, "relative": "1", "as": "geometry"})
         if (lk.target, lk.source) in pairs:
             arr = ET.SubElement(g, "Array", {"as": "points"})
             px, py = _offset(geom, lk.source, lk.target)

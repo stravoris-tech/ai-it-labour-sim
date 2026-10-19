@@ -1102,7 +1102,7 @@ def diagram_sections(root: Path = ROOT) -> tuple[list[str], list[str]]:
     ]
     for view, spec in DG.PANEL_VIEWS.items():
         ids = sorted(k for k, r in src.summary.items() if r["panel"] == spec.key)
-        caption = f"Loops: {', '.join(ids)}. " + " ".join(spec.captions)
+        caption = f"Loops: {', '.join(ids)}. " + " ".join(c.replace("\n", " ") for c in spec.captions)
         loops += [f"### {spec.title}", "", *_figure(view, spec.title, caption)]
     rows = []
     for lid, r in src.summary.items():
