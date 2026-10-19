@@ -68,7 +68,7 @@ _The more IT work GCCs hold, the stronger their scale advantage, and the more cl
 
 ![A3. Vendor distress and client flight](model/diagrams/svg/article-a3.svg)
 
-_A vendor whose margin falls well below normal loses clients and cuts staff; lost clients cut its revenue and margin further. Over time clients get used to the distress, so the flight fades. In the model this acts only in the stress set 'Fast AI + OIT price shock', for the Indian IT vendors, in 2029-2031._
+_A vendor whose margin falls well below normal loses clients and cuts staff; lost clients cut its revenue and margin further. Over time clients get used to the distress, so the flight fades. In the model it acts in five scenarios, never in Base: for the Indian IT vendors in the stress set 'Fast AI + OIT price shock' (2029-2031), Compute shock (2028 and 2034), and Visa relaxation, Jevons rebound and Demand boom (2036); and for the global SIs in Compute shock (2034)._
 
 #### A4. The pricing ceiling under fast AI
 

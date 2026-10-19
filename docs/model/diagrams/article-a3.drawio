@@ -1,6 +1,6 @@
 <mxfile host="aisim" type="device">
   <diagram id="article-a3" name="article-a3">
-    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1079" pageHeight="724" math="0" shadow="0">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1092" pageHeight="752" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -79,8 +79,8 @@
         <mxCell id="legend" value="+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop.&#10;Box: a stock (it accumulates). Bold text: everything else.&#10;Hexagon: a limit on the link beside it." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="40" y="617" width="389" height="67" as="geometry" />
         </mxCell>
-        <mxCell id="caption:1" value="A vendor whose margin falls well below normal loses clients and cuts staff; lost clients&#10;cut its revenue and margin further. Over time clients get used to the distress, so the&#10;flight fades. In the model this acts only in the stress set 'Fast AI + OIT price shock',&#10;for the Indian IT vendors, in 2029-2031." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="459" y="617" width="580" height="67" as="geometry" />
+        <mxCell id="caption:1" value="A vendor whose margin falls well below normal loses clients and cuts staff; lost clients&#10;cut its revenue and margin further. Over time clients get used to the distress, so the&#10;flight fades. In the model it acts in five scenarios, never in Base: for the Indian IT&#10;vendors in the stress set 'Fast AI + OIT price shock' (2029-2031), Compute shock (2028 and&#10;2034), and Visa relaxation, Jevons rebound and Demand boom (2036); and for the global SIs&#10;in Compute shock (2034)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="459" y="617" width="593" height="95" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

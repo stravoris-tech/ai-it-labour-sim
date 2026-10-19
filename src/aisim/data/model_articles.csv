@@ -47,7 +47,7 @@ A2,loop,A2.loop_gcc,GCC scale (capped),R7,,,R,A2.gcc_share > A2.gcc_scale > A2.c
 A2,loop,A2.loop_squeeze,Vendor squeeze,R6,,,R,A2.viability > A2.choosing > A2.gcc_share > A2.gcc_scale > A2.vendor_share > A2.revenue > A2.margin > A2.viability,,,reviewed
 A2,loop,A2.loop_hire,GCCs hire from vendors,R10,,,R,A2.viability > A2.choosing > A2.gcc_share > A2.leaving > A2.costs > A2.margin > A2.viability,,,reviewed
 A2,limit,A2.limit_cap,limit: the advantage is capped,R7Lcap,A2.gcc_share,A2.gcc_scale,,,,,reviewed
-A3,story,A3,Vendor distress and client flight,,,,,,,"A vendor whose margin falls well below normal loses clients and cuts staff; lost clients cut its revenue and margin further. Over time clients get used to the distress, so the flight fades. In the model this acts only in the stress set 'Fast AI + OIT price shock', for the Indian IT vendors, in 2029-2031.",reviewed
+A3,story,A3,Vendor distress and client flight,,,,,,,"A vendor whose margin falls well below normal loses clients and cuts staff; lost clients cut its revenue and margin further. Over time clients get used to the distress, so the flight fades. In the model it acts in five scenarios, never in Base: for the Indian IT vendors in the stress set 'Fast AI + OIT price shock' (2029-2031), Compute shock (2028 and 2034), and Visa relaxation, Jevons rebound and Demand boom (2036); and for the global SIs in Compute shock (2034).",reviewed
 A3,node,A3.margin,Vendor margin,VB.Margin,,,,,,,reviewed
 A3,node,A3.distress,Margin signal,VMarg,,,,,,,reviewed
 A3,node,A3.flight,Client flight,ClientFlight,,,,,,,reviewed
