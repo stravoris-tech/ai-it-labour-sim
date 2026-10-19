@@ -168,12 +168,13 @@ REFERENCE_STOCKS: Final = ("WS0", "Attr0", "Dur0")
 
 UNIT_ALLOWLIST: Final[frozenset[tuple[str, str]]] = frozenset(
     {
-        # pending operator review: signings (book volume per year) enter the duration-weighted coflow NewD (book
-        # volume-years) times the new-contract duration Dnew (years), integrate.py's NewD update
+        # confirmed by operator, Addendum A: signings (book volume per year) enter the duration-weighted coflow NewD
+        # (book volume-years) times the new-contract duration Dnew (years), integrate.py's NewD update
         ("NewD", "VB.Sign"),
     }
 )
-"""(stock, flow) pairs whose flow is not in the stock's units per year, each settled by its sources."""
+"""(stock, flow) pairs whose flow is not in the stock's units per year, each settled by its sources and confirmed
+by the operator."""
 
 LOOP_TERMS: Final[Mapping[str, str]] = {
     "R7": "sourcing",
@@ -772,9 +773,12 @@ UNIT_VOCABULARY: Final = (
 )
 """The controlled unit vocabulary (decision 3)."""
 UNIT_ADDITIONS: Final = ("applications", "seats", "book volume-years")
-"""Terms added where no vocabulary term fits (slice 10a): counts of applications and of software seats (06a:60-61)."""
+"""Terms added where no vocabulary term fits (slice 10a; confirmed by the operator, Addendum A): counts of
+applications and of software seats (06a:60-61), and book volume-years, the duration-weighted contract book ``NewD``
+(05:59)."""
 UNIT_DENOMINATORS: Final = ("year", "person", "model-unit person", "application", "seat", "margin point")
-"""Singular forms allowed after " per " (``USD per seat per year``)."""
+"""Forms allowed after " per ": singulars (``USD per seat per year``), and margin point, a percentage point of
+margin below the R6 threshold (``R6e``; confirmed by the operator, Addendum A)."""
 STATUSES: Final = ("drafted", "reviewed")
 
 
