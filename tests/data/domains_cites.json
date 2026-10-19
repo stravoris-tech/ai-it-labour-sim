@@ -3304,13 +3304,13 @@
  },
  "GCCMomentum": {
   "evidence": {
-   "src/aisim/scalar/engine.py:139": [
-    "p = p.with_overrides(**overrides)"
+   "src/aisim/scalar/engine.py:147": [
+    "tilt_sourcing_perception(st, pr[\"GCCMomentum\"])"
    ]
   },
   "notes": {
-   "engine.py:139": [
-    "p = p.with_overrides(**overrides)"
+   "engine.py:147": [
+    "tilt_sourcing_perception(st, pr[\"GCCMomentum\"])"
    ]
   }
  },
@@ -4664,11 +4664,11 @@
    "src/aisim/scalar/consumer.py:210": [
     "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
    ],
-   "src/aisim/scalar/engine.py:262": [
-    "adoption=ado,"
+   "src/aisim/scalar/engine.py:270": [
+    "rows.append(record(st, s, tb[\"SectorShare\"]))"
    ],
-   "src/aisim/scalar/record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "src/aisim/scalar/record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ],
    "src/aisim/scalar/work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
@@ -4681,8 +4681,8 @@
    "work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
    ],
-   "record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ]
   }
  },
@@ -4694,11 +4694,11 @@
    "src/aisim/scalar/consumer.py:210": [
     "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
    ],
-   "src/aisim/scalar/engine.py:262": [
-    "adoption=ado,"
+   "src/aisim/scalar/engine.py:270": [
+    "rows.append(record(st, s, tb[\"SectorShare\"]))"
    ],
-   "src/aisim/scalar/record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "src/aisim/scalar/record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ],
    "src/aisim/scalar/work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
@@ -4711,8 +4711,8 @@
    "work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
    ],
-   "record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ]
   }
  },
@@ -4724,11 +4724,11 @@
    "src/aisim/scalar/consumer.py:210": [
     "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
    ],
-   "src/aisim/scalar/engine.py:262": [
-    "adoption=ado,"
+   "src/aisim/scalar/engine.py:270": [
+    "rows.append(record(st, s, tb[\"SectorShare\"]))"
    ],
-   "src/aisim/scalar/record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "src/aisim/scalar/record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ],
    "src/aisim/scalar/work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
@@ -4741,8 +4741,8 @@
    "work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
    ],
-   "record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ]
   }
  },
@@ -4754,11 +4754,11 @@
    "src/aisim/scalar/consumer.py:210": [
     "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
    ],
-   "src/aisim/scalar/engine.py:262": [
-    "adoption=ado,"
+   "src/aisim/scalar/engine.py:270": [
+    "rows.append(record(st, s, tb[\"SectorShare\"]))"
    ],
-   "src/aisim/scalar/record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "src/aisim/scalar/record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ],
    "src/aisim/scalar/work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
@@ -4771,8 +4771,8 @@
    "work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
    ],
-   "record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ]
   }
  },
@@ -4784,11 +4784,11 @@
    "src/aisim/scalar/consumer.py:210": [
     "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
    ],
-   "src/aisim/scalar/engine.py:262": [
-    "adoption=ado,"
+   "src/aisim/scalar/engine.py:270": [
+    "rows.append(record(st, s, tb[\"SectorShare\"]))"
    ],
-   "src/aisim/scalar/record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "src/aisim/scalar/record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ],
    "src/aisim/scalar/work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
@@ -4801,8 +4801,8 @@
    "work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
    ],
-   "record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ]
   }
  },
@@ -4814,11 +4814,11 @@
    "src/aisim/scalar/consumer.py:210": [
     "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
    ],
-   "src/aisim/scalar/engine.py:262": [
-    "adoption=ado,"
+   "src/aisim/scalar/engine.py:270": [
+    "rows.append(record(st, s, tb[\"SectorShare\"]))"
    ],
-   "src/aisim/scalar/record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "src/aisim/scalar/record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ],
    "src/aisim/scalar/work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
@@ -4831,8 +4831,8 @@
    "work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
    ],
-   "record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ]
   }
  },
@@ -4844,11 +4844,11 @@
    "src/aisim/scalar/consumer.py:210": [
     "base = pr[\"BaseDemand\"] * G * SectorShare[x] * (1 + (pr[\"DemandStep\"] if y >= pr[\"StepYear\"] else 0))"
    ],
-   "src/aisim/scalar/engine.py:262": [
-    "adoption=ado,"
+   "src/aisim/scalar/engine.py:270": [
+    "rows.append(record(st, s, tb[\"SectorShare\"]))"
    ],
-   "src/aisim/scalar/record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "src/aisim/scalar/record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ],
    "src/aisim/scalar/work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
@@ -4861,8 +4861,8 @@
    "work.py:86": [
     "CS = {x: (CompS[x] / Completion if Completion > 0 else tb[\"SectorShare\"][x]) for x in SECTORS}"
    ],
-   "record.py:69": [
-    "\"year\": round(s.y, 4),"
+   "record.py:85": [
+    "\"AC_mean\": sum(st[\"AC\"][x] * SectorShare[x] for x in SECTORS),"
    ]
   }
  },

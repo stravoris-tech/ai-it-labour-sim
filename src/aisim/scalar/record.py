@@ -11,18 +11,18 @@ and employer; ``Unemp_``, ``HeadLoc_`` and ``TTF_`` by region; and the four ``Q1
 kept apart from the rows so that the rows stay the prototype's. Each is a value read from the state or an intermediate,
 never a new calculation:
 
-- ``Book_{v}_{k}``: the contract book by vendor and type, ``Leg + NewV`` (finance.py:180-181, the numerator of
+- ``Book_{v}_{k}``: the contract book by vendor and type, ``Leg + NewV`` (S10 ``contracts``, the numerator of
   ``Mix_``). Spec 00:89 names these stocks contract value in USD; the calibrated state normalises each vendor's 2024
   book to 1, so the unit is book volume (vendor 2024 book = 1), not USD.
-- ``SignVol_{v}_{k}``: new signings by vendor and type, S11b ``Sign[k]`` (finance.py:293), book volume per year.
-- ``Dnew_{v}_{k}``: the new-contract duration by vendor and type, S10 ``Dnew[k]`` (finance.py:183-186), years.
-- ``PNew_{v}_{k}``: the new-signing price by vendor and type, S10 ``PNew[k]`` (finance.py:225-228), price per unit
+- ``SignVol_{v}_{k}``: new signings by vendor and type, S11b ``Sign[k]`` (``vendor_books``), book volume per year.
+- ``Dnew_{v}_{k}``: the new-contract duration by vendor and type, S10 ``Dnew[k]`` (``contracts``), years.
+- ``PNew_{v}_{k}``: the new-signing price by vendor and type, S10 ``PNew[k]`` (``contracts``), price per unit
   of book volume (2024 = 1).
 - ``LeftField_{r}``: people who left the IT field, by region (state ``LeftField``), model-unit persons.
 - ``SeatSpend_{x}``, ``CreditSpend_{x}``, ``CloudSpend_{x}``: the seat, credit and cloud parts of consumer spend by
-  sector, S13c (consumer.py:172, 182, 183), USD per year.
+  sector, S13c ``consumer``, USD per year.
 - ``WI_{u}``: the wage index by unit (state ``WI``), 2024 = 1.
-- ``CapE_{e}``: delivery capacity by employer, S3 ``CapE`` (work.py:70), BFY per year.
+- ``CapE_{e}``: delivery capacity by employer, S3 ``CapE`` (``work``), BFY per year.
 - The loop outputs of slice 12 (``aisim.scalar.loops``), recorded for every model:
   - ``Vrel_{v}``: relative viability on the 0.75-year margin signal, S13b ``Vrel`` (``VMarg / NormalMargin``),
     ratio (1 at 2024).
