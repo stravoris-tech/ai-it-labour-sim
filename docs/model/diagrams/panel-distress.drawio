@@ -1,6 +1,6 @@
 <mxfile host="aisim" type="device">
   <diagram id="panel-distress" name="panel-distress">
-    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1369" pageHeight="1070" math="0" shadow="0">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1369" pageHeight="1050" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -200,10 +200,10 @@
           <mxGeometry x="62" y="202" width="102" height="27" as="geometry" />
         </mxCell>
         <mxCell id="limit:AIDiscCeil" value="limit: AI-discount&#10;ceiling (C6)" style="html=0;fontFamily=Helvetica;fontSize=12;shape=hexagon;perimeter=hexagonPerimeter2;size=0.12;fillColor=#FFFFFF;strokeColor=#333333;fontSize=11;fontStyle=2;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="986" y="800" width="153" height="40" as="geometry" />
+          <mxGeometry x="1138" y="787" width="153" height="40" as="geometry" />
         </mxCell>
         <mxCell id="limit:PriceFloor" value="limit: price floor&#10;(C5)" style="html=0;fontFamily=Helvetica;fontSize=12;shape=hexagon;perimeter=hexagonPerimeter2;size=0.12;fillColor=#FFFFFF;strokeColor=#333333;fontSize=11;fontStyle=2;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="892" y="470" width="153" height="40" as="geometry" />
+          <mxGeometry x="908" y="572" width="153" height="40" as="geometry" />
         </mxCell>
         <mxCell id="B6" value="B&#10;B6" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;dashed=1;" vertex="1" parent="1">
           <mxGeometry x="277" y="464" width="52" height="52" as="geometry" />
@@ -229,20 +229,20 @@
         <mxCell id="title" value="Panel 2. Vendor distress" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="40" y="30" width="257" height="32" as="geometry" />
         </mxCell>
-        <mxCell id="legend" value="Box: a stock. Bold text: an auxiliary. Colour: its module.&#10;+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop acting in Base.&#10;Dashed circle: weak in Base, or acting only in the stress set&#10;  'Fast AI + OIT price shock'.&#10;Grey circle: dormant in Base and in the stress set.&#10;? in a circle: the loop's sign depends on which path dominates.&#10;Dashed arrow: an open chain (no loop closes it).&#10;Faded arrow: every loop on it is dormant in Base.&#10;Hexagon: a limit on the link beside it." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="40" y="880" width="420" height="150" as="geometry" />
+        <mxCell id="legend" value="Box: a stock. Bold text: an auxiliary. Colour: its module.&#10;+ or - on an arrow: the link's polarity.&#10;Dashed circle: weak in Base, or acting only in the stress set&#10;  'Fast AI + OIT price shock'.&#10;Faded arrow: every loop on it is dormant in Base.&#10;Hexagon: a limit on the link beside it." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="880" width="408" height="95" as="geometry" />
         </mxCell>
         <mxCell id="caption:1" value="P-C2 has two labels on one path: balancing through labour cost (B), reinforcing through capacity (R)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="490" y="880" width="663" height="26" as="geometry" />
+          <mxGeometry x="478" y="880" width="663" height="26" as="geometry" />
         </mxCell>
         <mxCell id="caption:2" value="P-C4: client flight reinforces (R); clients getting used to the distress fade it (B)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="490" y="910" width="561" height="26" as="geometry" />
+          <mxGeometry x="478" y="910" width="561" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="caption:3" value="C5 and C6 are rules, not loops (limit markers). They bind only in the Fast AI scenario and the stress set:&#10;C5 (price floor) from 2028, C6 (AI-discount ceiling) from 2031." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="490" y="940" width="695" height="40" as="geometry" />
+        <mxCell id="caption:3" value="C5 and C6 are rules, not loops (limit markers). They bind only in the Fast AI scenario and the stress set:&#10;C5 (price floor) from 2028, C6 (AI-discount ceiling) from mid-2030." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="478" y="940" width="695" height="40" as="geometry" />
         </mxCell>
         <mxCell id="caption:4" value="Vendor staff groups vacancies, onboarding and headcount, which panel 1 shows apart." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="490" y="984" width="548" height="26" as="geometry" />
+          <mxGeometry x="478" y="984" width="548" height="26" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

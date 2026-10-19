@@ -81,8 +81,8 @@
         <mxCell id="title" value="A1. Why total IT jobs hold while their employer changes" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="40" y="30" width="564" height="32" as="geometry" />
         </mxCell>
-        <mxCell id="legend" value="+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop.&#10;Box: a stock (it accumulates). Bold text: everything else.&#10;Hexagon: a limit on the link beside it." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="40" y="466" width="389" height="67" as="geometry" />
+        <mxCell id="legend" value="+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop.&#10;Box: a stock (it accumulates). Bold text: everything else." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="466" width="389" height="54" as="geometry" />
         </mxCell>
         <mxCell id="caption:1" value="AI raises output per worker, so fewer staff are needed for the same work. Work that moves&#10;to a GCC still needs people, so the GCC hires as the vendor shrinks. At the same time GCCs&#10;win work from vendors and their scale advantage feeds itself, so total IT staff moves less&#10;than the split between employers." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="459" y="466" width="593" height="67" as="geometry" />

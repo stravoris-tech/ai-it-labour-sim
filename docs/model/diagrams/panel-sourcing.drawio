@@ -1,6 +1,6 @@
 <mxfile host="aisim" type="device">
   <diagram id="panel-sourcing" name="panel-sourcing">
-    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1357" pageHeight="1016" math="0" shadow="0">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1357" pageHeight="988" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -172,17 +172,17 @@
         <mxCell id="title" value="Panel 4. Sourcing and GCC growth" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="40" y="30" width="336" height="32" as="geometry" />
         </mxCell>
-        <mxCell id="legend" value="Box: a stock. Bold text: an auxiliary. Colour: its module.&#10;+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop acting in Base.&#10;Dashed circle: weak in Base, or acting only in the stress set&#10;  'Fast AI + OIT price shock'.&#10;Grey circle: dormant in Base and in the stress set.&#10;? in a circle: the loop's sign depends on which path dominates.&#10;Dashed arrow: an open chain (no loop closes it).&#10;Faded arrow: every loop on it is dormant in Base.&#10;Hexagon: a limit on the link beside it." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="40" y="826" width="420" height="150" as="geometry" />
+        <mxCell id="legend" value="Box: a stock. Bold text: an auxiliary. Colour: its module.&#10;+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop acting in Base.&#10;Dashed circle: weak in Base, or acting only in the stress set&#10;  'Fast AI + OIT price shock'.&#10;Dashed arrow: an open chain (no loop closes it).&#10;Faded arrow: every loop on it is dormant in Base.&#10;Hexagon: a limit on the link beside it." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="826" width="408" height="122" as="geometry" />
         </mxCell>
         <mxCell id="caption:1" value="R7 feeds back until about 2032, then sits at its cap: a fixed shift with no further gain." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="490" y="826" width="586" height="26" as="geometry" />
+          <mxGeometry x="478" y="826" width="586" height="26" as="geometry" />
         </mxCell>
         <mxCell id="caption:2" value="R10 closes only through R6's margin terms (E17)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="490" y="856" width="325" height="26" as="geometry" />
+          <mxGeometry x="478" y="856" width="325" height="26" as="geometry" />
         </mxCell>
         <mxCell id="caption:3" value="B8 (political pressure) is replaced by the visa scenario input and not drawn (E7)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="490" y="886" width="542" height="26" as="geometry" />
+          <mxGeometry x="478" y="886" width="542" height="26" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

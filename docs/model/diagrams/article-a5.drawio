@@ -1,6 +1,6 @@
 <mxfile host="aisim" type="device">
   <diagram id="article-a5" name="article-a5">
-    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1053" pageHeight="573" math="0" shadow="0">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1053" pageHeight="560" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -40,8 +40,8 @@
         <mxCell id="title" value="A5. Discouraged entry" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="40" y="30" width="227" height="32" as="geometry" />
         </mxCell>
-        <mxCell id="legend" value="+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop.&#10;Box: a stock (it accumulates). Bold text: everything else.&#10;Hexagon: a limit on the link beside it." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="40" y="466" width="389" height="67" as="geometry" />
+        <mxCell id="legend" value="+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop.&#10;Box: a stock (it accumulates). Bold text: everything else." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="466" width="389" height="54" as="geometry" />
         </mxCell>
         <mxCell id="caption:1" value="High IT unemployment puts students off IT; fewer graduates arrive years later,&#10;unemployment falls and prospects improve. Two delays, perception and study, mean the&#10;correction arrives years late." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="459" y="466" width="554" height="54" as="geometry" />

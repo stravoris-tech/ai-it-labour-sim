@@ -252,3 +252,28 @@ def test_overlap_check_detects_a_planted_overlap(views: dict[str, D.View]) -> No
     a, b = sorted(c.id for c in v.cells if c.kind == "node")[:2]
     geom[b] = [geom[a][0] + 5, geom[a][1] + 5, *geom[b][2:]]
     assert (a, b) in D.overlaps(v, geom) or (b, a) in D.overlaps(v, geom)
+
+
+def test_no_two_sign_labels_coincide(views: dict[str, D.View]) -> None:
+    """No two links' sign labels sit within 6 px of each other, with the sidecar's label offsets (Addendum C)."""
+    for name, v in views.items():
+        assert D.sign_label_clashes(v, D.read_sidecar(ROOT, name)) == [], name
+
+
+def test_sign_label_check_fails_on_planted_coincident_labels(tmp_path: Path) -> None:
+    for folder, files in (
+        (D.DATA, ("model_docs.csv", "model_modules.csv", "model_articles.csv")),
+        (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv")),
+    ):
+        (tmp_path / folder).mkdir(parents=True, exist_ok=True)
+        for name in files:
+            shutil.copyfile(ROOT / folder / name, tmp_path / folder / name)
+    shutil.copytree(ROOT / D.DIAGRAMS, tmp_path / D.DIAGRAMS)
+    v = D.build_views(tmp_path)["article-a5"]
+    assert D.sign_label_clashes(v, D.read_sidecar(tmp_path, "article-a5")) == []
+    geom = D.read_sidecar(tmp_path, "article-a5")
+    geom["A5.pipeline"] = list(geom["A5.unemployment"])  # the pipeline -> graduates link now lies on
+    geom["A5.graduates"] = list(geom["A5.seen"])  # unemployment -> seen, so their signs coincide
+    D.write_sidecar(tmp_path, "article-a5", geom)
+    clashes = D.sign_label_clashes(v, D.read_sidecar(tmp_path, "article-a5"))
+    assert ("e:A5.pipeline>A5.graduates", "e:A5.unemployment>A5.seen") in clashes

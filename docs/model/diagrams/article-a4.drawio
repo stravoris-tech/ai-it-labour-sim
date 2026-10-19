@@ -67,7 +67,7 @@
         <mxCell id="legend" value="+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop.&#10;Box: a stock (it accumulates). Bold text: everything else.&#10;Hexagon: a limit on the link beside it." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="40" y="617" width="389" height="67" as="geometry" />
         </mxCell>
-        <mxCell id="caption:1" value="Clients expect AI gains to show up as lower prices; a ceiling on the AI discount and a&#10;floor at cost limit how far prices fall, and vendors that lose share adopt AI faster. In&#10;the model both limits bind only in the Fast AI scenario and the stress set 'Fast AI + OIT&#10;price shock': the floor from 2028, the ceiling from 2031." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+        <mxCell id="caption:1" value="Clients expect AI gains to show up as lower prices; a ceiling on the AI discount and a&#10;floor at cost limit how far prices fall, and vendors that lose share adopt AI faster. In&#10;the model both limits bind only in the Fast AI scenario and the stress set 'Fast AI + OIT&#10;price shock': the floor from 2028, the ceiling from mid-2030." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="459" y="617" width="586" height="67" as="geometry" />
         </mxCell>
       </root>

@@ -103,7 +103,7 @@ PANELS: Final = (
             "P-C2 has two labels on one path: balancing through labour cost (B), reinforcing through capacity (R).",
             "P-C4: client flight reinforces (R); clients getting used to the distress fade it (B).",
             "C5 and C6 are rules, not loops (limit markers). They bind only in the Fast AI scenario and the stress set:"
-            "\nC5 (price floor) from 2028, C6 (AI-discount ceiling) from 2031.",
+            "\nC5 (price floor) from 2028, C6 (AI-discount ceiling) from mid-2030.",
             STAFF_NOTE,
         ),
     ),
@@ -116,7 +116,7 @@ PANELS: Final = (
             "? U1: closes through productivity (work over effort), where two parallel paths have opposite signs.",
             "B2 (T&M paradox) is reinforcing in the code, against the spec's balancing (E35).",
             "C6 caps the AI discount clients expect (limit marker)."
-            "\nIt binds only in the Fast AI scenario and the stress set, from 2031.",
+            "\nIt binds only in the Fast AI scenario and the stress set, from mid-2030.",
         ),
     ),
     PanelSpec(
@@ -368,17 +368,43 @@ EDGE_STYLE: Final = (
     "fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;"
 )
 LEGEND_LINES: Final = (
-    "Box: a stock. Bold text: an auxiliary. Colour: its module.",
-    "+ or - on an arrow: the link's polarity.",
-    "R / B circle: a reinforcing / balancing loop acting in Base.",
-    "Dashed circle: weak in Base, or acting only in the stress set",
-    f"  '{STRESS_SET}'.",
-    "Grey circle: dormant in Base and in the stress set.",
-    "? in a circle: the loop's sign depends on which path dominates.",
-    "Dashed arrow: an open chain (no loop closes it).",
-    "Faded arrow: every loop on it is dormant in Base.",
-    "Hexagon: a limit on the link beside it.",
+    ("", "Box: a stock. Bold text: an auxiliary. Colour: its module."),
+    ("", "+ or - on an arrow: the link's polarity."),
+    ("solid", "R / B circle: a reinforcing / balancing loop acting in Base."),
+    ("hollow", "Dashed circle: weak in Base, or acting only in the stress set"),
+    ("hollow", f"  '{STRESS_SET}'."),
+    ("grey", "Grey circle: dormant in Base and in the stress set."),
+    ("question", "? in a circle: the loop's sign depends on which path dominates."),
+    ("open", "Dashed arrow: an open chain (no loop closes it)."),
+    ("faded", "Faded arrow: every loop on it is dormant in Base."),
+    ("limit", "Hexagon: a limit on the link beside it."),
 )
+"""The panels' legend: each line with the mark it explains ("" for every view); a view lists only the marks it
+uses (Addendum C)."""
+
+
+def view_marks(cells: Sequence[Cell], links: Sequence[Link]) -> set[str]:
+    """The legend marks a view uses."""
+    marks = {""}
+    for c in cells:
+        if c.kind == "limit":
+            marks.add("limit")
+        if c.kind == "loop":
+            hollow, grey = "dashed=1" in c.style, "opacity=40" in c.style
+            marks.add("hollow" if hollow else "grey" if grey else "solid")
+            if c.label.startswith("?"):
+                marks.add("question")
+    for lk in links:
+        if "dashPattern=8 4" in lk.style:
+            marks.add("open")
+        if "opacity=45" in lk.style:
+            marks.add("faded")
+    return marks
+
+
+def legend_for(lines: Sequence[tuple[str, str]], cells: Sequence[Cell], links: Sequence[Link]) -> list[str]:
+    marks = view_marks(cells, links)
+    return [text for mark, text in lines if mark in marks]
 
 
 def caption_cells(captions: Sequence[str]) -> list[Cell]:
@@ -594,17 +620,17 @@ def panel(src: Sources, view: str) -> View:
             if capped_links:
                 cells.append(Cell(mid, wrap(mlabel, 22), LIMIT_STYLE, "limit", (mid.split(":", 1)[1],)))
                 limit_links[mid] = capped_links
-    cells += chrome(spec.title, LEGEND_LINES, spec.captions)
+    cells += chrome(spec.title, legend_for(LEGEND_LINES, cells, links), spec.captions)
     return View(view, "panel", tuple(cells), tuple(links), loop_cells, limit_links)
 
 
 # ---- the articles ---------------------------------------------------------------------------------------------------
 
 ARTICLE_LEGEND: Final = (
-    "+ or - on an arrow: the link's polarity.",
-    "R / B circle: a reinforcing / balancing loop.",
-    "Box: a stock (it accumulates). Bold text: everything else.",
-    "Hexagon: a limit on the link beside it.",
+    ("", "+ or - on an arrow: the link's polarity."),
+    ("solid", "R / B circle: a reinforcing / balancing loop."),
+    ("", "Box: a stock (it accumulates). Bold text: everything else."),
+    ("limit", "Hexagon: a limit on the link beside it."),
 )
 
 
@@ -654,7 +680,8 @@ def article(src: Sources, view: str) -> View:
     for r in article_rows(src, art, "limit"):
         cells.append(Cell(r["id"], wrap(r["label"], 22), LIMIT_STYLE, "limit", split_items(r["items"])))
         limit_links[r["id"]] = ((r["source"], r["target"]),)
-    cells += chrome(f"{art}. {story['label']}", ARTICLE_LEGEND, ["\n".join(textwrap.wrap(story["story"], 90))])
+    legend = legend_for(ARTICLE_LEGEND, cells, links)
+    cells += chrome(f"{art}. {story['label']}", legend, ["\n".join(textwrap.wrap(story["story"], 90))])
     return View(view, "article", tuple(cells), tuple(links), loop_cells, limit_links)
 
 
@@ -1161,6 +1188,46 @@ def _cross(p: tuple[float, float, float, float], q: tuple[float, float, float, f
     d3 = orient(p[0], p[1], p[2], p[3], q[0], q[1])
     d4 = orient(p[0], p[1], p[2], p[3], q[2], q[3])
     return d1 * d2 < 0 and d3 * d4 < 0
+
+
+def _exit(box: Sequence[float], towards: tuple[float, float]) -> tuple[float, float]:
+    """Where the line from a box's centre towards a point leaves the box."""
+    cx, cy = box[0] + box[2] / 2, box[1] + box[3] / 2
+    dx, dy = towards[0] - cx, towards[1] - cy
+    ts = [box[2] / 2 / abs(dx)] if dx else []
+    ts += [box[3] / 2 / abs(dy)] if dy else []
+    t = min([*ts, 1.0])
+    return cx + t * dx, cy + t * dy
+
+
+def sign_label_points(view: View, geom: Mapping[str, Sequence[float]]) -> dict[str, tuple[float, float]]:
+    """Each link's sign label position: draw.io's relative position along the link (the sidecar's ``e:`` entry, else
+    the middle), on the path from the source box's edge through any two-way waypoint to the target box's edge, moved
+    by the entry's offset at right angles to the path."""
+    pairs = {(lk.source, lk.target) for lk in view.links}
+    out = {}
+    for lk in view.links:
+        a, b = geom[lk.source], geom[lk.target]
+        ca, cb = (a[0] + a[2] / 2, a[1] + a[3] / 2), (b[0] + b[2] / 2, b[1] + b[3] / 2)
+        mid = [_offset(geom, lk.source, lk.target)] if (lk.target, lk.source) in pairs else []
+        path = [_exit(a, (mid or [cb])[0]), *mid, _exit(b, (mid or [ca])[-1])]
+        lens = [math.dist(p, q) for p, q in itertools.pairwise(path)]
+        at = geom.get(edge_id(lk), [0.0, 0.0])
+        goal = (at[0] + 1) / 2 * sum(lens)
+        for (p, q), ln in zip(itertools.pairwise(path), lens, strict=True):
+            if goal <= ln or q == path[-1]:
+                f = goal / ln if ln else 0.0
+                nx, ny = (-(q[1] - p[1]) / ln, (q[0] - p[0]) / ln) if ln else (0.0, 0.0)
+                out[edge_id(lk)] = (p[0] + f * (q[0] - p[0]) + at[1] * nx, p[1] + f * (q[1] - p[1]) + at[1] * ny)
+                break
+            goal -= ln
+    return out
+
+
+def sign_label_clashes(view: View, geom: Mapping[str, Sequence[float]], tol: float = 6.0) -> list[tuple[str, str]]:
+    """Pairs of links whose sign labels sit within ``tol`` px of each other (one would hide the other)."""
+    pts = sorted(sign_label_points(view, geom).items())
+    return [(a, b) for i, (a, p) in enumerate(pts) for b, q in pts[i + 1 :] if math.dist(p, q) < tol]
 
 
 def crossings(view: View, geom: Mapping[str, Sequence[float]]) -> int:

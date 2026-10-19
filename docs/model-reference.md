@@ -68,13 +68,13 @@ _The more IT work GCCs hold, the stronger their scale advantage, and the more cl
 
 ![A3. Vendor distress and client flight](model/diagrams/svg/article-a3.svg)
 
-_A vendor whose margin falls well below normal loses clients and cuts staff; lost clients cut its revenue and margin further. Over time clients get used to the distress, so the flight fades. In the model it acts in five scenarios, never in Base: for the Indian IT vendors in the stress set 'Fast AI + OIT price shock' (2029-2031), Compute shock (2028 and 2034), and Visa relaxation, Jevons rebound and Demand boom (2036); and for the global SIs in Compute shock (2034)._
+_A vendor whose margin falls well below normal loses clients and cuts staff; lost clients cut its revenue and margin further. Over time clients get used to the distress, so the flight fades. In the model it never acts in Base. It acts in short spells of about one to three years in five scenarios, mostly for the Indian IT vendors: the stress set 'Fast AI + OIT price shock', Compute shock, Visa relaxation, Jevons rebound and Demand boom._
 
 #### A4. The pricing ceiling under fast AI
 
 ![A4. The pricing ceiling under fast AI](model/diagrams/svg/article-a4.svg)
 
-_Clients expect AI gains to show up as lower prices; a ceiling on the AI discount and a floor at cost limit how far prices fall, and vendors that lose share adopt AI faster. In the model both limits bind only in the Fast AI scenario and the stress set 'Fast AI + OIT price shock': the floor from 2028, the ceiling from 2031._
+_Clients expect AI gains to show up as lower prices; a ceiling on the AI discount and a floor at cost limit how far prices fall, and vendors that lose share adopt AI faster. In the model both limits bind only in the Fast AI scenario and the stress set 'Fast AI + OIT price shock': the floor from 2028, the ceiling from mid-2030._
 
 #### A5. Discouraged entry
 
@@ -711,13 +711,13 @@ _Loops: B1, B13, B4, B5, P-R4, R4, R5, U2, U3. ? R5: balancing through hiring an
 
 ![Panel 2. Vendor distress](model/diagrams/svg/panel-distress.svg)
 
-_Loops: B6, P-C2, P-C4, P-C5, P-C6, P-R10, R6. P-C2 has two labels on one path: balancing through labour cost (B), reinforcing through capacity (R). P-C4: client flight reinforces (R); clients getting used to the distress fade it (B). C5 and C6 are rules, not loops (limit markers). They bind only in the Fast AI scenario and the stress set: C5 (price floor) from 2028, C6 (AI-discount ceiling) from 2031. Vendor staff groups vacancies, onboarding and headcount, which panel 1 shows apart._
+_Loops: B6, P-C2, P-C4, P-C5, P-C6, P-R10, R6. P-C2 has two labels on one path: balancing through labour cost (B), reinforcing through capacity (R). P-C4: client flight reinforces (R); clients getting used to the distress fade it (B). C5 and C6 are rules, not loops (limit markers). They bind only in the Fast AI scenario and the stress set: C5 (price floor) from 2028, C6 (AI-discount ceiling) from mid-2030. Vendor staff groups vacancies, onboarding and headcount, which panel 1 shows apart._
 
 ### Panel 3. Pricing and contracts
 
 ![Panel 3. Pricing and contracts](model/diagrams/svg/panel-pricing.svg)
 
-_Loops: B12, B2, R8, U1, U4. ? U1: closes through productivity (work over effort), where two parallel paths have opposite signs. B2 (T&M paradox) is reinforcing in the code, against the spec's balancing (E35). C6 caps the AI discount clients expect (limit marker). It binds only in the Fast AI scenario and the stress set, from 2031._
+_Loops: B12, B2, R8, U1, U4. ? U1: closes through productivity (work over effort), where two parallel paths have opposite signs. B2 (T&M paradox) is reinforcing in the code, against the spec's balancing (E35). C6 caps the AI discount clients expect (limit marker). It binds only in the Fast AI scenario and the stress set, from mid-2030._
 
 ### Panel 4. Sourcing and GCC growth
 
