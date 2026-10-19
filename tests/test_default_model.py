@@ -1,5 +1,5 @@
-"""The default model (slice 7): ``DEFAULT_MODEL`` is ``phase8``, and every library default and unknown-model fallback
-names it; the tornado ranges are computed per model.
+"""The default model (slice 7; ``phase9`` since slice 14): ``DEFAULT_MODEL`` is ``phase9``, and every library default
+and unknown-model fallback names it; the tornado ranges are computed per model.
 
 - The 8 sites of recon 07 B1: 6 signature defaults (``baseline_data``, ``Params.baseline``, ``BatchParams.baseline``,
   ``Experiment.model``, ``validate`` and ``tornado_levers``) and 2 unknown-model fallbacks (``known_model`` and the
@@ -36,8 +36,8 @@ def default_of(func: Callable[..., object], name: str = "model") -> object:
     return inspect.signature(func).parameters[name].default
 
 
-def test_default_model_is_phase8() -> None:
-    assert DEFAULT_MODEL == "phase8"
+def test_default_model_is_phase9() -> None:
+    assert DEFAULT_MODEL == "phase9"
 
 
 def test_the_six_signature_defaults_name_default_model() -> None:
@@ -55,10 +55,10 @@ def test_the_six_signature_defaults_name_default_model() -> None:
 
 
 def test_the_two_fallbacks_use_default_model() -> None:
-    """An unknown model is validated as the default model: a ``level_2024`` value equal to phase8's passes rule 8 (only
+    """An unknown model is validated as the default model: a ``level_2024`` value equal to phase9's passes rule 8 (only
     the model is reported), one equal to phase7's does not."""
     assert known_model(Experiment(model="nope")).model == DEFAULT_MODEL
-    for model, extra in (("phase8", []), ("phase7", [("level_2024", "Verif")])):
+    for model, extra in (("phase9", []), ("phase7", [("level_2024", "Verif")])):
         v = Params.baseline(model).scalars["Verif"]
         params = Params.baseline(DEFAULT_MODEL).with_overrides(Verif=v)
         with pytest.raises(ValidationError) as info:

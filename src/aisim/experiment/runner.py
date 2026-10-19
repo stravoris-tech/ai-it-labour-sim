@@ -100,8 +100,8 @@ class Experiment:
       ``level_2024``, ``Verif`` among them) must stay at their baseline values.
     - ``noise``: process noise by channel (``aisim.noise.CHANNELS``), off by default; it needs ``perturb_from`` and a
       ``noise_seed``. No amplitude is built in.
-    - ``model``: the named model (``aisim.state.BASELINE_FILES``) whose baseline every run starts from: ``"phase8"``
-      (the default, ``aisim.state.DEFAULT_MODEL``), ``"phase7"``, ``"phase8_highadoption"``, ``"phase9"`` or
+    - ``model``: the named model (``aisim.state.BASELINE_FILES``) whose baseline every run starts from: ``"phase9"``
+      (the default, ``aisim.state.DEFAULT_MODEL``), ``"phase7"``, ``"phase8"``, ``"phase8_highadoption"`` or
       ``"phase9_highadoption"``.
     """
 

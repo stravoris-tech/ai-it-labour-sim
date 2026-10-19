@@ -19,7 +19,7 @@ from aisim.charts.colours import BLACK, DASHED, DOTTED, INDIGO, LINE_STYLES, PAL
 from aisim.experiment import ScenarioResult, run_scenarios
 
 LABELS = ["Baseline", *SCENARIOS, *STRESS_SCENARIOS]
-"""The 15 scenario labels: the baseline (None) and the 14 scenarios, ``Base`` among them."""
+"""The 16 scenario labels: the baseline (None), the 14 scenarios, ``Base`` among them, and the stress set."""
 
 CONTRAST_PAIRS = [
     ("Fast AI", "Slow AI"),

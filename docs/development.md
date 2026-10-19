@@ -266,7 +266,7 @@ unchanged.
 scalar/record.py docstring that the new code moved; to be removed with slice 10 (model documentation), as its plan
 already intends.
 
-## Slice 13: phase 9 completion
+## Slice 13: phase 9 completion (PR #12, merged 2026-10-18, `afce6f8`)
 
 **Basis.** Recon 13 (the R7 cap's role and stakes, the Fast AI price-rule result, a trial `phase9_highadoption`, the
 stress set's placement, and the small fixes), the Q05 first look at `phase9` (loop activity, the stress set, persistent
@@ -298,6 +298,89 @@ golden is unchanged.
 
 **Held or deferred.** The default flip to `phase9`, the README story and the limitations, for slice 14.
 `run_batch_from` called directly still returns an empty series when phase 2 records no row.
+
+## Slice 14: phase 9 as the default, the README and the freeze
+
+**Basis.** The Q05 first look at `phase9` (which README claims change, and a story for the README), recon 13 (the
+R7 cap and the Fast AI price-rule result), recon 13g (the limitation texts for recon 11's open rows), and the Later
+lists and open questions of the slice 12 and 13 ship reports and the slice 13 conformance check.
+
+**Purpose.** Make `phase9` the library default, with `phase9_highadoption` as its documented adoption alternative.
+Rewrite the README around phase 9, with every number recomputed from the shipped models, and complete its
+limitations. Freeze the model at 0.2.0.
+
+**Gate at the build.** Exit 0, 562 tests (562 before), 12 slow deselected; the slow suite passed. No baseline file,
+golden, model spec or fit and nothing under `reference/` changed, so every model's results are bit-identical.
+
+**Key decisions.**
+- One constant changes: `DEFAULT_MODEL = "phase9"`. Tests that assert which model is the default moved to `phase9`.
+  Tests whose expected values or lever counts belong to an earlier model were pinned to it (`phase7` or `phase8`) with
+  no expected value changed, as slice 7 did.
+- A test defect was fixed. Since slice 7, two batch-parity positive controls had nudged the default model's
+  `AICost2024` against Phase 7 cases, so they detected the difference between two models (28%), not the 1e-9 nudge.
+  They are pinned to `phase7` again.
+- The README says the model gives scenario projections, not forecasts. A script recomputes every number in it from
+  the shipped models. A number that could not be recomputed cheaply was dropped rather than cited: the B8 political
+  pressure prototype needs an engine port, and the `p` profile needs a dozen refits.
+- `.claude/commands/analyze.md` pairs `phase9` with `phase9_highadoption` for adoption-sensitive questions, and asks
+  model comparisons of Monte Carlo bands to share one samples frame.
+- The version is 0.2.0 in `pyproject.toml`, `aisim.__version__` and `CITATION.cff`. `uv.lock` was relocked, because
+  it records the project's own version and CI syncs with `--locked`.
+
+**Held or deferred.** The later-version list below.
+
+## The freeze
+
+After slice 14 the model is frozen at 0.2.0. It changes only for a defect: behaviour that is wrong, or that
+contradicts its own documentation. Improvements go on the later-version list below and do not interrupt analysis
+work.
+
+### Later version
+
+Each item names its source; duplicates are merged.
+
+1. **`run_batch_from` called directly** returns an empty series, silently, when phase 2 records no row;
+   `run_experiment` and `run_scenarios` raise a clear `ValueError` (slice 13 Later 1, recon 13 Later 1).
+2. **R4's cap `U / MinSeekTime` never binds** in Base, Fast AI, the stress set or `EXTREME`, so it has no binding
+   flag (slice 13 Later 2, recon 13 Later 4).
+3. **`charts.drivers` with long labels.** With one panel and the 22 `phase9` levers, the structural labels (up to 62
+   characters) leave the axes narrow; a wider figure or wrapped labels would read better (slice 13 Later 3 and open
+   question 1, recon 13 Later 8).
+4. **Line references** in `catalogue.csv` descriptions and the `scalar/record.py` docstring moved with slices 12 and
+   13. They are deferred to slice 10 (the model reference) (slice 12 open question 2, slice 13 Later 4).
+5. **Re-anchoring the 2024-anchored rates** `DemandGrowth`, `ITBudgetGrowth` and `amax` under `perturb_from`.
+   Validation rejects a change to them after 2024 meanwhile (rule `anchored_rate`; slices 6 and 12).
+6. **`tools/build_model.py` writes its `--out` path into the baseline file**, so two builds of one model to different
+   paths differ in bytes (recon 13 Later 7).
+7. **Recording and charting gaps** (Q05 Issue 7, the parts slice 13 did not close). No output records the seeker
+   stocks, so R4's end needs a trace, and `aisim.charts` has no categorical chart (an activity map or a one-at-a-time
+   tornado).
+8. **The missed pricing targets.** The renewal step-down and the per-unit discount are missed, and `PriceHorizon` sits
+   at its fit bound (README "Limitations"; slice 9 open question 3; Q05 caveats).
+9. **The hand-set lever ranges.** `tornado_levers` re-centres only `Verif` and `JuniorCut` per model; the other
+   tornado ranges have no cited evidence (slice 9 open question 1; README "Limitations").
+10. **Stale names in `tests/test_models.py`.** The variables named `p7` at lines 207, 219 and 273 hold default-model
+    results, and the docstring at line 157 says "checked against phase 7" (slice 14, operator ruling).
+11. **Candidates if outside evidence is found.** These are recon 13g's Document rows with the largest stakes. Each
+    would become a build only with evidence for both its sign and its strength (recon 13g B4):
+    - X01, the GCC wave: GCC headcount by parent and sector after 2026, to see whether the wave fades after 2030;
+    - Q06, the sector win-rate penalty: the win rates of visa-exposed vendors by client sector during enforcement
+      episodes;
+    - L18-L20, B8 political pressure: a policy-response elasticity, that is, H-1B cap, fee or enforcement changes
+      against US IT unemployment over 1998-2026 (recon 13g C1 outlines the build);
+    - Q05, visa cost and tightness: onsite cost per head against visa approval rates, FY2017-2026;
+    - Q02, recruiting agencies: the agency share of IT hires and the fee as a share of first-year salary.
+
+**Resolved and dropped.**
+- **Slice 13 closed** Q05 Issues 1 (`phase9_highadoption`), 2 (the `C4Cap` wording) and 6 (the `KeyError`), and the
+  `drivers` labels and binding extras of Issue 7. It also qualified the design note's "C5 and C6 never act in Base"
+  to the base values (recon 13 Later 3).
+- **Slice 14 closed:**
+  - Q05 Issue 3 (the Monte Carlo draws: the `analyze.md` rule and a README limitation) and Issue 5 (the immediate
+    levers in the README);
+  - slice 13 Later 5 and open question 2 (the adoption pairing);
+  - the slice 13 conformance check's deviations 1 and 5 (the `test_colours.py` docstring and the R7 bind range).
+- **Q05 Issue 4** needed no change to the repository.
 
 ## Analyses
 

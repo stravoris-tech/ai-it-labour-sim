@@ -5,8 +5,8 @@ R7 (GCC scale learning), R6 (vendor capacity exit, client flight and two price r
 (skill erosion). Each loop is set at the base strength of an outside evidence report, and all 11 calibrated
 parameters are refitted with the loops in place.
 
-`phase9` is a registered model, not the default: `Experiment(model="phase9")` or `Params.baseline("phase9")` selects
-it, and the library default stays `phase8`. A first-look analysis comes before any change of default.
+`phase9` is the library default since slice 14 (`aisim.state.DEFAULT_MODEL`), after the Q05 first-look analysis;
+`phase8` stays registered as the earlier, loop-free structure.
 
 Every loop is an extension parameter whose strength defaults to 0, which turns it off. With every strength at 0 the
 engine reproduces every earlier model bit for bit: `phase7` against the prototype, and `phase8` and
@@ -71,7 +71,9 @@ talent-pool and wage-inflation limits" but calls its level "a design judgement, 
 - **It is not a stability device in the log form.** The loop gain `kR7 x (1 - WS)` is largest at the 2024 share,
   where the cap never binds: 0.676 at `kR7` 0.75, inside the report's 0.7. It falls as the share rises, and the
   uncapped term is bounded anyway, by `kR7 x ln(1 / WS_2024)` = 2.32 x `kR7` (recon 13, A1).
-- **It binds from about 2032:** from 2031.4 to 2033.6, by scenario and strength (recon 13, A2).
+- **It binds from about 2032:** first from 2031.1 to 2033.6, across the six scenarios recon 13 A2 ran (Base, Fast AI,
+  Slow AI, the two GCC waves and the stress set) at the three strengths; it never binds in GCC wave fades at `kR7`
+  0.15 (recon 13, A2).
 - **At base strength it trims little.** It cuts the 2040 term from 0.474 to 0.400 logit units, about 1% on the 2040
   headlines in Base: lifting it moves VendorHead by -0.89%, Head_GCC by +1.44% and RevenueTot by -0.94% (recon 13,
   A2).
@@ -346,7 +348,7 @@ eight structural levers.
 - **What absorbs the loops**, against `phase8_highadoption`: as in `phase9`, `GCCAppealEnd` falls 11.8% (2.865 to
   2.528), `SeekerExitRate` falls 1.5% and `AICost2024` rises 0.9%. Every other parameter moves less than 0.3%.
 - **Checks.** The four calibration cores stay in band (OIT's book price drift -3.23% a year, as
-  `phase8_highadoption`). `A_mean` is 0.853 in 2028 and 0.957 in 2030, as `phase8_highadoption`. The 2024 row
+  `phase8_highadoption`). `A_mean` is 0.853 in 2028 and 0.958 in 2030 (`phase8_highadoption`: 0.853 and 0.957). The 2024 row
   differs from `phase9`'s only through the refitted parameters. Integrity holds in Base and `EXTREME`, and with every
   strength at its high value (T1 0.0089 and 0.0091).
 

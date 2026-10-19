@@ -211,8 +211,8 @@ def test_end_to_end_every_step() -> None:
 def test_comparison_detects_a_change() -> None:
     """Positive control: the same check fails when the batch runs on one parameter 1e-9 (relative) from the scalar's."""
     case = ALL_CASES["base, every step"]
-    cost = Params.float_of(Params.baseline().scalars, "AICost2024")
-    nudged = BatchParams.baseline(1, AICost2024=cost * (1 + 1e-9))
+    cost = Params.float_of(Params.baseline("phase7").scalars, "AICost2024")
+    nudged = BatchParams.baseline(1, model="phase7", AICost2024=cost * (1 + 1e-9))
     result = run_batch(nudged, record_every=1.0)
     cmp = compare_run(result, 0, case.scalar(record_every=1.0))
     assert cmp.miss is not None
@@ -324,7 +324,7 @@ def test_sections_mixed() -> None:
 def test_section_check_detects_a_change() -> None:
     """Positive control: a 1e-9 relative change of one parameter shows up in the section comparison."""
     case = ALL_CASES["scenario Base"]
-    cost = Params.float_of(Params.baseline().scalars, "AICost2024")
+    cost = Params.float_of(Params.baseline("phase7").scalars, "AICost2024")
     nudged = Case("nudged", {"AICost2024": cost * (1 + 1e-9)})
     store = scalar_trace(case)
     cmp = Comparison()

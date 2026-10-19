@@ -42,7 +42,7 @@ from aisim.scalar.engine import RunResult, run
 from aisim.scenarios import SCENARIOS, STRESS_SCENARIOS
 from aisim.state import State, load_initial_state
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "SCENARIOS",
