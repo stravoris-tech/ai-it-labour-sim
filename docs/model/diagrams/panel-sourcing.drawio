@@ -1,0 +1,190 @@
+<mxfile host="aisim" type="device">
+  <diagram id="panel-sourcing" name="panel-sourcing">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1357" pageHeight="988" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:A&gt;ClientP" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;" edge="1" parent="1" source="A" target="ClientP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ClientP&gt;SrcPerc@IH" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;" edge="1" parent="1" source="ClientP" target="SrcPerc@IH">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Desired&gt;fl.openings" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="Desired" target="fl.openings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:EmpShare&gt;Desired" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="EmpShare" target="Desired">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:GCCScaleTerm&gt;SrcPerc@vendor" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="GCCScaleTerm" target="SrcPerc@vendor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:GCCScaleTerm&gt;SrcTarget@GCC" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="GCCScaleTerm" target="SrcTarget@GCC">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:GCCW&gt;EmpShare" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="GCCW" target="EmpShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:GCCW&gt;GCCScaleTerm" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;strokeWidth=2.4;" edge="1" parent="1" source="GCCW" target="GCCScaleTerm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:H&gt;UnempRate" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;opacity=45;textOpacity=60;" edge="1" parent="1" source="H" target="UnempRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:H&gt;VB.VendorCost" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;opacity=45;textOpacity=60;" edge="1" parent="1" source="H" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:IHW&gt;EmpShare" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;" edge="1" parent="1" source="IHW" target="EmpShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:O&gt;H" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;opacity=45;textOpacity=60;" edge="1" parent="1" source="O" target="H">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:SrcPerc@GCC&gt;GCCW" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="SrcPerc@GCC" target="GCCW">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:SrcPerc@IH&gt;IHW" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;" edge="1" parent="1" source="SrcPerc@IH" target="IHW">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:SrcTarget@GCC&gt;SrcPerc@GCC" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="SrcTarget@GCC" target="SrcPerc@GCC">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:TightPerc&gt;dTight" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;opacity=45;textOpacity=60;" edge="1" parent="1" source="TightPerc" target="dTight">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:UnitIn@onshore&gt;Desired" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;opacity=45;textOpacity=60;" edge="1" parent="1" source="UnitIn@onshore" target="Desired">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:V&gt;O" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;opacity=45;textOpacity=60;" edge="1" parent="1" source="V" target="O">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:V&gt;sw.out" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="V" target="sw.out">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VB.VendorCost&gt;Viab" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="VB.VendorCost" target="Viab">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Viab&gt;SrcTarget@GCC" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="Viab" target="SrcTarget@GCC">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VisaMix&gt;UnitIn@onshore" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;opacity=45;textOpacity=60;" edge="1" parent="1" source="VisaMix" target="UnitIn@onshore">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VisaTight&gt;TightPerc" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;opacity=45;textOpacity=60;" edge="1" parent="1" source="VisaTight" target="TightPerc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:dTight&gt;UnitIn@onshore" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;opacity=45;textOpacity=60;" edge="1" parent="1" source="dTight" target="UnitIn@onshore">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:dTight&gt;VisaMix" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;opacity=45;textOpacity=60;" edge="1" parent="1" source="dTight" target="VisaMix">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:fl.openings&gt;V" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="fl.openings" target="V">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:sw.out&gt;VB.VendorCost" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="sw.out" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:sw.out&gt;fl.openings" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="sw.out" target="fl.openings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A" value="Delivery AI&#10;adoption" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#D5ECFA;strokeColor=#56B4E9;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1008" y="744" width="95" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="ClientP" value="Client-perceived&#10;productivity" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="744" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="Desired" value="Desired headcount" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="982" y="422" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="EmpShare" value="Employer work&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="1188" y="414" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="GCCScaleTerm" value="GCC scale learning" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="789" y="202" width="152" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="GCCW" value="GCC work share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="807" y="312" width="116" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="H" value="Headcount" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="64" y="532" width="81" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="IHW" value="In-house work&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="524" width="109" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="O" value="Onboarding staff" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="420" y="752" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="SrcPerc@GCC" value="GCC's perceived&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="804" y="414" width="123" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="SrcPerc@IH" value="In-house perceived&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1173" y="634" width="144" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="SrcPerc@vendor" value="A vendor's&#10;perceived share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="614" y="194" width="123" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="SrcTarget@GCC" value="GCC's sourcing&#10;target" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="614" y="304" width="123" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="TightPerc" value="Perceived visa&#10;tightness" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F4D7BF;strokeColor=#D55E00;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="427" y="304" width="116" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="UnempRate" value="IT unemployment&#10;rate" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="40" y="634" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="UnitIn@onshore" value="Onshore unit work&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="982" y="194" width="145" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="V" value="Vacancies" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="634" y="752" width="81" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VB.VendorCost" value="Vendor total cost" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="222" y="422" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="Viab" value="Vendor viability" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="420" y="422" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VisaMix" value="Onsite visa mix" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="610" y="92" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VisaTight" value="Visa tightness" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="234" y="202" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="dTight" value="Tightness gap" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="428" y="92" width="115" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="fl.openings" value="Vacancy openings" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="796" y="642" width="138" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="sw.out" value="Switches out" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="621" y="642" width="108" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="limit:R7Lcap" value="limit: cap (R7Lcap)" style="html=0;fontFamily=Helvetica;fontSize=12;shape=hexagon;perimeter=hexagonPerimeter2;size=0.12;fillColor=#FFFFFF;strokeColor=#333333;fontSize=11;fontStyle=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="880" y="257" width="160" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="R10" value="R&#10;R10" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="744" y="464" width="52" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="R7" value="R&#10;R7" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="744" y="299" width="52" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Panel 4. Sourcing and GCC growth" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="336" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Box: a stock. Bold text: an auxiliary. Colour: its module.&#10;+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop acting in Base.&#10;Dashed circle: weak in Base, or acting only in the stress set&#10;  'Fast AI + OIT price shock'.&#10;Dashed arrow: an open chain (no loop closes it).&#10;Faded arrow: every loop on it is dormant in Base.&#10;Hexagon: a limit on the link beside it." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="826" width="408" height="122" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="R7 feeds back until about 2032, then sits at its cap: a fixed shift with no further gain." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="478" y="826" width="586" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:2" value="R10 closes only through R6's margin terms (E17)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="478" y="856" width="325" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:3" value="B8 (political pressure) is replaced by the visa scenario input and not drawn (E7)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="478" y="886" width="542" height="26" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

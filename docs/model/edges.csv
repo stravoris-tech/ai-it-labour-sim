@@ -17,6 +17,7 @@ BLe,auxiliary,DesiredE,auxiliary,data,work,workforce,src/aisim/scalar/workforce.
 BLe,auxiliary,Pe,auxiliary,data,work,work,src/aisim/scalar/work.py:65
 BLe,auxiliary,RateE,auxiliary,data,work,work,src/aisim/scalar/work.py:72
 BLs,auxiliary,BLe,auxiliary,data,work,work,src/aisim/scalar/work.py:63
+BLs,auxiliary,TotBL,auxiliary,data,work,work,src/aisim/scalar/work.py:87
 BudgetGrowth,auxiliary,cons.Budget,auxiliary,data,consumer,consumer,src/aisim/scalar/consumer.py:208;241
 CEc,auxiliary,cons.AdoptC,flow,data,consumer,consumer,src/aisim/scalar/consumer.py:197;199;230
 CEe,auxiliary,AdoptE,flow,data,adoption,adoption,src/aisim/scalar/adoption.py:52;63
@@ -30,6 +31,7 @@ ClientFlight,auxiliary,RiskOpt,auxiliary,data,sourcing,sourcing,src/aisim/scalar
 CloudPB,auxiliary,cons.CloudSpend,auxiliary,data,consumer,consumer,src/aisim/scalar/consumer.py:206;239
 Comp,flow,CompS,auxiliary,data,work,work,src/aisim/scalar/work.py:85
 Comp,flow,BL,stock,data,work,work,src/aisim/scalar/integrate.py:37
+CompE,auxiliary,Completion,auxiliary,data,work,work,src/aisim/scalar/work.py:82
 CompE,auxiliary,Delivered,auxiliary,data,work,finance,src/aisim/scalar/finance.py:148
 CompE,auxiliary,EffortDone,auxiliary,data,work,work,src/aisim/scalar/work.py:83
 CompE,auxiliary,RateE,auxiliary,data,work,work,src/aisim/scalar/work.py:72
@@ -128,6 +130,7 @@ Src.GCCTurn,flow,GCCW,stock,data,sourcing,sourcing,src/aisim/scalar/integrate.py
 Src.IHTurn,flow,Src.Contested,flow,data,sourcing,sourcing,src/aisim/scalar/sourcing.py:76;78
 Src.IHTurn,flow,IHW,stock,data,sourcing,sourcing,src/aisim/scalar/integrate.py:45
 Src.VExp,flow,SignS,flow,data,sourcing,sourcing,src/aisim/scalar/sourcing.py:71;77
+Src.VExp,flow,Src.Contested,flow,data,sourcing,sourcing,src/aisim/scalar/sourcing.py:76;78
 Src.VExp,flow,VW,stock,data,sourcing,sourcing,src/aisim/scalar/integrate.py:48
 SrcTarget,auxiliary,SrcPerc,stock,data,sourcing,sourcing,src/aisim/scalar/integrate.py:50
 TTFr,auxiliary,TTFratio,auxiliary,data,labour_market,labour_market,src/aisim/scalar/labour_market.py:340
@@ -192,6 +195,7 @@ VF.ExpRate,auxiliary,Src.VExp,flow,data,finance,sourcing,src/aisim/scalar/sourci
 VF.ExpRate,auxiliary,VB.SignRate,auxiliary,data,finance,finance,src/aisim/scalar/finance.py:337;370
 VF.ExpRate,auxiliary,ECost,stock,data,finance,finance,src/aisim/scalar/loops.py:192;206
 VF.Glide,auxiliary,NewP,stock,data,finance,finance,src/aisim/scalar/integrate.py:123
+VF.IdxVol,auxiliary,VF.AvgIdx,auxiliary,data,finance,finance,src/aisim/scalar/finance.py:252;288
 VF.PNew,auxiliary,VB.TypeShare,auxiliary,data,finance,finance,src/aisim/scalar/finance.py:359;376
 VF.PNew,auxiliary,VF.AvgP,auxiliary,data,finance,finance,src/aisim/scalar/finance.py:247;283
 VF.PNew,auxiliary,VF.FloorBinds,auxiliary,control,finance,finance,src/aisim/scalar/finance.py:242;246;298

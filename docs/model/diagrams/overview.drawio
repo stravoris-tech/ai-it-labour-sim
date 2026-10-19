@@ -1,0 +1,172 @@
+<mxfile host="aisim" type="device">
+  <diagram id="overview" name="overview">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1098" pageHeight="763" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:adoption&gt;capability" value="1" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#56B4E9;strokeWidth=1.00;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;opacity=60;" edge="1" parent="1" source="adoption" target="capability">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:adoption&gt;workforce" value="1" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#56B4E9;strokeWidth=1.00;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;opacity=60;" edge="1" parent="1" source="adoption" target="workforce">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:capability&gt;consumer" value="4" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#E69F00;strokeWidth=2.05;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="capability" target="consumer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:capability&gt;labour_market" value="2" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#E69F00;strokeWidth=1.35;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="capability" target="labour_market">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:capability&gt;work" value="1" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#E69F00;strokeWidth=1.00;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;opacity=60;" edge="1" parent="1" source="capability" target="work">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:consumer&gt;sourcing" value="6" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#009E73;strokeWidth=2.75;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="consumer" target="sourcing">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:consumer&gt;work" value="1" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#009E73;strokeWidth=1.00;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;opacity=60;" edge="1" parent="1" source="consumer" target="work">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="493.5" y="163.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:finance&gt;adoption" value="4" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#332288;strokeWidth=2.05;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="finance" target="adoption">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:finance&gt;consumer" value="3" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#332288;strokeWidth=1.70;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="finance" target="consumer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:finance&gt;labour_market" value="2" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#332288;strokeWidth=1.35;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="finance" target="labour_market">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="523" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:finance&gt;sourcing" value="12" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#332288;strokeWidth=4.85;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="finance" target="sourcing">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="556" y="460.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:finance&gt;workforce" value="1" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#332288;strokeWidth=1.00;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;opacity=60;" edge="1" parent="1" source="finance" target="workforce">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="348" y="585.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:labour_market&gt;consumer" value="1" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#CC79A7;strokeWidth=1.00;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;opacity=60;" edge="1" parent="1" source="labour_market" target="consumer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:labour_market&gt;finance" value="18" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#CC79A7;strokeWidth=6.95;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="labour_market" target="finance">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="524" y="528" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:labour_market&gt;sourcing" value="2" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#CC79A7;strokeWidth=1.35;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="labour_market" target="sourcing">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:labour_market&gt;work" value="2" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#CC79A7;strokeWidth=1.35;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="labour_market" target="work">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:labour_market&gt;workforce" value="8" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#CC79A7;strokeWidth=3.45;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="labour_market" target="workforce">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="662.6" y="564.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:sourcing&gt;finance" value="3" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#882255;strokeWidth=1.70;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="sourcing" target="finance">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="548" y="429.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:sourcing&gt;work" value="3" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#882255;strokeWidth=1.70;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="sourcing" target="work">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="556" y="252.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:work&gt;adoption" value="1" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#0072B2;strokeWidth=1.00;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;opacity=60;" edge="1" parent="1" source="work" target="adoption">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:work&gt;consumer" value="5" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#0072B2;strokeWidth=2.40;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="work" target="consumer">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="493.5" y="195.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:work&gt;finance" value="13" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#0072B2;strokeWidth=5.20;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="work" target="finance">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:work&gt;sourcing" value="3" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#0072B2;strokeWidth=1.70;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="work" target="sourcing">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="548" y="283.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:work&gt;workforce" value="2" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#0072B2;strokeWidth=1.35;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="work" target="workforce">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:workforce&gt;finance" value="1" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#D55E00;strokeWidth=1.00;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;opacity=60;" edge="1" parent="1" source="workforce" target="finance">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="356" y="554.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:workforce&gt;labour_market" value="15" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#D55E00;strokeWidth=5.90;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="workforce" target="labour_market">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="667.4" y="596.3" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:workforce&gt;sourcing" value="3" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#D55E00;strokeWidth=1.70;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="workforce" target="sourcing">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="adoption" value="Delivery AI&#10;adoption" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=1;fillColor=#56B4E9;strokeColor=#56B4E9;fontColor=#FFFFFF;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="334" width="107" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="capability" value="AI capability" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=1;fillColor=#E69F00;strokeColor=#E69F00;fontColor=#FFFFFF;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="432" y="92" width="123" height="29" as="geometry" />
+        </mxCell>
+        <mxCell id="consumer" value="Client demand&#10;and consumer AI" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=1;fillColor=#009E73;strokeColor=#009E73;fontColor=#FFFFFF;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="707" y="157" width="139" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="finance" value="Vendor finance&#10;and contracts" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=1;fillColor=#332288;strokeColor=#332288;fontColor=#FFFFFF;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="145" y="511" width="131" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="labour_market" value="Labour market" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=1;fillColor=#CC79A7;strokeColor=#CC79A7;fontColor=#FFFFFF;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="775" y="540" width="123" height="29" as="geometry" />
+        </mxCell>
+        <mxCell id="sourcing" value="Sourcing choice" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=1;fillColor=#882255;strokeColor=#882255;fontColor=#FFFFFF;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="824" y="342" width="139" height="29" as="geometry" />
+        </mxCell>
+        <mxCell id="work" value="Work and&#10;productivity" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=1;fillColor=#0072B2;strokeColor=#0072B2;fontColor=#FFFFFF;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="153" y="157" width="115" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="workforce" value="Workforce&#10;planning" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=1;fillColor=#D55E00;strokeColor=#D55E00;fontColor=#FFFFFF;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="448" y="584" width="91" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Overview: the model's eight modules" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="366" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Each arrow: the links from one module's stocks, flows and auxiliaries&#10;to items of another; its label and width give their number.&#10;Dashed: a single link. Parameters count with the module that reads them." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="669" width="478" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="8 modules, 27 module pairs, 118 links between modules (docs/model/edges.csv)." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="548" y="669" width="510" height="26" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

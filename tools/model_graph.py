@@ -16,6 +16,8 @@ helpers of ``loops.py``, every assignment's target is linked to the names it rea
   expansion (``quits`` is ``fl.quits``); at the ``root`` level expansion runs through it.
 - **Control dependences.** With ``control=True`` the tests of enclosing ``if`` statements and conditional expressions
   are inputs too.
+- **Dict values.** ``x.values()`` reads ``x``, so ``Completion = sum(CompE.values())`` links ``CompE`` to
+  ``Completion`` (slice 10b).
 - **S0.** ``run()`` tilts ``SrcPerc`` by ``GCCMomentum`` once before the time loop (``tilt_sourcing_perception``); it
   is added as one edge, as recon D2 did.
 
@@ -325,6 +327,8 @@ class Analyzer:
             summ = self.resolve(e) if self.resolve is not None else None
             if summ is not None:
                 return self.substitute(summ, summ.data | (summ.ctrl if control else frozenset()), e, control)
+            if isinstance(e.func, ast.Attribute) and e.func.attr == "values" and not e.args and not e.keywords:
+                return self.reads(e.func.value, control)  # sum(x.values()) reads x
             for a in e.args:
                 out |= self.reads(a, control)
             for kw in e.keywords:

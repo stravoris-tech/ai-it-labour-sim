@@ -1,0 +1,91 @@
+<mxfile host="aisim" type="device">
+  <diagram id="article-a2" name="article-a2">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1079" pageHeight="731" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:A2.choosing&gt;A2.gcc_share" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A2.choosing" target="A2.gcc_share">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A2.costs&gt;A2.margin" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A2.costs" target="A2.margin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A2.gcc_scale&gt;A2.choosing" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A2.gcc_scale" target="A2.choosing">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A2.gcc_scale&gt;A2.vendor_share" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A2.gcc_scale" target="A2.vendor_share">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A2.gcc_share&gt;A2.gcc_scale" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;strokeWidth=2.4;" edge="1" parent="1" source="A2.gcc_share" target="A2.gcc_scale">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A2.gcc_share&gt;A2.leaving" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A2.gcc_share" target="A2.leaving">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A2.leaving&gt;A2.costs" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A2.leaving" target="A2.costs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A2.margin&gt;A2.viability" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A2.margin" target="A2.viability">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A2.revenue&gt;A2.margin" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A2.revenue" target="A2.margin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A2.vendor_share&gt;A2.revenue" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A2.vendor_share" target="A2.revenue">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A2.viability&gt;A2.choosing" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A2.viability" target="A2.choosing">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.choosing" value="Clients choosing&#10;GCCs" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="418" y="392" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.costs" value="Vendor costs" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="669" y="400" width="108" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.gcc_scale" value="GCC scale&#10;advantage" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="201" y="242" width="85" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.gcc_share" value="GCC share of IT&#10;work" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="181" y="392" width="123" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.leaving" value="Staff leaving&#10;vendors" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="425" y="542" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.margin" value="Vendor margin" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="665" y="250" width="115" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.revenue" value="Vendor revenue" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="421" y="100" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.vendor_share" value="Vendor share of&#10;work" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="181" y="92" width="123" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.viability" value="Vendor viability" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="418" y="250" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.limit_cap" value="limit: the advantage&#10;is capped" style="html=0;fontFamily=Helvetica;fontSize=12;shape=hexagon;perimeter=hexagonPerimeter2;size=0.12;fillColor=#FFFFFF;strokeColor=#333333;fontSize=11;fontStyle=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="40" y="318" width="166" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.loop_gcc" value="R&#10;GCC scale&#10;(capped)" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="312" y="230" width="102" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.loop_hire" value="R&#10;GCCs hire from&#10;vendors" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="529" y="305" width="148" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="A2.loop_squeeze" value="R&#10;Vendor squeeze" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="289" y="162" width="148" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="A2. The GCC scale loop" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="237" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop.&#10;Box: a stock (it accumulates). Bold text: everything else.&#10;Hexagon: a limit on the link beside it." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="624" width="389" height="67" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="The more IT work GCCs hold, the stronger their scale advantage, and the more clients&#10;choose them; the work they take comes out of vendors' books, and GCC hiring from vendors&#10;raises their costs. The advantage is capped: the loop feeds back until about 2032, then&#10;sits at its cap, a fixed shift with no further gain." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="459" y="624" width="580" height="67" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

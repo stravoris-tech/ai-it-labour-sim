@@ -46,6 +46,15 @@ def test_extractor_finds_all_44_truth_edges(edges: list[G.GraphEdge]) -> None:
     assert missing == []
 
 
+def test_extractor_follows_dict_values(edges: list[G.GraphEdge]) -> None:
+    """``sum(x.values())`` reads ``x``: the four edges recon 10b found missing (slice 10b)."""
+    found = {(e.source, e.target): e.file_line for e in edges}
+    assert found[("item:VF.IdxVol", "item:VF.AvgIdx")].startswith("src/aisim/scalar/finance.py:252")
+    assert found[("item:CompE", "item:Completion")] == "src/aisim/scalar/work.py:82"
+    assert found[("item:Src.VExp", "item:Src.Contested")].startswith("src/aisim/scalar/sourcing.py:76")
+    assert found[("item:BLs", "item:TotBL")] == "src/aisim/scalar/work.py:87"
+
+
 def test_openings_switch_is_a_control_dependence(edges: list[G.GraphEdge]) -> None:
     dep = {(e.source, e.target): e.dependence for e in edges}
     assert dep[("param:OpeningsContinuous", "item:fl.openings")] == "control"

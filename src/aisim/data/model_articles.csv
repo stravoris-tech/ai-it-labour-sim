@@ -1,0 +1,105 @@
+article,part,id,label,items,source,target,sign,path,path_signs,story,status
+A1,story,A1,Why total IT jobs hold while their employer changes,,,,,,,"AI raises output per worker, so fewer staff are needed for the same work. Work that moves to a GCC still needs people, so the GCC hires as the vendor shrinks. At the same time GCCs win work from vendors and their scale advantage feeds itself, so total IT staff moves less than the split between employers.",reviewed
+A1,node,A1.ai_use,Delivery AI use,A,,,,,,,reviewed
+A1,node,A1.output,Output per worker,Pe;PerceivedP,,,,,,,reviewed
+A1,node,A1.waiting,IT work waiting,BL;BLe,,,,,,,reviewed
+A1,node,A1.needed,Staff needed,DesiredE;Desired,,,,,,,reviewed
+A1,node,A1.staff,IT staff,H,,,,,,,reviewed
+A1,node,A1.done,Work done,CompE;Comp,,,,,,,reviewed
+A1,node,A1.gcc_share,GCC share of work,GCCW,,,,,,,reviewed
+A1,node,A1.gcc_scale,GCC scale advantage,GCCScaleTerm,,,,,,,reviewed
+A1,node,A1.vendor_share,Vendor share of work,VW,,,,,,,reviewed
+A1,link,A1.ai_use>A1.output,,,A1.ai_use,A1.output,+,A > Pew > EffE > Pe,+ - -,,reviewed
+A1,link,A1.output>A1.needed,,,A1.output,A1.needed,-,PerceivedP > DesiredE,-,,reviewed
+A1,link,A1.waiting>A1.needed,,,A1.waiting,A1.needed,+,BLe > DesiredE,+,,reviewed
+A1,link,A1.needed>A1.staff,,,A1.needed,A1.staff,+,Desired > surplus > fl.layoffs > H,- + -,,reviewed
+A1,link,A1.staff>A1.done,,,A1.staff,A1.done,+,H > EffStaffE > CapE > CompE,+ + +,,reviewed
+A1,link,A1.done>A1.waiting,,,A1.done,A1.waiting,-,Comp > BL,-,,reviewed
+A1,link,A1.gcc_share>A1.gcc_scale,,,A1.gcc_share,A1.gcc_scale,+,GCCW > GCCScaleTerm,+,,reviewed
+A1,link,A1.gcc_scale>A1.gcc_share,,,A1.gcc_scale,A1.gcc_share,+,GCCScaleTerm > SrcTarget > SrcPerc > GCCW,+ + +,,reviewed
+A1,link,A1.gcc_scale>A1.vendor_share,,,A1.gcc_scale,A1.vendor_share,-,GCCScaleTerm > SrcTarget > SrcPerc > SignS > VW,- + + +,,reviewed
+A1,link,A1.vendor_share>A1.needed,,,A1.vendor_share,A1.needed,+,VW > EmpShare > BLe > DesiredE,+ + +,,reviewed
+A1,link,A1.gcc_share>A1.needed,,,A1.gcc_share,A1.needed,+,GCCW > EmpShare > BLe > DesiredE,+ + +,,reviewed
+A1,loop,A1.loop_staffing,Staffing catches up with the work,B13;B1,,,B,A1.needed > A1.staff > A1.done > A1.waiting > A1.needed,,,reviewed
+A1,loop,A1.loop_gcc,GCC scale,R7,,,R,A1.gcc_share > A1.gcc_scale > A1.gcc_share,,,reviewed
+A2,story,A2,The GCC scale loop,,,,,,,"The more IT work GCCs hold, the stronger their scale advantage, and the more clients choose them; the work they take comes out of vendors' books, and GCC hiring from vendors raises their costs. The advantage is capped: the loop feeds back until about 2032, then sits at its cap, a fixed shift with no further gain.",reviewed
+A2,node,A2.gcc_share,GCC share of IT work,GCCW,,,,,,,reviewed
+A2,node,A2.gcc_scale,GCC scale advantage,GCCScaleTerm,,,,,,,reviewed
+A2,node,A2.choosing,Clients choosing GCCs,SrcTarget;SrcPerc,,,,,,,reviewed
+A2,node,A2.vendor_share,Vendor share of work,VW,,,,,,,reviewed
+A2,node,A2.revenue,Vendor revenue,VF.Revenue,,,,,,,reviewed
+A2,node,A2.margin,Vendor margin,VB.Margin,,,,,,,reviewed
+A2,node,A2.leaving,Staff leaving vendors,sw.out,,,,,,,reviewed
+A2,node,A2.costs,Vendor costs,VB.VendorCost,,,,,,,reviewed
+A2,node,A2.viability,Vendor viability,Viab;VF.DevEff,,,,,,,reviewed
+A2,link,A2.gcc_share>A2.gcc_scale,,,A2.gcc_share,A2.gcc_scale,+,GCCW > GCCScaleTerm,+,,reviewed
+A2,link,A2.gcc_scale>A2.choosing,,,A2.gcc_scale,A2.choosing,+,GCCScaleTerm > SrcTarget,+,,reviewed
+A2,link,A2.choosing>A2.gcc_share,,,A2.choosing,A2.gcc_share,+,SrcPerc > GCCW,+,,reviewed
+A2,link,A2.gcc_scale>A2.vendor_share,,,A2.gcc_scale,A2.vendor_share,-,GCCScaleTerm > SrcTarget > SrcPerc > SignS > VW,- + + +,,reviewed
+A2,link,A2.vendor_share>A2.revenue,,,A2.vendor_share,A2.revenue,+,VW > EmpShare > BLe > CompE > Delivered > VF.BaseRev > VF.Revenue,+ + + + + +,,reviewed
+A2,link,A2.revenue>A2.margin,,,A2.revenue,A2.margin,+,VF.Revenue > VB.Margin,+,,reviewed
+A2,link,A2.leaving>A2.costs,,,A2.leaving,A2.costs,+,sw.out > VB.VendorCost,+,,reviewed
+A2,link,A2.costs>A2.margin,,,A2.costs,A2.margin,-,VB.VendorCost > VB.Margin,-,,reviewed
+A2,link,A2.margin>A2.viability,,,A2.margin,A2.viability,+,VB.Margin > Viab,+,,reviewed
+A2,link,A2.viability>A2.choosing,,,A2.viability,A2.choosing,-,VF.DevEff > RiskOpt > SrcTarget,+ -,,reviewed
+A2,link,A2.gcc_share>A2.leaving,,,A2.gcc_share,A2.leaving,+,GCCW > EmpShare > BLe > DesiredE > Desired > surplus > fl.openings > V > sw.out,+ + + + - - + +,,reviewed
+A2,loop,A2.loop_gcc,GCC scale (capped),R7,,,R,A2.gcc_share > A2.gcc_scale > A2.choosing > A2.gcc_share,,,reviewed
+A2,loop,A2.loop_squeeze,Vendor squeeze,R6,,,R,A2.viability > A2.choosing > A2.gcc_share > A2.gcc_scale > A2.vendor_share > A2.revenue > A2.margin > A2.viability,,,reviewed
+A2,loop,A2.loop_hire,GCCs hire from vendors,R10,,,R,A2.viability > A2.choosing > A2.gcc_share > A2.leaving > A2.costs > A2.margin > A2.viability,,,reviewed
+A2,limit,A2.limit_cap,limit: the advantage is capped,R7Lcap,A2.gcc_share,A2.gcc_scale,,,,,reviewed
+A3,story,A3,Vendor distress and client flight,,,,,,,"A vendor whose margin falls well below normal loses clients and cuts staff; lost clients cut its revenue and margin further. Over time clients get used to the distress, so the flight fades. In the model it never acts in Base. It acts in short spells of about one to three years in five scenarios, mostly for the Indian IT vendors: the stress set 'Fast AI + OIT price shock', Compute shock, Visa relaxation, Jevons rebound and Demand boom.",reviewed
+A3,node,A3.margin,Vendor margin,VB.Margin,,,,,,,reviewed
+A3,node,A3.distress,Margin signal,VMarg,,,,,,,reviewed
+A3,node,A3.flight,Client flight,ClientFlight,,,,,,,reviewed
+A3,node,A3.used,Clients get used to it,C4Hab,,,,,,,reviewed
+A3,node,A3.new_share,Vendor share of new contracts,SignS;SrcTarget;SrcPerc,,,,,,,reviewed
+A3,node,A3.work,Vendor work,VW,,,,,,,reviewed
+A3,node,A3.revenue,Vendor revenue,VF.Revenue,,,,,,,reviewed
+A3,node,A3.staff,Vendor staff,DesiredE;H,,,,,,,reviewed
+A3,node,A3.costs,Vendor costs,VB.VendorCost,,,,,,,reviewed
+A3,link,A3.margin>A3.distress,,,A3.margin,A3.distress,+,VB.Margin > VMarg,+,,reviewed
+A3,link,A3.distress>A3.flight,,,A3.distress,A3.flight,-,VMarg > ClientFlight,-,,reviewed
+A3,link,A3.flight>A3.new_share,,,A3.flight,A3.new_share,-,ClientFlight > RiskOpt > SrcTarget,- +,,reviewed
+A3,link,A3.new_share>A3.work,,,A3.new_share,A3.work,+,SignS > VW,+,,reviewed
+A3,link,A3.work>A3.revenue,,,A3.work,A3.revenue,+,VW > EmpShare > BLe > CompE > Delivered > VF.BaseRev > VF.Revenue,+ + + + + +,,reviewed
+A3,link,A3.revenue>A3.margin,,,A3.revenue,A3.margin,+,VF.Revenue > VB.Margin,+,,reviewed
+A3,link,A3.distress>A3.used,,,A3.distress,A3.used,-,VMarg > C4Hab,-,,reviewed
+A3,link,A3.used>A3.flight,,,A3.used,A3.flight,-,C4Hab > ClientFlight,-,,reviewed
+A3,link,A3.distress>A3.staff,,,A3.distress,A3.staff,+,VMarg > DesiredE,+,,reviewed
+A3,link,A3.staff>A3.costs,,,A3.staff,A3.costs,+,H > LabourCost > VF.VLab > VB.VendorCost,+ + +,,reviewed
+A3,link,A3.costs>A3.margin,,,A3.costs,A3.margin,-,VB.VendorCost > VB.Margin,-,,reviewed
+A3,loop,A3.loop_flight,Client flight,P-C4;R6,,,R,A3.margin > A3.distress > A3.flight > A3.new_share > A3.work > A3.revenue > A3.margin,,,reviewed
+A3,loop,A3.loop_fade,Flight fades,P-C4,,,B,A3.distress > A3.used > A3.flight > A3.new_share > A3.work > A3.revenue > A3.margin > A3.distress,,,reviewed
+A3,loop,A3.loop_cut,Cutting staff restores margin,P-C2;B6,,,B,A3.margin > A3.distress > A3.staff > A3.costs > A3.margin,,,reviewed
+A4,story,A4,The pricing ceiling under fast AI,,,,,,,"Clients expect AI gains to show up as lower prices; a ceiling on the AI discount and a floor at cost limit how far prices fall, and vendors that lose share adopt AI faster. In the model both limits bind only in the Fast AI scenario and the stress set 'Fast AI + OIT price shock': the floor from 2028, the ceiling from mid-2030.",reviewed
+A4,node,A4.ai_use,Vendor AI use,A,,,,,,,reviewed
+A4,node,A4.output,Vendor output per worker,Pe,,,,,,,reviewed
+A4,node,A4.expect,What clients expect AI to save,ClientP;VF.PU,,,,,,,reviewed
+A4,node,A4.will_pay,Price clients will pay,VF.Anchor,,,,,,,reviewed
+A4,node,A4.new_prices,New-contract prices,VF.PNew,,,,,,,reviewed
+A4,node,A4.cost,Cost of using a vendor,CostOpt,,,,,,,reviewed
+A4,node,A4.vendor_share,Vendor share of work,VW,,,,,,,reviewed
+A4,node,A4.lost,Share lost to rivals,VB.ShareLoss,,,,,,,reviewed
+A4,link,A4.ai_use>A4.output,,,A4.ai_use,A4.output,+,A > Pew > EffE > Pe,+ - -,,reviewed
+A4,link,A4.output>A4.expect,,,A4.output,A4.expect,+,Pe > ClientP,+,,reviewed
+A4,link,A4.expect>A4.will_pay,,,A4.expect,A4.will_pay,-,ClientP > VF.Anchor,-,,reviewed
+A4,link,A4.will_pay>A4.new_prices,,,A4.will_pay,A4.new_prices,+,VF.Anchor > VF.PNew,+,,reviewed
+A4,link,A4.will_pay>A4.cost,,,A4.will_pay,A4.cost,+,VF.Anchor > CostOpt,+,,reviewed
+A4,link,A4.cost>A4.vendor_share,,,A4.cost,A4.vendor_share,-,CostOpt > SrcTarget > SrcPerc > SignS > VW,- + + +,,reviewed
+A4,link,A4.vendor_share>A4.lost,,,A4.vendor_share,A4.lost,-,VW > VB.VShare > VB.ShareLoss,+ -,,reviewed
+A4,link,A4.lost>A4.ai_use,,,A4.lost,A4.ai_use,+,VB.ShareLoss > push > AdoptE > A,+ + +,,reviewed
+A4,loop,A4.loop_share,Lower prices ease the AI push,U4,,,B,A4.ai_use > A4.output > A4.expect > A4.will_pay > A4.cost > A4.vendor_share > A4.lost > A4.ai_use,,,reviewed
+A4,limit,A4.limit_ceiling,limit: AI-discount ceiling,AIDiscCeil,A4.expect,A4.will_pay,,,,,reviewed
+A4,limit,A4.limit_floor,limit: price floor at cost,PriceFloor;ECost,A4.will_pay,A4.new_prices,,,,,reviewed
+A5,story,A5,Discouraged entry,,,,,,,"High IT unemployment puts students off IT; fewer graduates arrive years later, unemployment falls and prospects improve. Two delays, perception and study, mean the correction arrives years late.",reviewed
+A5,node,A5.unemployment,IT unemployment,UnempRate;U,,,,,,,reviewed
+A5,node,A5.seen,Unemployment as students see it,PUL,,,,,,,reviewed
+A5,node,A5.enrolment,Enrolment in IT courses,EnrolEffect;Enrol,,,,,,,reviewed
+A5,node,A5.pipeline,Students in the pipeline,Pipeline,,,,,,,reviewed
+A5,node,A5.graduates,Graduates,Grad,,,,,,,reviewed
+A5,link,A5.unemployment>A5.seen,,,A5.unemployment,A5.seen,+,UnempRate > PUL,+,,reviewed
+A5,link,A5.seen>A5.enrolment,,,A5.seen,A5.enrolment,-,PUL > EnrolEffect,-,,reviewed
+A5,link,A5.enrolment>A5.pipeline,,,A5.enrolment,A5.pipeline,+,Enrol > Pipeline,+,,reviewed
+A5,link,A5.pipeline>A5.graduates,,,A5.pipeline,A5.graduates,+,Pipeline > Grad,+,,reviewed
+A5,link,A5.graduates>A5.unemployment,,,A5.graduates,A5.unemployment,+,Grad > U,+,,reviewed
+A5,loop,A5.loop_entry,Discouraged entry,B5,,,B,A5.unemployment > A5.seen > A5.enrolment > A5.pipeline > A5.graduates > A5.unemployment,,,reviewed

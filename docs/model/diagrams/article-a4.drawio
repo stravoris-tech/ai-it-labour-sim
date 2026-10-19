@@ -1,0 +1,76 @@
+<mxfile host="aisim" type="device">
+  <diagram id="article-a4" name="article-a4">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1085" pageHeight="724" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:A4.ai_use&gt;A4.output" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A4.ai_use" target="A4.output">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A4.cost&gt;A4.vendor_share" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A4.cost" target="A4.vendor_share">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A4.expect&gt;A4.will_pay" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;strokeWidth=2.4;" edge="1" parent="1" source="A4.expect" target="A4.will_pay">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A4.lost&gt;A4.ai_use" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A4.lost" target="A4.ai_use">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A4.output&gt;A4.expect" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A4.output" target="A4.expect">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A4.vendor_share&gt;A4.lost" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A4.vendor_share" target="A4.lost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A4.will_pay&gt;A4.cost" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="A4.will_pay" target="A4.cost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:A4.will_pay&gt;A4.new_prices" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;strokeWidth=2.4;" edge="1" parent="1" source="A4.will_pay" target="A4.new_prices">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A4.ai_use" value="Vendor AI use" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#D5ECFA;strokeColor=#56B4E9;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="302" y="550" width="109" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="A4.cost" value="Cost of using a&#10;vendor" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="530" y="92" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="A4.expect" value="What clients&#10;expect AI to save" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="48" y="392" width="137" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="A4.lost" value="Share lost to&#10;rivals" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="538" y="392" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="A4.new_prices" value="New-contract&#10;prices" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="302" y="92" width="108" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="A4.output" value="Vendor output per&#10;worker" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="284" y="392" width="145" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="A4.vendor_share" value="Vendor share of&#10;work" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="534" y="242" width="123" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="A4.will_pay" value="Price clients will&#10;pay" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="280" y="242" width="152" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="A4.limit_ceiling" value="limit: AI-discount&#10;ceiling" style="html=0;fontFamily=Helvetica;fontSize=12;shape=hexagon;perimeter=hexagonPerimeter2;size=0.12;fillColor=#FFFFFF;strokeColor=#333333;fontSize=11;fontStyle=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="40" y="318" width="153" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="A4.limit_floor" value="limit: price floor at&#10;cost" style="html=0;fontFamily=Helvetica;fontSize=12;shape=hexagon;perimeter=hexagonPerimeter2;size=0.12;fillColor=#FFFFFF;strokeColor=#333333;fontSize=11;fontStyle=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="150" y="168" width="172" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="A4.loop_share" value="B&#10;Lower prices&#10;ease the AI&#10;push" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="411" y="298" width="130" height="83" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="A4. The pricing ceiling under fast AI" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="386" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="+ or - on an arrow: the link's polarity.&#10;R / B circle: a reinforcing / balancing loop.&#10;Box: a stock (it accumulates). Bold text: everything else.&#10;Hexagon: a limit on the link beside it." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="617" width="389" height="67" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="Clients expect AI gains to show up as lower prices; a ceiling on the AI discount and a&#10;floor at cost limit how far prices fall, and vendors that lose share adopt AI faster. In&#10;the model both limits bind only in the Fast AI scenario and the stress set 'Fast AI + OIT&#10;price shock': the floor from 2028, the ceiling from mid-2030." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="459" y="617" width="586" height="67" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
