@@ -1,0 +1,366 @@
+<mxfile host="aisim" type="device">
+  <diagram id="module-finance-a" name="module-finance-a">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1331" pageHeight="847" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:AICostDecline&gt;AICostPerUnit" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="AICostDecline" target="AICostPerUnit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:AICostPerUnit&gt;VF.AICost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="AICostPerUnit" target="VF.AICost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:AIShockEnd&gt;AIShockNow" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="AIShockEnd" target="AIShockNow">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:AIShockMult&gt;AIShockNow" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="AIShockMult" target="AIShockNow">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:AIShockNow&gt;AICostPerUnit" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="AIShockNow" target="AICostPerUnit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:AIShockStart&gt;AIShockNow" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="AIShockStart" target="AIShockNow">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CostProg&gt;VF.VLab" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CostProg" target="VF.VLab">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CostProg&gt;flow:CostProg" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CostProg" target="flow:CostProg">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1127" y="541.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:Delivered&gt;VF.VendDel" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Delivered" target="VF.VendDel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ECost&gt;flow:ECost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ECost" target="flow:ECost">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="870" y="136.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:LabourCost&gt;VF.LabRaw" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="LabourCost" target="VF.LabRaw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:LabourCost&gt;VF.VLab" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="LabourCost" target="VF.VLab">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Overhead&gt;VB.VendorCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Overhead" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Overhead&gt;flow:Overhead" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Overhead" target="flow:Overhead">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1235.5" y="316.8" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:R10rc&gt;VB.VendorCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="R10rc" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VB.CostIdx&gt;flow:ECost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VB.CostIdx" target="flow:ECost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VB.CostProgTarget&gt;flow:CostProg" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VB.CostProgTarget" target="flow:CostProg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VB.VendorCost&gt;VB.CostIdx" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VB.VendorCost" target="VB.CostIdx">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.AICost&gt;VB.VendorCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.AICost" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.VLab&gt;VB.VendorCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.VLab" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.VendDel&gt;VB.CostIdx" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.VendDel" target="VB.CostIdx">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.VendDel&gt;VF.AICost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.VendDel" target="VF.AICost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.VisaCost&gt;VB.VendorCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.VisaCost" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:WI&gt;Wage" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="WI" target="Wage">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:WI&gt;flow:WI" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="WI" target="flow:WI">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="881.9" y="546" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:WITarget&gt;flow:WI" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="WITarget" target="flow:WI">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Wage&gt;LabourCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Wage" target="LabourCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Wage&gt;VB.VendorCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Wage" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:capu&gt;Delivered" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="capu" target="Delivered">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:flow:CostProg&gt;CostProg" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:CostProg" target="CostProg">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1158" y="549.3" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:flow:ECost&gt;ECost" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:ECost" target="ECost">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="874" y="167.9" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:flow:Overhead&gt;Overhead" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:Overhead" target="Overhead">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1205" y="326.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:flow:WI&gt;WI" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:WI" target="WI">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="887.1" y="577.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:ghost:Attr0&gt;VB.VendorCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:Attr0" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:Attr0&gt;VB.VolAttr" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:Attr0" target="VB.VolAttr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:CompE&gt;Delivered" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:CompE" target="Delivered">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:EffStaffE&gt;Delivered" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:EffStaffE" target="Delivered">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:H&gt;LabourCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:H" target="LabourCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:H&gt;VB.VendorCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:H" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:H&gt;VB.VolAttr" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:H" target="VB.VolAttr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:H&gt;VF.VisaCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:H" target="VF.VisaCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:H&gt;capu" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:H" target="capu">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:O&gt;LabourCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:O" target="LabourCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:O&gt;capu" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:O" target="capu">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:PUS&gt;WITarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:PUS" target="WITarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:Pe&gt;VF.AICost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:Pe" target="VF.AICost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:fl.leave&gt;VB.VendorCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:fl.leave" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:fl.leave&gt;VB.VolAttr" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:fl.leave" target="VB.VolAttr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:fl.quits&gt;VB.VendorCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:fl.quits" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:fl.quits&gt;VB.VolAttr" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:fl.quits" target="VB.VolAttr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:hires&gt;VF.VisaCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:hires" target="VF.VisaCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:sw.out&gt;VB.VendorCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:sw.out" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:sw.out&gt;VB.VolAttr" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:sw.out" target="VB.VolAttr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:VB.SalesCost&gt;VB.VendorCost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:VB.SalesCost" target="VB.VendorCost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:VF.BaseRev&gt;VB.CostIdx" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:VF.BaseRev" target="VB.CostIdx">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:VF.DevEff&gt;VB.CostProgTarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:VF.DevEff" target="VB.CostProgTarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:VF.DevEff&gt;WITarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:VF.DevEff" target="WITarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:VF.ExpRate&gt;flow:ECost" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:VF.ExpRate" target="flow:ECost">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:VF.Revenue&gt;flow:Overhead" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:VF.Revenue" target="flow:Overhead">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AICostDecline" value="AI cost decline" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="330" y="163" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="AICostPerUnit" value="AI cost per unit" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="303" y="202" width="138" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="AIShockEnd" value="AI shock end" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="87" y="105" width="102" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="AIShockMult" value="AI cost shock&#10;multiplier" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="162" y="214" width="109" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="AIShockNow" value="AI cost shock&#10;factor" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="178" y="156" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="AIShockStart" value="AI shock start" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="197" y="85" width="116" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="CostProg" value="Cost programme&#10;savings" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1094" y="486" width="116" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="Delivered" value="Work delivered" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="544" y="143" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="ECost" value="Expected delivery&#10;cost" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="883" y="121" width="137" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="LabourCost" value="Unit labour cost" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="830" y="415" width="138" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="Overhead" value="Vendor overhead" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1168" y="337" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="R10rc" value="Attrition&#10;replacement cost" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="424" y="621" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VB.CostIdx" value="Vendor cost index" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="515" y="279" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VB.CostProgTarget" value="Cost programme&#10;target" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="934" y="583" width="123" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VB.VendorCost" value="Vendor total cost" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="378" y="454" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VB.VolAttr" value="Voluntary&#10;attrition ratio" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="73" y="427" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.AICost" value="Vendor AI cost" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="349" y="318" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.LabRaw" value="Gross vendor&#10;labour cost" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="981" y="427" width="108" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.VLab" value="Net vendor labour&#10;cost" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="924" y="486" width="145" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.VendDel" value="Vendor work&#10;delivered" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="400" y="253" width="100" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.VisaCost" value="Visa cost" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="486" y="493" width="85" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="WI" value="Wage index" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="903" y="538" width="88" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="WITarget" value="Wage index target" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="710" y="628" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="Wage" value="Annual pay rate" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="775" y="454" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="capu" value="Unit effective&#10;staff" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="700" y="292" width="123" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:CostProg" value="Cost programme&#10;adjustment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1121" y="552" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:ECost" value="Expected cost&#10;adjustment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="780.5" y="130" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:Overhead" value="Overhead&#10;adjustment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1199" y="261" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:WI" value="Wage index&#10;adjustment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="810" y="540" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:Attr0" value="2024 voluntary&#10;attrition&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="198" y="577" width="114" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:CompE" value="Employer work&#10;completed&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="615" y="72" width="101" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:EffStaffE" value="Effective staff&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="491" y="79" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:H" value="Headcount&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="549" y="390" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:O" value="Onboarding staff&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="741" y="351" width="121" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:PUS" value="Worker-perceived&#10;unemployment&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="644" y="499" width="121" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:Pe" value="Employer&#10;productivity&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="246" y="305" width="95" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:fl.leave" value="Leaving IT&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="218" y="506" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:fl.quits" value="Quits&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="218" y="448" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:hires" value="Hires&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="510" y="545" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:sw.out" value="Switches out&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="237" y="390" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:VB.SalesCost" value="Sales cost&#10;(finance c)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="367" y="545" width="89" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:VF.BaseRev" value="Base revenue&#10;(finance c)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="561" y="212" width="95" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:VF.DevEff" value="Effective margin&#10;deviation&#10;(finance c)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="878" y="635" width="121" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:VF.ExpRate" value="Book expiry rate&#10;(finance b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="819" y="234" width="121" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:VF.Revenue" value="Vendor revenue&#10;(finance c)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="1176" y="196" width="108" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Vendor finance and contracts (a): costs and wages" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="505" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Box: a stock. Hourglass: a flow (its valve), named below. Bold coloured text: an&#10;auxiliary. Grey italic: a lever parameter. Thick arrow: a flow changing the&#10;stock it points to. Thin arrow: an input of the item it points to. Grey text,&#10;(module): an input from another module. Dashed grey box, (page): an input from&#10;another page of this module." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="709" width="529" height="81" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="Arrows show dependence only and carry no polarity: signs are on the causal-loop&#10;panels (panels 1-5) and in docs/model/loops.csv." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="709" width="523" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:2" value="Goal-seeking valves (a stock adjusting toward a target; every input points at&#10;the valve): Cost programme adjustment, Expected cost adjustment, Overhead&#10;adjustment, Wage index adjustment." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="753" width="510" height="54" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

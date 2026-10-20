@@ -1,0 +1,317 @@
+<mxfile host="aisim" type="device">
+  <diagram id="module-consumer-b" name="module-consumer-b">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1253" pageHeight="847" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:BudgetGrowth&gt;cons.Budget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BudgetGrowth" target="cons.Budget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:BudgetShock&gt;BudgetGrowth" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BudgetShock" target="BudgetGrowth">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:BudgetShockEnd&gt;BudgetGrowth" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BudgetShockEnd" target="BudgetGrowth">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:BudgetShockStart&gt;BudgetGrowth" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BudgetShockStart" target="BudgetGrowth">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CloudPB&gt;cons.CloudSpend" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CloudPB" target="cons.CloudSpend">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CostIdx6&gt;flow:CostPerc" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CostIdx6" target="flow:CostPerc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CostPerc&gt;Jev" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CostPerc" target="Jev">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CostPerc&gt;flow:CostPerc" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CostPerc" target="flow:CostPerc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1031.1" y="644.9" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:CreditCostPB&gt;cons.CreditSpend" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CreditCostPB" target="cons.CreditSpend">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Demand&gt;DemandTot" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Demand" target="DemandTot">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:GCCAppealKeep&gt;GCCAppeal" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="GCCAppealKeep" target="GCCAppeal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Jev&gt;Demand" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Jev" target="Demand">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Jev&gt;cons.AIBuild" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Jev" target="cons.AIBuild">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:JevonsEps&gt;Jev" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="JevonsEps" target="Jev">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:SpendRatio&gt;cons.Approval" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="SpendRatio" target="cons.Approval">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:SpendRatio&gt;flow:SpendRatio" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="SpendRatio" target="flow:SpendRatio">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1016.7" y="266.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:cons.AgentWork&gt;cons.CreditSpend" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="cons.AgentWork" target="cons.CreditSpend">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:cons.Approval&gt;Demand" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="cons.Approval" target="Demand">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:cons.Approval&gt;cons.AIBuild" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="cons.Approval" target="cons.AIBuild">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:cons.Budget&gt;flow:SpendRatio" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="cons.Budget" target="flow:SpendRatio">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:cons.CloudSpend&gt;cons.Committed" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="cons.CloudSpend" target="cons.Committed">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:cons.Committed&gt;flow:SpendRatio" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="cons.Committed" target="flow:SpendRatio">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:cons.CreditSpend&gt;cons.Committed" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="cons.CreditSpend" target="cons.Committed">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:flow:CostPerc&gt;CostPerc" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:CostPerc" target="CostPerc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1035.4" y="676.6" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:flow:SpendRatio&gt;SpendRatio" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:SpendRatio" target="SpendRatio">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1022.3" y="298.3" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:ghost:AIShockNow&gt;CreditCostPB" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:AIShockNow" target="CreditCostPB">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:CS&gt;cons.Committed" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:CS" target="cons.Committed">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:CompS&gt;cons.CloudSpend" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:CompS" target="cons.CloudSpend">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:Completion&gt;CostIdx6" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:Completion" target="CostIdx6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:G&gt;BudgetGrowth" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:G" target="BudgetGrowth">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:G&gt;Demand" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:G" target="Demand">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:G&gt;cons.AIBuild" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:G" target="cons.AIBuild">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:H&gt;ConsIT" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:H" target="ConsIT">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:P_all&gt;CloudPB" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:P_all" target="CloudPB">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:ServicesSpend&gt;CostIdx6" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:ServicesSpend" target="CostIdx6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:ServicesSpend&gt;cons.Committed" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:ServicesSpend" target="cons.Committed">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:AC&gt;Demand" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:AC" target="Demand">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:AC&gt;cons.AIBuild" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:AC" target="cons.AIBuild">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:CyberMult&gt;Demand" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:CyberMult" target="Demand">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:Port&gt;Demand" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:Port" target="Demand">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:SeatsB&gt;Demand" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:SeatsB" target="Demand">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:cons.AdoptC&gt;Demand" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:cons.AdoptC" target="Demand">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:cons.AdoptC&gt;cons.AIBuild" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:cons.AdoptC" target="cons.AIBuild">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:cons.LOBTarget&gt;cons.AgentWork" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:cons.LOBTarget" target="cons.AgentWork">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:cons.NetSavings&gt;cons.Budget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:cons.NetSavings" target="cons.Budget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:cons.NewApps&gt;Demand" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:cons.NewApps" target="Demand">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:cons.RegDrag&gt;Demand" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:cons.RegDrag" target="Demand">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:cons.Retire&gt;Demand" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:cons.Retire" target="Demand">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:cons.SeatSpend&gt;cons.Committed" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:cons.SeatSpend" target="cons.Committed">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BudgetGrowth" value="Budget growth&#10;factor" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="562" y="214" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="BudgetShock" value="Budget shock" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="629" y="163" width="102" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="BudgetShockEnd" value="Budget shock end" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="475" y="143" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="BudgetShockStart" value="Budget shock start" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="408" y="202" width="144" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="CloudPB" value="Cloud spend per&#10;unit" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="875" y="78" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="ConsIT" value="Consumer IT&#10;headcount" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="30" y="524" width="100" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="CostIdx6" value="Services cost&#10;index" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="782" y="563" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="CostPerc" value="Perceived IT cost" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#BFE7DC;strokeColor=#009E73;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="637" width="137" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="CreditCostPB" value="AI credit cost" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="358" y="648" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="Demand" value="IT work demand" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#BFE7DC;strokeColor=#009E73;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="368" y="347" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="DemandTot" value="Total IT demand" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="115" y="221" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="GCCAppeal" value="GCC appeal" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="596" width="93" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="GCCAppealKeep" value="GCC appeal kept" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="970" y="567" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="Jev" value="Jevons demand&#10;multiplier" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="1082" y="505" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="JevonsEps" value="Jevons elasticity" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="1052" y="454" width="137" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="SpendRatio" value="Spend to budget&#10;ratio" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#BFE7DC;strokeColor=#009E73;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1018" y="251" width="123" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="cons.AIBuild" value="AI build demand" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="915" y="531" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="cons.AgentWork" value="Agent work" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="334" y="609" width="93" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="cons.Approval" value="Demand approval" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="875" y="434" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="cons.Budget" value="Consumer IT budget" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="724" y="202" width="152" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="cons.CloudSpend" value="Cloud spend" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="970" y="143" width="100" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="cons.Committed" value="Committed IT spend" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="744" y="299" width="152" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="cons.CreditSpend" value="AI credit spend" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="455" y="590" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:CostPerc" value="Perceived cost&#10;adjustment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#BFE7DC;strokeColor=#009E73;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="946" y="639" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:SpendRatio" value="Spend ratio&#10;adjustment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#BFE7DC;strokeColor=#009E73;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="947.5" y="261" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:AIShockNow" value="AI cost shock&#10;factor&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="210" y="635" width="101" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:CS" value="Sector completion&#10;share&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="816" y="344" width="127" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:CompS" value="Sector work&#10;completed&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="1036" y="72" width="89" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:Completion" value="Total work&#10;completed&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="779" y="615" width="82" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:G" value="Demand growth&#10;multiplier&#10;(capability)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="550" y="286" width="101" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:H" value="Headcount&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="43" y="584" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:P_all" value="Realised&#10;productivity&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="852" y="130" width="95" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:ServicesSpend" value="Services spend&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="606" y="564" width="108" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:AC" value="Consumer AI&#10;adoption&#10;(consumer a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="732" y="480" width="95" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:CyberMult" value="Cyber demand&#10;multiplier&#10;(consumer a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="272" y="421" width="95" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:Port" value="Application&#10;portfolio&#10;(consumer c)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="292" y="247" width="95" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:SeatsB" value="Billed seats&#10;(consumer c)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="152" y="293" width="95" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:cons.AdoptC" value="Consumer AI&#10;adoption rate&#10;(consumer a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="430" y="518" width="101" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:cons.LOBTarget" value="LOB headcount&#10;target&#10;(consumer a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="290" y="538" width="101" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:cons.NetSavings" value="Net LOB savings&#10;(consumer a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="723" y="99" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:cons.NewApps" value="New applications&#10;(consumer c)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="180" y="370" width="121" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:cons.RegDrag" value="Regulatory drag&#10;(consumer a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="403" y="273" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:cons.Retire" value="Application&#10;retirements&#10;(consumer c)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="472" y="441" width="95" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:cons.SeatSpend" value="Seat spend&#10;(consumer c)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="1052" y="351" width="95" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Client demand and consumer AI (b): budgets, demand and spend" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="614" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Box: a stock. Hourglass: a flow (its valve), named below. Bold coloured text: an&#10;auxiliary. Grey italic: a lever parameter. Thick arrow: a flow changing the&#10;stock it points to. Thin arrow: an input of the item it points to. Grey text,&#10;(module): an input from another module. Dashed grey box, (page): an input from&#10;another page of this module." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="723" width="529" height="81" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="Arrows show dependence only and carry no polarity: signs are on the causal-loop&#10;panels (panels 1-5) and in docs/model/loops.csv." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="723" width="523" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:2" value="Goal-seeking valves (a stock adjusting toward a target; every input points at&#10;the valve): Perceived cost adjustment, Spend ratio adjustment." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="767" width="510" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

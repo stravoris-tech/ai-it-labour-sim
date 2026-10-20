@@ -1,0 +1,384 @@
+<mxfile host="aisim" type="device">
+  <diagram id="module-labour-market-b" name="module-labour-market-b">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1291" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:H&gt;Attr0" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="H" target="Attr0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:H&gt;conv" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="H" target="conv">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="594.2" y="309.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:H&gt;expiry" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="H" target="expiry">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="606.1" y="448.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:H&gt;fl.layoffs" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="H" target="fl.layoffs">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="388.3" y="508.6" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:H&gt;fl.quits" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="H" target="fl.quits">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="585.3" y="509.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:H&gt;sw.in" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="H" target="sw.in">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="799.1" y="516" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:H&gt;sw.out" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="H" target="sw.out">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="684.6" y="589.3" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:O&gt;fl.onboard" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="O" target="fl.onboard">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="614.3" y="228.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:TTFr&gt;TTFratio" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="TTFr" target="TTFratio">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:V&gt;TTFr" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="V" target="TTFr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:V&gt;fl.openings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="V" target="fl.openings">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="630.9" y="380" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:V&gt;hires" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="V" target="hires">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1010.8" y="335.2" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:V&gt;sw.in" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="V" target="sw.in">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="894.3" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:V&gt;sw.out" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="V" target="sw.out">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VisaCap&gt;hires" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VisaCap" target="hires">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:conv&gt;H" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="conv" target="H">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="566.3" y="324.9" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:conv&gt;fl.layoffs" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="conv" target="fl.layoffs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:conv&gt;fl.openings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="conv" target="fl.openings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:expiry&gt;H" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="expiry" target="H">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="594.9" y="478.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:expiry&gt;fl.layoffs" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="expiry" target="fl.layoffs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:expiry&gt;fl.openings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="expiry" target="fl.openings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:fl.layoffs&gt;H" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="fl.layoffs" target="H">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="391.7" y="540.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:fl.onboard&gt;H" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="fl.onboard" target="H">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:fl.onboard&gt;O" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="fl.onboard" target="O">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="645.2" y="220.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:fl.openings&gt;V" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="fl.openings" target="V">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="629.6" y="412" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:fl.quits&gt;Attr0" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="fl.quits" target="Attr0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:fl.quits&gt;H" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="fl.quits" target="H">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="595.7" y="539.6" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:fl.quits&gt;fl.layoffs" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="fl.quits" target="fl.layoffs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:fl.quits&gt;fl.openings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="fl.quits" target="fl.openings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:G&gt;VisaCap" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:G" target="VisaCap">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VisaTight&gt;VisaCap" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VisaTight" target="VisaCap">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VisaTight&gt;conv" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VisaTight" target="conv">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:WI&gt;sw.in" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:WI" target="sw.in">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:WI&gt;sw.out" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:WI" target="sw.out">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:avail&gt;hires" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:avail" target="hires">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:avail&gt;sw.in" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:avail" target="sw.in">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:avail&gt;sw.out" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:avail" target="sw.out">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:cancel&gt;V" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="ghost:cancel" target="V">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:promo&gt;H" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="ghost:promo" target="H">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:promo&gt;TTFr" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:promo" target="TTFr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:promo&gt;V" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="ghost:promo" target="V">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:promo&gt;hires" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:promo" target="hires">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:promo&gt;sw.in" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:promo" target="sw.in">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:promo&gt;sw.out" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:promo" target="sw.out">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:surplus&gt;fl.layoffs" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:surplus" target="fl.layoffs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:surplus&gt;fl.openings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:surplus" target="fl.openings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:hires&gt;O" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="hires" target="O">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:hires&gt;TTFr" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="hires" target="TTFr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:hires&gt;V" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="hires" target="V">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="990.2" y="310.8" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:ref:U&gt;hires" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:U" target="hires">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:fl.leave&gt;Attr0" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:fl.leave" target="Attr0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:fl.leave&gt;H" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="ref:fl.leave" target="H">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:fl.leave&gt;fl.layoffs" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:fl.leave" target="fl.layoffs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:fl.leave&gt;fl.openings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:fl.leave" target="fl.openings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:fl.promo_out&gt;H" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="ref:fl.promo_out" target="H">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:fl.promo_out&gt;fl.layoffs" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:fl.promo_out" target="fl.layoffs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:fl.promo_out&gt;fl.openings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:fl.promo_out" target="fl.openings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:fl.retire&gt;H" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="ref:fl.retire" target="H">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:fl.retire&gt;fl.layoffs" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:fl.retire" target="fl.layoffs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:fl.retire&gt;fl.openings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:fl.retire" target="fl.openings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:sw.in&gt;H" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="sw.in" target="H">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="800.9" y="484" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:sw.in&gt;TTFr" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="sw.in" target="TTFr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:sw.in&gt;V" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="sw.in" target="V">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="925.7" y="454" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:sw.in&gt;hires" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="sw.in" target="hires">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:sw.out&gt;Attr0" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="sw.out" target="Attr0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:sw.out&gt;H" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="sw.out" target="H">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="715.9" y="582.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:sw.out&gt;fl.layoffs" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="sw.out" target="fl.layoffs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:sw.out&gt;fl.openings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="sw.out" target="fl.openings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Attr0" value="2024 voluntary&#10;attrition" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="542" y="681" width="116" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="H" value="Headcount" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="640" y="480" width="81" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="O" value="Onboarding staff" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="555" y="174" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="TTFr" value="Time to fill" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="986" y="419" width="108" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="TTFratio" value="Mid time-to-fill&#10;ratio" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="1031" y="485" width="138" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="V" value="Vacancies" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="860" y="394" width="81" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VisaCap" value="Visa cap" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="981" y="174" width="78" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="conv" value="Visa conversions" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="468" y="116" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="expiry" value="Visa expiries" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="508.5" y="409" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="fl.layoffs" value="Layoffs" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="87.5" y="531" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="fl.onboard" value="Onboarding&#10;completions" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="627.5" y="229" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="fl.openings" value="Vacancy openings" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="348" y="360" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="fl.quits" value="Quits" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="488.5" y="531" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:G" value="Demand growth&#10;multiplier&#10;(capability)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="970" y="88" width="101" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:VisaTight" value="Visa tightness&#10;(workforce)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="706" y="144" width="108" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:WI" value="Wage index&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="799" y="584" width="82" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:avail" value="Fill capacity&#10;(workforce)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="560" width="101" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:cancel" value="Vacancy&#10;cancellations&#10;(workforce)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="870" y="234" width="101" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:promo" value="Promotions&#10;(workforce)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="736" y="413" width="89" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:surplus" value="Staff surplus&#10;(workforce)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="50" y="413" width="101" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hires" value="Hires" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1088.5" y="214" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:U" value="Job seekers&#10;(labour market a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="1096" y="144" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:fl.leave" value="Leaving IT&#10;(labour market a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="396" y="658" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:fl.promo_out" value="Promotions out&#10;(labour market a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="276" y="169" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:fl.retire" value="Retirements&#10;(labour market a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="216" y="437" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="sw.in" value="Switches in" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="907.5" y="482" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="sw.out" value="Switches out" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="708" y="654" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Labour market (b): hiring and switching" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="405" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Box: a stock. Hourglass: a flow (its valve), named below. Bold coloured text: an&#10;auxiliary. Thick arrow: a flow changing the stock it points to. Thin arrow: an&#10;input of the item it points to. Grey text, (module): an input from another&#10;module. Dashed grey box, (page): an input from another page of this module." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="743" width="529" height="67" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="Arrows show dependence only and carry no polarity: signs are on the causal-loop&#10;panels (panels 1-5) and in docs/model/loops.csv." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="743" width="523" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

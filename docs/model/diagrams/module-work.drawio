@@ -1,0 +1,293 @@
+<mxfile host="aisim" type="device">
+  <diagram id="module-work" name="module-work">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1325" pageHeight="852" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:Aband&gt;BL" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="Aband" target="BL">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="840.5" y="604.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:BL&gt;Aband" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BL" target="Aband">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="846" y="636.3" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:BL&gt;BLs" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BL" target="BLs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:BL&gt;Comp" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BL" target="Comp">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="888.5" y="666.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:BL&gt;EffE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BL" target="EffE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:BLe&gt;CompE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BLe" target="CompE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:BLe&gt;Pe" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BLe" target="Pe">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:BLe&gt;RateE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BLe" target="RateE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:BLs&gt;BLe" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BLs" target="BLe">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:BLs&gt;TotBL" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="BLs" target="TotBL">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CapE&gt;CompE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CapE" target="CompE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ClientP&gt;flow:ClientP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ClientP" target="flow:ClientP">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="878.1" y="214.2" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:ClientP&gt;flow:ClientPRef" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ClientP" target="flow:ClientPRef">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ClientPRef&gt;flow:ClientPRef" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ClientPRef" target="flow:ClientPRef">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1146.9" y="105.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:Comp&gt;BL" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="Comp" target="BL">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="892.5" y="634.6" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:Comp&gt;CompS" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Comp" target="CompS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CompE&gt;Completion" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CompE" target="Completion">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CompE&gt;EffortDone" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CompE" target="EffortDone">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CompE&gt;RateE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CompE" target="RateE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CompS&gt;CS" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CompS" target="CS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Completion&gt;CS" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Completion" target="CS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Completion&gt;P_all" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Completion" target="P_all">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:EffE&gt;Pe" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="EffE" target="Pe">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:EffStaffE&gt;CapE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="EffStaffE" target="CapE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:EffortDone&gt;P_all" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="EffortDone" target="P_all">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:EmpShare&gt;Aband" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="EmpShare" target="Aband">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:EmpShare&gt;BLe" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="EmpShare" target="BLe">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:EmpShare&gt;Comp" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="EmpShare" target="Comp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:EmpShare&gt;EffE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="EmpShare" target="EffE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Pe&gt;CapE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Pe" target="CapE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Pe&gt;EffortDone" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Pe" target="EffortDone">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Pe&gt;flow:ClientP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Pe" target="flow:ClientP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Pe&gt;flow:PerceivedP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Pe" target="flow:PerceivedP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:PerceivedP&gt;flow:PerceivedP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="PerceivedP" target="flow:PerceivedP">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="328.6" y="176.3" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:RateE&gt;Aband" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="RateE" target="Aband">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:RateE&gt;Comp" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="RateE" target="Comp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:flow:ClientP&gt;ClientP" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:ClientP" target="ClientP">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="882.4" y="245.8" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:flow:ClientPRef&gt;ClientPRef" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:ClientPRef" target="ClientPRef">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1153.1" y="136.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:flow:PerceivedP&gt;PerceivedP" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:PerceivedP" target="PerceivedP">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="331.9" y="208.2" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:ghost:Demand&gt;BL" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="ghost:Demand" target="BL">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:GCCW&gt;EmpShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:GCCW" target="EmpShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:H&gt;EffStaffE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:H" target="EffStaffE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:IHW&gt;EmpShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:IHW" target="EmpShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:O&gt;EffStaffE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:O" target="EffStaffE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:Pew&gt;EffE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:Pew" target="EffE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VW&gt;EmpShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VW" target="EmpShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Aband" value="Work abandonment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="913" y="582" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="BL" value="IT work backlog" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="700" y="621" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="BLe" value="Employer backlog" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="731" y="440" width="138" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="BLs" value="Sector backlog" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="718" y="525" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="CS" value="Sector completion&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="1128" y="475" width="145" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="CapE" value="Delivery capacity" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="788" y="312" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="ClientP" value="Client-perceived&#10;productivity" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="895" y="198" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="ClientPRef" value="Client reference&#10;productivity" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1155" y="86" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="Comp" value="Work completion" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1007.5" y="642" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="CompE" value="Employer work&#10;completed" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="922" y="411" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="CompS" value="Sector work&#10;completed" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="560" width="100" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="Completion" value="Total work&#10;completed" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="1134" y="411" width="93" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="EffE" value="Employer backlog&#10;effort" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="471" y="475" width="138" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="EffStaffE" value="Effective staff" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="555" y="227" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="EffortDone" value="Effort spent" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="986" y="354" width="108" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="EmpShare" value="Employer work&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="302" y="624" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="P_all" value="Realised&#10;productivity" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="1106" y="347" width="108" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="Pe" value="Employer&#10;productivity" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="686" y="369" width="108" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="PerceivedP" value="Perceived&#10;productivity" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="349" y="164" width="102" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="RateE" value="Employer&#10;completion rate" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="935" y="475" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="TotBL" value="Total backlog" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#0072B2;" vertex="1" parent="1">
+          <mxGeometry x="802" y="482" width="115" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:ClientP" value="Client perception&#10;change" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="788.5" y="209" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:ClientPRef" value="Reference&#10;productivity&#10;change" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1068" y="95" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:PerceivedP" value="Perception change" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#BFDCEC;strokeColor=#0072B2;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="248.5" y="175" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:Demand" value="IT work demand&#10;(consumer)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="560" y="654" width="108" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:GCCW" value="GCC work share&#10;(sourcing)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="306" y="539" width="108" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:H" value="Headcount&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="463" y="137" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:IHW" value="In-house work&#10;share&#10;(sourcing)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="170" y="639" width="101" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:O" value="Onboarding staff&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="600" y="157" width="121" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:Pew" value="Employer work-type&#10;productivity&#10;(capability)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="474" y="384" width="133" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:VW" value="Vendor work share&#10;(sourcing)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="136" y="561" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Work and productivity" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="227" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Box: a stock. Hourglass: a flow (its valve), named below. Bold coloured text: an&#10;auxiliary. Thick arrow: a flow changing the stock it points to. Thin arrow: an&#10;input of the item it points to. Grey text, (module): an input from another&#10;module." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="714" width="529" height="67" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="Arrows show dependence only and carry no polarity: signs are on the causal-loop&#10;panels (panels 1-5) and in docs/model/loops.csv." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="714" width="523" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:2" value="Goal-seeking valves (a stock adjusting toward a target; every input points at&#10;the valve): Client perception change, Perception change, Reference productivity&#10;change." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="758" width="523" height="54" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

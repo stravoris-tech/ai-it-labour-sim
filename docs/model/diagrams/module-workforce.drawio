@@ -1,0 +1,213 @@
+<mxfile host="aisim" type="device">
+  <diagram id="module-workforce" name="module-workforce">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1178" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:Desired&gt;cancel" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Desired" target="cancel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Desired&gt;surplus" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Desired" target="surplus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:DesiredE&gt;Desired" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="DesiredE" target="Desired">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:JuniorCut&gt;ShareL" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="JuniorCut" target="ShareL">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:OnsiteShare&gt;UnitIn" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="OnsiteShare" target="UnitIn">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:R6e&gt;DesiredE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="R6e" target="DesiredE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ShareL&gt;Desired" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ShareL" target="Desired">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ShareL&gt;denomE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ShareL" target="denomE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:TightPerc&gt;dTight" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="TightPerc" target="dTight">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:TightPerc&gt;flow:TightPerc" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="TightPerc" target="flow:TightPerc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1016.3" y="506.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:UnitIn&gt;Desired" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="UnitIn" target="Desired">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VTEnd&gt;VisaTight" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VTEnd" target="VisaTight">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VTRampEnd&gt;VisaTight" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VTRampEnd" target="VisaTight">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VTRampStart&gt;VisaTight" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VTRampStart" target="VisaTight">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VisaMix&gt;UnitIn" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VisaMix" target="UnitIn">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VisaTight&gt;flow:TightPerc" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VisaTight" target="flow:TightPerc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:avail&gt;promo" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="avail" target="promo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:cancel&gt;avail" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="cancel" target="avail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:dTight&gt;OnsiteShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="dTight" target="OnsiteShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:dTight&gt;VisaMix" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="dTight" target="VisaMix">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:denomE&gt;Desired" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="denomE" target="Desired">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:flow:TightPerc&gt;TightPerc" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:TightPerc" target="TightPerc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1023.7" y="537.8" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:ghost:A&gt;ShareL" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:A" target="ShareL">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:BLe&gt;DesiredE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:BLe" target="DesiredE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:H&gt;cancel" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:H" target="cancel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:H&gt;promo" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:H" target="promo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:H&gt;surplus" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:H" target="surplus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:O&gt;cancel" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:O" target="cancel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:O&gt;surplus" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:O" target="surplus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:PerceivedP&gt;DesiredE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:PerceivedP" target="DesiredE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:V&gt;avail" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:V" target="avail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:V&gt;cancel" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:V" target="cancel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:V&gt;promo" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:V" target="promo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VMarg&gt;DesiredE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VMarg" target="DesiredE">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Desired" value="Desired headcount" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="588" y="310" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="DesiredE" value="Desired effective&#10;staff" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="788" y="196" width="145" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="JuniorCut" value="Junior hiring cut" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="452" y="267" width="137" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="OnsiteShare" value="OIT onsite share" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="871" y="353" width="138" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="R6e" value="Capacity exit&#10;strength" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="766" y="282" width="109" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="ShareL" value="Level mix" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="538" y="225" width="85" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="TightPerc" value="Perceived visa&#10;tightness" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F4D7BF;strokeColor=#D55E00;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1022" y="487" width="116" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="UnitIn" value="Unit work share" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="715" y="353" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VTEnd" value="End visa tightness" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="748" y="459" width="144" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VTRampEnd" value="Visa ramp end" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="606" y="502" width="109" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VTRampStart" value="Visa ramp start" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="738" y="545" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VisaMix" value="Onsite visa mix" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="775" y="395" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VisaTight" value="Visa tightness" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="738" y="502" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="avail" value="Fill capacity" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="142" y="502" width="115" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="cancel" value="Vacancy&#10;cancellations" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F4D7BF;strokeColor=#D55E00;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="388.5" y="441" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="dTight" value="Tightness gap" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="922" y="395" width="115" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="denomE" value="Effective staff&#10;per head" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="635" y="218" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:TightPerc" value="Tightness&#10;perception&#10;adjustment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F4D7BF;strokeColor=#D55E00;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="948" y="497" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:A" value="Delivery AI&#10;adoption&#10;(adoption)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="516" y="148" width="89" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:BLe" value="Employer backlog&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="900" y="283" width="121" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:H" value="Headcount&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="223" y="304" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:O" value="Onboarding staff&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="360" y="368" width="121" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:PerceivedP" value="Perceived&#10;productivity&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="792" y="105" width="95" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:V" value="Vacancies&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="203" y="432" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:VMarg" value="Vendor margin&#10;signal&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="910" y="84" width="101" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="promo" value="Promotions" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F4D7BF;strokeColor=#D55E00;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="188" y="364" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="surplus" value="Staff surplus" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#D55E00;" vertex="1" parent="1">
+          <mxGeometry x="382" y="310" width="115" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Workforce planning" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="197" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Box: a stock. Hourglass: a flow (its valve), named below. Bold coloured text: an&#10;auxiliary. Grey italic: a lever parameter. Thick arrow: a flow changing the&#10;stock it points to. Thin arrow: an input of the item it points to. Grey text,&#10;(module): an input from another module." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="596" width="529" height="67" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="Arrows show dependence only and carry no polarity: signs are on the causal-loop&#10;panels (panels 1-5) and in docs/model/loops.csv." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="596" width="523" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:2" value="Goal-seeking valves (a stock adjusting toward a target; every input points at&#10;the valve): Tightness perception adjustment." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="640" width="510" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,131 @@
+<mxfile host="aisim" type="device">
+  <diagram id="module-consumer-a" name="module-consumer-a">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1156" pageHeight="601" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:AC&gt;cons.AdoptC" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="AC" target="cons.AdoptC">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="497.2" y="245.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:AC&gt;cons.LOBTarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="AC" target="cons.LOBTarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CEc&gt;cons.AdoptC" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CEc" target="cons.AdoptC">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:LOB&gt;cons.NetSavings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="LOB" target="cons.NetSavings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:LOB&gt;flow:LOB" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="LOB" target="flow:LOB">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="320.4" y="160.8" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:LOBAuto&gt;cons.LOBTarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="LOBAuto" target="cons.LOBTarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:RegRamp&gt;cons.RegDrag" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="RegRamp" target="cons.RegDrag">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:RegScenario&gt;cons.RegDrag" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="RegScenario" target="cons.RegDrag">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:aL_max&gt;LOBAuto" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="aL_max" target="LOBAuto">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:cons.AdoptC&gt;AC" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="cons.AdoptC" target="AC">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="502.8" y="277.3" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:cons.LOBTarget&gt;flow:LOB" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="cons.LOBTarget" target="flow:LOB">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:cons.NetSavings&gt;cons.AdoptC" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="cons.NetSavings" target="cons.AdoptC">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:cons.RegDrag&gt;cons.AdoptC" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="cons.RegDrag" target="cons.AdoptC">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:flow:LOB&gt;LOB" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:LOB" target="LOB">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="320.6" y="192.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:ref:CreditCostPB&gt;CEc" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:CreditCostPB" target="CEc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:cons.CreditSpend&gt;cons.NetSavings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:cons.CreditSpend" target="cons.NetSavings">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AC" value="Consumer AI&#10;adoption" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#BFE7DC;strokeColor=#009E73;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="512" y="230" width="95" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="CEc" value="Consumer cost&#10;effect" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="362" y="345" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="CyberMult" value="Cyber demand&#10;multiplier" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="46" y="203" width="108" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="LOB" value="LOB headcount" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#BFE7DC;strokeColor=#009E73;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="326" y="163" width="109" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="LOBAuto" value="LOB automatable&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="555" y="156" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="RegRamp" value="Regulation&#10;phase-in" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="514" y="415" width="93" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="RegScenario" value="Regulation&#10;scenario" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="636" y="321" width="88" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="aL_max" value="Max LOB&#10;automatable share" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="612" y="86" width="137" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="cons.AdoptC" value="Consumer AI&#10;adoption rate" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#BFE7DC;strokeColor=#009E73;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="428.5" y="240" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="cons.LOBTarget" value="LOB headcount&#10;target" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="442" y="86" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="cons.NetSavings" value="Net LOB savings" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="235" y="234" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="cons.RegDrag" value="Regulatory drag" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#009E73;" vertex="1" parent="1">
+          <mxGeometry x="495" y="352" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:LOB" value="LOB headcount&#10;adjustment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#BFE7DC;strokeColor=#009E73;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="248.5" y="145" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:CreditCostPB" value="AI credit cost&#10;(consumer b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="366" y="416" width="108" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:cons.CreditSpend" value="AI credit spend&#10;(consumer b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="203" y="299" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Client demand and consumer AI (a): client AI and line of business" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="663" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Box: a stock. Hourglass: a flow (its valve), named below. Bold coloured text: an&#10;auxiliary. Grey italic: a lever parameter. Thick arrow: a flow changing the&#10;stock it points to. Thin arrow: an input of the item it points to. Dashed grey&#10;box, (page): an input from another page of this module." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="477" width="529" height="67" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="Arrows show dependence only and carry no polarity: signs are on the causal-loop&#10;panels (panels 1-5) and in docs/model/loops.csv." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="477" width="523" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:2" value="Goal-seeking valves (a stock adjusting toward a target; every input points at&#10;the valve): LOB headcount adjustment." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="521" width="510" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

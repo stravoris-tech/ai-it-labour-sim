@@ -1,0 +1,731 @@
+"""The PDF model reference: one HTML page generated from the committed rows, printed with headless Edge (slice 10c).
+
+The HTML is a pure function of the committed files it reads (``inputs()``): the inventory, the loop inventory, the
+module and page tables, the spec errata, the exported SVGs and ``pyproject.toml``. It carries no build date and no
+commit hash, so two generations are byte-identical. Edge prints it locally; the PDF's dates and ``/ID`` are then
+replaced by fixed values of the same byte length (``pin()``), so two prints are byte-identical too. The manifest
+(``docs/model/diagrams/MANIFEST.json``, key ``reference``) records the SHA-256 of the HTML and of the pinned PDF; CI
+regenerates the HTML and checks both hashes without Edge.
+
+Order (recon 10b E2): title page, contents, introduction, overview, the module pages each with its item list, the
+causal-loop panels and the loop table, the data dictionary (parameters and tables in a compact layout), the spec
+errata, and an appendix with the per-link loop table and the name clashes.
+
+Usage: ``uv run --frozen python tools/model_pdf.py --html`` (writes ``docs/_build/model-reference.html``), ``--pdf``
+(writes the HTML, prints it with Edge, pins it, writes ``docs/model-reference.pdf`` and the manifest's hashes; local
+only) or ``--check`` (exit 1 if the HTML or the committed PDF differs from the manifest).
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import csv
+import hashlib
+import html
+import json
+import re
+import subprocess
+import sys
+import tempfile
+import tomllib
+from collections.abc import Mapping, Sequence
+from pathlib import Path
+from typing import Final
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from tools import model_diagrams as DG
+
+ROOT: Final = Path(__file__).resolve().parent.parent
+HTML_OUT: Final = Path("docs/_build/model-reference.html")
+PDF_OUT: Final = Path("docs/model-reference.pdf")
+INVENTORY: Final = DG.MODEL / "inventory.csv"
+ERRATA: Final = Path("docs/spec-errata.md")
+STATE_PY: Final = Path("src/aisim/state.py")
+EDGE_EXE: Final = Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
+
+PAGE_W_MM: Final = 297.0
+PAGE_H_MM: Final = 210.0
+MARGIN_MM: Final = 10.0
+FIG_W_MM: Final = PAGE_W_MM - 2 * MARGIN_MM
+FIG_H_MM: Final = 176.0
+"""A diagram page: the SVG is scaled to fit FIG_W_MM x FIG_H_MM, leaving room for a one-line caption."""
+HEADING_MM: Final = 12.0
+"""The first diagram of a part carries the part's heading on its page, and is that much shorter."""
+FIRST_FIGURES: Final = frozenset({"overview", next(iter(DG.MODULE_VIEWS)), next(iter(DG.PANEL_VIEWS))})
+PT_PER_MM: Final = 72 / 25.4
+MIN_LABEL_PT: Final = 6.5
+PIN_DATE: Final = b"20000101000000"
+KINDS: Final = ("stock", "flow", "auxiliary", "parameter", "table", "output")
+SECTION_TITLES: Final = {
+    "stock": "Stocks",
+    "flow": "Flows",
+    "auxiliary": "Auxiliaries",
+    "parameter": "Parameters",
+    "table": "Tables",
+    "output": "Outputs",
+}
+LOOP_RULING: Final = re.compile(r"\bE\d+\b")
+
+CSS: Final = f"""@page {{ size: A4 landscape; margin: {MARGIN_MM:g}mm; }}
+html {{ font-family: Helvetica, Arial, sans-serif; font-size: 8pt; color: #1A1A1A; }}
+body {{ margin: 0; }}
+h1 {{ font-size: 16pt; margin: 0 0 4mm; break-before: page; break-after: avoid; }}
+h2 {{ font-size: 12pt; margin: 4mm 0 2mm; break-after: avoid; }}
+h3 {{ font-size: 10pt; margin: 3mm 0 1.5mm; break-after: avoid; }}
+p, li {{ line-height: 1.35; }}
+a {{ color: #0B4F8A; text-decoration: none; }}
+code {{ font-family: Consolas, Menlo, monospace; font-size: 7.2pt; }}
+table {{ border-collapse: collapse; width: 100%; table-layout: fixed; margin: 1mm 0 3mm; }}
+th, td {{ border: 0.4pt solid #9A9A9A; padding: 1.2pt 2.5pt; vertical-align: top; text-align: left;
+  overflow-wrap: anywhere; }}
+th {{ background: #ECECEC; }}
+thead {{ display: table-header-group; }}
+tr {{ break-inside: avoid; }}
+table.small {{ font-size: 6.8pt; }}
+section.title {{ height: {PAGE_H_MM - 2 * MARGIN_MM - 1:g}mm; display: flex; flex-direction: column;
+  justify-content: center; }}
+section.title h1 {{ font-size: 28pt; break-before: auto; }}
+section.title p.sub {{ font-size: 16pt; margin: 0 0 8mm; }}
+section.title table {{ width: 120mm; font-size: 10pt; }}
+section.figure {{ break-before: page; break-after: page; break-inside: avoid; }}
+svg.diagram {{ display: block; width: {FIG_W_MM:g}mm; height: {FIG_H_MM:g}mm; }}
+svg.diagram.headed {{ height: {FIG_H_MM - HEADING_MM:g}mm; }}
+section.figure h1 {{ break-before: auto; }}
+p.caption {{ font-size: 8pt; font-style: italic; margin: 1.5mm 0 0; }}
+nav ol {{ margin: 0; }}
+nav li {{ margin: 0.4mm 0; }}
+dl.marks dt {{ font-weight: bold; margin-top: 1.5mm; }}
+dl.marks dd {{ margin-left: 6mm; }}
+"""
+
+
+# ---- reading --------------------------------------------------------------------------------------------------------
+
+
+def read_csv(path: Path) -> list[dict[str, str]]:
+    with path.open(encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def version(root: Path) -> str:
+    with (root / "pyproject.toml").open("rb") as f:
+        return str(tomllib.load(f)["project"]["version"])
+
+
+def default_model(root: Path) -> str:
+    """``aisim.state.DEFAULT_MODEL``, read from the source so that this tool imports no model code."""
+    tree = ast.parse((root / STATE_PY).read_text(encoding="utf-8"))
+    for node in tree.body:
+        if (
+            isinstance(node, ast.AnnAssign)
+            and isinstance(node.target, ast.Name)
+            and node.target.id == "DEFAULT_MODEL"
+            and isinstance(node.value, ast.Constant)
+            and isinstance(node.value.value, str)
+        ):
+            return node.value.value
+    raise ValueError(f"no DEFAULT_MODEL in {STATE_PY.as_posix()}")
+
+
+def svg_path(root: Path, view: str) -> Path:
+    return DG.export_paths(root, view)["svg"]
+
+
+def inputs(root: Path = ROOT) -> list[Path]:
+    """Every file the HTML is built from."""
+    out = [
+        root / "pyproject.toml",
+        root / STATE_PY,
+        root / INVENTORY,
+        root / DG.DATA / "model_docs.csv",
+        root / DG.DATA / "model_modules.csv",
+        root / DG.DATA / "model_articles.csv",
+        root / DG.MODEL / "edges.csv",
+        root / DG.MODEL / "loops.csv",
+        root / DG.MODEL / "loop_summary.csv",
+        root / DG.PAGES_CSV,
+        root / ERRATA,
+    ]
+    return out + [svg_path(root, v) for v in DG.VIEWS if not v.startswith("article-")]
+
+
+# ---- HTML pieces ----------------------------------------------------------------------------------------------------
+
+
+def esc(s: str) -> str:
+    return html.escape(s, quote=True)
+
+
+def code(s: str) -> str:
+    return f"<code>{esc(s)}</code>"
+
+
+def table(head: Sequence[str] | None, widths: Sequence[float], rows: Sequence[Sequence[str]], cls: str = "") -> str:
+    """A table with fixed column widths (percent) and a repeating header row, or none if ``head`` is None; cells
+    are HTML already escaped by the caller."""
+    if any(len(r) != len(widths) for r in rows) or (head is not None and len(head) != len(widths)):
+        raise ValueError("table: a row's length differs from the widths'")
+    cols = "".join(f'<col style="width:{w:g}%">' for w in widths)
+    if head is None:
+        body = "".join("<tr>" + "".join(f"<td>{c}</td>" for c in r) + "</tr>\n" for r in rows)
+        attr = f' class="{cls}"' if cls else ""
+        return f"<table{attr}><colgroup>{cols}</colgroup>\n<tbody>\n{body}</tbody></table>\n"
+    th = "".join(f"<th>{esc(h)}</th>" for h in head)
+    body = "".join("<tr>" + "".join(f"<td>{c}</td>" for c in r) + "</tr>\n" for r in rows)
+    attr = f' class="{cls}"' if cls else ""
+    return f"<table{attr}><colgroup>{cols}</colgroup>\n<thead><tr>{th}</tr></thead>\n<tbody>\n{body}</tbody></table>\n"
+
+
+SVG_SIZE: Final = re.compile(r'\s(width|height)="[^"]*"')
+
+
+def inline_svg(path: Path, cls: str = "diagram") -> str:
+    """A committed SVG export as inline SVG: no XML declaration or doctype, scaled by CSS through its viewBox."""
+    text = path.read_bytes().decode("utf-8")
+    text = text[text.index("<svg") :].rstrip()
+    end = text.index(">")
+    head = SVG_SIZE.sub("", text[:end])
+    return head.replace("<svg ", f'<svg class="{cls}" ', 1) + text[end:]
+
+
+def svg_size(path: Path) -> tuple[float, float]:
+    """The width and height of an SVG export in px (draw.io writes them on the root element)."""
+    text = path.read_bytes().decode("utf-8")
+    root = text[text.index("<svg") : text.index(">", text.index("<svg"))]
+    w = re.search(r'\swidth="([0-9.]+)px"', root)
+    h = re.search(r'\sheight="([0-9.]+)px"', root)
+    if w is None or h is None:
+        raise ValueError(f"{path.name}: no width and height in px")
+    return float(w.group(1)), float(h.group(1))
+
+
+def fig_h_mm(view: str) -> float:
+    """The height a view's diagram is printed into: shorter where it carries its part's heading."""
+    return FIG_H_MM - HEADING_MM if view in FIRST_FIGURES else FIG_H_MM
+
+
+def print_pt_per_px(width: float, height: float, fig_h: float = FIG_H_MM) -> float:
+    """The printed size of one SVG px in pt, for a diagram scaled to fit FIG_W_MM x ``fig_h``."""
+    return min(FIG_W_MM / width, fig_h / height) * PT_PER_MM
+
+
+def figure(root: Path, view: str, anchor: str, caption: str = "", heading: tuple[str, str] | None = None) -> str:
+    """A diagram on its own page; ``heading`` (anchor, title) puts its part's heading on the page above it."""
+    cap = f'<p class="caption">{esc(caption)}</p>' if caption else ""
+    top = f'<h1 id="{heading[0]}">{esc(heading[1])}</h1>\n' if heading else ""
+    svg = inline_svg(svg_path(root, view), "diagram headed" if heading else "diagram")
+    return f'<section class="figure" id="{anchor}">\n{top}{svg}\n{cap}</section>\n'
+
+
+# ---- sections -------------------------------------------------------------------------------------------------------
+
+
+def title_page(root: Path) -> str:
+    rows = [["Version", esc(version(root))], ["Default model", code(default_model(root))]]
+    return (
+        '<section class="title" id="title">\n<h1>ai-it-labour-sim</h1>\n<p class="sub">Model reference</p>\n'
+        "<p>A System Dynamics model of AI's impact on IT employment, contract mix and vendor viability, for India "
+        "and onshore (North America and Europe), 2024-2040.</p>\n"
+        + table(None, [35, 65], rows)
+        + "<p>Generated from the committed metadata; see docs/model/diagrams/MANIFEST.json</p>\n"
+        "<p>Code: MIT. Text and diagrams: CC BY 4.0 (LICENSE-DOCS).</p>\n</section>\n"
+    )
+
+
+def contents(entries: Sequence[tuple[str, str, Sequence[tuple[str, str]]]]) -> str:
+    out = ['<nav id="contents">\n<h1>Contents</h1>\n<ol>']
+    for anchor, label, subs in entries:
+        sub = ""
+        if subs:
+            sub = "<ol>" + "".join(f'<li><a href="#{a}">{esc(t)}</a></li>' for a, t in subs) + "</ol>"
+        out.append(f'<li><a href="#{anchor}">{esc(label)}</a>{sub}</li>')
+    out.append("</ol>\n</nav>\n")
+    return "\n".join(out)
+
+
+MARKS: Final = (
+    (
+        "Stock",
+        "A box filled with its module's colour: a quantity that accumulates (a backlog, a headcount, a book of "
+        "contracts). Stocks change only through flows.",
+    ),
+    (
+        "Flow (valve)",
+        "An hourglass with its name below: a rate that changes a stock. A thick arrow from a valve to a "
+        "stock means the flow changes that stock, in or out; module pages do not say which, as they carry no "
+        "polarity.",
+    ),
+    (
+        "Goal-seeking valve",
+        "A stock that adjusts toward a target over a time (a perception, a smoothed signal) has "
+        "one unnamed flow, its adjustment, drawn as a valve named after the stock's change. Every input of the "
+        "adjustment points at the valve, the stock's own level included.",
+    ),
+    (
+        "Coflow valve",
+        "Two stocks of the contract book (the duration-weighted and price-weighted new book) move with "
+        "the book itself: their whole update is one flow that reads the signings and expiries. It is drawn as a valve "
+        "whose inputs include those flows' valves.",
+    ),
+    ("Auxiliary", "Bold text in the module's colour: a quantity computed afresh every step from other items."),
+    ("Lever", "Grey italic text: a parameter that scenarios or the levers of an experiment set."),
+    ("Ghost input", "Small grey text with a module in brackets: an item of another module that feeds this page."),
+    (
+        "Page reference",
+        "Small grey text in a dashed box with a page in brackets: an item of the same module drawn on "
+        "another of its pages, that feeds this page.",
+    ),
+    (
+        "Polarity",
+        "On the causal-loop panels and the article diagrams, + on an arrow means the target moves the same "
+        "way as the source, - the opposite way. Module pages show dependence only: their arrows carry no sign.",
+    ),
+    ("R and B labels", "A circle with R marks a reinforcing loop, B a balancing loop, with the loop's id."),
+    ("The ? label", "A loop whose sign depends on which of its paths dominates."),
+    (
+        "Hollow, grey and faded marks",
+        "A dashed (hollow) circle marks a loop that is weak in Base or acts only in the "
+        f"stress set '{DG.STRESS_SET}'; a grey circle one dormant in both; a faded arrow a link whose every loop is "
+        "dormant in Base; a dashed arrow an open chain that no loop closes.",
+    ),
+    ("Limit markers", "A hexagon beside a link: a rule (a floor, a ceiling or a cap) that limits that link."),
+)
+
+
+def introduction(src: DG.Sources) -> str:
+    marks = "".join(f"<dt>{esc(a)}</dt><dd>{esc(b)}</dd>" for a, b in MARKS)
+    return (
+        '<section id="intro">\n<h1>Introduction</h1>\n'
+        "<p>This is the model reference of <code>ai-it-labour-sim</code>, a System Dynamics model of AI's impact on "
+        "IT employment, contract mix and vendor viability. It gives scenario projections, not forecasts: read every "
+        'value as "under these assumptions" (README). It states no model results; the README and the analyses do.</p>\n'
+        f"<p>The model has {len(src.modules)} engine modules. The overview shows how they feed each other; one or more "
+        "module pages show each module's stocks, flows, auxiliaries and levers as a stock-and-flow diagram, each "
+        "followed by its item list; five causal-loop panels show the feedback loops with their polarity; the data "
+        "dictionary describes every named item; the errata list where the original specification is wrong and what "
+        "the model does instead. The full per-link loop table is in the appendix. Every diagram and table is "
+        "generated from the committed files; names are the engine's (<code>docs/model/inventory.csv</code>).</p>\n"
+        "<p>On the module pages, arrows show which item is computed from which (<code>docs/model/edges.csv</code>); "
+        "they carry no polarity, which is on the causal-loop panels and in <code>docs/model/loops.csv</code>. The "
+        "larger modules take two or three pages, and each page is followed by its item list.</p>\n"
+        f'<h2>How to read the diagrams</h2>\n<dl class="marks">{marks}</dl>\n</section>\n'
+    )
+
+
+def overview(root: Path, src: DG.Sources) -> str:
+    pairs = DG.module_pairs(src)
+    cap = (
+        f"The eight modules and the {len(pairs)} module pairs that one module's stocks, flows and auxiliaries link to "
+        f"another's items ({sum(pairs.values())} links). The label and width give the number of links; a dashed "
+        "arrow is a single link."
+    )
+    rows = [[code(m["module"]), esc(m["display_name"]), esc(m["description"])] for m in src.modules]
+    return (
+        '<section id="overview-part">\n'
+        + figure(root, "overview", "overview-figure", cap, ("overview", "Overview"))
+        + '<h2 id="modules">The modules</h2>\n'
+        + table(["Module", "Display name", "Description"], [14, 20, 66], rows)
+        + "</section>\n"
+    )
+
+
+def module_pages(root: Path, src: DG.Sources, inv: Mapping[tuple[str, str], Mapping[str, str]]) -> str:
+    views = {name: DG.module_page(src, name) for name in DG.MODULE_VIEWS}
+    valves = DG.valve_stocks(src)
+    out = ['<section class="part">\n']
+    for name, spec in DG.MODULE_VIEWS.items():
+        v = views[name]
+        heading = ("module-pages", "Module pages") if name in FIRST_FIGURES else None
+        out.append(figure(root, name, name, heading=heading))
+        rows = []
+        for c in v.cells:
+            if c.kind not in ("node", "valve"):
+                continue
+            item = DG.page_item(src, c.id)
+            r = inv.get(item, {})
+            kind = item[1]
+            if item[0].startswith("flow:"):
+                kind = f"flow ({valves[item[0].removeprefix('flow:')]})"
+            rows.append([code(item[0]), esc(kind), esc(r.get("label", "")), esc(r.get("units", ""))])
+        rows.sort(key=lambda x: x[0])
+        ghosts = sorted(c.label.replace("\n", " ") for c in v.cells if c.kind == "ghost")
+        refs = sorted(c.label.replace("\n", " ") for c in v.cells if c.kind == "ref")
+        out.append(f'<section id="items-{name}">\n<h2>{esc(spec.title)}: items</h2>\n')
+        out.append(table(["Name", "Kind", "Label", "Units"], [22, 14, 40, 24], rows, "small"))
+        if ghosts:
+            out.append(f"<p>Inputs from other modules: {esc('; '.join(ghosts))}.</p>\n")
+        if refs:
+            out.append(f"<p>Inputs from other pages of this module: {esc('; '.join(refs))}.</p>\n")
+        out.append("</section>\n")
+    out.append("</section>\n")
+    return "".join(out)
+
+
+def panels(root: Path, src: DG.Sources) -> str:
+    out = ['<section class="part">\n']
+    for view, spec in DG.PANEL_VIEWS.items():
+        ids = sorted(k for k, r in src.summary.items() if r["panel"] == spec.key)
+        heading = ("panels", "Feedback loops") if view in FIRST_FIGURES else None
+        out.append(figure(root, view, view, f"Loops: {', '.join(ids)}.", heading))
+    rows = []
+    for lid, r in src.summary.items():
+        ruling = ", ".join(dict.fromkeys(LOOP_RULING.findall(r["status_basis"]))) or "-"
+        polarity = r["code_polarity"].split()[0].strip(":,(") if r["code_polarity"] else ""
+        cells = [lid, r["name"], polarity, r["status"], r["acts_phase9_base"], r["acts_stress_set"], ruling]
+        rows.append([esc(x) for x in cells])
+    out.append(
+        '<h2 id="loops">The loops</h2>\n<p>The five panels are drawn from the loop inventory: '
+        "<code>docs/model/loops.csv</code> (one row per link, with its sign, the code line and the regime it needs) "
+        f"and <code>docs/model/loop_summary.csv</code> (one row per loop: the {len(rows)} loops below). Each panel's "
+        f"legend gives its marks; the stress set is '{esc(DG.STRESS_SET)}'. Open chains are dashed; replaced loops "
+        "(R4, B8) are noted, not drawn.</p>\n"
+    )
+    head = ["Loop", "Name", "Polarity", "Status", "Acts in Base", "Acts in the stress set", "Ruling"]
+    out.append(table(head, [6, 20, 10, 9, 22, 22, 11], rows, "small"))
+    out.append("</section>\n")
+    return "".join(out)
+
+
+def short_value(row: Mapping[str, str], model: str) -> str:
+    """A parameter's or table's value for the compact table: the scalar as stored, or a pointer to the inventory."""
+    v = row.get(f"value_{model}", "")
+    if "=" not in v and ";" not in v:
+        return v
+    dims = row["dimensions"]
+    return f"per {dims}, see inventory.csv" if dims else "indexed, see inventory.csv"
+
+
+def dictionary(inv_rows: Sequence[Mapping[str, str]], model: str) -> str:
+    models = [k.removeprefix("value_") for k in inv_rows[0] if k.startswith("value_")]
+    others = [m for m in models if m != model]
+    out = [
+        '<section id="dictionary">\n<h1>Data dictionary</h1>\n',
+        "<p>Every named item of the model, as in <code>docs/model-reference.md</code>. Parameters and tables show "
+        f"their <code>{esc(model)}</code> value: a scalar as stored, or a pointer for an indexed value; every model's "
+        'full values are in <code>docs/model/inventory.csv</code>. "Differs in" names the models whose value '
+        f"differs from <code>{esc(model)}</code>'s.</p>\n",
+    ]
+    for kind in KINDS:
+        rows = []
+        for r in (x for x in inv_rows if x["kind"] == kind):
+            row = [code(r["name"]), esc(r["label"]), esc(r["description"]), esc(r["units"]), esc(r["dimensions"])]
+            row.append(esc(r["module"]))
+            if kind in ("parameter", "table"):
+                ref = r.get(f"value_{model}", "")
+                differs = [m for m in others if r.get(f"value_{m}", "") != ref]
+                row += [esc(short_value(r, model)), esc(", ".join(differs)), esc(r["classification"]), esc(r["lever"])]
+            row.append(esc(r["status"]))
+            rows.append(row)
+        head = ["Name", "Label", "Description", "Units", "Dimensions", "Module"]
+        widths: list[float] = [11, 13, 41, 12, 9, 7]
+        if kind in ("parameter", "table"):
+            head += [model, "Differs in", "Class", "Lever"]
+            widths = [9, 10, 25, 8, 7, 6, 9, 8, 8, 4]
+        head.append("Status")
+        widths.append(7 if kind not in ("parameter", "table") else 6)
+        widths[2] += 100 - sum(widths)
+        out.append(f'<h2 id="dict-{kind}">{SECTION_TITLES[kind]}</h2>\n<p>{len(rows)} items.</p>\n')
+        out.append(table(head, widths, rows, "small"))
+    out.append("</section>\n")
+    return "".join(out)
+
+
+INLINE: Final = re.compile(r"`([^`]+)`|\*\*(.+?)\*\*")
+
+
+def inline(s: str) -> str:
+    """Code spans and bold, the only inline marks of the errata file; everything else escaped."""
+    out, pos = [], 0
+    for m in INLINE.finditer(s):
+        out.append(esc(s[pos : m.start()]))
+        out.append(code(m.group(1)) if m.group(1) is not None else f"<strong>{inline(m.group(2))}</strong>")
+        pos = m.end()
+    out.append(esc(s[pos:]))
+    return "".join(out)
+
+
+def slug(s: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+
+
+def errata(root: Path) -> tuple[str, list[tuple[str, str]]]:
+    """``docs/spec-errata.md`` as HTML. Only its own constructs are accepted (headings, paragraphs, bullet lists with
+    indented continuation lines, tables, code spans and bold); any other line raises, so a new construct is never
+    dropped silently. Returns the HTML and the (anchor, title) of each module heading."""
+    lines = (root / ERRATA).read_text(encoding="utf-8").split("\n")
+    out: list[str] = ['<section id="errata">\n']
+    heads: list[tuple[str, str]] = []
+    para: list[str] = []
+    items: list[list[str]] = []
+    rows: list[list[str]] = []
+
+    def flush() -> None:
+        if para:
+            out.append(f"<p>{inline(' '.join(para))}</p>\n")
+            para.clear()
+        if items:
+            out.append("<ul>" + "".join(f"<li>{inline(' '.join(x))}</li>" for x in items) + "</ul>\n")
+            items.clear()
+        if rows:
+            out.append(table(rows[0], [100 / len(rows[0])] * len(rows[0]), [[inline(c) for c in r] for r in rows[1:]]))
+            rows.clear()
+
+    for ln in lines:
+        if not ln.strip():
+            flush()
+        elif ln.startswith("# "):
+            flush()
+            out.append(f"<h1>{inline(ln[2:])}</h1>\n")
+        elif ln.startswith("## "):
+            flush()
+            anchor = f"errata-{slug(ln[3:])}"
+            heads.append((anchor, ln[3:]))
+            out.append(f'<h2 id="{anchor}">{inline(ln[3:])}</h2>\n')
+        elif ln.startswith("### "):
+            flush()
+            out.append(f"<h3>{inline(ln[4:])}</h3>\n")
+        elif ln.startswith("- "):
+            if para or rows:
+                flush()
+            items.append([ln[2:]])
+        elif ln.startswith("  ") and items:
+            items[-1].append(ln.strip())
+        elif ln.startswith("| "):
+            if para or items:
+                flush()
+            cells = [c.strip() for c in ln.strip().strip("|").split("|")]
+            if not all(set(c) <= {"-"} for c in cells):
+                rows.append(cells)
+        elif ln[0].isalnum() or ln[0] in '(`*"':
+            if items:
+                flush()
+            para.append(ln.strip())
+        else:
+            raise ValueError(f"{ERRATA.as_posix()}: a line this renderer does not know: {ln!r}")
+    flush()
+    out.append("</section>\n")
+    first = out[1]
+    if not first.startswith("<h1>"):
+        raise ValueError(f"{ERRATA.as_posix()}: no title")
+    out[1] = first.replace("<h1>", '<h1 id="errata-title">', 1)
+    return "".join(out), heads
+
+
+def appendix(src: DG.Sources, inv_rows: Sequence[Mapping[str, str]]) -> str:
+    rows = [
+        [
+            esc(r["loop_id"]),
+            esc(r["step"]),
+            code(r["source"]),
+            code(r["target"]),
+            esc(r["sign"]),
+            esc(r["regime"]),
+            esc(r["file_line"]),
+        ]
+        for r in src.loops
+    ]
+    by: dict[str, list[Mapping[str, str]]] = {}
+    for r in inv_rows:
+        by.setdefault(r["name"], []).append(r)
+    clashes = [
+        [
+            code(n),
+            esc(
+                "; ".join(f"{n} ({r['kind']}, {r['module']})" for r in sorted(rs, key=lambda x: KINDS.index(x["kind"])))
+            ),
+        ]
+        for n, rs in sorted(by.items())
+        if len(rs) > 1
+    ]
+    return (
+        '<section id="appendix">\n<h1>Appendix</h1>\n'
+        f'<h2 id="loop-links">The loop links</h2>\n<p>{len(rows)} rows of <code>docs/model/loops.csv</code>, one per '
+        "link of each loop: its step, source and target, sign, the regime it needs and the code line. The code "
+        "expression and notes are in the file.</p>\n"
+        + table(
+            ["Loop", "Step", "Source", "Target", "Sign", "Regime", "Code"], [5, 18, 11, 11, 4, 33, 18], rows, "small"
+        )
+        + '<h2 id="name-clashes">Name clashes</h2>\n<p>Names shared by items of different kinds; each entry is '
+        "qualified by its kind.</p>\n" + table(["Name", "Items"], [15, 85], clashes) + "</section>\n"
+    )
+
+
+def build_html(root: Path = ROOT) -> str:
+    src = DG.read_sources(root)
+    inv_rows = read_csv(root / INVENTORY)
+    inv = {(r["name"], r["kind"]): r for r in inv_rows}
+    model = default_model(root)
+    errata_html, errata_heads = errata(root)
+    entries: list[tuple[str, str, Sequence[tuple[str, str]]]] = [
+        ("intro", "Introduction", ()),
+        ("overview", "Overview", (("modules", "The modules"),)),
+        ("module-pages", "Module pages", [(n, s.title) for n, s in DG.MODULE_VIEWS.items()]),
+        ("panels", "Feedback loops", [*((v, s.title) for v, s in DG.PANEL_VIEWS.items()), ("loops", "The loops")]),
+        ("dictionary", "Data dictionary", [(f"dict-{k}", SECTION_TITLES[k]) for k in KINDS]),
+        ("errata-title", "Specification errata", errata_heads),
+        ("appendix", "Appendix", (("loop-links", "The loop links"), ("name-clashes", "Name clashes"))),
+    ]
+    body = (
+        title_page(root)
+        + contents(entries)
+        + introduction(src)
+        + overview(root, src)
+        + module_pages(root, src, inv)
+        + panels(root, src)
+        + dictionary(inv_rows, model)
+        + errata_html
+        + appendix(src, inv_rows)
+    )
+    return (
+        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+        f"<title>ai-it-labour-sim model reference {esc(version(root))}</title>\n<style>\n{CSS}</style>\n</head>\n"
+        f"<body>\n{body}</body>\n</html>\n"
+    )
+
+
+# ---- checks ---------------------------------------------------------------------------------------------------------
+
+DATE_PATTERN: Final = re.compile(r"\b(?:19|20)\d\d-[01]\d-[0-3]\d\b|\b[0-2]\d:[0-5]\d:[0-5]\d\b")
+HASH_PATTERN: Final = re.compile(r"\b(?=[0-9a-f]*[a-f])(?=[0-9a-f]*[0-9])[0-9a-f]{7,40}\b")
+
+
+def stamp_problems(text: str, sources: Sequence[str]) -> list[str]:
+    """Date, time or commit-hash patterns in the HTML that appear in none of its source files (a build stamp)."""
+    found = sorted(set(DATE_PATTERN.findall(text)) | set(HASH_PATTERN.findall(text)))
+    return [f for f in found if not any(f in s for s in sources)]
+
+
+def link_problems(text: str) -> list[str]:
+    """Internal links whose target id does not exist."""
+    ids = set(re.findall(r'\sid="([^"]+)"', text))
+    return sorted({h for h in re.findall(r'\shref="#([^"]+)"', text) if h not in ids})
+
+
+def sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def manifest(root: Path) -> dict[str, object]:
+    data: dict[str, object] = json.loads((root / DG.MANIFEST).read_text(encoding="utf-8"))
+    return data
+
+
+def reference_hashes(root: Path) -> dict[str, str]:
+    ref = manifest(root).get("reference", {})
+    if not isinstance(ref, dict):
+        return {}
+    return {str(k): str(v) for k, v in ref.items()}
+
+
+def check(root: Path = ROOT) -> list[str]:
+    ref = reference_hashes(root)
+    bad = []
+    if sha256_bytes(build_html(root).encode("utf-8")) != ref.get("html"):
+        bad.append(f"{HTML_OUT.as_posix()}: differs from the manifest's hash (the PDF needs a new print)")
+    pdf = root / PDF_OUT
+    if not pdf.exists() or sha256_bytes(pdf.read_bytes()) != ref.get("pdf"):
+        bad.append(f"{PDF_OUT.as_posix()}: missing or differs from the manifest's hash")
+    return bad
+
+
+# ---- printing -------------------------------------------------------------------------------------------------------
+
+PDF_DATE: Final = re.compile(rb"D:(\d{14})")
+PDF_ID: Final = re.compile(rb"/ID\s*\[\s*<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>\s*\]")
+
+
+def pin(pdf: bytes, html_sha: str) -> bytes:
+    """Edge's PDF with its dates and ``/ID`` replaced by fixed values of the same byte length, so that every
+    offset (and the xref table) stays put: each ``D:`` date's 14 digits become ``PIN_DATE``, each ``/ID`` string the
+    first characters of the HTML's SHA-256. Raises unless the PDF has exactly two dates (``/CreationDate`` and
+    ``/ModDate``) and at most one file ``/ID`` of two strings (Edge 155 writes none in a tagged PDF; the structure
+    tree's ``/ID (nodeNNNN)`` keys are counters, not dates or ids of the print)."""
+    dates = PDF_DATE.findall(pdf)
+    ids = PDF_ID.findall(pdf)
+    if len(dates) != 2 or len(ids) > 1:
+        raise ValueError(f"pin: expected 2 dates and at most 1 /ID, found {len(dates)} and {len(ids)}")
+    out = PDF_DATE.sub(b"D:" + PIN_DATE, pdf)
+
+    def fixed(m: re.Match[bytes]) -> bytes:
+        whole, start = bytearray(m.group(0)), m.start(0)
+        for g in (1, 2):
+            if m.end(g) - m.start(g) > len(html_sha):
+                raise ValueError("pin: an /ID string longer than the HTML hash")
+            whole[m.start(g) - start : m.end(g) - start] = html_sha[: m.end(g) - m.start(g)].encode("ascii")
+        return bytes(whole)
+
+    out = PDF_ID.sub(fixed, out)
+    if len(out) != len(pdf):
+        raise ValueError("pin: the byte length changed")
+    return out
+
+
+def edge_print(html_file: Path, pdf_file: Path) -> None:
+    """Print the HTML with headless Edge (recon 10b A2's flags, a plain ``C:/`` path, a fresh profile)."""
+    pdf_file.parent.mkdir(parents=True, exist_ok=True)
+    pdf_file.unlink(missing_ok=True)
+    with tempfile.TemporaryDirectory(prefix="edge_profile_") as prof:
+        cmd = [
+            str(EDGE_EXE),
+            "--headless=new",
+            "--disable-gpu",
+            "--no-pdf-header-footer",
+            f"--user-data-dir={prof}",
+            f"--print-to-pdf={pdf_file.resolve()}",
+            html_file.resolve().as_posix(),
+        ]
+        subprocess.run(cmd, check=True, capture_output=True)
+    if not pdf_file.exists():
+        raise RuntimeError(f"Edge wrote no {pdf_file}")
+
+
+def write_html(root: Path = ROOT, out_root: Path | None = None) -> Path:
+    out = (root if out_root is None else out_root) / HTML_OUT
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with out.open("w", encoding="utf-8", newline="") as f:
+        f.write(build_html(root))
+    return out
+
+
+def write_pdf(root: Path = ROOT) -> dict[str, str]:
+    """Write the HTML, print it, pin the PDF and record both hashes in the manifest (local only)."""
+    html_file = write_html(root)
+    html_sha = sha256_bytes(html_file.read_bytes())
+    raw = root / HTML_OUT.parent / "model-reference.raw.pdf"
+    edge_print(html_file, raw)
+    pdf = pin(raw.read_bytes(), html_sha)
+    (root / PDF_OUT).write_bytes(pdf)
+    man = manifest(root)
+    man["reference"] = {"html": html_sha, "pdf": sha256_bytes(pdf)}
+    with (root / DG.MANIFEST).open("w", encoding="utf-8", newline="") as f:
+        f.write(json.dumps(man, indent=1, sort_keys=True) + "\n")
+    return {"html": html_sha, "pdf": sha256_bytes(pdf)}
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
+    g = ap.add_mutually_exclusive_group(required=True)
+    g.add_argument("--html", action="store_true", help="write docs/_build/model-reference.html")
+    g.add_argument("--pdf", action="store_true", help="write the HTML, print it with Edge, pin it, update the manifest")
+    g.add_argument("--check", action="store_true", help="exit 1 if the HTML or the PDF differs from the manifest")
+    ap.add_argument("--root", type=Path, default=ROOT, help="repository root (default: this repository)")
+    a = ap.parse_args(argv)
+    if a.html:
+        print("wrote", write_html(a.root).relative_to(a.root).as_posix())
+    elif a.pdf:
+        print(PDF_OUT.as_posix(), write_pdf(a.root))
+    else:
+        bad = check(a.root)
+        for b in bad:
+            print(b)
+        if bad:
+            print("rebuild with: uv run --frozen python tools/model_pdf.py --pdf (locally, with Edge)")
+            return 1
+        print("model reference: the HTML and the PDF match the manifest")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

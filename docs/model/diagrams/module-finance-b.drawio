@@ -1,0 +1,400 @@
+<mxfile host="aisim" type="device">
+  <diagram id="module-finance-b" name="module-finance-b">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1317" pageHeight="847" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:AIDiscCeil&gt;VF.Anchor" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="AIDiscCeil" target="VF.Anchor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:AIDiscCeil&gt;VF.CeilBinds" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="AIDiscCeil" target="VF.CeilBinds">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Leg&gt;VB.EffortShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Leg" target="VB.EffortShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Leg&gt;VF.Book" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Leg" target="VF.Book">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Leg&gt;VF.ExpLeg" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Leg" target="VF.ExpLeg">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1053.8" y="540.3" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:Leg&gt;VF.IdxVol" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Leg" target="VF.IdxVol">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:NewD&gt;VF.AvgDur" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="NewD" target="VF.AvgDur">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:NewP&gt;VF.AvgP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="NewP" target="VF.AvgP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:NewP&gt;VF.IdxVol" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="NewP" target="VF.IdxVol">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:NewP&gt;flow:NewP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="NewP" target="flow:NewP">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1034" y="394.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:NewV&gt;VB.EffortShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="NewV" target="VB.EffortShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:NewV&gt;VF.AvgDur" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="NewV" target="VF.AvgDur">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:NewV&gt;VF.AvgP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="NewV" target="VF.AvgP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:NewV&gt;VF.Book" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="NewV" target="VF.Book">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:NewV&gt;VF.ExpNew" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="NewV" target="VF.ExpNew">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1166.2" y="289.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:NewV&gt;flow:NewD" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="NewV" target="flow:NewD">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Pass&gt;VB.TypeShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Pass" target="VB.TypeShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Pass&gt;VF.Glide" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Pass" target="VF.Glide">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:PriceFloor&gt;VF.FloorBinds" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="PriceFloor" target="VF.FloorBinds">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:PriceFloor&gt;VF.PNew" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="PriceFloor" target="VF.PNew">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:PriceHorizon&gt;VF.Anchor" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="PriceHorizon" target="VF.Anchor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VB.Sign&gt;NewV" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="VB.Sign" target="NewV">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VB.Sign&gt;flow:NewD" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VB.Sign" target="flow:NewD">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VB.Sign&gt;flow:NewP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VB.Sign" target="flow:NewP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VB.SignRate&gt;VB.Sign" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VB.SignRate" target="VB.Sign">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VB.TypeShare&gt;VB.Sign" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VB.TypeShare" target="VB.Sign">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VB.wv&gt;VB.TypeShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VB.wv" target="VB.TypeShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.Anchor&gt;VF.CeilBinds" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.Anchor" target="VF.CeilBinds">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.Anchor&gt;VF.PNew" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.Anchor" target="VF.PNew">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.AvgDur&gt;VF.ExpNew" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.AvgDur" target="VF.ExpNew">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.AvgP&gt;flow:NewP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.AvgP" target="flow:NewP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.Book&gt;VB.EffortShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.Book" target="VB.EffortShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.Book&gt;VB.Sign" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.Book" target="VB.Sign">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.Book&gt;VF.AvgIdx" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.Book" target="VF.AvgIdx">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.Book&gt;VF.ExpRate" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.Book" target="VF.ExpRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.Dnew&gt;VB.TypeShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.Dnew" target="VB.TypeShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.Dnew&gt;VF.AvgDur" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.Dnew" target="VF.AvgDur">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.Dnew&gt;flow:NewD" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.Dnew" target="flow:NewD">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.ExpLeg&gt;Leg" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="VF.ExpLeg" target="Leg">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1084.7" y="531.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:VF.ExpLeg&gt;VF.ExpRate" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.ExpLeg" target="VF.ExpRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.ExpNew&gt;NewV" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="VF.ExpNew" target="NewV">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1166.3" y="257.8" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:VF.ExpNew&gt;VF.ExpRate" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.ExpNew" target="VF.ExpRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.ExpNew&gt;flow:NewP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.ExpNew" target="flow:NewP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.ExpRate&gt;VB.SignRate" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.ExpRate" target="VB.SignRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.Glide&gt;flow:NewP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.Glide" target="flow:NewP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.IdxVol&gt;VF.AvgIdx" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.IdxVol" target="VF.AvgIdx">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.PNew&gt;VB.TypeShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.PNew" target="VB.TypeShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.PNew&gt;VF.AvgP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.PNew" target="VF.AvgP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.PNew&gt;VF.FloorBinds" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.PNew" target="VF.FloorBinds">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.PNew&gt;flow:NewP" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.PNew" target="flow:NewP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.PU&gt;VB.TypeShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.PU" target="VB.TypeShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.PU&gt;VF.Anchor" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.PU" target="VF.Anchor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.PU&gt;VF.Dnew" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.PU" target="VF.Dnew">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.PU&gt;VF.Glide" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.PU" target="VF.Glide">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.Power&gt;VB.wv" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.Power" target="VB.wv">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VF.Power&gt;VF.Dnew" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VF.Power" target="VF.Dnew">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:flow:NewD&gt;NewD" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:NewD" target="NewD">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:flow:NewP&gt;NewP" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:NewP" target="NewP">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1027" y="425.6" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:ghost:ClientP&gt;VB.TypeShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:ClientP" target="VB.TypeShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:ClientP&gt;VF.Anchor" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:ClientP" target="VF.Anchor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:ClientP&gt;VF.PU" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:ClientP" target="VF.PU">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:ClientPRef&gt;VF.PU" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:ClientPRef" target="VF.PU">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:CompS&gt;VB.SignRate" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:CompS" target="VB.SignRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:Pe&gt;VB.TypeShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:Pe" target="VB.TypeShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:Pe&gt;VF.IdxVol" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:Pe" target="VF.IdxVol">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:Pe&gt;VF.PNew" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:Pe" target="VF.PNew">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:SignS&gt;VB.SignRate" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:SignS" target="VB.SignRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:TTFratio&gt;VB.TypeShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:TTFratio" target="VB.TypeShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VW&gt;VB.SignRate" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VW" target="VB.SignRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:Disc&gt;VF.PNew" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:Disc" target="VF.PNew">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:ECost&gt;VF.PNew" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:ECost" target="VF.PNew">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:VB.CostIdx&gt;VB.TypeShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:VB.CostIdx" target="VB.TypeShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:VF.dev&gt;VF.Power" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:VF.dev" target="VF.Power">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:VF.nm&gt;VB.TypeShare" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:VF.nm" target="VB.TypeShare">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AIDiscCeil" value="AI discount&#10;ceiling" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="109" y="563" width="95" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="Leg" value="Legacy contracts" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="985" y="454" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="NewD" value="Duration-weighted&#10;new book" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1079" y="77" width="137" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="NewP" value="Price-weighted new&#10;book" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1133" y="428" width="144" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="NewV" value="New contracts" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1054" y="260" width="109" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="Pass" value="Gain pass-through&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="435" y="389" width="145" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="PriceFloor" value="New-bid price&#10;floor" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="705" y="175" width="109" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="PriceHorizon" value="Client price&#10;horizon" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="242" y="602" width="102" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VB.EffortShare" value="Effort-billed&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="1128" y="350" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VB.Sign" value="New signings" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="630" y="347" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="VB.SignRate" value="Signing rate" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="685" y="590" width="108" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VB.TypeShare" value="Signing type share" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="256" y="299" width="152" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VB.wv" value="Vendor bargaining&#10;weight" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="221" y="156" width="145" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.Anchor" value="Client price&#10;anchor" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="220" y="544" width="108" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.AvgDur" value="Average new&#10;duration" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="1077" y="175" width="100" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.AvgIdx" value="Book price index" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="903" y="512" width="138" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.AvgP" value="Average new price" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="803" y="279" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.Book" value="Contract book" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="837" y="435" width="115" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.CeilBinds" value="Discount ceiling&#10;binds" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="69" y="505" width="138" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.Dnew" value="New contract&#10;duration" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="394" y="117" width="108" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.ExpLeg" value="Legacy expiries" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1076.5" y="580" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.ExpNew" value="New contract&#10;expiries" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1212" y="242" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.ExpRate" value="Book expiry rate" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="748" y="551" width="138" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.FloorBinds" value="Price floor binds" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="609" y="260" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.Glide" value="Price glide rate" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="438" y="454" width="138" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.IdxVol" value="Price-weighted&#10;book" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="1124" y="486" width="123" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.PNew" value="New-signing price" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="435" y="279" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.PU" value="Price uncertainty" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="338" y="493" width="145" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.Power" value="Bargaining power" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="224" y="85" width="138" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="VF.shock" value="Price shock" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#332288;" vertex="1" parent="1">
+          <mxGeometry x="1174" y="629" width="100" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:NewD" value="Duration-weighted&#10;book change" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="980.5" y="87" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:NewP" value="Price-weighted&#10;book change" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#CCC8E1;strokeColor=#332288;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="844" y="339" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:ClientP" value="Client-perceived&#10;productivity&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="136" y="441" width="121" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:ClientPRef" value="Client reference&#10;productivity&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="350" y="538" width="121" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:CompS" value="Sector work&#10;completed&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="754" y="635" width="89" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:Pe" value="Employer&#10;productivity&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="265" y="402" width="95" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:SignS" value="Vendor signings&#10;(sourcing)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="624" y="642" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:TTFratio" value="Mid time-to-fill&#10;ratio&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="136" y="344" width="121" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:VW" value="Vendor work share&#10;(sourcing)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="850" y="623" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:Disc" value="Competitive&#10;discount&#10;(finance c)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="443" y="208" width="89" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:ECost" value="Expected delivery&#10;cost&#10;(finance a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="540" y="169" width="127" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:VB.CostIdx" value="Vendor cost index&#10;(finance a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="113" y="293" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:VF.dev" value="Margin deviation&#10;(finance c)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="97" y="79" width="121" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:VF.nm" value="Normal margin&#10;(finance c)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="185" y="215" width="101" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Vendor finance and contracts (b): contracts and prices" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="554" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Box: a stock. Hourglass: a flow (its valve), named below. Bold coloured text: an&#10;auxiliary. Grey italic: a lever parameter. Thick arrow: a flow changing the&#10;stock it points to. Thin arrow: an input of the item it points to. Grey text,&#10;(module): an input from another module. Dashed grey box, (page): an input from&#10;another page of this module." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="709" width="529" height="81" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="Arrows show dependence only and carry no polarity: signs are on the causal-loop&#10;panels (panels 1-5) and in docs/model/loops.csv." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="709" width="523" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:2" value="Coflow valves (the contract book's whole update in one flow, reading the&#10;signings and expiries): Duration-weighted book change, Price-weighted book&#10;change." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="753" width="491" height="54" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
