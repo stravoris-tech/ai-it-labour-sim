@@ -53,7 +53,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:LOB&gt;SeatsB" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;" edge="1" parent="1" source="LOB" target="SeatsB">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry x="-0.6" y="0" relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:LOB&gt;cons.NetSavings" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="LOB" target="cons.NetSavings">
           <mxGeometry relative="1" as="geometry" />

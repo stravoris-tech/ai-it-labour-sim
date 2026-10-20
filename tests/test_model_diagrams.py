@@ -277,3 +277,60 @@ def test_sign_label_check_fails_on_planted_coincident_labels(tmp_path: Path) -> 
     D.write_sidecar(tmp_path, "article-a5", geom)
     clashes = D.sign_label_clashes(v, D.read_sidecar(tmp_path, "article-a5"))
     assert ("e:A5.pipeline>A5.graduates", "e:A5.unemployment>A5.seen") in clashes
+
+
+def _copy_inputs(tmp_path: Path) -> None:
+    for folder, files in (
+        (D.DATA, ("model_docs.csv", "model_modules.csv", "model_articles.csv")),
+        (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv")),
+    ):
+        (tmp_path / folder).mkdir(parents=True, exist_ok=True)
+        for name in files:
+            shutil.copyfile(ROOT / folder / name, tmp_path / folder / name)
+    shutil.copytree(ROOT / D.DIAGRAMS, tmp_path / D.DIAGRAMS)
+
+
+def test_no_sign_sits_on_a_link_of_opposite_sign(views: dict[str, D.View]) -> None:
+    """No sign label lies within 6 px of another link's drawn path when that link carries the opposite sign (slice
+    10b.1). The overview's labels are counts, not signs."""
+    found = {
+        name: D.signs_on_opposite_links(v, D.read_sidecar(ROOT, name))
+        for name, v in views.items()
+        if name != "overview"
+    }
+    assert {k: v for k, v in found.items() if v} == {}
+
+
+def test_opposite_sign_check_fails_on_a_planted_sign(tmp_path: Path) -> None:
+    _copy_inputs(tmp_path)
+    v = D.build_views(tmp_path)["panel-demand"]
+    assert D.signs_on_opposite_links(v, D.read_sidecar(tmp_path, "panel-demand")) == []
+    geom = D.read_sidecar(tmp_path, "panel-demand")
+    del geom["e:LOB>SeatsB"]  # its "+" goes back to the middle, on the crossing with AC -> LOB target ("-")
+    D.write_sidecar(tmp_path, "panel-demand", geom)
+    found = D.signs_on_opposite_links(v, D.read_sidecar(tmp_path, "panel-demand"))
+    assert ("e:LOB>SeatsB", "e:AC>cons.LOBTarget") in found
+
+
+def test_each_limit_marker_sits_nearest_a_link_it_caps(views: dict[str, D.View]) -> None:
+    """Each limit marker is at least 5 px nearer a link it caps than any link it does not, on the drawn paths, and no
+    sign label sits within 6 px of it (slice 10b.1)."""
+    found = {name: D.limit_marker_problems(v, D.read_sidecar(ROOT, name)) for name, v in views.items()}
+    assert {k: v for k, v in found.items() if v} == {}
+
+
+def test_limit_marker_check_fails_on_a_planted_marker(tmp_path: Path) -> None:
+    _copy_inputs(tmp_path)
+    v = D.build_views(tmp_path)["panel-sourcing"]
+    clean = D.read_sidecar(tmp_path, "panel-sourcing")
+    assert D.limit_marker_problems(v, clean) == []
+    geom = dict(clean)
+    geom["limit:R7Lcap"] = [880.0, 257.0, 160.0, 26.0]  # main's place, midway between two vertical links
+    D.write_sidecar(tmp_path, "panel-sourcing", geom)
+    found = D.limit_marker_problems(v, D.read_sidecar(tmp_path, "panel-sourcing"))
+    assert any(x.startswith("limit:R7Lcap: capped link at") for x in found), found
+    geom = dict(clean)
+    geom["e:GCCW>GCCScaleTerm"] = [0.1, 10.0, 0.0, 0.0]  # the capped link's "+" moved onto the marker
+    D.write_sidecar(tmp_path, "panel-sourcing", geom)
+    found = D.limit_marker_problems(v, D.read_sidecar(tmp_path, "panel-sourcing"))
+    assert any(x.startswith("limit:R7Lcap: the sign of e:GCCW>GCCScaleTerm") for x in found), found

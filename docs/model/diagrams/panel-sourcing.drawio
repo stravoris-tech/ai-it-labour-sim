@@ -26,7 +26,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:GCCW&gt;GCCScaleTerm" value="+" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;strokeWidth=2.4;" edge="1" parent="1" source="GCCW" target="GCCScaleTerm">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry x="-0.5" y="0" relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:H&gt;UnempRate" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;dashed=1;dashPattern=8 4;opacity=45;textOpacity=60;" edge="1" parent="1" source="H" target="UnempRate">
           <mxGeometry relative="1" as="geometry" />
@@ -161,7 +161,7 @@
           <mxGeometry x="621" y="642" width="108" height="27" as="geometry" />
         </mxCell>
         <mxCell id="limit:R7Lcap" value="limit: cap (R7Lcap)" style="html=0;fontFamily=Helvetica;fontSize=12;shape=hexagon;perimeter=hexagonPerimeter2;size=0.12;fillColor=#FFFFFF;strokeColor=#333333;fontSize=11;fontStyle=2;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="880" y="257" width="160" height="26" as="geometry" />
+          <mxGeometry x="872" y="244" width="160" height="26" as="geometry" />
         </mxCell>
         <mxCell id="R10" value="R&#10;R10" style="html=0;fontFamily=Helvetica;fontSize=12;ellipse;fillColor=#FFFFFF;strokeColor=#333333;strokeWidth=1.5;fontStyle=1;fontColor=#1A1A1A;dashed=1;" vertex="1" parent="1">
           <mxGeometry x="744" y="464" width="52" height="52" as="geometry" />

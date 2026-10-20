@@ -70,7 +70,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:R4Mult&gt;U" value="-" style="html=0;endArrow=classic;endSize=7;rounded=0;strokeColor=#444444;strokeWidth=1.2;fontFamily=Helvetica;fontSize=16;fontStyle=1;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="R4Mult" target="U">
-          <mxGeometry relative="1" as="geometry">
+          <mxGeometry x="-0.6" y="0" relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="402.5" y="704.4" />
             </Array>
