@@ -1200,27 +1200,95 @@ def _exit(box: Sequence[float], towards: tuple[float, float]) -> tuple[float, fl
     return cx + t * dx, cy + t * dy
 
 
-def sign_label_points(view: View, geom: Mapping[str, Sequence[float]]) -> dict[str, tuple[float, float]]:
-    """Each link's sign label position: draw.io's relative position along the link (the sidecar's ``e:`` entry, else
-    the middle), on the path from the source box's edge through any two-way waypoint to the target box's edge, moved
-    by the entry's offset at right angles to the path."""
+def link_paths(view: View, geom: Mapping[str, Sequence[float]]) -> dict[str, list[tuple[float, float]]]:
+    """Each link's drawn path: from the source box's edge through any two-way waypoint to the target box's edge."""
     pairs = {(lk.source, lk.target) for lk in view.links}
     out = {}
     for lk in view.links:
         a, b = geom[lk.source], geom[lk.target]
         ca, cb = (a[0] + a[2] / 2, a[1] + a[3] / 2), (b[0] + b[2] / 2, b[1] + b[3] / 2)
         mid = [_offset(geom, lk.source, lk.target)] if (lk.target, lk.source) in pairs else []
-        path = [_exit(a, (mid or [cb])[0]), *mid, _exit(b, (mid or [ca])[-1])]
+        out[edge_id(lk)] = [_exit(a, (mid or [cb])[0]), *mid, _exit(b, (mid or [ca])[-1])]
+    return out
+
+
+def sign_label_points(view: View, geom: Mapping[str, Sequence[float]]) -> dict[str, tuple[float, float]]:
+    """Each link's sign label position: draw.io's relative position along the link (the sidecar's ``e:`` entry, else
+    the middle), on its drawn path (``link_paths``), moved by the entry's offset at right angles to the path."""
+    out = {}
+    for eid, path in link_paths(view, geom).items():
         lens = [math.dist(p, q) for p, q in itertools.pairwise(path)]
-        at = geom.get(edge_id(lk), [0.0, 0.0])
+        at = geom.get(eid, [0.0, 0.0])
         goal = (at[0] + 1) / 2 * sum(lens)
         for (p, q), ln in zip(itertools.pairwise(path), lens, strict=True):
             if goal <= ln or q == path[-1]:
                 f = goal / ln if ln else 0.0
                 nx, ny = (-(q[1] - p[1]) / ln, (q[0] - p[0]) / ln) if ln else (0.0, 0.0)
-                out[edge_id(lk)] = (p[0] + f * (q[0] - p[0]) + at[1] * nx, p[1] + f * (q[1] - p[1]) + at[1] * ny)
+                out[eid] = (p[0] + f * (q[0] - p[0]) + at[1] * nx, p[1] + f * (q[1] - p[1]) + at[1] * ny)
                 break
             goal -= ln
+    return out
+
+
+def _point_segment(p: tuple[float, float], a: tuple[float, float], b: tuple[float, float]) -> float:
+    dx, dy = b[0] - a[0], b[1] - a[1]
+    ln2 = dx * dx + dy * dy
+    t = max(0.0, min(1.0, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / ln2)) if ln2 else 0.0
+    return math.dist(p, (a[0] + t * dx, a[1] + t * dy))
+
+
+def _point_box(p: tuple[float, float], box: Sequence[float]) -> float:
+    x, y, w, h = box[:4]
+    return math.hypot(max(x - p[0], 0.0, p[0] - x - w), max(y - p[1], 0.0, p[1] - y - h))
+
+
+def _box_path(box: Sequence[float], path: Sequence[tuple[float, float]]) -> float:
+    """The distance from a box to a drawn path: 0 where the path enters the box."""
+    x, y, w, h = box[:4]
+    corners = ((x, y), (x + w, y), (x + w, y + h), (x, y + h))
+    sides = list(itertools.pairwise((*corners, corners[0])))
+    best = math.inf
+    for a, b in itertools.pairwise(path):
+        if any(_cross((*a, *b), (*c, *d)) for c, d in sides):
+            return 0.0
+        best = min(best, _point_box(a, box), _point_box(b, box), *(_point_segment(c, a, b) for c in corners))
+    return best
+
+
+def signs_on_opposite_links(view: View, geom: Mapping[str, Sequence[float]], tol: float = 6.0) -> list[tuple[str, str]]:
+    """(link, other link) pairs where the link's sign label sits within ``tol`` px of the other link's drawn path and
+    the two signs are opposite, so a reader could take the sign for the other link's (slice 10b.1)."""
+    paths = link_paths(view, geom)
+    sign = {edge_id(lk): lk.label for lk in view.links}
+    return [
+        (e, o)
+        for e, p in sorted(sign_label_points(view, geom).items())
+        for o, path in sorted(paths.items())
+        if o != e
+        and {sign[e], sign[o]} == {"+", "-"}
+        and min(_point_segment(p, a, b) for a, b in itertools.pairwise(path)) < tol
+    ]
+
+
+def limit_marker_problems(
+    view: View, geom: Mapping[str, Sequence[float]], margin: float = 5.0, clearance: float = 6.0
+) -> list[str]:
+    """Limit markers not clearly beside a link they cap: the nearest capped link's drawn path must be at least
+    ``margin`` px nearer the marker's box than any other link's, and no sign label may sit within ``clearance`` px of
+    the box (slice 10b.1)."""
+    paths = link_paths(view, geom)
+    signs = sign_label_points(view, geom)
+    out = []
+    for mid, caps in sorted(view.limit_links.items()):
+        box = geom[mid]
+        capped = {f"e:{a}>{b}" for a, b in caps}
+        near = min(_box_path(box, paths[e]) for e in capped)
+        other, oid = min(((_box_path(box, p), e) for e, p in paths.items() if e not in capped), default=(math.inf, ""))
+        if other - near < margin:
+            out.append(f"{mid}: capped link at {near:.1f} px, {oid} at {other:.1f} px")
+        for e, p in sorted(signs.items()):
+            if _point_box(p, box) < clearance:
+                out.append(f"{mid}: the sign of {e} at {_point_box(p, box):.1f} px")
     return out
 
 
