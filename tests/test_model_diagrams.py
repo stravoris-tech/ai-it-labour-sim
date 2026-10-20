@@ -48,7 +48,8 @@ def test_manifest_matches_the_sources_and_exports() -> None:
 def test_check_fails_on_a_copy_with_one_changed_label(tmp_path: Path) -> None:
     for folder, files in (
         (D.DATA, ("model_docs.csv", "model_modules.csv", "model_articles.csv")),
-        (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv")),
+        (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv", "inventory.csv")),
+        (D.PAGES_CSV.parent, (D.PAGES_CSV.name,)),
     ):
         (tmp_path / folder).mkdir(parents=True, exist_ok=True)
         for name in files:
@@ -77,6 +78,9 @@ def test_every_node_maps_to_model_items(views: dict[str, D.View], src: D.Sources
                 assert c.id in modules, (name, c.id)
             elif c.kind == "node" and v.kind == "article":
                 assert c.items and set(c.items) <= names, (name, c.id)
+            elif c.kind in ("node", "valve", "ghost", "ref") and v.kind == "module":
+                assert c.items and set(c.items) <= names, (name, c.id)
+                assert D.page_item(src, c.id)[0] == c.items[0], (name, c.id)
             elif c.kind == "node":
                 ok = (
                     c.id in names
@@ -168,7 +172,8 @@ def test_bundled_article_nodes_connect_inside(src: D.Sources) -> None:
 def test_bundle_check_fails_on_a_planted_bundle(tmp_path: Path) -> None:
     for folder, files in (
         (D.DATA, ("model_docs.csv", "model_modules.csv", "model_articles.csv")),
-        (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv")),
+        (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv", "inventory.csv")),
+        (D.PAGES_CSV.parent, (D.PAGES_CSV.name,)),
     ):
         (tmp_path / folder).mkdir(parents=True, exist_ok=True)
         for name in files:
@@ -204,9 +209,11 @@ def test_article_loops_close_with_their_polarity(src: D.Sources) -> None:
 
 
 def test_labels_stay_within_their_limits(views: dict[str, D.View], src: D.Sources) -> None:
-    for name in D.PANEL_VIEWS:
+    """Panel and module page labels: at most 3 lines of 18 characters (a ghost's or page reference's last line is
+    its module or page)."""
+    for name in (*D.PANEL_VIEWS, *D.MODULE_VIEWS):
         for c in views[name].cells:
-            if c.kind == "node":
+            if c.kind in ("node", "valve", "ghost", "ref"):
                 lines = c.label.split("\n")
                 assert len(lines) <= 3 and max(len(x) for x in lines) <= 18, (name, c.id, c.label)
     for r in src.articles:
@@ -219,7 +226,7 @@ def test_labels_stay_within_their_limits(views: dict[str, D.View], src: D.Source
 
 def test_no_view_repeats_a_node_label(views: dict[str, D.View]) -> None:
     for name, v in views.items():
-        labels = [c.label for c in v.cells if c.kind == "node"]
+        labels = [c.label for c in v.cells if c.kind in ("node", "valve", "ghost", "ref")]
         assert len(labels) == len(set(labels)), name
 
 
@@ -255,15 +262,19 @@ def test_overlap_check_detects_a_planted_overlap(views: dict[str, D.View]) -> No
 
 
 def test_no_two_sign_labels_coincide(views: dict[str, D.View]) -> None:
-    """No two links' sign labels sit within 6 px of each other, with the sidecar's label offsets (Addendum C)."""
+    """No two links' sign labels sit within 6 px of each other, with the sidecar's label offsets (Addendum C). Signed
+    views only: the module pages are skipped on purpose, as their arrows carry no label (slice 10c)."""
     for name, v in views.items():
+        if v.kind == "module":
+            continue
         assert D.sign_label_clashes(v, D.read_sidecar(ROOT, name)) == [], name
 
 
 def test_sign_label_check_fails_on_planted_coincident_labels(tmp_path: Path) -> None:
     for folder, files in (
         (D.DATA, ("model_docs.csv", "model_modules.csv", "model_articles.csv")),
-        (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv")),
+        (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv", "inventory.csv")),
+        (D.PAGES_CSV.parent, (D.PAGES_CSV.name,)),
     ):
         (tmp_path / folder).mkdir(parents=True, exist_ok=True)
         for name in files:
@@ -282,7 +293,8 @@ def test_sign_label_check_fails_on_planted_coincident_labels(tmp_path: Path) -> 
 def _copy_inputs(tmp_path: Path) -> None:
     for folder, files in (
         (D.DATA, ("model_docs.csv", "model_modules.csv", "model_articles.csv")),
-        (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv")),
+        (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv", "inventory.csv")),
+        (D.PAGES_CSV.parent, (D.PAGES_CSV.name,)),
     ):
         (tmp_path / folder).mkdir(parents=True, exist_ok=True)
         for name in files:
@@ -292,11 +304,12 @@ def _copy_inputs(tmp_path: Path) -> None:
 
 def test_no_sign_sits_on_a_link_of_opposite_sign(views: dict[str, D.View]) -> None:
     """No sign label lies within 6 px of another link's drawn path when that link carries the opposite sign (slice
-    10b.1). The overview's labels are counts, not signs."""
+    10b.1). Signed views only: the overview's labels are counts, not signs, and the module pages are skipped on
+    purpose, as their arrows carry no sign (slice 10c)."""
     found = {
         name: D.signs_on_opposite_links(v, D.read_sidecar(ROOT, name))
         for name, v in views.items()
-        if name != "overview"
+        if name != "overview" and v.kind != "module"
     }
     assert {k: v for k, v in found.items() if v} == {}
 
@@ -314,8 +327,11 @@ def test_opposite_sign_check_fails_on_a_planted_sign(tmp_path: Path) -> None:
 
 def test_each_limit_marker_sits_nearest_a_link_it_caps(views: dict[str, D.View]) -> None:
     """Each limit marker is at least 5 px nearer a link it caps than any link it does not, on the drawn paths, and no
-    sign label sits within 6 px of it (slice 10b.1)."""
-    found = {name: D.limit_marker_problems(v, D.read_sidecar(ROOT, name)) for name, v in views.items()}
+    sign label sits within 6 px of it (slice 10b.1). Signed views only: the module pages are skipped on purpose, as
+    they have no limit markers and no signs (slice 10c)."""
+    found = {
+        name: D.limit_marker_problems(v, D.read_sidecar(ROOT, name)) for name, v in views.items() if v.kind != "module"
+    }
     assert {k: v for k, v in found.items() if v} == {}
 
 
@@ -334,3 +350,111 @@ def test_limit_marker_check_fails_on_a_planted_marker(tmp_path: Path) -> None:
     D.write_sidecar(tmp_path, "panel-sourcing", geom)
     found = D.limit_marker_problems(v, D.read_sidecar(tmp_path, "panel-sourcing"))
     assert any(x.startswith("limit:R7Lcap: the sign of e:GCCW>GCCScaleTerm") for x in found), found
+
+
+# ---- 10c: the module pages ------------------------------------------------------------------------------------------
+
+
+def _page_cells(root: Path, name: str) -> list[D.DrawnCell]:
+    return D.read_drawio_cells(D.drawio_path(root, name))
+
+
+def test_every_module_item_is_on_exactly_one_page_of_its_module(src: D.Sources) -> None:
+    """Each item a module page draws (``model_docs.csv``'s module) is drawn on exactly one page of its module, as a
+    node of that page, never twice (slice 10c)."""
+    items = D.module_items(src)
+    assign = D.page_assignment(src)
+    assert sorted(it for its in assign.values() for it in its) == sorted(items)
+    drawn: dict[D.Item, list[str]] = {}
+    for name, spec in D.MODULE_VIEWS.items():
+        for c in _page_cells(ROOT, name):
+            if not c.is_item():
+                continue
+            it = D.page_item(src, c.id)
+            assert items[it] in spec.modules, (name, c.id)
+            drawn.setdefault(it, []).append(name)
+    assert {it: ps for it, ps in drawn.items() if len(ps) != 1} == {}
+    assert sorted(drawn) == sorted(items)
+
+
+def test_the_page_table_fails_on_a_planted_duplicate_or_missing_item(tmp_path: Path) -> None:
+    _copy_inputs(tmp_path)
+    p = tmp_path / D.PAGES_CSV
+    D.page_assignment(D.read_sources(tmp_path))  # the copy is clean before the plant
+    text = p.read_bytes().decode("utf-8")
+    assert text.count("\nfinance-b,VF.PNew,auxiliary\n") == 1
+    p.write_bytes((text + "finance-c,VF.PNew,auxiliary\n").encode("utf-8"))
+    with pytest.raises(ValueError, match=r"VF\.PNew \(auxiliary\) assigned twice"):
+        D.page_assignment(D.read_sources(tmp_path))
+    p.write_bytes(text.replace("finance-b,VF.PNew,auxiliary\n", "").encode("utf-8"))
+    with pytest.raises(ValueError, match=r"VF\.PNew \(auxiliary\) unassigned"):
+        D.page_assignment(D.read_sources(tmp_path))
+
+
+def test_ghosts_and_page_references_are_inputs_from_where_they_say(src: D.Sources) -> None:
+    """A ghost is an item of another module with an edge into the page; a page reference an item of the same module,
+    assigned to a different page, with an edge into the page (slice 10c)."""
+    found = {name: D.reference_problems(src, name, _page_cells(ROOT, name)) for name in D.MODULE_VIEWS}
+    assert {k: v for k, v in found.items() if v} == {}
+
+
+def test_the_reference_checks_fail_on_planted_cells(tmp_path: Path) -> None:
+    _copy_inputs(tmp_path)
+    src = D.read_sources(tmp_path)
+    path = D.drawio_path(tmp_path, "module-finance-b")
+    clean = path.read_bytes().decode("utf-8")
+    assert D.reference_problems(src, "module-finance-b", D.read_drawio_cells(path)) == []
+    plants = {
+        "ref:VF.PNew": "on this page",  # a reference to an item drawn on the same page
+        "ref:RevenueTot": "no edge into the page",  # an item of a sibling page that feeds nothing here
+        "ghost:VF.Book": "not of another module",  # a ghost of the page's own module
+    }
+    for cid, why in plants.items():
+        cell = (
+            f'<mxCell id="{cid}" value="x" style="text;" vertex="1" parent="1">'
+            '<mxGeometry x="0" y="0" width="9" height="9" as="geometry"/></mxCell>'
+        )
+        path.write_bytes(clean.replace("</root>", cell + "</root>", 1).encode("utf-8"))
+        problems = D.reference_problems(src, "module-finance-b", D.read_drawio_cells(path))
+        assert any(cid in x and why in x for x in problems), (cid, problems)
+
+
+def test_no_edge_on_a_module_page_carries_a_sign() -> None:
+    """Module pages show dependence only: no arrow has a label (decision 2)."""
+    found = {name: D.sign_problems(_page_cells(ROOT, name)) for name in D.MODULE_VIEWS}
+    assert {k: v for k, v in found.items() if v} == {}
+
+
+def test_the_sign_check_fails_on_a_planted_sign(tmp_path: Path) -> None:
+    p = tmp_path / "module-work.drawio"
+    shutil.copyfile(D.drawio_path(ROOT, "module-work"), p)
+    clean = p.read_bytes().decode("utf-8")
+    assert D.sign_problems(D.read_drawio_cells(p)) == []
+    i = clean.index('value="" style="html=0;endArrow')
+    p.write_bytes((clean[:i] + 'value="+"' + clean[i + len('value=""') :]).encode("utf-8"))
+    assert len(D.sign_problems(D.read_drawio_cells(p))) == 1
+
+
+def test_every_valve_sits_with_its_stock(src: D.Sources) -> None:
+    """Each goal-seeking or coflow stock on a page has exactly one valve and exactly one arrow into its box, the pipe
+    from that valve, so no input of its update points at the stock; no valve lacks its stock (slice 10c)."""
+    found = {name: D.valve_problems(src, _page_cells(ROOT, name)) for name in D.MODULE_VIEWS}
+    assert {k: v for k, v in found.items() if v} == {}
+    kinds = D.valve_stocks(src)
+    assert sum(k == "goal-seeking" for k in kinds.values()) == 20
+    assert sorted(s for s, k in kinds.items() if k == "coflow") == ["NewD", "NewP"]
+
+
+def test_the_valve_check_fails_on_planted_cells(tmp_path: Path) -> None:
+    _copy_inputs(tmp_path)
+    src = D.read_sources(tmp_path)
+    path = D.drawio_path(tmp_path, "module-finance-c")
+    clean = path.read_bytes().decode("utf-8")
+    assert D.valve_problems(src, D.read_drawio_cells(path)) == []
+    i = clean.index('<mxCell id="flow:Viab"')
+    j = clean.index("</mxCell>", i) + len("</mxCell>")
+    path.write_bytes((clean[:i] + clean[j:]).encode("utf-8"))  # the valve removed
+    assert any("Viab" in x and "valve" in x for x in D.valve_problems(src, D.read_drawio_cells(path)))
+    k = clean.index('target="flow:Viab"')
+    path.write_bytes((clean[:k] + 'target="Viab"' + clean[k + len('target="flow:Viab"') :]).encode("utf-8"))
+    assert any("Viab" in x and "arrows into" in x for x in D.valve_problems(src, D.read_drawio_cells(path)))

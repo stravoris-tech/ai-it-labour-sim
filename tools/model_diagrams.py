@@ -1,4 +1,11 @@
-"""The model's diagrams: the overview, the causal-loop panels and the article set, as draw.io files (slice 10b).
+"""The model's diagrams: the overview, the causal-loop panels, the article set (slice 10b) and the module pages (slice
+10c), as draw.io files.
+
+Module pages are stock-and-flow views of each module (``MODULE_PAGES``; each item's page in ``tools/module_pages.csv``,
+its module from ``model_docs.csv``): stocks as boxes, flows as valves, auxiliaries in the module colour, levers grey
+italic, inputs from other modules as grey ghosts and inputs from the module's other pages as grey page references.
+Their arrows carry no polarity. A stock's unnamed flow ``flow:<stock>`` is drawn as its valve: every input of the
+update points at the valve, and the valve's pipe at the stock.
 
 Every view is generated from the curated metadata (``src/aisim/data/model_docs.csv``, ``model_modules.csv`` and
 ``model_articles.csv``), the dependency edges (``docs/model/edges.csv``) and the loop inventory
@@ -37,6 +44,7 @@ import importlib
 import itertools
 import json
 import math
+import re
 import subprocess
 import sys
 import textwrap
@@ -144,7 +152,37 @@ PANELS: Final = (
 PANEL_VIEWS: Final = {f"panel-{p.key}": p for p in PANELS}
 ARTICLES: Final = ("A1", "A2", "A3", "A4", "A5")
 ARTICLE_VIEWS: Final = {f"article-{a.lower()}": a for a in ARTICLES}
-VIEWS: Final = ("overview", *PANEL_VIEWS, *ARTICLE_VIEWS)
+
+
+@dataclass(frozen=True)
+class PageSpec:
+    """One module page (slice 10c): its key, the modules whose items it draws, its title and the short name that page
+    references to it carry."""
+
+    key: str
+    modules: tuple[str, ...]
+    title: str
+    short: str
+
+
+MODULE_PAGES: Final = (
+    PageSpec("capability-adoption", ("capability", "adoption"), "AI capability and delivery AI adoption", "capability"),
+    PageSpec(
+        "consumer-a", ("consumer",), "Client demand and consumer AI (a): client AI and line of business", "consumer a"
+    ),
+    PageSpec("consumer-b", ("consumer",), "Client demand and consumer AI (b): budgets, demand and spend", "consumer b"),
+    PageSpec("consumer-c", ("consumer",), "Client demand and consumer AI (c): applications and seats", "consumer c"),
+    PageSpec("work", ("work",), "Work and productivity", "work"),
+    PageSpec("workforce", ("workforce",), "Workforce planning", "workforce"),
+    PageSpec("labour-market-a", ("labour_market",), "Labour market (a): people pools and exits", "labour market a"),
+    PageSpec("labour-market-b", ("labour_market",), "Labour market (b): hiring and switching", "labour market b"),
+    PageSpec("sourcing", ("sourcing",), "Sourcing choice", "sourcing"),
+    PageSpec("finance-a", ("finance",), "Vendor finance and contracts (a): costs and wages", "finance a"),
+    PageSpec("finance-b", ("finance",), "Vendor finance and contracts (b): contracts and prices", "finance b"),
+    PageSpec("finance-c", ("finance",), "Vendor finance and contracts (c): revenue, margin and viability", "finance c"),
+)
+MODULE_VIEWS: Final = {f"module-{p.key}": p for p in MODULE_PAGES}
+VIEWS: Final = ("overview", *PANEL_VIEWS, *ARTICLE_VIEWS, *MODULE_VIEWS)
 
 QUESTION_LOOPS: Final = frozenset({"R5", "U1", "U3", "U5"})
 """Loops whose sign depends on which path dominates (decision 3): a "?" label and a caption."""
@@ -276,7 +314,14 @@ class Sources:
     summary: Mapping[str, Mapping[str, str]]
     articles: Sequence[Mapping[str, str]]
     kinds: Mapping[str, str]
+    pages: Sequence[Mapping[str, str]] = ()
+    """``tools/module_pages.csv``: each module item's page."""
+    levers: frozenset[str] = frozenset()
+    """The lever parameters (``docs/model/inventory.csv``, ``lever`` "yes" or "yes (structural)")."""
 
+
+PAGES_CSV: Final = Path("tools/module_pages.csv")
+"""Each item a module page draws, with its page (``page,name,kind``); a page's valves follow their stocks."""
 
 KIND_ORDER: Final = ("stock", "flow", "auxiliary", "parameter", "table", "time")
 
@@ -297,6 +342,12 @@ def read_sources(root: Path = ROOT) -> Sources:
         {r["loop_id"]: r for r in read_csv(root / MODEL / "loop_summary.csv")},
         read_csv(root / DATA / "model_articles.csv"),
         kinds,
+        read_csv(root / PAGES_CSV),
+        frozenset(
+            r["name"]
+            for r in read_csv(root / MODEL / "inventory.csv")
+            if r["kind"] == "parameter" and r["lever"].startswith("yes")
+        ),
     )
 
 
@@ -319,8 +370,9 @@ def signed_links(src: Sources) -> list[Mapping[str, str]]:
 # ---- labels and styles ----------------------------------------------------------------------------------------------
 
 
-def wrap(label: str, width: int = WRAP) -> str:
-    return "\n".join(textwrap.wrap(label, width, break_long_words=False)) or label
+def wrap(label: str, width: int = WRAP, hyphens: bool = True) -> str:
+    """A label wrapped at ``width``; module pages pass ``hyphens=False`` so that "phase-in" stays whole."""
+    return "\n".join(textwrap.wrap(label, width, break_long_words=False, break_on_hyphens=hyphens)) or label
 
 
 def text_size(label: str, font: float = 12.0, bold: bool = False) -> tuple[float, float]:
@@ -685,11 +737,242 @@ def article(src: Sources, view: str) -> View:
     return View(view, "article", tuple(cells), tuple(links), loop_cells, limit_links)
 
 
+# ---- the module pages -----------------------------------------------------------------------------------------------
+
+PAGE_KINDS: Final = ("stock", "flow", "auxiliary")
+REFERENCE_STOCKS: Final = ("WS0", "Attr0", "Dur0")
+"""Loop state families set once, on the first step, to a 2024 reference (``loops.pre``): no flow enters them, so a
+flow they read is an input, not a pipe."""
+COFLOWS: Final = frozenset({"NewD", "NewP"})
+"""Stocks whose one unnamed flow is a coflow of the contract book, not a goal-seeking adjustment: their whole update
+reads the signings and expiries (``integrate.py:122-123``; operator ruling, slice 10c)."""
+NO_POLARITY: Final = (
+    "Arrows show dependence only and carry no polarity: signs are on the causal-loop panels (panels 1-5) and in "
+    "docs/model/loops.csv."
+)
+MODULE_WRAP: Final = 80
+"""A module page's legend and captions wrap at 80 characters, side by side under the drawing."""
+GHOST_STYLE: Final = BASE + "text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;"
+REF_STYLE: Final = BASE + "text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;"
+PIPE_STYLE: Final = "html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;"
+INFO_STYLE: Final = "html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;"
+VALVE_W: Final = 24.0
+VALVE_H: Final = 22.0
+"""A valve's drawn shape; its sidecar box is the shape and the label below it."""
+MODULE_LEGEND: Final = (
+    ("stock", "Box: a stock."),
+    ("valve", "Hourglass: a flow (its valve), named below."),
+    ("auxiliary", "Bold coloured text: an auxiliary."),
+    ("lever", "Grey italic: a lever parameter."),
+    ("pipe", "Thick arrow: a flow changing the stock it points to."),
+    ("", "Thin arrow: an input of the item it points to."),
+    ("ghost", "Grey text, (module): an input from another module."),
+    ("ref", "Dashed grey box, (page): an input from another page of this module."),
+)
+"""The module pages' legend: each part with the mark it explains ("" for every page), run together and wrapped."""
+
+Item = tuple[str, str]
+"""A model item: (name, kind)."""
+
+
+def valve_style(colour: str) -> str:
+    return (
+        BASE + f"shape=mxgraph.flowchart.collate;fillColor={tint(colour)};strokeColor={colour};strokeWidth=1.5;"
+        "verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;"
+        "labelBackgroundColor=#FFFFFF;"
+    )
+
+
+def module_items(src: Sources) -> dict[Item, str]:
+    """Every item a module page draws, with its module from ``model_docs.csv``: stocks, named flows, auxiliaries and
+    lever parameters. A stock's unnamed flow ``flow:<stock>`` is its valve and follows the stock."""
+    return {
+        (n, k): r["module"]
+        for (n, k), r in sorted(src.docs.items())
+        if not n.startswith("flow:") and (k in PAGE_KINDS or (k == "parameter" and n in src.levers))
+    }
+
+
+def page_assignment(src: Sources) -> dict[str, list[Item]]:
+    """Each page's items (``tools/module_pages.csv``). Raises ``ValueError`` listing every unassigned item, every item
+    assigned twice, and every row that names an unknown page, an item no module page draws or an item of another
+    module."""
+    items = module_items(src)
+    mods = {p.key: p.modules for p in MODULE_PAGES}
+    seen: dict[Item, str] = {}
+    bad = []
+    for r in src.pages:
+        key, page = (r["name"], r["kind"]), r["page"]
+        if page not in mods:
+            bad.append(f"{key[0]} ({key[1]}): unknown page {page!r}")
+        elif key not in items:
+            bad.append(f"{key[0]} ({key[1]}) on {page}: not an item a module page draws")
+        elif items[key] not in mods[page]:
+            bad.append(f"{key[0]} ({key[1]}) on {page}: a {items[key]} item")
+        elif key in seen:
+            bad.append(f"{key[0]} ({key[1]}) assigned twice: {seen[key]} and {page}")
+        else:
+            seen[key] = page
+    bad += [f"{n} ({k}) unassigned" for n, k in sorted(set(items) - set(seen))]
+    if bad:
+        raise ValueError("module pages: " + "; ".join(bad))
+    out: dict[str, list[Item]] = {p.key: [] for p in MODULE_PAGES}
+    for key, page in seen.items():
+        out[page].append(key)
+    return {k: sorted(v) for k, v in out.items()}
+
+
+def valve_stocks(src: Sources) -> dict[str, str]:
+    """Each stock with an unnamed flow ``flow:<stock>``, and whether that flow is ``goal-seeking`` or a ``coflow``.
+    Raises if a goal-seeking stock's update also reads a named flow, so that it would have two flow items (the
+    operator's stop rule)."""
+    stocks = {n[5:] for n, _ in src.docs if n.startswith("flow:")}
+    two = sorted(
+        {
+            e["target"]
+            for e in src.edges
+            if e["target"] in stocks - COFLOWS and e["target_kind"] == "stock" and e["source_kind"] == "flow"
+        }
+    )
+    if two:
+        raise ValueError(f"stocks whose update has more than one flow item: {two}")
+    return {s: "coflow" if s in COFLOWS else "goal-seeking" for s in sorted(stocks)}
+
+
+def name_clashes(src: Sources) -> set[str]:
+    """Names shared by two items that module pages draw (``Att``: a stock and an auxiliary)."""
+    names = collections.Counter(n for n, _ in module_items(src))
+    return {n for n, c in names.items() if c > 1}
+
+
+JS_NAMES: Final = frozenset(
+    {
+        "__proto__", "apply", "arguments", "at", "bind", "call", "caller", "concat", "constructor", "copyWithin",
+        "entries", "every", "fill", "filter", "find", "findIndex", "findLast", "findLastIndex", "flat", "flatMap",
+        "forEach", "hasOwnProperty", "includes", "indexOf", "isPrototypeOf", "join", "keys", "lastIndexOf", "length",
+        "map", "name", "pop", "propertyIsEnumerable", "prototype", "push", "reduce", "reduceRight", "reverse", "shift",
+        "slice", "some", "sort", "splice", "toLocaleString", "toReversed", "toSorted", "toSpliced", "toString",
+        "unshift", "valueOf", "values", "with",
+    }
+)  # fmt: skip
+"""JavaScript prototype members. draw.io keeps cells in an object keyed by id, and a cell whose id is one of these
+(the auxiliary ``push``) makes its export fail, printing "Export failed" but exiting 0 (slice 10c)."""
+
+
+def cell_id(item: Item, clashes: set[str]) -> str:
+    """A module page's cell id for an item: its name, or ``name#kind`` where two drawn items share the name or the
+    name is a JavaScript prototype member (``JS_NAMES``)."""
+    return f"{item[0]}#{item[1]}" if item[0] in clashes or item[0] in JS_NAMES else item[0]
+
+
+def page_item(src: Sources, cid: str) -> Item:
+    """The item a module page's cell id stands for (a ghost or page-reference id without its prefix)."""
+    cid = cid.split(":", 1)[1] if cid.startswith(("ghost:", "ref:")) else cid
+    if cid.startswith("flow:"):
+        return (cid, "flow")
+    if "#" in cid:
+        n, k = cid.split("#", 1)
+        return (n, k)
+    kinds = [k for n, k in module_items(src) if n == cid]
+    if len(kinds) != 1:
+        raise KeyError(f"no single module item named {cid!r}")
+    return (cid, kinds[0])
+
+
+def module_page(src: Sources, view: str) -> View:
+    """A stock-and-flow page (slice 10c): the page's items, its stocks' valves, ghost inputs from other modules and
+    page references to the module's other pages; arrows without signs. Every input of a stock's unnamed flow points
+    at its valve, and the valve's pipe at the stock (operator rulings)."""
+    spec = MODULE_VIEWS[view]
+    assign = page_assignment(src)
+    items = module_items(src)
+    clashes = name_clashes(src)
+    valves = valve_stocks(src)
+    page_of = {it: p for p, its in assign.items() for it in its}
+    short = {p.key: p.short for p in MODULE_PAGES}
+    colours = {m["module"]: m["colour"] for m in src.modules}
+    members = assign[spec.key]
+    ids = {it: cell_id(it, clashes) for it in members}
+    stocks = sorted(n for n, k in members if k == "stock" and n in valves)
+
+    def target_cell(n: str, k: str) -> str | None:
+        if (n, k) not in ids:
+            return None
+        return f"flow:{n}" if k == "stock" and n in stocks else ids[(n, k)]
+
+    pairs: dict[tuple[str, str], str] = {}
+    outside: dict[str, tuple[Item, str]] = {}
+    for e in src.edges:
+        tgt = target_cell(e["target"], e["target_kind"])
+        sitem = (e["source"], e["source_kind"])
+        if tgt is None:
+            continue
+        if sitem in ids:
+            sid = ids[sitem]
+        elif sitem in items and sitem[1] in PAGE_KINDS:
+            if items[sitem] in spec.modules:
+                sid = f"ref:{cell_id(sitem, clashes)}"
+                outside[sid] = (sitem, short[page_of[sitem]])
+            else:
+                sid = f"ghost:{cell_id(sitem, clashes)}"
+                outside[sid] = (sitem, items[sitem].replace("_", " "))
+        else:
+            continue
+        if sid != tgt:
+            pairs[(sid, tgt)] = sitem[1]
+    for s in stocks:
+        pairs[(f"flow:{s}", s)] = "flow"
+
+    drawn = [*members, *((f"flow:{s}", "flow") for s in stocks), *(it for it, _ in outside.values())]
+    labels = collections.Counter(src.docs[it]["label"] for it in drawn)
+
+    def label_of(it: Item) -> str:
+        lab = src.docs[it]["label"]
+        return lab + (f" ({it[1]})" if labels[lab] > 1 else "")
+
+    cells: list[Cell] = []
+    marks = {""}
+    for it in [*members, *((f"flow:{s}", "flow") for s in stocks)]:
+        stock_of = it[0][5:] if it[0].startswith("flow:") else None
+        colour = colours[items[(stock_of, "stock")] if stock_of else items[it]]
+        cid = it[0] if stock_of else ids[it]
+        if it[1] == "flow":
+            cells.append(Cell(cid, wrap(label_of(it), hyphens=False), valve_style(colour), "valve", (it[0],)))
+            marks.add("valve")
+        else:
+            cells.append(Cell(cid, wrap(label_of(it), hyphens=False), node_style(it[1], colour), "node", (it[0],)))
+            marks.add("lever" if it[1] == "parameter" else it[1])
+    for sid in sorted(outside):
+        it, where = outside[sid]
+        kind = "ref" if sid.startswith("ref:") else "ghost"
+        style = REF_STYLE if kind == "ref" else GHOST_STYLE
+        cells.append(Cell(sid, f"{wrap(label_of(it), hyphens=False)}\n({where})", style, kind, (it[0],)))
+        marks.add(kind)
+    stock_ids = {ids[it] for it in members if it[1] == "stock" and it[0] not in REFERENCE_STOCKS}
+    links = []
+    for (a, b), skind in sorted(pairs.items()):
+        pipe = skind == "flow" and b in stock_ids
+        marks |= {"pipe"} if pipe else set()
+        links.append(Link(a, b, "", PIPE_STYLE if pipe else INFO_STYLE))
+    captions = ["\n".join(textwrap.wrap(NO_POLARITY, MODULE_WRAP))]
+    for kind, text in (
+        ("goal-seeking", "Goal-seeking valves (a stock adjusting toward a target; every input points at the valve)"),
+        ("coflow", "Coflow valves (the contract book's whole update in one flow, reading the signings and expiries)"),
+    ):
+        names = sorted(src.docs[(f"flow:{s}", "flow")]["label"] for s in stocks if valves[s] == kind)
+        if names:
+            captions.append("\n".join(textwrap.wrap(f"{text}: {', '.join(names)}.", MODULE_WRAP)))
+    legend = textwrap.wrap(" ".join(t for m, t in MODULE_LEGEND if m in marks), MODULE_WRAP)
+    cells += chrome(spec.title, legend, captions)
+    return View(view, "module", tuple(cells), tuple(links))
+
+
 def build_views(root: Path = ROOT, src: Sources | None = None) -> dict[str, View]:
     src = read_sources(root) if src is None else src
     out = {"overview": overview(src)}
     out.update({v: panel(src, v) for v in PANEL_VIEWS})
     out.update({v: article(src, v) for v in ARTICLE_VIEWS})
+    out.update({v: module_page(src, v) for v in MODULE_VIEWS})
     return out
 
 
@@ -819,8 +1102,11 @@ def cell_size(c: Cell) -> tuple[float, float]:
         return w + 20, h
     if c.kind == "title":
         return text_size(c.label, 16, True)
-    if c.kind in ("legend", "caption"):
+    if c.kind in ("legend", "caption", "ghost", "ref"):
         return text_size(c.label, 11, False)
+    if c.kind == "valve":
+        w, h = text_size(c.label, 12, False)
+        return max(w, VALVE_W + 16), h + VALVE_H
     bold = "fontStyle=1" in c.style
     return text_size(c.label, 13 if "fontSize=13" in c.style else 12, bold)
 
@@ -946,11 +1232,16 @@ def spring(nodes: Sequence[str], edges: Iterable[tuple[str, str]], seed: int = 7
 
 def first_layout(view: View) -> Geometry:
     """A first layout of every cell of a view (decision 6)."""
-    nodes = [c for c in view.cells if c.kind == "node"]
+    nodes = [c for c in view.cells if c.kind in ("node", "valve", "ghost", "ref")]
     ids = [c.id for c in nodes]
     edges = [(lk.source, lk.target) for lk in view.links]
     geom: Geometry = {}
-    if view.kind == "overview":
+    if view.kind == "module":  # layers left to right, as stocks and valves read along their main flow
+        lo = layered(ids, edges)
+        for n, (la, o) in lo.items():
+            w, h = cell_size(view.cell(n))
+            geom[n] = [60 + la * 200, 90 + o * 80, w, h]
+    elif view.kind == "overview":
         lo = layered(ids, edges)
         for n, (la, o) in lo.items():
             w, h = cell_size(view.cell(n))
@@ -1009,7 +1300,17 @@ def _offset(geom: Mapping[str, Sequence[float]], a: str, b: str, d: float = 16.0
     return (x1 + x2) / 2 - (y2 - y1) / ln * d, (y1 + y2) / 2 + (x2 - x1) / ln * d
 
 
-KIND_RANK: Final = {"node": 0, "limit": 1, "loop": 2, "title": 3, "legend": 4, "caption": 5}
+KIND_RANK: Final = {
+    "node": 0,
+    "valve": 0,
+    "ghost": 0,
+    "ref": 0,
+    "limit": 1,
+    "loop": 2,
+    "title": 3,
+    "legend": 4,
+    "caption": 5,
+}
 
 
 def render(view: View, geom: Mapping[str, Sequence[float]]) -> bytes:
@@ -1060,6 +1361,8 @@ def render(view: View, geom: Mapping[str, Sequence[float]]) -> bytes:
             root, "mxCell", {"id": cell.id, "value": cell.label, "style": cell.style, "vertex": "1", "parent": "1"}
         )
         x, y, w, h = geom[cell.id]
+        if cell.kind == "valve":  # the shape at the top of its box, the label drawn below it
+            x, y, w, h = x + w / 2 - VALVE_W / 2, y, VALVE_W, VALVE_H
         ET.SubElement(
             c, "mxGeometry", {"x": _num(x), "y": _num(y), "width": _num(w), "height": _num(h), "as": "geometry"}
         )
@@ -1331,13 +1634,120 @@ def through_boxes(view: View, geom: Mapping[str, Sequence[float]]) -> list[tuple
     return out
 
 
+def min_font_px(view: View) -> float:
+    """The smallest label font of a view's cells in px (draw.io takes a style's last ``fontSize``)."""
+    sizes = []
+    for c in view.cells:
+        found = [float(x) for x in re.findall(r"fontSize=([0-9.]+);", c.style)]
+        sizes.append(found[-1] if found else 12.0)
+    return min(sizes)
+
+
+# ---- module page checks, on the committed .drawio files (slice 10c) -------------------------------------------------
+
+CHROME_IDS: Final = re.compile(r"^(title|legend|caption:\d+)$")
+
+
+@dataclass(frozen=True)
+class DrawnCell:
+    """A cell as a ``.drawio`` file has it: a vertex, or an edge with its source and target."""
+
+    id: str
+    value: str
+    style: str
+    edge: bool
+    source: str = ""
+    target: str = ""
+
+    def is_item(self) -> bool:
+        """A vertex standing for a module item drawn on its own page (not a ghost, a reference, a valve or chrome)."""
+        return not self.edge and not CHROME_IDS.match(self.id) and not self.id.startswith(("ghost:", "ref:", "flow:"))
+
+
+def read_drawio_cells(path: Path) -> list[DrawnCell]:
+    out = []
+    for c in ET.parse(path).iter("mxCell"):
+        if c.get("vertex") == "1" or c.get("edge") == "1":
+            out.append(
+                DrawnCell(
+                    c.get("id", ""),
+                    c.get("value", ""),
+                    c.get("style", ""),
+                    c.get("edge") == "1",
+                    c.get("source", ""),
+                    c.get("target", ""),
+                )
+            )
+    return out
+
+
+def sign_problems(cells: Sequence[DrawnCell]) -> list[str]:
+    """Edges of a module page that carry a label: module pages show no polarity (decision 2)."""
+    return [f"{c.id}: label {c.value!r}" for c in cells if c.edge and c.value]
+
+
+def reference_problems(src: Sources, view: str, cells: Sequence[DrawnCell]) -> list[str]:
+    """Ghosts that are not an item of another module with an edge into the page, and page references that are not
+    an item of the same module, assigned to a different page, with an edge into the page (``edges.csv``, and drawn)."""
+    spec = MODULE_VIEWS[view]
+    items = module_items(src)
+    page_of = {it: p for p, its in page_assignment(src).items() for it in its}
+    on_page = {page_item(src, c.id) for c in cells if c.is_item()}
+    feeds = {(e["source"], e["source_kind"]) for e in src.edges if (e["target"], e["target_kind"]) in on_page}
+    drawn = {c.source for c in cells if c.edge}
+    out = []
+    for c in cells:
+        if c.edge or not c.id.startswith(("ghost:", "ref:")):
+            continue
+        try:
+            it = page_item(src, c.id)
+        except KeyError:
+            out.append(f"{c.id}: not a module item")
+            continue
+        if c.id.startswith("ghost:") and items[it] in spec.modules:
+            out.append(f"{c.id}: not of another module")
+        if c.id.startswith("ref:") and items[it] not in spec.modules:
+            out.append(f"{c.id}: not of this page's module")
+        if c.id.startswith("ref:") and page_of.get(it) == spec.key:
+            out.append(f"{c.id}: on this page")
+        if it not in feeds or c.id not in drawn:
+            out.append(f"{c.id}: no edge into the page")
+    return out
+
+
+def valve_problems(src: Sources, cells: Sequence[DrawnCell]) -> list[str]:
+    """For each goal-seeking or coflow stock on a module page: exactly one valve and exactly one arrow into the stock
+    box, the pipe from that valve (so no input of its update points at the stock); and no valve without its stock."""
+    valves = valve_stocks(src)
+    vertices = {c.id: c for c in cells if not c.edge}
+    clashes = name_clashes(src)
+    out = []
+    for c in cells:
+        if c.is_item() and page_item(src, c.id)[1] == "stock" and page_item(src, c.id)[0] in valves:
+            s = page_item(src, c.id)[0]
+            v = [x for x in vertices.values() if x.id == f"flow:{s}"]
+            if len(v) != 1 or "mxgraph.flowchart.collate" not in v[0].style:
+                out.append(f"{s}: {len(v)} valve cells for its {valves[s]} flow")
+            into = sorted(x.source for x in cells if x.edge and x.target == c.id)
+            if into != [f"flow:{s}"]:
+                out.append(f"{s}: arrows into the stock box from {into}, not only its valve's pipe")
+    for cid in vertices:
+        if cid.startswith("flow:"):
+            s = cid[5:]
+            if s not in valves or cell_id((s, "stock"), clashes) not in vertices:
+                out.append(f"{cid}: a valve without its stock on this page")
+    return out
+
+
 # ---- export ---------------------------------------------------------------------------------------------------------
 
 
-def export(root: Path = ROOT) -> dict[str, dict[str, str]]:
-    """Export every view to SVG and PNG with draw.io desktop, then write the manifest (local only)."""
+def export(root: Path = ROOT, views: Sequence[str] | None = None) -> dict[str, dict[str, str]]:
+    """Export the views (default: every view) to SVG and PNG with draw.io desktop, then write their manifest entries
+    (local only). Other entries and keys of an existing manifest are kept, so exporting new views never rewrites
+    another view's files (slice 10c)."""
     entries: dict[str, dict[str, str]] = {}
-    for name in VIEWS:
+    for name in VIEWS if views is None else views:
         src = drawio_path(root, name)
         for fmt, out in export_paths(root, name).items():
             out.parent.mkdir(parents=True, exist_ok=True)
@@ -1349,7 +1759,12 @@ def export(root: Path = ROOT) -> dict[str, dict[str, str]]:
                 raise RuntimeError(f"draw.io wrote no {out}")
         paths = export_paths(root, name)
         entries[name] = {"source": sha256(src), "svg": sha256(paths["svg"]), "png": sha256(paths["png"])}
-    man = {"drawio": DRAWIO_VERSION, "png_scale": PNG_SCALE, "border": BORDER, "views": entries}
+    old: dict[str, object] = (
+        json.loads((root / MANIFEST).read_text(encoding="utf-8")) if (root / MANIFEST).exists() else {}
+    )
+    kept = old.get("views", {})
+    views_all = {**(kept if isinstance(kept, dict) else {}), **entries}
+    man = {**old, "drawio": DRAWIO_VERSION, "png_scale": PNG_SCALE, "border": BORDER, "views": views_all}
     with (root / MANIFEST).open("w", encoding="utf-8", newline="") as f:
         f.write(json.dumps(man, indent=1, sort_keys=True) + "\n")
     return entries
@@ -1382,6 +1797,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     g.add_argument("--layout", metavar="VIEW", choices=VIEWS, help="a first layout for VIEW's unplaced cells")
     g.add_argument("--absorb", metavar="VIEW", choices=VIEWS, help="read VIEW's hand-edited .drawio into its sidecar")
     g.add_argument("--export", action="store_true", help="export SVG and PNG with draw.io desktop, write the manifest")
+    ap.add_argument("--views", nargs="+", choices=VIEWS, help="with --export: export only these views")
     ap.add_argument("--root", type=Path, default=ROOT, help="repository root (default: this repository)")
     a = ap.parse_args(argv)
     if a.write:
@@ -1394,7 +1810,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         moved, ignored = absorb(a.root, a.absorb, build_views(a.root)[a.absorb])
         print(f"{a.absorb}: moved {moved}; ignored {ignored}")
     elif a.export:
-        for name, ent in export(a.root).items():
+        for name, ent in export(a.root, a.views).items():
             print(name, ent)
     else:
         views = build_views(a.root)

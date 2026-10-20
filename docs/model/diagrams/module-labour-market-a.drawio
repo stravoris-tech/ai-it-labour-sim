@@ -1,0 +1,365 @@
+<mxfile host="aisim" type="device">
+  <diagram id="module-labour-market-a" name="module-labour-market-a">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1334" pageHeight="852" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:Dur0&gt;R4Mult" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Dur0" target="R4Mult">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Enrol&gt;Pipeline" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="Enrol" target="Pipeline">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:EnrolEffect&gt;Enrol" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="EnrolEffect" target="Enrol">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:EnrolSensitivity&gt;EnrolEffect" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="EnrolSensitivity" target="EnrolEffect">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Grad&gt;Pipeline" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="Grad" target="Pipeline">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="414.8" y="136.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:Grad&gt;U" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="Grad" target="U">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:LeaveEffect&gt;pool.rec_to_left" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="LeaveEffect" target="pool.rec_to_left">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:LeaveEffect&gt;pool.rec_to_seek" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="LeaveEffect" target="pool.rec_to_seek">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:LeaveEffect&gt;pool.seek_exit" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="LeaveEffect" target="pool.seek_exit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:PUL&gt;EnrolEffect" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="PUL" target="EnrolEffect">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:PUL&gt;flow:PUL" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="PUL" target="flow:PUL">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="225.4" y="582.6" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:PUS&gt;LeaveEffect" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="PUS" target="LeaveEffect">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:PUS&gt;flow:PUS" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="PUS" target="flow:PUS">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920.6" y="367.6" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:Pipeline&gt;Grad" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Pipeline" target="Grad">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="411.2" y="167.9" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:R&gt;UnempRate" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="R" target="UnempRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:R&gt;pool.rec_retire" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="R" target="pool.rec_retire">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1087.3" y="427.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:R&gt;pool.rec_to_left" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="R" target="pool.rec_to_left">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1222.6" y="356.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:R&gt;pool.rec_to_seek" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="R" target="pool.rec_to_seek">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1180.3" y="383.9" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:R4Mult&gt;pool.seek_exit" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="R4Mult" target="pool.seek_exit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:R4a&gt;R4Mult" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="R4a" target="R4Mult">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:R4a&gt;pool.seek_exit" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="R4a" target="pool.seek_exit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:U&gt;Dur0" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="U" target="Dur0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:U&gt;R4Mult" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="U" target="R4Mult">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:U&gt;UnempRate" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="U" target="UnempRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:U&gt;pool.seek_exit" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="U" target="pool.seek_exit">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="637.1" y="308.8" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:U&gt;pool.seek_retire" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="U" target="pool.seek_retire">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="528.8" y="353.3" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:UnempRate&gt;flow:PUL" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="UnempRate" target="flow:PUL">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:UnempRate&gt;flow:PUS" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="UnempRate" target="flow:PUS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ext&gt;U" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="ext" target="U">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:fl.leave&gt;LeftField" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="fl.leave" target="LeftField">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:fl.retire&gt;Retired" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="fl.retire" target="Retired">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:flow:PUL&gt;PUL" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:PUL" target="PUL">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="229.1" y="614.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:flow:PUS&gt;PUS" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:PUS" target="PUS">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="924.9" y="399.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:ghost:G&gt;Enrol" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:G" target="Enrol">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:promo&gt;fl.promo_out" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:promo" target="fl.promo_out">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:pool.rec_retire&gt;R" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="pool.rec_retire" target="R">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1090.2" y="458.9" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:pool.rec_retire&gt;Retired" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="pool.rec_retire" target="Retired">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:pool.rec_to_left&gt;LeftField" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="pool.rec_to_left" target="LeftField">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:pool.rec_to_left&gt;R" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="pool.rec_to_left" target="R">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1190.9" y="352.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:pool.rec_to_seek&gt;R" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="pool.rec_to_seek" target="R">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1154.7" y="403.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:pool.rec_to_seek&gt;U" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="pool.rec_to_seek" target="U">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:pool.seek_exit&gt;LeftField" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="pool.seek_exit" target="LeftField">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:pool.seek_exit&gt;U" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="pool.seek_exit" target="U">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="619.4" y="282.2" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:pool.seek_retire&gt;Retired" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="pool.seek_retire" target="Retired">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:pool.seek_retire&gt;U" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="pool.seek_retire" target="U">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="551.7" y="375.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:ref:H&gt;UnempRate" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:H" target="UnempRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:H&gt;ext" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:H" target="ext">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:H&gt;fl.leave" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:H" target="fl.leave">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:H&gt;fl.retire" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:H" target="fl.retire">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:O&gt;UnempRate" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:O" target="UnempRate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:TTFr&gt;ext" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:TTFr" target="ext">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:expiry&gt;U" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="ref:expiry" target="U">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:fl.layoffs&gt;R" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="ref:fl.layoffs" target="R">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:fl.quits&gt;U" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="ref:fl.quits" target="U">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:hires&gt;Dur0" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:hires" target="Dur0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:hires&gt;R4Mult" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ref:hires" target="R4Mult">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ref:hires&gt;U" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="ref:hires" target="U">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Dur0" value="2024 seeker spell" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="247" y="340" width="137" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="Enrol" value="Enrolment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="205.5" y="134" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="EnrolEffect" value="Enrolment effect" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="70" y="86" width="138" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="EnrolSensitivity" value="Enrolment&#10;sensitivity" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="228" y="79" width="95" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="Grad" value="Graduation" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="460" y="134" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="LeaveEffect" value="Leave effect" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="1006" y="282" width="108" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="LeftField" value="Left the field" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1178" y="113" width="116" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="PUL" value="Student-perceived&#10;unemployment" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="247" y="567" width="137" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="PUS" value="Worker-perceived&#10;unemployment" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="936" y="352" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="Pipeline" value="Student pipeline" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="289" y="132" width="130" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="R" value="Recovering after&#10;layoff" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1132" y="412" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="R4Mult" value="Skill erosion&#10;multiplier" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="375" y="255" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="R4a" value="Onshore skill&#10;erosion" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="653" y="177" width="109" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="Retired" value="Retired" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="516" y="446" width="67" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="U" value="Job seekers" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="522" y="321" width="95" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="UnempRate" value="IT unemployment&#10;rate" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
+          <mxGeometry x="681" y="608" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="ext" value="External entry" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="146" y="389" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="fl.leave" value="Leaving IT" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="675" y="115" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="fl.promo_out" value="Promotions out" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1165" y="546" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="fl.retire" value="Retirements" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="400.5" y="448" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:PUL" value="Student perception&#10;change" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="127" y="577" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:PUS" value="Worker perception&#10;change" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="832.5" y="362" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:G" value="Demand growth&#10;multiplier&#10;(capability)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="206" y="210" width="101" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:promo" value="Promotions&#10;(workforce)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="1114" y="609" width="89" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pool.rec_retire" value="Recovering&#10;retirements" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="968.5" y="421" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="pool.rec_to_left" value="Recovered, left&#10;field" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1204.5" y="244" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="pool.rec_to_seek" value="Recovered to&#10;seeking" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1126" y="322" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="pool.seek_exit" value="Seeker exits" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="675" y="232" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="pool.seek_retire" value="Seeker retirements" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="499" y="370" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:H" value="Headcount&#10;(labour market b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="153" y="511" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:O" value="Onboarding staff&#10;(labour market b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="682" y="668" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:TTFr" value="Time to fill&#10;(labour market b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="94" y="334" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:expiry" value="Visa expiries&#10;(labour market b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="643" y="295" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:fl.layoffs" value="Layoffs&#10;(labour market b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="1113" y="472" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:fl.quits" value="Quits&#10;(labour market b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="623" y="374" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ref:hires" value="Hires&#10;(labour market b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="231" y="276" width="127" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Labour market (a): people pools and exits" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="425" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Box: a stock. Hourglass: a flow (its valve), named below. Bold coloured text: an&#10;auxiliary. Grey italic: a lever parameter. Thick arrow: a flow changing the&#10;stock it points to. Thin arrow: an input of the item it points to. Grey text,&#10;(module): an input from another module. Dashed grey box, (page): an input from&#10;another page of this module." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="728" width="529" height="81" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="Arrows show dependence only and carry no polarity: signs are on the causal-loop&#10;panels (panels 1-5) and in docs/model/loops.csv." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="728" width="523" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:2" value="Goal-seeking valves (a stock adjusting toward a target; every input points at&#10;the valve): Student perception change, Worker perception change." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="772" width="510" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

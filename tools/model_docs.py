@@ -164,8 +164,9 @@ UNNAMED_FLOWS: Final = (
 """The stocks whose update is a goal-seeking term written inline, ``(target - stock) / time`` (recon 10 D7), the
 last three in ``loops.post``."""
 
-REFERENCE_STOCKS: Final = ("WS0", "Attr0", "Dur0")
-"""Loop state families set once, on the first step, to a 2024 reference (``loops.pre``): no flow enters them."""
+REFERENCE_STOCKS: Final = DG.REFERENCE_STOCKS
+"""Loop state families set once, on the first step, to a 2024 reference (``loops.pre``): no flow enters them (defined
+once, in ``tools/model_diagrams.py``)."""
 
 UNIT_ALLOWLIST: Final[frozenset[tuple[str, str]]] = frozenset(
     {
@@ -1083,6 +1084,20 @@ def diagram_sections(root: Path = ROOT) -> tuple[list[str], list[str]]:
             f"link to another's items ({sum(pairs.values())} links). The label and width give the number of links; "
             "a dashed arrow is a single link.",
         ),
+        "### Module pages",
+        "",
+        "Stock-and-flow views of each module, one page per module and two or three for the larger ones (slice 10c): "
+        "stocks as boxes, flows as valves, auxiliaries in the module colour, levers in grey italic, inputs from other "
+        "modules as grey ghosts and inputs from the module's other pages as grey page references. Their arrows carry "
+        "no polarity. The [PDF model reference](model-reference.pdf) prints them with their item lists, the panels, "
+        "this data dictionary and the spec errata.",
+        "",
+    ]
+    for view, page_spec in DG.MODULE_VIEWS.items():
+        page = DG.module_page(src, view)
+        caption = " ".join(c.label.replace("\n", " ") for c in page.cells if c.kind == "caption")
+        diagrams += [f"#### {page_spec.title}", "", *_figure(view, page_spec.title, caption)]
+    diagrams += [
         "### The article set",
         "",
         "Five small diagrams for a reader outside the project. Every node stands for named items of the "

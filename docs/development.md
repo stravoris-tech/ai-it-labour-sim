@@ -12,6 +12,10 @@ recon reports, ship reports, scratch code) lived in a gitignored `temp/` folder 
 
 Slice 7, release preparation, was planned before slices 8 and 9 but built last, so it comes last here.
 
+The PDF model reference (`docs/model-reference.pdf`) is rebuilt locally with `uv run --frozen python
+tools/model_pdf.py --pdf` (headless Edge: it writes the HTML to the gitignored `docs/_build/`, prints it, pins its
+dates and `/ID`, and records both hashes in `docs/model/diagrams/MANIFEST.json`, which CI checks).
+
 ## Slice 01: scaffold (PR #1, merged 2026-10-11, `c7c11c9`)
 
 **Purpose.** An empty but fully gated Python project, before any model code: a uv project (package `aisim`), the gate

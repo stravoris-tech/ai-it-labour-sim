@@ -1,0 +1,395 @@
+<mxfile host="aisim" type="device">
+  <diagram id="module-sourcing" name="module-sourcing">
+    <mxGraphModel grid="0" gridSize="10" page="0" pageWidth="1337" pageHeight="851" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e:AvgW&gt;CostOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="AvgW" target="CostOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:AvgWM&gt;CostOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="AvgWM" target="CostOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:C4Hab&gt;ClientFlight" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="C4Hab" target="ClientFlight">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:C4Hab&gt;flow:C4Hab" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="C4Hab" target="flow:C4Hab">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="249.7" y="213.3" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:ClientFlight&gt;RiskOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ClientFlight" target="RiskOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CostOpt&gt;SrcTarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CostOpt" target="SrcTarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:CostOpt&gt;Val" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="CostOpt" target="Val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:GCCScaleTerm&gt;SrcTarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="GCCScaleTerm" target="SrcTarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:GCCScaleTerm&gt;Val" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="GCCScaleTerm" target="Val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:GCCW&gt;GCCScaleTerm" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="GCCW" target="GCCScaleTerm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:GCCW&gt;Src.GCCTurn" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="GCCW" target="Src.GCCTurn">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="922.2" y="410.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:GCCW&gt;WS0" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="GCCW" target="WS0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:IHW&gt;Src.IHTurn" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="IHW" target="Src.IHTurn">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1121.8" y="501.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:RiskOpt&gt;SrcTarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="RiskOpt" target="SrcTarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:RiskOpt&gt;Val" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="RiskOpt" target="Val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:SignS&gt;VW" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="SignS" target="VW">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Src.Contested&gt;GCCW" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="Src.Contested" target="GCCW">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Src.Contested&gt;IHW" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="Src.Contested" target="IHW">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Src.Contested&gt;SignS" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Src.Contested" target="SignS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Src.GCCTurn&gt;GCCW" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="Src.GCCTurn" target="GCCW">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="941.3" y="384.6" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:Src.GCCTurn&gt;Src.Contested" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Src.GCCTurn" target="Src.Contested">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Src.IHTurn&gt;IHW" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="Src.IHTurn" target="IHW">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1096.2" y="481.9" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:Src.IHTurn&gt;Src.Contested" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Src.IHTurn" target="Src.Contested">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Src.VExp&gt;SignS" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Src.VExp" target="SignS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Src.VExp&gt;Src.Contested" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="Src.VExp" target="Src.Contested">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:Src.VExp&gt;VW" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="Src.VExp" target="VW">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1157.4" y="283.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:SrcCostSens&gt;SrcTarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="SrcCostSens" target="SrcTarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:SrcCostSens&gt;Val" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="SrcCostSens" target="Val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:SrcPerc&gt;GCCW" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="SrcPerc" target="GCCW">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:SrcPerc&gt;IHW" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="SrcPerc" target="IHW">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:SrcPerc&gt;SignS" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="SrcPerc" target="SignS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:SrcPerc&gt;flow:SrcPerc" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="SrcPerc" target="flow:SrcPerc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="733.4" y="465.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:SrcTarget&gt;flow:SrcPerc" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="SrcTarget" target="flow:SrcPerc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:VW&gt;Src.VExp" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="VW" target="Src.VExp">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1137.1" y="307.9" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:WS0&gt;GCCScaleTerm" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="WS0" target="GCCScaleTerm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:flow:C4Hab&gt;C4Hab" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:C4Hab" target="C4Hab">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="280.8" y="221.2" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:flow:SrcPerc&gt;SrcPerc" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:SrcPerc" target="SrcPerc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="737.6" y="497.1" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e:ghost:AC&gt;SrcTarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:AC" target="SrcTarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:AC&gt;Val" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:AC" target="Val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:AICostPerUnit&gt;CostOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:AICostPerUnit" target="CostOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:CS&gt;GCCScaleTerm" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:CS" target="GCCScaleTerm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:CS&gt;WS0" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:CS" target="WS0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:ClientP&gt;CostOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:ClientP" target="CostOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:GCCAppeal&gt;SrcTarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:GCCAppeal" target="SrcTarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:GCCAppeal&gt;Val" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:GCCAppeal" target="Val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:ShareL&gt;AvgW" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:ShareL" target="AvgW">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:ShareL&gt;AvgWM" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:ShareL" target="AvgWM">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:TTFratio&gt;SrcTarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:TTFratio" target="SrcTarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:TTFratio&gt;Val" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:TTFratio" target="Val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:TightPerc&gt;RiskOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:TightPerc" target="RiskOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VF.Anchor&gt;CostOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VF.Anchor" target="CostOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VF.BasePriceAvg&gt;CostOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VF.BasePriceAvg" target="CostOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VF.DevEff&gt;RiskOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VF.DevEff" target="RiskOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VF.Disc&gt;CostOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VF.Disc" target="CostOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VF.ExpRate&gt;Src.VExp" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VF.ExpRate" target="Src.VExp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VF.Vi&gt;RiskOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VF.Vi" target="RiskOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VF.shock&gt;CostOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VF.shock" target="CostOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VMarg&gt;ClientFlight" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VMarg" target="ClientFlight">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VMarg&gt;Vrel" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VMarg" target="Vrel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:VMarg&gt;flow:C4Hab" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:VMarg" target="flow:C4Hab">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:WI&gt;CostOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:WI" target="CostOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:cons.RegDrag&gt;SrcTarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:cons.RegDrag" target="SrcTarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:ghost:cons.RegDrag&gt;Val" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="ghost:cons.RegDrag" target="Val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:kR7&gt;GCCScaleTerm" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="kR7" target="GCCScaleTerm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:kR7&gt;SrcTarget" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="kR7" target="SrcTarget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:kR7&gt;Val" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="kR7" target="Val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:kViab&gt;ClientFlight" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="kViab" target="ClientFlight">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e:kViab&gt;RiskOpt" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="kViab" target="RiskOpt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AvgW" value="Average level&#10;weight" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="511" y="647" width="115" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="AvgWM" value="Average wage&#10;multiplier" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="652" y="608" width="108" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="C4Hab" value="Habituated&#10;viability&#10;shortfall" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="231" y="150" width="88" height="57" as="geometry" />
+        </mxCell>
+        <mxCell id="ClientFlight" value="Client flight" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="256" y="85" width="115" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="CostOpt" value="Sourcing option&#10;cost" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="406" y="588" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="GCCScaleTerm" value="GCC scale learning" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="670" y="281" width="152" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="GCCW" value="GCC work share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="825" y="348" width="116" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="IHW" value="In-house work&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1025" y="510" width="109" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="RiskOpt" value="Sourcing option&#10;risk" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="504" y="78" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="SignS" value="Vendor signings" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1027.5" y="291" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="Src.Contested" value="Contested work" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1047" y="350" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="Src.GCCTurn" value="GCC work review" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="968.5" y="409" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="Src.IHTurn" value="In-house work&#10;review" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1126.5" y="420" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="Src.VExp" value="Vendor work expiry" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1184" y="311" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="SrcCostSens" value="Sourcing cost&#10;sensitivity" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="221" y="333" width="109" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="SrcPerc" value="Perceived sourcing&#10;shares" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="732" y="451" width="144" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="SrcTarget" value="Sourcing target&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="465" y="431" width="130" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="VW" value="Vendor work share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="242" width="137" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="Val" value="Sourcing value" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="370" y="301" width="123" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="Vrel" value="Relative viability" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#882255;" vertex="1" parent="1">
+          <mxGeometry x="42" y="125" width="152" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="WS0" value="2024 GCC work&#10;share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="770" y="216" width="109" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:C4Hab" value="Habituation&#10;adjustment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="243.5" y="224" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="flow:SrcPerc" value="Sourcing&#10;perception&#10;adjustment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="655" y="451" width="24" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:AC" value="Consumer AI&#10;adoption&#10;(consumer)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="564" y="308" width="89" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:AICostPerUnit" value="AI cost per unit&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="274" y="609" width="121" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:CS" value="Sector completion&#10;share&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="701" y="151" width="127" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:ClientP" value="Client-perceived&#10;productivity&#10;(work)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="607" y="543" width="121" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:GCCAppeal" value="GCC appeal&#10;(consumer)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="450" y="373" width="82" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:ShareL" value="Level mix&#10;(workforce)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="643" y="667" width="89" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:TTFratio" value="Mid time-to-fill&#10;ratio&#10;(labour market)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="117" y="445" width="121" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:TightPerc" value="Perceived visa&#10;tightness&#10;(workforce)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="319" y="229" width="108" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:VF.Anchor" value="Client price&#10;anchor&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="325" y="484" width="95" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:VF.BasePriceAvg" value="Average base price&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="268" y="667" width="133" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:VF.DevEff" value="Effective margin&#10;deviation&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="646" y="72" width="121" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:VF.Disc" value="Competitive&#10;discount&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="506" y="523" width="89" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:VF.ExpRate" value="Book expiry rate&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="1176" y="256" width="121" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:VF.Vi" value="Vendor viability&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="568" y="138" width="121" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:VF.shock" value="Price shock&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="310" y="550" width="89" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:VMarg" value="Vendor margin&#10;signal&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="88" y="170" width="101" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:WI" value="Wage index&#10;(finance)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="411" y="667" width="82" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ghost:cons.RegDrag" value="Regulatory drag&#10;(consumer)" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
+          <mxGeometry x="297" y="413" width="114" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="kR7" value="GCC scale learning&#10;strength" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="615" y="392" width="144" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="kViab" value="Client flight&#10;strength" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="358" y="137" width="109" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Sourcing choice" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=16;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="167" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" value="Box: a stock. Hourglass: a flow (its valve), named below. Bold coloured text: an&#10;auxiliary. Grey italic: a lever parameter. Thick arrow: a flow changing the&#10;stock it points to. Thin arrow: an input of the item it points to. Grey text,&#10;(module): an input from another module." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="727" width="529" height="67" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:1" value="Arrows show dependence only and carry no polarity: signs are on the causal-loop&#10;panels (panels 1-5) and in docs/model/loops.csv." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="727" width="523" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="caption:2" value="Goal-seeking valves (a stock adjusting toward a target; every input points at&#10;the valve): Habituation adjustment, Sourcing perception adjustment." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=11;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="593" y="771" width="510" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
