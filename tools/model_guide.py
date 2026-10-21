@@ -91,8 +91,11 @@ SCENARIO_TEXT: Final[Mapping[str, str]] = {
     "Strict regulation": "Regulation slows clients' adoption of AI more than in Base.",
     "Light regulation": "Regulation slows clients' adoption of AI less than in Base.",
     "Compute shock": "A temporary shortage of AI compute makes AI work dearer for a few years.",
-    "Visa crackdown": "Onshore work visas become much harder to get, starting soon.",
-    "Visa relaxation": "Onshore work visas become easier to get.",
+    "Visa crackdown": (
+        "Onshore work visas become much harder to get, with tightening starting earlier and reaching a higher level "
+        "than in Base."
+    ),
+    "Visa relaxation": "Onshore work visas become easier to get: tightening ends lower and sooner than in Base.",
     "Downturn": "A temporary downturn cuts the growth of clients' IT budgets for a few years.",
     "Jevons rebound": "Cheaper IT work draws out more demand for applications and data work.",
     "Demand stalls": "Underlying IT demand stops growing after mid-2026.",
@@ -100,11 +103,26 @@ SCENARIO_TEXT: Final[Mapping[str, str]] = {
     "GCC wave persists": "Clients keep their full appetite for captive centres in India after the wave peaks.",
     "GCC wave fades": "Clients' appetite for captive centres in India fades away after the wave peaks.",
     "Fast AI + OIT price shock": (
-        "Fast AI plus a revenue cut for the offshore Indian IT vendor: a stress test in which every phase9 feedback "
-        "loop acts."
+        "Fast AI, plus the offshore Indian IT vendor losing a share of its revenue from the price-shock year onward: "
+        "a stress test in which every phase9 term acts, the loops GCC scale learning (R7), capacity exit (C2), client "
+        "flight (C4), attrition cost (R10) and skill erosion (R4), and the price floor (C5) and AI-discount ceiling "
+        "(C6) rules."
     ),
 }
 """One plain sentence per named set, in ``SCENARIOS`` then ``STRESS_SCENARIOS`` order; the values are in the table."""
+
+PERCENT: Final = frozenset(
+    {
+        "WorkShare_{employer}",
+        "Margin_{vendor}",
+        "EffortShare_revenue_weighted",
+        "Unemp_{region}",
+        "A_mean",
+        "AC_mean",
+    }
+)
+"""The outputs in ``model_docs.csv`` units "fraction" that are shares or rates: the guide shows them in percent
+(Addendum A, Part 3)."""
 
 DIM_ROWS: Final[Mapping[str, tuple[str, tuple[str, ...]]]] = {
     "region": ("`Region`", REGIONS),
@@ -190,6 +208,11 @@ def three(v: float) -> str:
     if _three(v * (1 + 1e-9)) != s or _three(v * (1 - 1e-9)) != s:
         raise ValueError(f"{v!r} lies on a 3-significant-figure rounding boundary")
     return s
+
+
+def percent(v: float) -> str:
+    """A share or rate in percent to 3 significant figures (0.0553 is 5.53%), with ``three``'s boundary guard."""
+    return three(v * 100) + "%"
 
 
 def _cell(s: str) -> str:
@@ -397,20 +420,25 @@ def outputs_section(root: Path) -> list[str]:
     keyed = {o["name"]: members(o["name"], catalogue) for o in outs}
     vals = measure([m["key"] for ms in keyed.values() for m in ms])
 
+    for name in PERCENT:
+        if docs[name]["units"] != "fraction":
+            raise ValueError(f"{name}: shown in percent, but its units are {docs[name]['units']!r}")
+
     def cell(name: str, i: int) -> str:
+        fmt = percent if name in PERCENT else three
         ms = keyed[name]
         if len(ms) == 1 and ms[0]["key"] == name:
-            return three(vals[name][i])
+            return fmt(vals[name][i])
         parts = []
         for m in ms:
             dim, value = m["dims"].split("=")
-            parts.append(f"{labels[dim][value]} {three(vals[m['key']][i])}")
+            parts.append(f"{labels[dim][value]} {fmt(vals[m['key']][i])}")
         return "; ".join(parts)
 
     rows = [
         [
             f"`{o['name']}` {docs[o['name']]['label']}",
-            docs[o["name"]]["units"],
+            "percent" if o["name"] in PERCENT else docs[o["name"]]["units"],
             o["why"],
             cell(o["name"], 0),
             cell(o["name"], 1),
@@ -423,7 +451,10 @@ def outputs_section(root: Path) -> list[str]:
         f"{len(rows)} outputs from `tools/guide_outputs.csv`, with names, labels and units from "
         "`src/aisim/data/model_docs.csv`. A name with a dimension in braces gives every member, labelled as in the "
         f"specification. Values are {MODEL} Base: one deterministic run, recorded every step, rounded to 3 significant "
-        "figures. Headcounts are in model units; money is in real USD a year.",
+        "figures. Shares and rates are in percent. Headcounts are in model units, which are proportions, not "
+        "national counts: compare changes and shares, not absolute levels (specification 07, "
+        '"Model units are proportions, not national counts"). Work is in BFY, the baseline FTE-year: one '
+        "person-year of effort at pre-AI productivity (specification 00). Money is in real USD a year.",
         "",
         *_table(["Output", "Units", "What it tells you", f"{MODEL} Base 2024", f"{MODEL} Base 2040"], rows),
     ]

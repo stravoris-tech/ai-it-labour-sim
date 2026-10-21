@@ -39,15 +39,15 @@ The 14 scenarios of `aisim.SCENARIOS` and the 1 stress set of `aisim.STRESS_SCEN
 | `Strict regulation` | `RegScenario` 1.5 | Regulation slows clients' adoption of AI more than in Base. |
 | `Light regulation` | `RegScenario` 0.5 | Regulation slows clients' adoption of AI less than in Base. |
 | `Compute shock` | `AIShockMult` 3; `AIShockStart` 2027; `AIShockEnd` 2029.5 | A temporary shortage of AI compute makes AI work dearer for a few years. |
-| `Visa crackdown` | `VTEnd` 0.8; `VTRampStart` 2025.7; `VTRampEnd` 2027.7 | Onshore work visas become much harder to get, starting soon. |
-| `Visa relaxation` | `VTEnd` 0.1; `VTRampStart` 2027; `VTRampEnd` 2028 | Onshore work visas become easier to get. |
+| `Visa crackdown` | `VTEnd` 0.8; `VTRampStart` 2025.7; `VTRampEnd` 2027.7 | Onshore work visas become much harder to get, with tightening starting earlier and reaching a higher level than in Base. |
+| `Visa relaxation` | `VTEnd` 0.1; `VTRampStart` 2027; `VTRampEnd` 2028 | Onshore work visas become easier to get: tightening ends lower and sooner than in Base. |
 | `Downturn` | `BudgetShock` 0.15; `BudgetShockStart` 2027; `BudgetShockEnd` 2029 | A temporary downturn cuts the growth of clients' IT budgets for a few years. |
 | `Jevons rebound` | `JevonsEps` 0.5 | Cheaper IT work draws out more demand for applications and data work. |
 | `Demand stalls` | `DemandGrowthLate` 0 | Underlying IT demand stops growing after mid-2026. |
 | `Demand boom` | `DemandGrowthLate` 0.05 | Underlying IT demand grows faster after mid-2026. |
 | `GCC wave persists` | `GCCAppealKeep` 1 | Clients keep their full appetite for captive centres in India after the wave peaks. |
 | `GCC wave fades` | `GCCAppealKeep` 0 | Clients' appetite for captive centres in India fades away after the wave peaks. |
-| `Fast AI + OIT price shock` | `g` 0.2; `VerifDecline` 0.1; `PriceShock_OIT` 0.2, not a lever: a stress-test input (inventory lever = no) | Fast AI plus a revenue cut for the offshore Indian IT vendor: a stress test in which every phase9 feedback loop acts. |
+| `Fast AI + OIT price shock` | `g` 0.2; `VerifDecline` 0.1; `PriceShock_OIT` 0.2, not a lever: a stress-test input (inventory lever = no) | Fast AI, plus the offshore Indian IT vendor losing a share of its revenue from the price-shock year onward: a stress test in which every phase9 term acts, the loops GCC scale learning (R7), capacity exit (C2), client flight (C4), attrition cost (R10) and skill erosion (R4), and the price floor (C5) and AI-discount ceiling (C6) rules. |
 
 ## 3. Levers
 
@@ -95,24 +95,24 @@ The 31 levers of `docs/model/inventory.csv` (its `lever` column begins with "yes
 
 ## 4. Main outputs
 
-18 outputs from `tools/guide_outputs.csv`, with names, labels and units from `src/aisim/data/model_docs.csv`. A name with a dimension in braces gives every member, labelled as in the specification. Values are phase9 Base: one deterministic run, recorded every step, rounded to 3 significant figures. Headcounts are in model units; money is in real USD a year.
+18 outputs from `tools/guide_outputs.csv`, with names, labels and units from `src/aisim/data/model_docs.csv`. A name with a dimension in braces gives every member, labelled as in the specification. Values are phase9 Base: one deterministic run, recorded every step, rounded to 3 significant figures. Shares and rates are in percent. Headcounts are in model units, which are proportions, not national counts: compare changes and shares, not absolute levels (specification 07, "Model units are proportions, not national counts"). Work is in BFY, the baseline FTE-year: one person-year of effort at pre-AI productivity (specification 00). Money is in real USD a year.
 
 | Output | Units | What it tells you | phase9 Base 2024 | phase9 Base 2040 |
 | --- | --- | --- | --- | --- |
 | `HeadTotal` Total IT headcount | model-unit persons | Total IT employment across every employer and both regions | 82,700 | 80,700 |
 | `VendorHead` Vendor headcount | model-unit persons | Staff of the three vendor types together | 48,600 | 31,100 |
 | `Head_{employer}` Employer headcount | model-unit persons | Who employs IT staff: clients' in-house teams, their captive centres (GCCs) and each vendor type | Consumer in-house 25,600; GCC 8,490; Offshore Indian IT 24,900; Global SI 18,200; Boutique 5,440 | Consumer in-house 24,200; GCC 25,400; Offshore Indian IT 12,000; Global SI 12,500; Boutique 6,490 |
-| `WorkShare_{employer}` Employer work share | fraction | Each employer's share of all IT work; the GCC share shows the shift from vendors to GCCs | Consumer in-house 0.308; GCC 0.0984; Offshore Indian IT 0.317; Global SI 0.214; Boutique 0.0624 | Consumer in-house 0.301; GCC 0.316; Offshore Indian IT 0.153; Global SI 0.152; Boutique 0.0778 |
+| `WorkShare_{employer}` Employer work share | percent | Each employer's share of all IT work; the GCC share shows the shift from vendors to GCCs | Consumer in-house 30.8%; GCC 9.84%; Offshore Indian IT 31.7%; Global SI 21.4%; Boutique 6.24% | Consumer in-house 30.1%; GCC 31.6%; Offshore Indian IT 15.3%; Global SI 15.2%; Boutique 7.78% |
 | `OnshoreTotal` Onshore headcount | model-unit persons | IT headcount onshore, visa holders included | 46,400 | 40,000 |
 | `IndiaTotal` India headcount | model-unit persons | IT headcount in India: with OnshoreTotal, the onshore and offshore mix | 36,300 | 40,700 |
 | `RevenueTot` Total vendor revenue | USD per year | Vendor revenue in real terms | 5.73 bn | 4.35 bn |
-| `Margin_{vendor}` Vendor margin | fraction | Each vendor type's margin, the signal behind its viability and distress | Offshore Indian IT 0.187; Global SI 0.158; Boutique 0.128 | Offshore Indian IT 0.183; Global SI 0.187; Boutique 0.161 |
+| `Margin_{vendor}` Vendor margin | percent | Each vendor type's margin, the signal behind its viability and distress | Offshore Indian IT 18.7%; Global SI 15.8%; Boutique 12.8% | Offshore Indian IT 18.3%; Global SI 18.7%; Boutique 16.1% |
 | `AvgIdx_{vendor}` Book price index | index (2024 = 1) | The price index of each vendor type's in-force contract book: how far prices fall | Offshore Indian IT 1.00; Global SI 1.00; Boutique 1.00 | Offshore Indian IT 0.670; Global SI 0.701; Boutique 0.695 |
-| `EffortShare_revenue_weighted` Revenue-weighted effort share | fraction | The effort-billed share of vendor contract books: the shift away from billing by effort | 0.394 | 0.297 |
-| `Unemp_{region}` Unemployment rate | fraction | The IT unemployment rate in each regional labour pool | India 0.0502; Onshore 0.0553 | India 0.0697; Onshore 0.0779 |
+| `EffortShare_revenue_weighted` Revenue-weighted effort share | percent | The effort-billed share of vendor contract books: the shift away from billing by effort | 39.4% | 29.7% |
+| `Unemp_{region}` Unemployment rate | percent | The IT unemployment rate in each regional labour pool | India 5.02%; Onshore 5.53% | India 6.97%; Onshore 7.79% |
 | `JuniorHiringRatio` Junior hiring ratio | index (2024 = 1) | Junior hiring relative to 2024: the entry pipeline into IT | 1.00 | 0.504 |
-| `A_mean` Mean delivery adoption | fraction | The share of delivery work done with AI | 0.350 | 0.999 |
-| `AC_mean` Mean consumer AI adoption | fraction | The share of clients' own consumers using AI | 0.300 | 0.978 |
+| `A_mean` Mean delivery adoption | percent | The share of delivery work done with AI | 35.0% | 99.9% |
+| `AC_mean` Mean consumer AI adoption | percent | The share of clients' own consumers using AI | 30.0% | 97.8% |
 | `Demand` Total IT demand | BFY per year | Total IT work that clients demand a year | 100,000 | 147,000 |
 | `Budget` Total consumer budget | USD per year | Clients' total IT budget, a cap on committed spend: above it, new work is approved less often | 15.4 bn | 30.3 bn |
 | `Committed` Total committed spend | USD per year | Clients' committed IT spend: services plus software seats, AI credits and cloud | 14.6 bn | 15.9 bn |

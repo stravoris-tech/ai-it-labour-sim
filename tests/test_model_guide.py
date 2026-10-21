@@ -177,6 +177,7 @@ def test_values_round_to_three_significant_figures() -> None:
         "7.62 million",
         "0",
     ]
+    assert [G.percent(v) for v in (0.0553, 0.316, 0.35, 0.0984)] == ["5.53%", "31.6%", "35.0%", "9.84%"]
     with pytest.raises(ValueError):
         G.three(82650.0)  # halfway between 82,600 and 82,700: a last-digit change would flip it
 
@@ -214,3 +215,19 @@ def test_the_where_next_counts_match_the_diagrams() -> None:
     )
     assert text["Feedback loops"].startswith(f"{words[len(DG.PANEL_VIEWS)]} causal-loop panels")
     assert text["Article diagrams"].startswith(f"{words[articles]} small diagrams")
+
+
+def test_shares_and_rates_print_in_percent(md: str) -> None:
+    """The shares and rates of ``PERCENT`` show every member value in percent, with units "percent"; no other output
+    does."""
+    rows = G.section_table(md, G.SECTIONS[3])
+    names = [G.CODE.match(r[0]) for r in rows]
+    assert all(names)
+    for m, r in zip(names, rows, strict=True):
+        assert m is not None
+        parts = [p for cell in r[3:5] for p in cell.split("; ")]
+        if m.group(1) in G.PERCENT:
+            assert r[1] == "percent" and all(p.endswith("%") for p in parts), m.group(1)
+        else:
+            assert r[1] != "percent" and not any(p.endswith("%") for p in parts), m.group(1)
+    assert sum(m is not None and m.group(1) in G.PERCENT for m in names) == len(G.PERCENT) == 6
