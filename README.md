@@ -172,7 +172,8 @@ if __name__ == "__main__":
 
 Five models are registered. `Experiment.model`, `Params.baseline(model=...)` and `BatchParams.baseline(n, model=...)`
 name the calibrated baseline every run starts from; any other name raises. With no model named, runs use `phase9`
-(`aisim.state.DEFAULT_MODEL`).
+(`aisim.state.DEFAULT_MODEL`). The [model guide](docs/model-guide.md) ([PDF](docs/model-guide.pdf)) lists the
+questions the model can answer: its scenarios, its levers and its main outputs with their `phase9` Base values.
 
 | Model | What it is | Use it for |
 | --- | --- | --- |

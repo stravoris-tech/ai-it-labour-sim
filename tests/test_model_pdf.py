@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import json
 import re
 import shutil
 from pathlib import Path
@@ -124,3 +125,67 @@ def test_pin_keeps_every_offset_and_fixes_the_dates_and_id() -> None:
     assert P.pin(no_id, "f" * 64) == no_id.replace(b"D:20261020101112", b"D:20000101000000").replace(
         b"D:20261020101113", b"D:20000101000000"
     )
+
+
+# ---- the model guide (slice 10d) ------------------------------------------------------------------------------------
+
+
+def test_the_guide_html_regenerates_byte_for_byte_and_matches_the_manifest(tmp_path: Path) -> None:
+    first = P.write_guide_html(ROOT, tmp_path / "a").read_bytes()
+    second = P.write_guide_html(ROOT, tmp_path / "b").read_bytes()
+    assert first == second == P.build_guide_html(ROOT).encode("utf-8")
+    assert hashlib.sha256(first).hexdigest() == P.guide_hashes(ROOT)["html"]
+
+
+def test_the_committed_guide_pdf_matches_the_manifest() -> None:
+    pdf = (ROOT / P.GUIDE_PDF_OUT).read_bytes()
+    assert pdf.startswith(b"%PDF-")
+    assert hashlib.sha256(pdf).hexdigest() == P.guide_hashes(ROOT)["pdf"]
+
+
+def test_the_stored_pages_are_the_reference_pdfs() -> None:
+    pages = P.stored_pages(ROOT)
+    assert all(v > 0 for v in pages.values())
+    pdf = (ROOT / P.PDF_OUT).read_bytes()
+    assert P.page_problems(pages, pdf) == []
+    found = P.dest_pages(pdf)
+    assert found["intro"] < found["guide"] < found["overview"] < found["module-pages"]
+
+
+def test_the_page_check_fails_on_a_planted_wrong_page(tmp_path: Path) -> None:
+    p = tmp_path / "MANIFEST.json"
+    shutil.copyfile(ROOT / D.MANIFEST, p)
+    man = json.loads(p.read_text(encoding="utf-8"))
+    pdf = (ROOT / P.PDF_OUT).read_bytes()
+    assert P.page_problems(man["guide"]["pages"], pdf) == []
+    man["guide"]["pages"]["panels"] += 1
+    right = man["guide"]["pages"]["panels"] - 1
+    assert P.page_problems(man["guide"]["pages"], pdf) == [f"panels: stored page {right + 1}, PDF page {right}"]
+
+
+def _guide_part(text: str) -> str:
+    return text[text.index('<section class="guide"') : text.index('<section id="overview-part">')]
+
+
+def test_the_guide_prints_at_8_pt_or_larger(html: str) -> None:
+    """The guide's tables, code and code blocks print at 8 pt or more: none of its tables takes the 6.8 pt
+    ``small`` class, and the guide's own rule sets ``GUIDE_MIN_PT``."""
+    assert P.GUIDE_MIN_PT >= 8
+    assert f"section.guide table, section.guide code, section.guide pre {{ font-size: {P.GUIDE_MIN_PT:g}pt; }}" in P.CSS
+    part = _guide_part(html)
+    assert part.count("<table") == 3 and 'class="small"' not in part
+
+
+def test_the_small_print_check_fails_on_a_planted_small_table(tmp_path: Path, html: str) -> None:
+    p = tmp_path / "model-reference.html"
+    p.write_bytes(html.encode("utf-8"))
+    part = _guide_part(p.read_bytes().decode("utf-8"))
+    assert 'class="small"' not in part
+    assert 'class="small"' in part.replace("<table>", '<table class="small">', 1)
+
+
+def test_the_guide_appears_after_the_introduction_with_its_contents_entries(html: str) -> None:
+    assert html.index('<section id="intro">') < html.index('<section class="guide"') < html.index("overview-part")
+    contents = html[html.index('<nav id="contents">') : html.index("</nav>")]
+    assert contents.index('href="#intro"') < contents.index('href="#guide"') < contents.index('href="#overview"')
+    assert '<a href="#guide-3-levers">Levers</a>' in contents

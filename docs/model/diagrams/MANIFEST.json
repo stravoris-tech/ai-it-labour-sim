@@ -1,10 +1,20 @@
 {
  "border": 20,
  "drawio": "29.0.3",
+ "guide": {
+  "html": "d5e49e1d3eda1629cd4ed240790d161757951b9d956dabdd09ffae4dd3c4e1b4",
+  "pages": {
+   "dictionary": 42,
+   "errata-title": 64,
+   "module-pages": 12,
+   "panels": 36
+  },
+  "pdf": "be0055d88fa0109d73b2525b713290f155259f7c1c49dfce6cbf73014de5c1c4"
+ },
  "png_scale": 2,
  "reference": {
-  "html": "361d87ab26f9c63334ec6757431fe4e1b46b56e4a19ff5fa57c7840cea8a2087",
-  "pdf": "12c7920135428bb4766c47458c9e546dfd68a04b663f2c625c65fcd7dd7e6ce7"
+  "html": "023b4e25a7745d84ca7c1910e654ca9143f1f9a2878215748fbe25c412552256",
+  "pdf": "7d39c114d8e6b0bf21188cb268e269c6fb5ba4bf28e543d0e5960210c25ec9dd"
  },
  "views": {
   "article-a1": {

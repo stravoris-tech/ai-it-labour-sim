@@ -161,6 +161,19 @@ C3, which merges recon 11 and recon 12b's spec notes.
   work shares (`IHW`, `GCCW`, `VW`); each employer works its share at its own clearing rate
   (`reference/prototype/spec/06b_phase6b_build_guide.md:28`) (`src/aisim/scalar/work.py:60`; `src/aisim/scalar/work.py:63`)
 
+### E36: The work unit BFY is defined at pre-AI productivity
+
+- **Spec:** `reference/prototype/spec/00_model_spec.md:27`
+- **The spec says:** "Baseline FTE-year (BFY): one person-year of effort at pre-AI productivity"
+- **What is wrong:** The code measures work at 2024 productivity, the blend of AI-assisted and unassisted work at 2024
+  delivery AI adoption (`A0` 0.35), not at pre-AI productivity. A person working without AI completes 0.4% to 3.3%
+  less than one BFY a year, by work type (`phase9`).
+- **What the model does instead:** A BFY is one person-year of 2024 delivery. Productivity is
+  "`(Aemp[e] * PAI[w] + (1 - Aemp[e])) / (pr["A0"] * PAI0[w] + (1 - pr["A0"]))`", 1 in 2024
+  (`src/aisim/scalar/capability.py:77-81`), and capacity is "`CapE = {e: pr["WorkPerPerson"] * Pe[e] * EffStaffE[e]
+  ...}`" with `WorkPerPerson` 1 BFY per person a year (`src/aisim/scalar/work.py:70`). The units vocabulary says the
+  same: "BFY is a unit of IT work (one person-year of 2024 delivery)" (`tools/model_docs.py:972`)
+
 ## Workforce planning
 
 ### E7: B8's sign is ambiguous and its decision is open
@@ -388,10 +401,10 @@ C3, which merges recon 11 and recon 12b's spec notes.
 | AI capability | 2 |
 | Delivery AI adoption | 3 |
 | Client demand and consumer AI | 7 |
-| Work and productivity | 2 |
+| Work and productivity | 3 |
 | Workforce planning | 3 |
 | Labour market | 4 |
 | Sourcing choice | 5 |
 | Vendor finance and contracts | 6 |
 | Whole model | 3 |
-| Total | 35 |
+| Total | 36 |

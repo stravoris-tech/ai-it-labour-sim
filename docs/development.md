@@ -12,9 +12,13 @@ recon reports, ship reports, scratch code) lived in a gitignored `temp/` folder 
 
 Slice 7, release preparation, was planned before slices 8 and 9 but built last, so it comes last here.
 
-The PDF model reference (`docs/model-reference.pdf`) is rebuilt locally with `uv run --frozen python
-tools/model_pdf.py --pdf` (headless Edge: it writes the HTML to the gitignored `docs/_build/`, prints it, pins its
-dates and `/ID`, and records both hashes in `docs/model/diagrams/MANIFEST.json`, which CI checks).
+The PDF model reference (`docs/model-reference.pdf`) and the model guide (`docs/model-guide.md` and
+`docs/model-guide.pdf`) are rebuilt locally in two steps. First, `uv run --frozen python tools/model_guide.py --write`
+regenerates the guide from `src/aisim/scenarios.py`, `docs/model/inventory.csv`, `src/aisim/data/model_docs.csv` and
+`tools/guide_outputs.csv`. Then `uv run --frozen python tools/model_pdf.py --pdf` uses headless Edge: it writes both
+HTML files to the gitignored `docs/_build/`, prints the reference until the guide's page numbers settle, prints the
+guide, pins every PDF's dates and `/ID`, and records the hashes and pages in `docs/model/diagrams/MANIFEST.json`.
+CI checks the guide and the manifest.
 
 ## Slice 01: scaffold (PR #1, merged 2026-10-11, `c7c11c9`)
 
