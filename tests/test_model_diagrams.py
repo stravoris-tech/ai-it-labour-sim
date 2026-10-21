@@ -3,7 +3,9 @@ the exports are checked against ``docs/model/diagrams/MANIFEST.json``."""
 
 from __future__ import annotations
 
+import collections
 import itertools
+import math
 import shutil
 from pathlib import Path
 
@@ -49,7 +51,7 @@ def test_check_fails_on_a_copy_with_one_changed_label(tmp_path: Path) -> None:
     for folder, files in (
         (D.DATA, ("model_docs.csv", "model_modules.csv", "model_articles.csv")),
         (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv", "inventory.csv")),
-        (D.PAGES_CSV.parent, (D.PAGES_CSV.name,)),
+        (D.PAGES_CSV.parent, (D.PAGES_CSV.name, D.PIPES_CSV.name)),
     ):
         (tmp_path / folder).mkdir(parents=True, exist_ok=True)
         for name in files:
@@ -76,8 +78,12 @@ def test_every_node_maps_to_model_items(views: dict[str, D.View], src: D.Sources
         for c in v.cells:
             if c.kind == "node" and v.kind == "overview":
                 assert c.id in modules, (name, c.id)
-            elif c.kind == "node" and v.kind == "article":
+            elif (c.kind == "node" and v.kind == "article") or (
+                c.kind in ("node", "valve", "cloud") and v.kind == "map"
+            ):
                 assert c.items and set(c.items) <= names, (name, c.id)
+            elif c.kind == "region":
+                assert c.id.removeprefix("region:") in modules, (name, c.id)
             elif c.kind in ("node", "valve", "ghost", "ref") and v.kind == "module":
                 assert c.items and set(c.items) <= names, (name, c.id)
                 assert D.page_item(src, c.id)[0] == c.items[0], (name, c.id)
@@ -173,7 +179,7 @@ def test_bundle_check_fails_on_a_planted_bundle(tmp_path: Path) -> None:
     for folder, files in (
         (D.DATA, ("model_docs.csv", "model_modules.csv", "model_articles.csv")),
         (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv", "inventory.csv")),
-        (D.PAGES_CSV.parent, (D.PAGES_CSV.name,)),
+        (D.PAGES_CSV.parent, (D.PAGES_CSV.name, D.PIPES_CSV.name)),
     ):
         (tmp_path / folder).mkdir(parents=True, exist_ok=True)
         for name in files:
@@ -263,9 +269,10 @@ def test_overlap_check_detects_a_planted_overlap(views: dict[str, D.View]) -> No
 
 def test_no_two_sign_labels_coincide(views: dict[str, D.View]) -> None:
     """No two links' sign labels sit within 6 px of each other, with the sidecar's label offsets (Addendum C). Signed
-    views only: the module pages are skipped on purpose, as their arrows carry no label (slice 10c)."""
+    views only: the module pages are skipped on purpose, as their arrows carry no label (slice 10c), and so is the
+    model map, whose labels are counts, checked as boxes by ``map_label_problems`` (slice 10e)."""
     for name, v in views.items():
-        if v.kind == "module":
+        if v.kind in ("module", "map"):
             continue
         assert D.sign_label_clashes(v, D.read_sidecar(ROOT, name)) == [], name
 
@@ -274,7 +281,7 @@ def test_sign_label_check_fails_on_planted_coincident_labels(tmp_path: Path) -> 
     for folder, files in (
         (D.DATA, ("model_docs.csv", "model_modules.csv", "model_articles.csv")),
         (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv", "inventory.csv")),
-        (D.PAGES_CSV.parent, (D.PAGES_CSV.name,)),
+        (D.PAGES_CSV.parent, (D.PAGES_CSV.name, D.PIPES_CSV.name)),
     ):
         (tmp_path / folder).mkdir(parents=True, exist_ok=True)
         for name in files:
@@ -294,7 +301,7 @@ def _copy_inputs(tmp_path: Path) -> None:
     for folder, files in (
         (D.DATA, ("model_docs.csv", "model_modules.csv", "model_articles.csv")),
         (D.MODEL, ("edges.csv", "loops.csv", "loop_summary.csv", "inventory.csv")),
-        (D.PAGES_CSV.parent, (D.PAGES_CSV.name,)),
+        (D.PAGES_CSV.parent, (D.PAGES_CSV.name, D.PIPES_CSV.name)),
     ):
         (tmp_path / folder).mkdir(parents=True, exist_ok=True)
         for name in files:
@@ -305,11 +312,11 @@ def _copy_inputs(tmp_path: Path) -> None:
 def test_no_sign_sits_on_a_link_of_opposite_sign(views: dict[str, D.View]) -> None:
     """No sign label lies within 6 px of another link's drawn path when that link carries the opposite sign (slice
     10b.1). Signed views only: the overview's labels are counts, not signs, and the module pages are skipped on
-    purpose, as their arrows carry no sign (slice 10c)."""
+    purpose, as their arrows carry no sign (slice 10c), and so is the model map, whose labels are counts (slice 10e)."""
     found = {
         name: D.signs_on_opposite_links(v, D.read_sidecar(ROOT, name))
         for name, v in views.items()
-        if name != "overview" and v.kind != "module"
+        if name != "overview" and v.kind not in ("module", "map")
     }
     assert {k: v for k, v in found.items() if v} == {}
 
@@ -328,9 +335,11 @@ def test_opposite_sign_check_fails_on_a_planted_sign(tmp_path: Path) -> None:
 def test_each_limit_marker_sits_nearest_a_link_it_caps(views: dict[str, D.View]) -> None:
     """Each limit marker is at least 5 px nearer a link it caps than any link it does not, on the drawn paths, and no
     sign label sits within 6 px of it (slice 10b.1). Signed views only: the module pages are skipped on purpose, as
-    they have no limit markers and no signs (slice 10c)."""
+    they have no limit markers and no signs (slice 10c), and so is the model map (slice 10e)."""
     found = {
-        name: D.limit_marker_problems(v, D.read_sidecar(ROOT, name)) for name, v in views.items() if v.kind != "module"
+        name: D.limit_marker_problems(v, D.read_sidecar(ROOT, name))
+        for name, v in views.items()
+        if v.kind not in ("module", "map")
     }
     assert {k: v for k, v in found.items() if v} == {}
 
@@ -346,7 +355,8 @@ def test_limit_marker_check_fails_on_a_planted_marker(tmp_path: Path) -> None:
     found = D.limit_marker_problems(v, D.read_sidecar(tmp_path, "panel-sourcing"))
     assert any(x.startswith("limit:R7Lcap: capped link at") for x in found), found
     geom = dict(clean)
-    geom["e:GCCW>GCCScaleTerm"] = [0.1, 10.0, 0.0, 0.0]  # the capped link's "+" moved onto the marker
+    # the capped link's "+" moved onto the marker (slice 10e: offsets run to draw.io's side, so -10, not +10)
+    geom["e:GCCW>GCCScaleTerm"] = [0.1, -10.0, 0.0, 0.0]
     D.write_sidecar(tmp_path, "panel-sourcing", geom)
     found = D.limit_marker_problems(v, D.read_sidecar(tmp_path, "panel-sourcing"))
     assert any(x.startswith("limit:R7Lcap: the sign of e:GCCW>GCCScaleTerm") for x in found), found
@@ -458,3 +468,250 @@ def test_the_valve_check_fails_on_planted_cells(tmp_path: Path) -> None:
     k = clean.index('target="flow:Viab"')
     path.write_bytes((clean[:k] + 'target="Viab"' + clean[k + len('target="flow:Viab"') :]).encode("utf-8"))
     assert any("Viab" in x and "arrows into" in x for x in D.valve_problems(src, D.read_drawio_cells(path)))
+
+
+# ---- 10e: arrows through boxes on their drawn paths, every view -----------------------------------------------------
+
+
+def test_no_drawn_arrow_passes_through_a_box(views: dict[str, D.View]) -> None:
+    """No link's drawn path (``link_paths``, with its two-way waypoints) crosses a box it does not connect, in any
+    view, with ``through_boxes``'s 2 px inset (slice 10e, step 5)."""
+    found = {name: D.drawn_through_boxes(v, D.read_sidecar(ROOT, name)) for name, v in views.items()}
+    assert {k: v for k, v in found.items() if v} == {}
+
+
+def test_the_drawn_path_check_fails_on_a_planted_box(tmp_path: Path) -> None:
+    _copy_inputs(tmp_path)
+    v = D.build_views(tmp_path)["module-work"]
+    geom = D.read_sidecar(tmp_path, "module-work")
+    assert D.drawn_through_boxes(v, geom) == []  # the copy is clean before the plant
+    lk = v.links[0]
+    (ax, ay), (bx, by) = D.link_paths(v, geom)[D.edge_id(lk)][:2]
+    other = next(c.id for c in v.cells if c.id not in (lk.source, lk.target) and c.kind == "node")
+    w, h = geom[other][2:4]
+    geom[other] = [(ax + bx) / 2 - w / 2, (ay + by) / 2 - h / 2, w, h]  # a box on the drawn segment's midpoint
+    D.write_sidecar(tmp_path, "module-work", geom)
+    assert (D.edge_id(lk), other) in D.drawn_through_boxes(v, D.read_sidecar(tmp_path, "module-work"))
+
+
+# ---- 10e: the model map ---------------------------------------------------------------------------------------------
+
+MAP = D.MAP_VIEWS[0]
+SCALAR = Path("src/aisim/scalar")
+
+
+def _map_cells(root: Path) -> list[D.DrawnCell]:
+    return D.read_drawio_cells(D.drawio_path(root, MAP))
+
+
+def _length(path: list[tuple[float, float]]) -> float:
+    return sum(math.dist(p, q) for p, q in itertools.pairwise(path))
+
+
+def _without(text: str, cid: str) -> str:
+    """A .drawio text without the cell ``cid`` (its id as the XML writes it, ``>`` escaped)."""
+    i = text.index(f'<mxCell id="{cid.replace(">", "&gt;")}"')
+    j = text.index("</mxCell>", i) + len("</mxCell>")
+    return text[:i] + text[j:]
+
+
+def test_the_map_holds_every_stock_valve_lever_and_cloud_once(src: D.Sources, views: dict[str, D.View]) -> None:
+    """Every stock, every flow's valve and every lever exactly once, the clouds ``tools/flow_pipes.csv`` implies and
+    the eight regions, and nothing else but the title, legend and captions (slice 10e, step 4.1). A within-Headcount
+    valve stands for its group's flows, so every flow is on exactly one valve."""
+    assert D.map_contents_problems(src, _map_cells(ROOT)) == []
+    cells = views[MAP].cells
+    kinds = collections.Counter(c.kind for c in cells)
+    stocks = [n for n, k in src.docs if k == "stock"]
+    flows = sorted(n for n, k in src.docs if k == "flow")
+    assert len(stocks) == 43 and len(flows) == 60 and len(src.levers) == 31
+    assert kinds["valve"] == 58 and kinds["cloud"] == 42 and kinds["region"] == 8
+    assert kinds["node"] == len(stocks) + len(src.levers)
+    assert sorted(f for c in cells if c.kind == "valve" for f in c.items) == flows
+
+
+def test_the_map_contents_check_fails_on_planted_cells(tmp_path: Path, src: D.Sources) -> None:
+    p = tmp_path / "model-map.drawio"
+    shutil.copyfile(D.drawio_path(ROOT, MAP), p)
+    clean = p.read_bytes().decode("utf-8")
+    assert D.map_contents_problems(src, D.read_drawio_cells(p)) == []
+    p.write_bytes(_without(clean, "cloud:Enrol").encode("utf-8"))  # a cloud the table implies, removed
+    assert "cloud:Enrol: drawn 0 times" in D.map_contents_problems(src, D.read_drawio_cells(p))
+    i = clean.index('<mxCell id="BL"')
+    j = clean.index("</mxCell>", i) + len("</mxCell>")
+    p.write_bytes((clean[:j] + clean[i:j] + clean[j:]).encode("utf-8"))  # a stock drawn twice
+    assert "BL: drawn 2 times" in D.map_contents_problems(src, D.read_drawio_cells(p))
+    extra = '<mxCell id="cons.LOBTarget" value="x" style="text;" vertex="1" parent="1"></mxCell>'
+    p.write_bytes(clean.replace("</root>", extra + "</root>", 1).encode("utf-8"))  # an auxiliary
+    assert any(x.startswith("cons.LOBTarget: not a") for x in D.map_contents_problems(src, D.read_drawio_cells(p)))
+
+
+def test_the_pipe_table_is_derived_from_the_integration_code(src: D.Sources) -> None:
+    """``tools/flow_pipes.csv`` has one row per flow with known stocks; every cite's lines name the flow's code
+    identifier, lie in an update of the cited stock and carry the row's direction; and every term of every stock
+    update names a flow whose row has that stock on the term's side (slice 10e, step 4.2)."""
+    assert sorted(D.pipe_rows(src)) == sorted(n for n, k in src.docs if k == "flow")
+    assert D.cite_problems(ROOT, src) == []
+    assert D.code_flow_problems(ROOT, src) == []
+
+
+def test_the_pipe_checks_fail_on_planted_rows(tmp_path: Path) -> None:
+    _copy_inputs(tmp_path)
+    (tmp_path / SCALAR).mkdir(parents=True)
+    for name in ("integrate.py", "loops.py"):
+        shutil.copyfile(ROOT / SCALAR / name, tmp_path / SCALAR / name)
+    p = tmp_path / D.PIPES_CSV
+    clean = p.read_bytes().decode("utf-8")
+    src = D.read_sources(tmp_path)
+    assert D.cite_problems(tmp_path, src) == [] and D.code_flow_problems(tmp_path, src) == []
+    row = "\nComp,BL,cloud,,src/aisim/scalar/integrate.py:37 (BL)\n"
+    assert clean.count(row) == 1
+    p.write_bytes(clean.replace(row, "\nComp,cloud,BL,,src/aisim/scalar/integrate.py:37 (BL)\n").encode("utf-8"))
+    src = D.read_sources(tmp_path)  # a wrong direction: completion fills the backlog
+    assert any(x.startswith("Comp: takes from BL") for x in D.code_flow_problems(tmp_path, src))
+    assert any(x.startswith("Comp: its term in BL") for x in D.cite_problems(tmp_path, src))
+    p.write_bytes(clean.replace(row, "\nComp,BL,cloud,,src/aisim/scalar/integrate.py:38 (BL)\n").encode("utf-8"))
+    src = D.read_sources(tmp_path)  # a wrong cite line
+    assert "Comp: src/aisim/scalar/integrate.py:(38,) does not name 'Comp'" in D.cite_problems(tmp_path, src)
+    p.write_bytes(clean.replace(row, "\n").encode("utf-8"))  # a missing row
+    with pytest.raises(ValueError, match="Comp: no row"):
+        D.pipe_rows(D.read_sources(tmp_path))
+
+
+def test_the_map_pipes_and_drains_follow_the_table(src: D.Sources) -> None:
+    """Each flow's pipes from its sources (or its cloud) into its valve and on to its sinks, each within-Headcount
+    valve's attachment to Headcount with no pipe, and each also-drains arrow, exactly as ``tools/flow_pipes.csv``
+    says; no other edge style (operator rulings, slice 10e)."""
+    assert D.pipe_problems(src, _map_cells(ROOT)) == []
+    kinds = D.map_link_kinds(_map_cells(ROOT))
+    assert sorted(kinds["attach"]) == [("conv", "H"), ("promo", "H"), ("sw.in", "H")]
+    assert sorted(kinds["drain"]) == [("hires", "V"), ("promo", "V"), ("sw.in", "V")]
+
+
+def test_the_pipe_check_fails_on_a_planted_pipe(tmp_path: Path, src: D.Sources) -> None:
+    p = tmp_path / "model-map.drawio"
+    shutil.copyfile(D.drawio_path(ROOT, MAP), p)
+    clean = p.read_bytes().decode("utf-8")
+    assert D.pipe_problems(src, D.read_drawio_cells(p)) == []
+    old = 'source="hires" target="O"'
+    assert clean.count(old) == 1
+    p.write_bytes(clean.replace(old, 'source="hires" target="H"').encode("utf-8"))  # hires into Headcount
+    problems = D.pipe_problems(src, D.read_drawio_cells(p))
+    assert "pipe-out hires -> O: missing" in problems and "pipe-out hires -> H: not in the pipe table" in problems
+
+
+def test_lever_arrows_follow_the_rulings(src: D.Sources) -> None:
+    """A lever with at most four targets points at each; a wider one has one labelled arrow to each other module it
+    reaches and its own-module count on its label (operator rulings, slice 10e, step 4.3): 42 + 32 = 74 arrows."""
+    assert D.lever_arrow_problems(src, _map_cells(ROOT)) == []
+    arrows, own = D.lever_arrows(src)
+    assert (len(arrows), sum(not lab for _, _, lab in arrows)) == (74, 42)
+    assert own == {"AICostDecline": 4, "AIShockEnd": 4, "AIShockMult": 4, "AIShockStart": 4, "aL_max": 5}
+    assert all(len(t) > 0 for t in D.lever_targets(src).values())
+
+
+def test_the_lever_arrow_check_fails_on_planted_arrows(tmp_path: Path, src: D.Sources) -> None:
+    p = tmp_path / "model-map.drawio"
+    shutil.copyfile(D.drawio_path(ROOT, MAP), p)
+    clean = p.read_bytes().decode("utf-8")
+    assert D.lever_arrow_problems(src, D.read_drawio_cells(p)) == []
+    p.write_bytes(_without(clean, "e:kR7>flow:SrcPerc").encode("utf-8"))  # a narrow lever's arrow removed
+    assert "lever kR7 -> flow:SrcPerc: missing" in D.lever_arrow_problems(src, D.read_drawio_cells(p))
+    assert clean.count('value="g, 7"') == 1
+    p.write_bytes(clean.replace('value="g, 7"', 'value="g, 6"').encode("utf-8"))  # a wrong region count
+    found = D.lever_arrow_problems(src, D.read_drawio_cells(p))
+    assert any(x.startswith("region arrow g -> region:consumer") for x in found)
+    p.write_bytes(clean.replace("(acts on 4 in", "(acts on 3 in", 1).encode("utf-8"))  # a wrong own-module count
+    assert any("label counts [3]" in x for x in D.lever_arrow_problems(src, D.read_drawio_cells(p)))
+
+
+def test_every_map_node_sits_in_its_module_region(src: D.Sources, views: dict[str, D.View]) -> None:
+    """Every stock, valve, cloud and lever lies wholly inside its module's region, and no two regions overlap (slice
+    10e, step 4.4)."""
+    assert D.region_problems(src, views[MAP], D.read_sidecar(ROOT, MAP)) == []
+
+
+def test_the_region_check_fails_on_planted_moves(src: D.Sources, views: dict[str, D.View]) -> None:
+    geom = D.read_sidecar(ROOT, MAP)
+    assert D.region_problems(src, views[MAP], geom) == []
+    moved = dict(geom)
+    r = geom["region:finance"]
+    moved["BL"] = [r[0] + 40, r[1] + 60, *geom["BL"][2:]]  # the backlog inside the finance region
+    assert "BL: outside region:work" in D.region_problems(src, views[MAP], moved)
+    grown = dict(geom)
+    w = geom["region:work"]
+    grown["region:work"] = [w[0], w[1], w[2] + 60, w[3]]  # the work region over the workforce region
+    assert "region:work overlaps region:workforce" in D.region_problems(src, views[MAP], grown)
+
+
+def test_no_lever_arrow_runs_along_a_pipe_and_no_label_clashes(views: dict[str, D.View]) -> None:
+    """Lever arrows may cross pipes but never run along one, and the region-arrow labels overlap no other label, box
+    or pipe (slice 10e criteria)."""
+    geom = D.read_sidecar(ROOT, MAP)
+    assert D.runs_along(views[MAP], geom) == []
+    assert D.map_label_problems(views[MAP], geom) == []
+
+
+def test_the_run_along_and_label_checks_fail_on_planted_geometry(views: dict[str, D.View]) -> None:
+    v = views[MAP]
+    geom = D.read_sidecar(ROOT, MAP)
+    assert D.runs_along(v, geom) == [] and D.map_label_problems(v, geom) == []
+    paths = D.link_paths(v, geom)
+    pipe = max((lk for lk in v.links if lk.style in D.PIPE_STYLES), key=lambda lk: _length(paths[D.edge_id(lk)]))
+    (sx, sy), (tx, ty) = paths[D.edge_id(pipe)][0], paths[D.edge_id(pipe)][-1]
+    w, h = geom["kR7"][2:4]
+    planted = dict(geom)
+    planted["kR7"] = [2 * sx - tx - w / 2, 2 * sy - ty - h / 2, w, h]  # kR7 on the line of the longest pipe
+    arrow = D.Link("kR7", pipe.target, "", D.LEVER_STYLE)  # an arrow from kR7 along that pipe to its end
+    along = D.View(v.name, v.kind, v.cells, (pipe, arrow))
+    assert D.runs_along(along, planted) == [f"e:kR7>{pipe.target} runs along a pipe"]
+    e, box = sorted(D.label_boxes(v, geom).items())[0]
+    covered = dict(geom)
+    covered["TMBrake"] = [box[0], box[1], *geom["TMBrake"][2:]]  # a lever under a label
+    assert f"{e}: label on TMBrake" in D.map_label_problems(v, covered)
+
+
+def test_within_headcount_valves_conserve() -> None:
+    """Each two-flow ``WITHIN`` group moves staff between members of Headcount: its flows are equal in total, summed
+    over units and levels, at every step of a phase9 Base run (operator ruling, slice 10e). Control: promotions
+    against quits do not conserve."""
+    from aisim.dims import LEVELS, UNITS
+    from aisim.params import Params
+    from aisim.scalar.engine import run
+    from aisim.scalar.labour_market import Exits, Switching
+    from aisim.scalar.workforce import Vacancies
+
+    seen: dict[int, tuple[Vacancies, Switching, Exits]] = {}
+    parts: dict[str, object] = {}
+
+    def trace(step: int, y: float, sec: str, obj: object) -> None:
+        parts[sec] = obj
+        if sec == "S8c":
+            vac, sw, ex = parts["S7"], parts["S8a"], parts["S8c"]
+            assert isinstance(vac, Vacancies) and isinstance(sw, Switching) and isinstance(ex, Exits)
+            seen[step] = (vac, sw, ex)
+
+    run(Params.baseline("phase9"), trace=trace)
+
+    def total(s: tuple[Vacancies, Switching, Exits], flow: str) -> float:
+        vac, sw, ex = s
+        if flow == "promo":
+            return sum(vac.promo[u][lv] for u in UNITS for lv in LEVELS)
+        if flow == "sw.in":
+            return sum(sw.sw[u][lv]["in"] for u in UNITS for lv in LEVELS)
+        if flow == "sw.out":
+            return sum(sw.sw[u][lv]["out"] for u in UNITS for lv in LEVELS)
+        if flow == "fl.promo_out":
+            return sum(ex.fl[u][lv]["promo_out"] for u in UNITS for lv in LEVELS)
+        assert flow == "fl.quits"  # the control
+        return sum(ex.fl[u][lv]["quits"] for u in UNITS for lv in LEVELS)
+
+    def worst(a: str, b: str) -> float:
+        return max(abs(total(s, a) - total(s, b)) / max(1.0, abs(total(s, a))) for s in seen.values())
+
+    pairs = [flows for flows, _ in D.WITHIN.values() if len(flows) == 2]
+    assert sorted(pairs) == [("promo", "fl.promo_out"), ("sw.in", "sw.out")]
+    assert len(seen) == 257
+    for a, b in pairs:
+        assert worst(a, b) < 1e-12, (a, b)
+    assert worst("promo", "fl.quits") > 1e-3

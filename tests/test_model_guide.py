@@ -231,3 +231,37 @@ def test_shares_and_rates_print_in_percent(md: str) -> None:
         else:
             assert r[1] != "percent" and not any(p.endswith("%") for p in parts), m.group(1)
     assert sum(m is not None and m.group(1) in G.PERCENT for m in names) == len(G.PERCENT) == 6
+
+
+# ---- the wide levers (slice 10e) ------------------------------------------------------------------------------------
+
+
+def test_the_wide_lever_table_matches_the_computation(md: str) -> None:
+    """Section 3's "Where the wide levers act" lists every lever with more than ``DG.WIDE`` targets once, with its
+    count and its targets by module, from the computation the model map draws (operator ruling, slice 10e)."""
+    assert G.wide_lever_problems(md) == []
+    assert [w[0] for w in G.wide_levers(ROOT)] == [
+        "DemandGrowthLate",
+        "g",
+        "Verif",
+        "VerifDecline",
+        "AICostDecline",
+        "AIShockEnd",
+        "AIShockMult",
+        "AIShockStart",
+        "R6Theta",
+        "aL_max",
+    ]
+
+
+def test_the_wide_lever_check_fails_on_planted_rows(copy: Path) -> None:
+    clean = copy.read_text(encoding="utf-8")
+    assert G.wide_lever_problems(clean) == []
+    assert clean.count("| `g` | 22 |") == 1
+    assert G.wide_lever_problems(clean.replace("| `g` | 22 |", "| `g` | 21 |")) == ["wide lever g: count 21 against 22"]
+    row = next(ln for ln in clean.split("\n") if ln.startswith("| `R6Theta` |"))
+    assert any(
+        x.startswith("wide lever R6Theta: targets")
+        for x in G.wide_lever_problems(clean.replace(row, row.replace(", `fl.openings`", "")))
+    )
+    assert G.wide_lever_problems(clean.replace(row + "\n", "")) == ["wide lever R6Theta: no row"]

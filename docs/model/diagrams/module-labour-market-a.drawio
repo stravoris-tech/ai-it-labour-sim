@@ -336,7 +336,7 @@
           <mxGeometry x="94" y="334" width="127" height="40" as="geometry" />
         </mxCell>
         <mxCell id="ref:expiry" value="Visa expiries&#10;(labour market b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
-          <mxGeometry x="643" y="295" width="127" height="40" as="geometry" />
+          <mxGeometry x="645" y="297" width="127" height="40" as="geometry" />
         </mxCell>
         <mxCell id="ref:fl.layoffs" value="Layoffs&#10;(labour market b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
           <mxGeometry x="1113" y="472" width="127" height="40" as="geometry" />

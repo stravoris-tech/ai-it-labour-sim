@@ -54,6 +54,8 @@ GUIDE_MD: Final = Path("docs/model-guide.md")
 GUIDE_OUTPUTS: Final = Path("tools/guide_outputs.csv")
 GUIDE_HTML_OUT: Final = Path("docs/_build/model-guide.html")
 GUIDE_PDF_OUT: Final = Path("docs/model-guide.pdf")
+MAP_HTML_OUT: Final = Path("docs/_build/model-map.html")
+MAP_PDF_OUT: Final = Path("docs/model-map.pdf")
 EDGE_EXE: Final = Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
 PAGE_W_MM: Final = 297.0
@@ -67,6 +69,15 @@ HEADING_MM: Final = 12.0
 FIRST_FIGURES: Final = frozenset({"overview", next(iter(DG.MODULE_VIEWS)), next(iter(DG.PANEL_VIEWS))})
 PT_PER_MM: Final = 72 / 25.4
 MIN_LABEL_PT: Final = 6.5
+MAP_PAGE_W_MM: Final = 594.0
+MAP_PAGE_H_MM: Final = 420.0
+MAP_FIG_W_MM: Final = MAP_PAGE_W_MM - 2 * MARGIN_MM
+MAP_FIG_H_MM: Final = 374.0
+"""The model map's page (slice 10e): A2 landscape, the named page ``map``. Its size is given in mm because Edge 155
+ignores the ``A2 landscape`` keyword on a named page. The figure leaves room for the heading and a caption."""
+MAP_MIN_LABEL_PT: Final = 7.0
+EDGE_TIMEOUT_S: Final = 300
+"""Edge is stopped after this many seconds (slice 10e: the 10d re-verify saw it hang after writing its PDF)."""
 PIN_DATE: Final = b"20000101000000"
 KINDS: Final = ("stock", "flow", "auxiliary", "parameter", "table", "output")
 SECTION_TITLES: Final = {
@@ -92,9 +103,11 @@ GUIDE_WIDTHS: Final[Mapping[tuple[str, ...], tuple[float, ...]]] = {
         "At year Y",
     ): (13, 30, 8, 11, 15, 13, 10),
     ("Output", "Units", "What it tells you", "phase9 Base 2024", "phase9 Base 2040"): (19, 8, 23, 25, 25),
+    ("Lever", "Targets", "Where it acts"): (13, 7, 80),
 }
 """The guide's tables by header row: their column widths (percent). A guide table without an entry raises."""
 GUIDE_PAGES: Final[Mapping[str, tuple[str, str]]] = {
+    "Model map": ("model-map", "module-pages"),
     "Module pages": ("module-pages", "panels"),
     "Feedback loops": ("panels", "dictionary"),
     "Data dictionary": ("dictionary", "errata-title"),
@@ -127,6 +140,9 @@ section.title table {{ width: 120mm; font-size: 10pt; }}
 section.figure {{ break-before: page; break-after: page; break-inside: avoid; }}
 svg.diagram {{ display: block; width: {FIG_W_MM:g}mm; height: {FIG_H_MM:g}mm; }}
 svg.diagram.headed {{ height: {FIG_H_MM - HEADING_MM:g}mm; }}
+@page map {{ size: {MAP_PAGE_W_MM:g}mm {MAP_PAGE_H_MM:g}mm; margin: {MARGIN_MM:g}mm; }}
+section.map {{ page: map; }}
+svg.map {{ display: block; width: {MAP_FIG_W_MM:g}mm; height: {MAP_FIG_H_MM:g}mm; }}
 section.figure h1 {{ break-before: auto; }}
 p.caption {{ font-size: 8pt; font-style: italic; margin: 1.5mm 0 0; }}
 nav ol {{ margin: 0; }}
@@ -189,6 +205,7 @@ def inputs(root: Path = ROOT) -> list[Path]:
         root / ERRATA,
         root / GUIDE_MD,
         root / GUIDE_OUTPUTS,
+        root / DG.PIPES_CSV,
     ]
     return out + [svg_path(root, v) for v in DG.VIEWS if not v.startswith("article-")]
 
@@ -248,9 +265,9 @@ def fig_h_mm(view: str) -> float:
     return FIG_H_MM - HEADING_MM if view in FIRST_FIGURES else FIG_H_MM
 
 
-def print_pt_per_px(width: float, height: float, fig_h: float = FIG_H_MM) -> float:
-    """The printed size of one SVG px in pt, for a diagram scaled to fit FIG_W_MM x ``fig_h``."""
-    return min(FIG_W_MM / width, fig_h / height) * PT_PER_MM
+def print_pt_per_px(width: float, height: float, fig_h: float = FIG_H_MM, fig_w: float = FIG_W_MM) -> float:
+    """The printed size of one SVG px in pt, for a diagram scaled to fit ``fig_w`` x ``fig_h`` (A4 by default)."""
+    return min(fig_w / width, fig_h / height) * PT_PER_MM
 
 
 def figure(root: Path, view: str, anchor: str, caption: str = "", heading: tuple[str, str] | None = None) -> str:
@@ -311,6 +328,11 @@ MARKS: Final = (
         "the book itself: their whole update is one flow that reads the signings and expiries. It is drawn as a valve "
         "whose inputs include those flows' valves.",
     ),
+    (
+        "Cloud and module region",
+        "On the model map: a cloud is a source or sink outside the model's stocks; a tinted panel holds one "
+        "module's stocks, valves and levers.",
+    ),
     ("Auxiliary", "Bold text in the module's colour: a quantity computed afresh every step from other items."),
     ("Lever", "Grey italic text: a parameter that scenarios or the levers of an experiment set."),
     ("Ghost input", "Small grey text with a module in brackets: an item of another module that feeds this page."),
@@ -344,7 +366,8 @@ def introduction(src: DG.Sources) -> str:
         "IT employment, contract mix and vendor viability. It gives scenario projections, not forecasts: read every "
         'value as "under these assumptions" (README). Its only model results are the Base values of the model guide; '
         "the README and the analyses state the rest.</p>\n"
-        f"<p>The model has {len(src.modules)} engine modules. The overview shows how they feed each other; one or more "
+        f"<p>The model has {len(src.modules)} engine modules. The overview shows how they feed each other; the model "
+        "map shows every stock, flow and lever on one A2 page, with the pipes between the stocks; one or more "
         "module pages show each module's stocks, flows, auxiliaries and levers as a stock-and-flow diagram, each "
         "followed by its item list; five causal-loop panels show the feedback loops with their polarity; the data "
         "dictionary describes every named item; the errata list where the original specification is wrong and what "
@@ -371,6 +394,22 @@ def overview(root: Path, src: DG.Sources) -> str:
         + '<h2 id="modules">The modules</h2>\n'
         + table(["Module", "Display name", "Description"], [14, 20, 66], rows)
         + "</section>\n"
+    )
+
+
+MAP_CAPTION: Final = (
+    "Every stock, flow and lever of the model, by module: the pipes each flow fills and drains (tools/flow_pipes.csv, "
+    "cited to the integration code) and each lever's first stocks and flows (docs/model/edges.csv). The legend on "
+    "the map explains its marks; the module pages after it show the auxiliaries and information links it leaves out."
+)
+
+
+def map_section(root: Path) -> str:
+    """The model map on its own A2 landscape page (slice 10e), with its heading and caption."""
+    svg = inline_svg(svg_path(root, DG.MAP_VIEWS[0]), "map")
+    return (
+        f'<section class="figure map" id="model-map-part">\n<h1 id="model-map">Model map</h1>\n{svg}\n'
+        f'<p class="caption">{esc(MAP_CAPTION)}</p></section>\n'
     )
 
 
@@ -675,6 +714,11 @@ def build_guide_html(root: Path = ROOT, pages: Mapping[str, int] | None = None) 
     return _document(f"ai-it-labour-sim model guide {version(root)}", html_)
 
 
+def build_map_html(root: Path = ROOT) -> str:
+    """The standalone model map: its A2 page alone."""
+    return _document(f"ai-it-labour-sim model map {version(root)}", map_section(root))
+
+
 def build_html(root: Path = ROOT, pages: Mapping[str, int] | None = None) -> str:
     """The model reference, with its own pages in the guide's "Where to look next" lines (the manifest's by
     default)."""
@@ -688,6 +732,7 @@ def build_html(root: Path = ROOT, pages: Mapping[str, int] | None = None) -> str
         ("intro", "Introduction", ()),
         ("guide", "Model guide", [(a, re.sub(r"^\d+\. ", "", t)) for a, t in guide_heads]),
         ("overview", "Overview", (("modules", "The modules"),)),
+        ("model-map", "Model map", ()),
         ("module-pages", "Module pages", [(n, s.title) for n, s in DG.MODULE_VIEWS.items()]),
         ("panels", "Feedback loops", [*((v, s.title) for v, s in DG.PANEL_VIEWS.items()), ("loops", "The loops")]),
         ("dictionary", "Data dictionary", [(f"dict-{k}", SECTION_TITLES[k]) for k in KINDS]),
@@ -700,6 +745,7 @@ def build_html(root: Path = ROOT, pages: Mapping[str, int] | None = None) -> str
         + introduction(src)
         + guide_html
         + overview(root, src)
+        + map_section(root)
         + module_pages(root, src, inv)
         + panels(root, src)
         + dictionary(inv_rows, model)
@@ -741,6 +787,14 @@ def reference_hashes(root: Path) -> dict[str, str]:
     if not isinstance(ref, dict):
         return {}
     return {str(k): str(v) for k, v in ref.items()}
+
+
+def map_hashes(root: Path) -> dict[str, str]:
+    """The standalone map's HTML and PDF hashes as the manifest stores them (key ``map``)."""
+    entry = manifest(root).get("map", {})
+    if not isinstance(entry, dict):
+        return {}
+    return {k: str(entry[k]) for k in ("html", "pdf") if k in entry}
 
 
 def guide_hashes(root: Path) -> dict[str, str]:
@@ -806,6 +860,12 @@ def check(root: Path = ROOT) -> list[str]:
     gpdf = root / GUIDE_PDF_OUT
     if not gpdf.exists() or sha256_bytes(gpdf.read_bytes()) != guide.get("pdf"):
         bad.append(f"{GUIDE_PDF_OUT.as_posix()}: missing or differs from the manifest's hash")
+    mp = map_hashes(root)
+    if sha256_bytes(build_map_html(root).encode("utf-8")) != mp.get("html"):
+        bad.append(f"{MAP_HTML_OUT.as_posix()}: differs from the manifest's hash (the PDF needs a new print)")
+    mpdf = root / MAP_PDF_OUT
+    if not mpdf.exists() or sha256_bytes(mpdf.read_bytes()) != mp.get("pdf"):
+        bad.append(f"{MAP_PDF_OUT.as_posix()}: missing or differs from the manifest's hash")
     return bad
 
 
@@ -841,23 +901,51 @@ def pin(pdf: bytes, html_sha: str) -> bytes:
     return out
 
 
-def edge_print(html_file: Path, pdf_file: Path) -> None:
-    """Print the HTML with headless Edge (recon 10b A2's flags, a plain ``C:/`` path, a fresh profile)."""
+def complete_pdf(path: Path) -> bool:
+    """Whether a file is a whole PDF: it starts with ``%PDF-`` and ends with ``%%EOF``."""
+    if not path.exists():
+        return False
+    data = path.read_bytes()
+    return data.startswith(b"%PDF-") and data.rstrip().endswith(b"%%EOF")
+
+
+def edge_print(html_file: Path, pdf_file: Path, timeout: float = EDGE_TIMEOUT_S) -> None:
+    """Print the HTML with headless Edge (recon 10b A2's flags, a plain ``C:/`` path, a fresh profile), stopped after
+    ``timeout`` seconds (slice 10e). On a timeout Edge's process tree is ended; a complete PDF it already wrote is
+    used (``pin()`` follows), otherwise the print is tried once more. Each timeout is printed for the report. Edge's
+    output is not piped: a child left running would hold the pipe open."""
     pdf_file.parent.mkdir(parents=True, exist_ok=True)
-    pdf_file.unlink(missing_ok=True)
-    with tempfile.TemporaryDirectory(prefix="edge_profile_") as prof:
-        cmd = [
-            str(EDGE_EXE),
-            "--headless=new",
-            "--disable-gpu",
-            "--no-pdf-header-footer",
-            f"--user-data-dir={prof}",
-            f"--print-to-pdf={pdf_file.resolve()}",
-            html_file.resolve().as_posix(),
-        ]
-        subprocess.run(cmd, check=True, capture_output=True)
-    if not pdf_file.exists():
-        raise RuntimeError(f"Edge wrote no {pdf_file}")
+    for attempt in (1, 2):
+        pdf_file.unlink(missing_ok=True)
+        with tempfile.TemporaryDirectory(prefix="edge_profile_", ignore_cleanup_errors=True) as prof:
+            cmd = [
+                str(EDGE_EXE),
+                "--headless=new",
+                "--disable-gpu",
+                "--no-pdf-header-footer",
+                f"--user-data-dir={prof}",
+                f"--print-to-pdf={pdf_file.resolve()}",
+                html_file.resolve().as_posix(),
+            ]
+            proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            try:
+                code = proc.wait(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                kill = ["taskkill", "/T", "/F", "/PID", str(proc.pid)]
+                subprocess.run(kill, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+                proc.wait()
+                done = complete_pdf(pdf_file)
+                outcome = "its PDF is complete and is used" if done else "no complete PDF, printing again"
+                print(f"Edge timed out after {timeout:g} s printing {html_file.name} (attempt {attempt}); {outcome}")
+                if done:
+                    return
+                continue
+            if code != 0:
+                raise subprocess.CalledProcessError(code, cmd)
+        if not complete_pdf(pdf_file):
+            raise RuntimeError(f"Edge wrote no complete {pdf_file}")
+        return
+    raise RuntimeError(f"Edge timed out twice printing {html_file.name}")
 
 
 def _write(path: Path, text: str) -> Path:
@@ -873,6 +961,10 @@ def write_html(root: Path = ROOT, out_root: Path | None = None, pages: Mapping[s
 
 def write_guide_html(root: Path = ROOT, out_root: Path | None = None, pages: Mapping[str, int] | None = None) -> Path:
     return _write((root if out_root is None else out_root) / GUIDE_HTML_OUT, build_guide_html(root, pages))
+
+
+def write_map_html(root: Path = ROOT, out_root: Path | None = None) -> Path:
+    return _write((root if out_root is None else out_root) / MAP_HTML_OUT, build_map_html(root))
 
 
 def _print(root: Path, html_file: Path, name: str) -> tuple[str, bytes]:
@@ -900,14 +992,17 @@ def write_pdf(root: Path = ROOT) -> dict[str, object]:
     else:
         raise RuntimeError(f"the reference's page numbers did not settle in {MAX_PRINTS} prints")
     guide_sha, guide_pdf = _print(root, write_guide_html(root, pages=pages), "model-guide")
+    map_sha, map_pdf = _print(root, write_map_html(root), "model-map")
     (root / PDF_OUT).write_bytes(pdf)
     (root / GUIDE_PDF_OUT).write_bytes(guide_pdf)
+    (root / MAP_PDF_OUT).write_bytes(map_pdf)
     man = manifest(root)
     man["reference"] = {"html": html_sha, "pdf": sha256_bytes(pdf)}
     man["guide"] = {"html": guide_sha, "pdf": sha256_bytes(guide_pdf), "pages": pages}
+    man["map"] = {"html": map_sha, "pdf": sha256_bytes(map_pdf)}
     with (root / DG.MANIFEST).open("w", encoding="utf-8", newline="") as f:
         f.write(json.dumps(man, indent=1, sort_keys=True) + "\n")
-    return {"reference": man["reference"], "guide": man["guide"]}
+    return {"reference": man["reference"], "guide": man["guide"], "map": man["map"]}
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -919,10 +1014,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     ap.add_argument("--root", type=Path, default=ROOT, help="repository root (default: this repository)")
     a = ap.parse_args(argv)
     if a.html:
-        for p in (write_html(a.root), write_guide_html(a.root)):
+        for p in (write_html(a.root), write_guide_html(a.root), write_map_html(a.root)):
             print("wrote", p.relative_to(a.root).as_posix())
     elif a.pdf:
-        print(PDF_OUT.as_posix(), GUIDE_PDF_OUT.as_posix(), write_pdf(a.root))
+        print(PDF_OUT.as_posix(), GUIDE_PDF_OUT.as_posix(), MAP_PDF_OUT.as_posix(), write_pdf(a.root))
     else:
         bad = check(a.root)
         for b in bad:
@@ -930,7 +1025,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         if bad:
             print("rebuild with: uv run --frozen python tools/model_pdf.py --pdf (locally, with Edge)")
             return 1
-        print("model reference and model guide: the HTML and the PDFs match the manifest")
+        print("model reference, model guide and model map: the HTML and the PDFs match the manifest")
     return 0
 
 

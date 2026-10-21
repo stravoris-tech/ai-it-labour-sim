@@ -36,6 +36,7 @@ VIEW``, ``--export``)
 from __future__ import annotations
 
 import argparse
+import ast
 import base64
 import collections
 import csv
@@ -43,11 +44,13 @@ import hashlib
 import importlib
 import itertools
 import json
+import keyword
 import math
 import re
 import subprocess
 import sys
 import textwrap
+import tokenize
 import urllib.parse
 import xml.etree.ElementTree as ET
 import zlib
@@ -182,7 +185,9 @@ MODULE_PAGES: Final = (
     PageSpec("finance-c", ("finance",), "Vendor finance and contracts (c): revenue, margin and viability", "finance c"),
 )
 MODULE_VIEWS: Final = {f"module-{p.key}": p for p in MODULE_PAGES}
-VIEWS: Final = ("overview", *PANEL_VIEWS, *ARTICLE_VIEWS, *MODULE_VIEWS)
+MAP_VIEWS: Final = ("model-map",)
+"""The whole-model map (slice 10e): one A2 page."""
+VIEWS: Final = ("overview", *PANEL_VIEWS, *ARTICLE_VIEWS, *MODULE_VIEWS, *MAP_VIEWS)
 
 QUESTION_LOOPS: Final = frozenset({"R5", "U1", "U3", "U5"})
 """Loops whose sign depends on which path dominates (decision 3): a "?" label and a caption."""
@@ -290,6 +295,8 @@ class View:
     links: tuple[Link, ...]
     loop_cells: Mapping[str, tuple[str, ...]] = field(default_factory=dict)
     limit_links: Mapping[str, tuple[tuple[str, str], ...]] = field(default_factory=dict)
+    homes: Mapping[str, str] = field(default_factory=dict)
+    """On the model map: each node's module, whose region holds it (slice 10e)."""
 
     def cell(self, cid: str) -> Cell:
         return next(c for c in self.cells if c.id == cid)
@@ -318,9 +325,16 @@ class Sources:
     """``tools/module_pages.csv``: each module item's page."""
     levers: frozenset[str] = frozenset()
     """The lever parameters (``docs/model/inventory.csv``, ``lever`` "yes" or "yes (structural)")."""
+    pipes: Sequence[Mapping[str, str]] = ()
+    """``tools/flow_pipes.csv``: each flow's pipes (slice 10e)."""
 
 
 PAGES_CSV: Final = Path("tools/module_pages.csv")
+PIPES_CSV: Final = Path("tools/flow_pipes.csv")
+"""Each flow's pipes (slice 10e), derived from the integration code: ``flow,from,to,also_drains,cite``. ``from`` and
+``to`` are stocks (``;`` lists where a flow touches several) or ``cloud``; ``also_drains`` lists the stocks a flow only
+reduces (vacancies filled); ``cite`` gives ``path:line[,line] (stock)`` for each stock touched, joined by ``"; "``. A
+second line is a local alias's definition where the update line names only the alias (operator ruling)."""
 """Each item a module page draws, with its page (``page,name,kind``); a page's valves follow their stocks."""
 
 KIND_ORDER: Final = ("stock", "flow", "auxiliary", "parameter", "table", "time")
@@ -348,6 +362,7 @@ def read_sources(root: Path = ROOT) -> Sources:
             for r in read_csv(root / MODEL / "inventory.csv")
             if r["kind"] == "parameter" and r["lever"].startswith("yes")
         ),
+        read_csv(root / PIPES_CSV),
     )
 
 
@@ -967,12 +982,444 @@ def module_page(src: Sources, view: str) -> View:
     return View(view, "module", tuple(cells), tuple(links))
 
 
+# ---- the model map (slice 10e) --------------------------------------------------------------------------------------
+
+CLOUD: Final = "cloud"
+INTEGRATION: Final[Mapping[Path, str]] = {
+    Path("src/aisim/scalar/integrate.py"): "integrate",
+    Path("src/aisim/scalar/loops.py"): "post",
+}
+"""The functions that update the stocks (``integrate`` calls ``loops.post`` last); the cites point into them."""
+WITHIN: Final[Mapping[str, tuple[tuple[str, ...], str]]] = {
+    "conv": (("conv",), "within Headcount:\nvisa to local"),
+    "promo": (("promo", "fl.promo_out"), "within Headcount:\njunior to senior"),
+    "sw.in": (("sw.in", "sw.out"), "within Headcount:\nbetween employers"),
+}
+"""Flows that move staff between members of Headcount (``from`` = ``to`` = ``H``), each group drawn as one valve
+attached to Headcount, with its label (operator rulings, slice 10e). A group's flows are equal in total at every step:
+``fl.promo_out`` is the next level's ``promo`` (``labour_market.py:204``) and each switch is one employer's ``in`` and
+another's ``out`` (``labour_market.py:157-163``); ``test_within_headcount_valves_conserve`` checks it on a run."""
+WIDE: Final = 4
+"""A lever reaching more than this many stocks and flows is drawn with one arrow per other module (operator ruling)."""
+MAP_TITLE: Final = "The model map: every stock, flow and lever, by module"
+MAP_WRAP: Final = 110
+MAP_FONT: Final = 12
+REGION_PAD: Final = 16.0
+REGION_HEAD: Final = 30.0
+"""A region's padding around its nodes, and the extra room above them for its label."""
+CLOUD_W: Final = 34.0
+CLOUD_H: Final = 22.0
+PIPE_IN_STYLE: Final = "html=0;endArrow=none;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;"
+"""A pipe from a stock or cloud into a valve; ``PIPE_STYLE`` (with its arrowhead) leads from the valve on."""
+ATTACH_STYLE: Final = (
+    "html=0;endArrow=none;startArrow=none;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;dashed=1;dashPattern=2 2;"
+)
+DRAIN_STYLE: Final = "html=0;endArrow=open;endSize=8;rounded=0;strokeColor=#7A7A7A;strokeWidth=1.2;"
+LEVER_STYLE: Final = (
+    "html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;"
+)
+REGION_ARROW_STYLE: Final = (
+    LEVER_STYLE.replace("strokeWidth=1;", "strokeWidth=1.4;")
+    + f"fontFamily=Helvetica;fontSize={MAP_FONT};fontStyle=2;fontColor=#444444;labelBackgroundColor=#FFFFFF;"
+)
+CLOUD_STYLE: Final = BASE + "shape=cloud;fillColor=#FFFFFF;strokeColor=#7A7A7A;strokeWidth=1.2;"
+MAP_LEGEND_STYLE: Final = LEGEND_STYLE.replace("fontSize=11;", f"fontSize={MAP_FONT};")
+MAP_CAPTION_STYLE: Final = CAPTION_STYLE.replace("fontSize=11;", f"fontSize={MAP_FONT};")
+MAP_TITLE_STYLE: Final = TITLE_STYLE.replace("fontSize=16;", "fontSize=20;")
+MAP_LEGEND: Final = (
+    "Tinted panel: a module. Box: a stock. Hourglass: a flow (its valve), named below. Cloud: a source or sink"
+    " outside the model's stocks.",
+    "Thick arrow (a pipe): what a flow moves, from a stock or cloud through its valve into a stock. A flow that only"
+    " reduces a stock as it moves people (vacancies filled) has a thin arrow from its valve to that stock.",
+    "Dotted thick line: a valve whose flow moves staff between members of Headcount (promotion, switching between"
+    " employers, visa to local), so nothing enters or leaves Headcount.",
+    "Grey italic: a lever. Dashed arrow: the first stocks and flows the lever reaches through auxiliaries"
+    " (docs/model/edges.csv).",
+    f"A lever reaching more than {WIDE} has one dashed arrow per other module, labelled with the lever and its count"
+    ' there, and "(acts on N in this module)" for its own module;',
+    'the model guide\'s table "Where the wide levers act" (docs/model-guide.md) lists the targets.',
+)
+MAP_CAPTIONS: Final = (
+    "Left out: the auxiliaries, the parameters that are not levers, and the information links between stocks. The"
+    " module pages and the causal-loop panels show them (docs/model-reference.pdf, docs/model/diagrams/).",
+    "Pipes: tools/flow_pipes.csv, each cited to the line of the integration code that fills or drains the stock.",
+)
+
+
+@dataclass(frozen=True)
+class Pipe:
+    """A row of ``tools/flow_pipes.csv``: the flow, its source and sink stocks (``CLOUD`` for outside the model),
+    the stocks it only drains, and its cites as (path, lines, stock)."""
+
+    flow: str
+    sources: tuple[str, ...]
+    sinks: tuple[str, ...]
+    drains: tuple[str, ...]
+    cites: tuple[tuple[str, tuple[int, ...], str], ...]
+
+    @property
+    def within(self) -> bool:
+        """Whether the flow moves stock between members of one stock (``from`` = ``to``)."""
+        return self.sources == self.sinks and CLOUD not in self.sources
+
+
+CITE: Final = re.compile(r"^(?P<path>[^:]+):(?P<lines>\d+(?:,\d+)*) \((?P<stock>[^()]+)\)$")
+
+
+def _split(s: str) -> tuple[str, ...]:
+    return tuple(x for x in s.split(";") if x)
+
+
+def pipe_rows(src: Sources) -> dict[str, Pipe]:
+    """``tools/flow_pipes.csv`` by flow. Raises ``ValueError`` listing every unknown or missing flow, flow listed
+    twice, unknown stock, ``cloud`` mixed with stocks or in ``also_drains``, malformed cite, and stock touched without
+    a cite or cited without a touch."""
+    stocks = {n for n, k in src.docs if k == "stock"}
+    flows = [n for n, k in src.docs if k == "flow"]
+    out: dict[str, Pipe] = {}
+    bad = []
+    for r in src.pipes:
+        f = r["flow"]
+        if f not in flows:
+            bad.append(f"{f}: not a flow")
+            continue
+        if f in out:
+            bad.append(f"{f}: listed twice")
+            continue
+        ends = (_split(r["from"]), _split(r["to"]))
+        drains = _split(r["also_drains"])
+        for name, side in (("from", ends[0]), ("to", ends[1])):
+            if not side or (CLOUD in side and len(side) > 1):
+                bad.append(f"{f}: {name} {';'.join(side)!r}")
+        unknown = sorted({s for s in (*ends[0], *ends[1], *drains) if s != CLOUD and s not in stocks})
+        if unknown or CLOUD in drains:
+            bad.append(f"{f}: unknown stocks {unknown or [CLOUD]}")
+        cites = []
+        for c in (x.strip() for x in r["cite"].split(";") if x.strip()):
+            m = CITE.match(c)
+            if m is None:
+                bad.append(f"{f}: cite {c!r}")
+                continue
+            cites.append((m["path"], tuple(int(x) for x in m["lines"].split(",")), m["stock"]))
+        touched = {s for s in (*ends[0], *ends[1], *drains) if s != CLOUD}
+        if {c[2] for c in cites} != touched:
+            bad.append(f"{f}: cites {sorted({c[2] for c in cites})} for stocks {sorted(touched)}")
+        out[f] = Pipe(f, ends[0], ends[1], drains, tuple(cites))
+    bad += [f"{f}: no row" for f in sorted(set(flows) - set(out))]
+    if bad:
+        raise ValueError(f"{PIPES_CSV.as_posix()}: " + "; ".join(bad))
+    return {f: out[f] for f in sorted(out)}
+
+
+def code_name(flow: str) -> str:
+    """A flow's identifier in the integration code: the stock of ``flow:<stock>``, else the name's last segment
+    (``fl.quits`` -> ``quits``, ``sw.in`` -> ``in``)."""
+    return flow[5:] if flow.startswith("flow:") else flow.rsplit(".", 1)[-1]
+
+
+def _named(node: ast.AST) -> set[str]:
+    """The names, attributes and string keys an expression uses."""
+    out: set[str] = set()
+    for n in ast.walk(node):
+        if isinstance(n, ast.Name):
+            out.add(n.id)
+        elif isinstance(n, ast.Attribute):
+            out.add(n.attr)
+        elif isinstance(n, ast.Constant) and isinstance(n.value, str):
+            out.add(n.value)
+    return out
+
+
+def _terms(node: ast.expr, sign: int = 1) -> list[tuple[int, ast.expr]]:
+    """An expression's additive terms with their signs; a product or quotient with a one-term factor carries the
+    other factor's terms (``d * (a - b) / T`` gives ``+a``, ``-b``)."""
+    if isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Add, ast.Sub)):
+        flip = -sign if isinstance(node.op, ast.Sub) else sign
+        return _terms(node.left, sign) + _terms(node.right, flip)
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.USub):
+        return _terms(node.operand, -sign)
+    if isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Mult, ast.Div)):
+        lt, rt = _terms(node.left), _terms(node.right)
+        if len(rt) == 1 and (isinstance(node.op, ast.Div) or len(lt) > 1):
+            return [(s * rt[0][0] * sign, n) for s, n in lt]
+        if len(lt) == 1 and isinstance(node.op, ast.Mult) and len(rt) > 1:
+            return [(s * lt[0][0] * sign, n) for s, n in rt]
+        return [(sign * lt[0][0] * rt[0][0] if len(lt) == len(rt) == 1 else sign, node)]
+    return [(sign, node)]
+
+
+@dataclass(frozen=True)
+class Update:
+    """One augmented assignment to a stock in the integration code: the stock, its file and lines, and its terms with
+    their signs and the names each uses (local aliases expanded)."""
+
+    stock: str
+    path: Path
+    first: int
+    last: int
+    terms: tuple[tuple[int, frozenset[str]], ...]
+
+
+def stock_updates(root: Path = ROOT) -> list[Update]:
+    """Every ``st["<stock>"]... += ...`` in ``INTEGRATION``'s functions, with each name a term uses expanded through
+    the function's single-name assignments (``promo_in = promo[u][l]``)."""
+    out = []
+    for path, fn in INTEGRATION.items():
+        tree = ast.parse((root / path).read_text(encoding="utf-8"))
+        func = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == fn)
+        alias: dict[str, set[str]] = {}
+        for n in ast.walk(func):
+            if isinstance(n, ast.Assign) and len(n.targets) == 1 and isinstance(n.targets[0], ast.Name):
+                alias[n.targets[0].id] = _named(n.value)
+        for n in ast.walk(func):
+            if not (isinstance(n, ast.AugAssign) and isinstance(n.op, ast.Add)):
+                continue
+            base: ast.expr = n.target
+            while isinstance(base, ast.Subscript) and not (isinstance(base.value, ast.Name) and base.value.id == "st"):
+                base = base.value
+            if not (isinstance(base, ast.Subscript) and isinstance(base.slice, ast.Constant)):
+                continue
+            terms = []
+            for s, t in _terms(n.value):
+                names = _named(t)
+                names |= {x for a in names & alias.keys() for x in alias[a]}
+                terms.append((s, frozenset(names)))
+            out.append(Update(str(base.slice.value), path, n.lineno, n.end_lineno or n.lineno, tuple(terms)))
+    return out
+
+
+def _line_names(text: str) -> set[str]:
+    """The non-keyword names and the string constants of one line of code."""
+    out: set[str] = set()
+    for tok in tokenize.generate_tokens(iter([text + "\n"]).__next__):
+        if tok.type == tokenize.NAME and not keyword.iskeyword(tok.string):
+            out.add(tok.string)
+        elif tok.type == tokenize.STRING:
+            out.add(ast.literal_eval(tok.string))
+    return out
+
+
+def cite_problems(root: Path, src: Sources) -> list[str]:
+    """Cites that do not show their flow at work: each cite's lines must name the flow's identifier (``code_name``),
+    one of them must lie in an update of the cited stock, and the flow's term there must carry the table's direction
+    (added for ``to``, subtracted for ``from`` and ``also_drains``; either for a flow within one stock). A goal-seeking
+    or coflow flow ``flow:<stock>`` is its stock's whole update."""
+    updates = stock_updates(root)
+    lines: dict[str, list[str]] = {}
+    out = []
+    for f, p in pipe_rows(src).items():
+        name = code_name(f)
+        for path, nums, stock in p.cites:
+            if Path(path) not in INTEGRATION:
+                out.append(f"{f}: {path} is not integration code")
+                continue
+            text = lines.setdefault(path, (root / path).read_text(encoding="utf-8").split("\n"))
+            if not any(name in _line_names(text[n - 1]) for n in nums if 0 < n <= len(text)):
+                out.append(f"{f}: {path}:{nums} does not name {name!r}")
+            ups = [
+                u
+                for u in updates
+                if u.path == Path(path) and u.stock == stock and any(u.first <= n <= u.last for n in nums)
+            ]
+            if len(ups) != 1:
+                out.append(f"{f}: {path}:{nums} is not in one update of {stock}")
+                continue
+            if f.startswith("flow:"):
+                continue
+            signs = {s for s, names in ups[0].terms if name in names}
+            want = set()
+            if stock in p.sinks:
+                want.add(1)
+            if stock in p.sources or stock in p.drains:
+                want.add(-1)
+            if not signs or not signs <= want:
+                out.append(f"{f}: its term in {stock}'s update at {path}:{ups[0].first} has sign {sorted(signs)}")
+    return out
+
+
+def code_flow_problems(root: Path, src: Sources) -> list[str]:
+    """The table against the integration code, update by update: a stock updated with a ``flow:<stock>`` row is that
+    flow's alone; in every other update each term must name a flow whose row has the stock on the term's side (``to``
+    for an added term, ``from`` or ``also_drains`` for a subtracted one), and every stock a row names must be
+    updated."""
+    rows = pipe_rows(src)
+    by_name: dict[str, list[str]] = collections.defaultdict(list)
+    for f in rows:
+        if not f.startswith("flow:"):
+            by_name[code_name(f)].append(f)
+    out = []
+    updated = set()
+    for u in stock_updates(root):
+        updated.add(u.stock)
+        if f"flow:{u.stock}" in rows:
+            continue
+        for s, names in u.terms:
+            named = [f for n in names for f in by_name.get(n, [])]
+            if not named:
+                out.append(f"{u.stock} at {u.path.as_posix()}:{u.first}: a term that names no flow")
+            for f in named:
+                p = rows[f]
+                ok = u.stock in p.sinks if s > 0 else (u.stock in p.sources or u.stock in p.drains)
+                if not ok:
+                    how = "adds to" if s > 0 else "takes from"
+                    out.append(f"{f}: {how} {u.stock} at {u.path.as_posix()}:{u.first}, not in its row")
+    for f, p in rows.items():
+        for stock in sorted({*p.sources, *p.sinks, *p.drains} - {CLOUD}):
+            if stock not in updated:
+                out.append(f"{f}: {stock} has no update in the integration code")
+    return out
+
+
+def valve_ids(src: Sources) -> dict[str, str]:
+    """Each flow's valve on the map: its own name, or the first flow of its ``WITHIN`` group."""
+    out = {f: f for f in pipe_rows(src)}
+    for vid, (flows, _) in WITHIN.items():
+        out.update(dict.fromkeys(flows, vid))
+    return out
+
+
+def stock_modules(src: Sources) -> dict[str, str]:
+    return {n: r["module"] for (n, k), r in src.docs.items() if k == "stock"}
+
+
+def valve_modules(src: Sources) -> dict[str, str]:
+    """Each valve's module (decision 4): its stocks' module, or for a flow between modules its ``model_docs.csv``
+    module."""
+    mods = stock_modules(src)
+    rows = pipe_rows(src)
+    out = {}
+    for f, vid in valve_ids(src).items():
+        p = rows[f]
+        ms = {mods[s] for s in (*p.sources, *p.sinks) if s != CLOUD}
+        out[vid] = ms.pop() if len(ms) == 1 else src.docs[(f, "flow")]["module"]
+    return out
+
+
+def lever_targets(src: Sources) -> dict[str, dict[str, int]]:
+    """Each lever's targets with their distance in links: the first stocks and flows reached from it through
+    auxiliaries only (``edges.csv``; decision 3). A stock with a goal-seeking or coflow valve is that valve, a flow its
+    valve on the map."""
+    out_edges: dict[tuple[str, str], list[tuple[str, str]]] = collections.defaultdict(list)
+    for e in src.edges:
+        out_edges[(e["source"], e["source_kind"])].append((e["target"], e["target_kind"]))
+    valves = valve_stocks(src)
+    vid = valve_ids(src)
+    out: dict[str, dict[str, int]] = {}
+    for lever in sorted(src.levers):
+        found: dict[str, int] = {}
+        seen: set[tuple[str, str]] = set()
+        frontier = [(lever, "parameter")]
+        hop = 0
+        while frontier:
+            hop += 1
+            nxt = []
+            for node in frontier:
+                for t in out_edges[node]:
+                    if t[1] in ("stock", "flow"):
+                        cid = f"flow:{t[0]}" if t[1] == "stock" and t[0] in valves else t[0]
+                        found.setdefault(vid.get(cid, cid), hop)
+                    elif t[1] == "auxiliary" and t not in seen:
+                        seen.add(t)
+                        nxt.append(t)
+            frontier = sorted(nxt)
+        if not found:
+            raise ValueError(f"lever {lever}: reaches no stock or flow")
+        out[lever] = found
+    return out
+
+
+def target_modules(src: Sources) -> dict[str, str]:
+    """The module of every lever target: a stock's, or its valve's (``valve_modules``)."""
+    return {**stock_modules(src), **valve_modules(src)}
+
+
+def lever_arrows(src: Sources) -> tuple[list[tuple[str, str, str]], dict[str, int]]:
+    """The map's lever arrows as (lever, target cell, label) and each wide lever's count in its own module (operator
+    rulings, slice 10e): a lever with at most ``WIDE`` targets points at each; a wider one has one arrow to each other
+    module's region, labelled "<lever>, <count>", and its own module's count on its label."""
+    mods = target_modules(src)
+    own_mod = {n: r["module"] for (n, k), r in src.docs.items() if k == "parameter"}
+    arrows: list[tuple[str, str, str]] = []
+    own: dict[str, int] = {}
+    for lever, targets in lever_targets(src).items():
+        if len(targets) <= WIDE:
+            arrows += [(lever, t, "") for t in sorted(targets)]
+            continue
+        counts = collections.Counter(mods[t] for t in targets)
+        for m, n in sorted(counts.items()):
+            if m == own_mod[lever]:
+                own[lever] = n
+            else:
+                arrows.append((lever, f"region:{m}", f"{lever}, {n}"))
+    return arrows, own
+
+
+def own_note(n: int) -> str:
+    return f"(acts on {n} in this module)"
+
+
+def model_map(src: Sources, view: str) -> View:
+    """The whole model on one page (slice 10e): each module a tinted region holding its stocks, valves, clouds and
+    levers; pipes from ``tools/flow_pipes.csv``; lever arrows by ``lever_arrows``. No auxiliaries, no other parameters
+    and no information links."""
+    mods = {m["module"]: m for m in src.modules}
+    smod = stock_modules(src)
+    vmod = valve_modules(src)
+    rows = pipe_rows(src)
+    vid = valve_ids(src)
+    arrows, own = lever_arrows(src)
+    cells: list[Cell] = [
+        Cell(f"region:{m}", r["display_name"], region_style(r["colour"]), "region", ()) for m, r in mods.items()
+    ]
+    for s in sorted(smod):
+        lab = wrap(src.docs[(s, "stock")]["label"], hyphens=False)
+        cells.append(Cell(s, lab, node_style("stock", mods[smod[s]]["colour"]), "node", (s,)))
+    for v in sorted(set(vid.values())):
+        flows = WITHIN[v][0] if v in WITHIN else (v,)
+        lab = WITHIN[v][1] if v in WITHIN else wrap(src.docs[(v, "flow")]["label"], hyphens=False)
+        cells.append(Cell(v, lab, valve_style(mods[vmod[v]]["colour"]), "valve", flows))
+    for f, p in rows.items():
+        if CLOUD in (*p.sources, *p.sinks):
+            cells.append(Cell(f"cloud:{f}", "", CLOUD_STYLE, "cloud", (f,)))
+    for lever in sorted(src.levers):
+        r = src.docs[(lever, "parameter")]
+        label = r["label"] + (f" {own_note(own[lever])}" if lever in own else "")
+        cells.append(Cell(lever, wrap(label, hyphens=False), node_style("parameter", ""), "node", (lever,)))
+    links: list[Link] = []
+    for f, p in rows.items():
+        v = vid[f]
+        if p.within:
+            if f == v:
+                links.append(Link(v, p.sources[0], "", ATTACH_STYLE))
+        else:
+            links += [Link(f"cloud:{f}" if s == CLOUD else s, v, "", PIPE_IN_STYLE) for s in p.sources]
+            links += [Link(v, f"cloud:{f}" if s == CLOUD else s, "", PIPE_STYLE) for s in p.sinks]
+        links += [Link(v, s, "", DRAIN_STYLE) for s in p.drains]
+    links += [Link(a, b, lab, REGION_ARROW_STYLE if lab else LEVER_STYLE) for a, b, lab in arrows]
+    legend = [line for text in MAP_LEGEND for line in textwrap.wrap(text, MAP_WRAP)]
+    captions = ["\n".join(textwrap.wrap(c, MAP_WRAP)) for c in MAP_CAPTIONS]
+    cells += [
+        Cell("title", MAP_TITLE, MAP_TITLE_STYLE, "title"),
+        Cell("legend", "\n".join(legend), MAP_LEGEND_STYLE, "legend"),
+        *(Cell(f"caption:{i}", c, MAP_CAPTION_STYLE, "caption") for i, c in enumerate(captions, start=1)),
+    ]
+    return View(view, "map", tuple(cells), tuple(links), homes=map_homes(src))
+
+
+def region_style(colour: str) -> str:
+    return (
+        BASE + f"rounded=1;arcSize=3;fillColor={tint(colour, 0.12)};strokeColor={colour};strokeWidth=2;"
+        "verticalAlign=top;align=left;spacingLeft=10;spacingTop=4;fontSize=16;fontStyle=1;fontColor=#1A1A1A;"
+    )
+
+
 def build_views(root: Path = ROOT, src: Sources | None = None) -> dict[str, View]:
     src = read_sources(root) if src is None else src
     out = {"overview": overview(src)}
     out.update({v: panel(src, v) for v in PANEL_VIEWS})
     out.update({v: article(src, v) for v in ARTICLE_VIEWS})
     out.update({v: module_page(src, v) for v in MODULE_VIEWS})
+    out.update({v: model_map(src, v) for v in MAP_VIEWS})
     return out
 
 
@@ -1092,8 +1539,20 @@ def _num(v: float) -> str:
     return str(_round(v))
 
 
+def _font(style: str) -> float:
+    """A style's font size in px (draw.io takes its last ``fontSize``)."""
+    found = re.findall(r"fontSize=([0-9.]+);", style)
+    return float(found[-1]) if found else 12.0
+
+
 def cell_size(c: Cell) -> tuple[float, float]:
     """The box a cell's label needs."""
+    if c.kind == "cloud":
+        return CLOUD_W, CLOUD_H
+    if c.kind == "region":
+        return text_size(c.label, _font(c.style), True)
+    if c.kind in ("title", "legend", "caption") and c.style in (MAP_TITLE_STYLE, MAP_LEGEND_STYLE, MAP_CAPTION_STYLE):
+        return text_size(c.label, _font(c.style), c.kind == "title")
     if c.kind == "loop":
         w, h = text_size(c.label, 12, True)
         return max(math.ceil(w * 1.2), h, 52.0), max(math.ceil(h * 1.15), 52.0)
@@ -1120,8 +1579,9 @@ def edge_id(lk: Link) -> str:
 
 
 def orphans(view: View, geom: Mapping[str, Sequence[float]]) -> list[str]:
-    """Sidecar ids that are neither a cell nor a link of the view (a link's entry places its sign label)."""
-    ids = {c.id for c in view.cells} | {edge_id(lk) for lk in view.links}
+    """Sidecar ids that are neither a cell nor a link of the view (a link's entry places its sign label, its ``w:``
+    entry its bends)."""
+    ids = {c.id for c in view.cells} | {edge_id(lk) for lk in view.links} | {waypoint_id(lk) for lk in view.links}
     return sorted(k for k in geom if k not in ids)
 
 
@@ -1147,7 +1607,7 @@ def place_free(view: View, geom: Geometry, ids: Sequence[str]) -> Geometry:
 
 def view_geometry(root: Path, view: View) -> Geometry:
     """The sidecar's positions for the view's cells, with any unplaced cell in the free column."""
-    ids = {c.id for c in view.cells} | {edge_id(lk) for lk in view.links}
+    ids = {c.id for c in view.cells} | {edge_id(lk) for lk in view.links} | {waypoint_id(lk) for lk in view.links}
     geom = {k: v for k, v in read_sidecar(root, view.name).items() if k in ids}
     return place_free(view, geom, unplaced(view, geom))
 
@@ -1232,6 +1692,8 @@ def spring(nodes: Sequence[str], edges: Iterable[tuple[str, str]], seed: int = 7
 
 def first_layout(view: View) -> Geometry:
     """A first layout of every cell of a view (decision 6)."""
+    if view.kind == "map":
+        return map_first_layout(view)
     nodes = [c for c in view.cells if c.kind in ("node", "valve", "ghost", "ref")]
     ids = [c.id for c in nodes]
     edges = [(lk.source, lk.target) for lk in view.links]
@@ -1278,6 +1740,95 @@ def first_layout(view: View) -> Geometry:
     return {k: [float(_round(x)) for x in v] for k, v in geom.items()}
 
 
+MAP_ROWS: Final = (
+    ("capability", "adoption", "consumer", "work"),
+    ("workforce", "labour_market", "sourcing", "finance"),
+)
+"""The first layout's module grid (slice 10e). No pipe crosses modules, so the modules sit where the lever arrows
+between them stay short: capability beside adoption, consumer and work; workforce beside the labour market; finance
+beside sourcing."""
+
+
+def _components(nodes: Sequence[str], edges: Iterable[tuple[str, str]]) -> list[list[str]]:
+    """The connected groups of ``nodes`` (sorted, largest first)."""
+    parent = {n: n for n in nodes}
+
+    def find(n: str) -> str:
+        while parent[n] != n:
+            n = parent[n]
+        return n
+
+    for a, b in edges:
+        if a in parent and b in parent:
+            parent[find(a)] = find(b)
+    groups: dict[str, list[str]] = collections.defaultdict(list)
+    for n in sorted(nodes):
+        groups[find(n)].append(n)
+    return sorted(groups.values(), key=lambda g: (-len(g), g[0]))
+
+
+def map_first_layout(view: View) -> Geometry:
+    """The map's first layout: in each module its levers in a column on the left, then each connected group of stocks,
+    valves and clouds laid left to right along its pipes (``layered``), the groups stacked; each region around its
+    nodes, the regions on ``MAP_ROWS``."""
+    cells = {c.id: c for c in view.cells}
+    flows = [(lk.source, lk.target) for lk in view.links if lk.style in (*PIPE_STYLES, DRAIN_STYLE)]
+    members: dict[str, list[str]] = collections.defaultdict(list)
+    for cid, m in sorted(view.homes.items()):
+        members[m].append(cid)
+    local: dict[str, Geometry] = {}
+    size: dict[str, tuple[float, float]] = {}
+    for m, ids in members.items():
+        geom: Geometry = {}
+        levers = [i for i in ids if cells[i].kind == "node" and "fontStyle=2" in cells[i].style]
+        y = REGION_HEAD + REGION_PAD
+        for i in levers:
+            w, h = cell_size(cells[i])
+            geom[i] = [REGION_PAD, y, w, h]
+            y += h + 14
+        x0 = REGION_PAD + (max((geom[i][2] for i in levers), default=0.0) + 40 if levers else 0.0)
+        cy = REGION_HEAD + REGION_PAD
+        rest = [i for i in ids if i not in levers]
+        for comp in _components(rest, flows):
+            lo = layered(comp, [e for e in flows if e[0] in comp and e[1] in comp])
+            sz = {i: cell_size(cells[i]) for i in comp}
+            nl = max(la for la, _ in lo.values()) + 1
+            no = max(o for _, o in lo.values()) + 1
+            col_w = [max((sz[i][0] for i in comp if lo[i][0] == k), default=0.0) for k in range(nl)]
+            row_h = [max((sz[i][1] for i in comp if lo[i][1] == k), default=0.0) for k in range(no)]
+            xs = [x0 + sum(col_w[:k]) + 36 * k for k in range(nl)]
+            ys = [cy + sum(row_h[:k]) + 18 * k for k in range(no)]
+            for i in comp:
+                la, o = lo[i]
+                w, h = sz[i]
+                geom[i] = [xs[la] + (col_w[la] - w) / 2, ys[o] + (row_h[o] - h) / 2, w, h]
+            cy = ys[-1] + row_h[-1] + 30
+        _, _, x1, y1 = bbox(geom.values())
+        local[m] = geom
+        size[m] = (x1 + REGION_PAD, max(y1, cy - 30) + REGION_PAD)
+    out: Geometry = {}
+    top = 80.0
+    for row in MAP_ROWS:
+        x = 40.0
+        for m in row:
+            w, h = size[m]
+            out[f"region:{m}"] = [x, top, w, h]
+            for i, (bx, by, bw, bh) in local[m].items():
+                out[i] = [x + bx, top + by, bw, bh]
+            x += w + 30
+        top += max(size[m][1] for m in row) + 30
+    x0, y0, _, y1 = bbox(out.values())
+    w, h = cell_size(cells["title"])
+    out["title"] = [x0, y0 - h - 20, w, h]
+    y = y1 + 30
+    for c in view.cells:
+        if c.kind in ("legend", "caption"):
+            w, h = cell_size(c)
+            out[c.id] = [x0, y, w, h]
+            y += h + 10
+    return {k: [float(_round(x)) for x in v] for k, v in out.items()}
+
+
 def layout(root: Path, name: str, view: View) -> tuple[list[str], list[str]]:
     """Store a first layout for the cells of a view with no position; returns (placed, orphans)."""
     geom = read_sidecar(root, name)
@@ -1301,6 +1852,8 @@ def _offset(geom: Mapping[str, Sequence[float]], a: str, b: str, d: float = 16.0
 
 
 KIND_RANK: Final = {
+    "region": -1,
+    "cloud": 0,
     "node": 0,
     "valve": 0,
     "ghost": 0,
@@ -1313,8 +1866,19 @@ KIND_RANK: Final = {
 }
 
 
+def _vertex(root: ET.Element, cell: Cell, geom: Mapping[str, Sequence[float]]) -> None:
+    c = ET.SubElement(
+        root, "mxCell", {"id": cell.id, "value": cell.label, "style": cell.style, "vertex": "1", "parent": "1"}
+    )
+    x, y, w, h = geom[cell.id]
+    if cell.kind == "valve":  # the shape at the top of its box, the label drawn below it
+        x, y, w, h = x + w / 2 - VALVE_W / 2, y, VALVE_W, VALVE_H
+    ET.SubElement(c, "mxGeometry", {"x": _num(x), "y": _num(y), "width": _num(w), "height": _num(h), "as": "geometry"})
+
+
 def render(view: View, geom: Mapping[str, Sequence[float]]) -> bytes:
-    """The ``.drawio`` XML of a view: fixed element and attribute order, sorted cells, numbers to 0.1, LF."""
+    """The ``.drawio`` XML of a view: fixed element and attribute order, sorted cells, numbers to 0.1, LF. Module
+    regions (the model map) come before the edges, so that every arrow draws above them; the other vertices after."""
     _x0, _y0, x1, y1 = bbox(geom[c.id] for c in view.cells)
     mxfile = ET.Element("mxfile", {"host": "aisim", "type": "device"})
     diagram = ET.SubElement(mxfile, "diagram", {"id": view.name, "name": view.name})
@@ -1334,7 +1898,8 @@ def render(view: View, geom: Mapping[str, Sequence[float]]) -> bytes:
     root = ET.SubElement(model, "root")
     ET.SubElement(root, "mxCell", {"id": "0"})
     ET.SubElement(root, "mxCell", {"id": "1", "parent": "0"})
-    pairs = {(lk.source, lk.target) for lk in view.links}
+    for cell in sorted((c for c in view.cells if c.kind == "region"), key=lambda c: c.id):
+        _vertex(root, cell, geom)
     for lk in sorted(view.links, key=lambda x: (x.source, x.target)):
         c = ET.SubElement(
             root,
@@ -1352,20 +1917,13 @@ def render(view: View, geom: Mapping[str, Sequence[float]]) -> bytes:
         label_at = geom.get(edge_id(lk))
         attrs = {"x": _num(label_at[0]), "y": _num(label_at[1])} if label_at else {}
         g = ET.SubElement(c, "mxGeometry", {**attrs, "relative": "1", "as": "geometry"})
-        if (lk.target, lk.source) in pairs:
+        bends = waypoints(view, geom, lk)
+        if bends:
             arr = ET.SubElement(g, "Array", {"as": "points"})
-            px, py = _offset(geom, lk.source, lk.target)
-            ET.SubElement(arr, "mxPoint", {"x": _num(px), "y": _num(py)})
-    for cell in sorted(view.cells, key=lambda c: (KIND_RANK[c.kind], c.id)):
-        c = ET.SubElement(
-            root, "mxCell", {"id": cell.id, "value": cell.label, "style": cell.style, "vertex": "1", "parent": "1"}
-        )
-        x, y, w, h = geom[cell.id]
-        if cell.kind == "valve":  # the shape at the top of its box, the label drawn below it
-            x, y, w, h = x + w / 2 - VALVE_W / 2, y, VALVE_W, VALVE_H
-        ET.SubElement(
-            c, "mxGeometry", {"x": _num(x), "y": _num(y), "width": _num(w), "height": _num(h), "as": "geometry"}
-        )
+            for px, py in bends:
+                ET.SubElement(arr, "mxPoint", {"x": _num(px), "y": _num(py)})
+    for cell in sorted((c for c in view.cells if c.kind != "region"), key=lambda c: (KIND_RANK[c.kind], c.id)):
+        _vertex(root, cell, geom)
     ET.indent(mxfile, "  ")
     return bytes(ET.tostring(mxfile, encoding="utf-8", xml_declaration=False)) + b"\n"
 
@@ -1462,9 +2020,16 @@ def boxes_overlap(a: Sequence[float], b: Sequence[float], gap: float = 0.0) -> b
 
 
 def overlaps(view: View, geom: Mapping[str, Sequence[float]]) -> list[tuple[str, str]]:
-    """Pairs of cells whose boxes overlap: nodes, loop labels, limit markers, the title, legend and captions."""
+    """Pairs of cells whose boxes overlap: nodes, loop labels, limit markers, the title, legend and captions. A module
+    region (the model map) holds its nodes, so only region against region counts for it."""
     ids = sorted(c.id for c in view.cells)
-    return [(a, b) for i, a in enumerate(ids) for b in ids[i + 1 :] if boxes_overlap(geom[a], geom[b])]
+    region = {c.id for c in view.cells if c.kind == "region"}
+    return [
+        (a, b)
+        for i, a in enumerate(ids)
+        for b in ids[i + 1 :]
+        if (a in region) == (b in region) and boxes_overlap(geom[a], geom[b])
+    ]
 
 
 def too_small(view: View, geom: Mapping[str, Sequence[float]]) -> list[str]:
@@ -1503,21 +2068,38 @@ def _exit(box: Sequence[float], towards: tuple[float, float]) -> tuple[float, fl
     return cx + t * dx, cy + t * dy
 
 
+def waypoint_id(lk: Link) -> str:
+    return f"w:{lk.source}>{lk.target}"
+
+
+def waypoints(view: View, geom: Mapping[str, Sequence[float]], lk: Link) -> list[tuple[float, float]]:
+    """A link's bends: the sidecar's ``w:<source>><target>`` points, x and y in turn (slice 10e), else the offset
+    point of a two-way pair, else none."""
+    w = geom.get(waypoint_id(lk))
+    if w:
+        return [(w[i], w[i + 1]) for i in range(0, len(w) - 1, 2)]
+    if any(o.source == lk.target and o.target == lk.source for o in view.links):
+        return [_offset(geom, lk.source, lk.target)]
+    return []
+
+
 def link_paths(view: View, geom: Mapping[str, Sequence[float]]) -> dict[str, list[tuple[float, float]]]:
-    """Each link's drawn path: from the source box's edge through any two-way waypoint to the target box's edge."""
-    pairs = {(lk.source, lk.target) for lk in view.links}
+    """Each link's drawn path: from the source box's edge through its waypoints (``waypoints``) to the target box's
+    edge."""
     out = {}
     for lk in view.links:
         a, b = geom[lk.source], geom[lk.target]
         ca, cb = (a[0] + a[2] / 2, a[1] + a[3] / 2), (b[0] + b[2] / 2, b[1] + b[3] / 2)
-        mid = [_offset(geom, lk.source, lk.target)] if (lk.target, lk.source) in pairs else []
+        mid = waypoints(view, geom, lk)
         out[edge_id(lk)] = [_exit(a, (mid or [cb])[0]), *mid, _exit(b, (mid or [ca])[-1])]
     return out
 
 
 def sign_label_points(view: View, geom: Mapping[str, Sequence[float]]) -> dict[str, tuple[float, float]]:
     """Each link's sign label position: draw.io's relative position along the link (the sidecar's ``e:`` entry, else
-    the middle), on its drawn path (``link_paths``), moved by the entry's offset at right angles to the path."""
+    the middle), on its drawn path (``link_paths``), moved by the entry's offset at right angles to the path, to the
+    left of the direction of travel for a positive offset, as draw.io draws it (measured on its SVG, slice 10e; no
+    view before the model map uses an offset)."""
     out = {}
     for eid, path in link_paths(view, geom).items():
         lens = [math.dist(p, q) for p, q in itertools.pairwise(path)]
@@ -1526,7 +2108,7 @@ def sign_label_points(view: View, geom: Mapping[str, Sequence[float]]) -> dict[s
         for (p, q), ln in zip(itertools.pairwise(path), lens, strict=True):
             if goal <= ln or q == path[-1]:
                 f = goal / ln if ln else 0.0
-                nx, ny = (-(q[1] - p[1]) / ln, (q[0] - p[0]) / ln) if ln else (0.0, 0.0)
+                nx, ny = ((q[1] - p[1]) / ln, -(q[0] - p[0]) / ln) if ln else (0.0, 0.0)
                 out[eid] = (p[0] + f * (q[0] - p[0]) + at[1] * nx, p[1] + f * (q[1] - p[1]) + at[1] * ny)
                 break
             goal -= ln
@@ -1619,7 +2201,7 @@ def through_boxes(view: View, geom: Mapping[str, Sequence[float]]) -> list[tuple
     for lk in view.links:
         p = _segment(geom, lk.source, lk.target)
         for c in view.cells:
-            if c.id in (lk.source, lk.target):
+            if c.id in (lk.source, lk.target) or c.kind == "region":
                 continue
             x, y, w, h = geom[c.id]
             x, y, w, h = x + 2, y + 2, w - 4, h - 4
@@ -1635,12 +2217,9 @@ def through_boxes(view: View, geom: Mapping[str, Sequence[float]]) -> list[tuple
 
 
 def min_font_px(view: View) -> float:
-    """The smallest label font of a view's cells in px (draw.io takes a style's last ``fontSize``)."""
-    sizes = []
-    for c in view.cells:
-        found = [float(x) for x in re.findall(r"fontSize=([0-9.]+);", c.style)]
-        sizes.append(found[-1] if found else 12.0)
-    return min(sizes)
+    """The smallest label font of a view's cells and labelled links in px (draw.io takes a style's last
+    ``fontSize``)."""
+    return min(_font(s) for s in (*(c.style for c in view.cells), *(lk.style for lk in view.links if lk.label)))
 
 
 # ---- module page checks, on the committed .drawio files (slice 10c) -------------------------------------------------
@@ -1737,6 +2316,246 @@ def valve_problems(src: Sources, cells: Sequence[DrawnCell]) -> list[str]:
             if s not in valves or cell_id((s, "stock"), clashes) not in vertices:
                 out.append(f"{cid}: a valve without its stock on this page")
     return out
+
+
+# ---- map checks, on the committed .drawio file and sidecar (slice 10e) ----------------------------------------------
+
+
+def map_contents_problems(src: Sources, cells: Sequence[DrawnCell]) -> list[str]:
+    """The map's vertices against the model: every stock, valve and lever exactly once, the clouds the pipe table
+    implies and the eight regions, and nothing else besides the title, legend and captions."""
+    want = {
+        *stock_modules(src),
+        *valve_ids(src).values(),
+        *src.levers,
+        *(f"cloud:{f}" for f, p in pipe_rows(src).items() if CLOUD in (*p.sources, *p.sinks)),
+        *(f"region:{m['module']}" for m in src.modules),
+    }
+    got = collections.Counter(c.id for c in cells if not c.edge and not CHROME_IDS.match(c.id))
+    out = [f"{k}: drawn {got[k]} times" for k in sorted(want) if got[k] != 1]
+    out += [f"{k}: not a stock, valve, lever, cloud or region" for k in sorted(got) if k not in want]
+    return out
+
+
+MAP_LINK_KINDS: Final = {
+    PIPE_IN_STYLE: "pipe-in",
+    PIPE_STYLE: "pipe-out",
+    ATTACH_STYLE: "attach",
+    DRAIN_STYLE: "drain",
+    LEVER_STYLE: "lever",
+    REGION_ARROW_STYLE: "region",
+}
+
+
+def map_link_kinds(cells: Sequence[DrawnCell]) -> dict[str, set[tuple[str, str]]]:
+    """The map's edges by kind, from their styles (``other`` for an unknown style)."""
+    out: dict[str, set[tuple[str, str]]] = {k: set() for k in (*MAP_LINK_KINDS.values(), "other")}
+    for c in cells:
+        if c.edge:
+            out[MAP_LINK_KINDS.get(c.style, "other")].add((c.source, c.target))
+    return out
+
+
+def pipe_problems(src: Sources, cells: Sequence[DrawnCell]) -> list[str]:
+    """The map's pipes, attachments and drain arrows against ``tools/flow_pipes.csv`` (operator rulings): a pipe from
+    each source (or the flow's cloud) into its valve and from the valve to each sink; one attachment from a
+    within-Headcount valve to its stock, with no pipe; a thin arrow from the valve to each stock it also drains."""
+    vid = valve_ids(src)
+    want: dict[str, set[tuple[str, str]]] = {k: set() for k in ("pipe-in", "pipe-out", "attach", "drain")}
+    for f, p in pipe_rows(src).items():
+        v = vid[f]
+        if p.within:
+            want["attach"].add((v, p.sources[0]))
+        else:
+            want["pipe-in"] |= {(f"cloud:{f}" if s == CLOUD else s, v) for s in p.sources}
+            want["pipe-out"] |= {(v, f"cloud:{f}" if s == CLOUD else s) for s in p.sinks}
+        want["drain"] |= {(v, s) for s in p.drains}
+    got = map_link_kinds(cells)
+    out = []
+    for k, pairs in want.items():
+        out += [f"{k} {a} -> {b}: missing" for a, b in sorted(pairs - got[k])]
+        out += [f"{k} {a} -> {b}: not in the pipe table" for a, b in sorted(got[k] - pairs)]
+    out += [f"{a} -> {b}: an edge of no known kind" for a, b in sorted(got["other"])]
+    return out
+
+
+def lever_arrow_problems(src: Sources, cells: Sequence[DrawnCell]) -> list[str]:
+    """The map's lever arrows against ``lever_arrows``: each narrow lever's arrow to each target, each wide lever's
+    labelled arrow to each other module's region, and its own-module count on its label (operator rulings)."""
+    arrows, own = lever_arrows(src)
+    got = map_link_kinds(cells)
+    labels = {(c.source, c.target): c.value for c in cells if c.edge}
+    out = [f"lever {a} -> {b}: missing" for a, b, lab in arrows if not lab and (a, b) not in got["lever"]]
+    out += [
+        f"region arrow {a} -> {b} {lab!r}: missing or labelled {labels.get((a, b))!r}"
+        for a, b, lab in arrows
+        if lab and ((a, b) not in got["region"] or labels.get((a, b)) != lab)
+    ]
+    narrow = {(a, b) for a, b, lab in arrows if not lab}
+    wide = {(a, b) for a, b, lab in arrows if lab}
+    out += [f"lever {a} -> {b}: not a target" for a, b in sorted(got["lever"] - narrow)]
+    out += [f"region arrow {a} -> {b}: not a module the lever reaches" for a, b in sorted(got["region"] - wide)]
+    text = {c.id: c.value.replace("\n", " ") for c in cells if not c.edge}
+    for lever in sorted(src.levers):
+        found = [int(n) for n in re.findall(r"\(acts on (\d+) in this module\)", text.get(lever, ""))]
+        if found != ([own[lever]] if lever in own else []):
+            out.append(f"{lever}: label counts {found}, own-module targets {own.get(lever, 0)}")
+    return out
+
+
+def map_homes(src: Sources) -> dict[str, str]:
+    """The module whose region holds each map node: a stock's, a valve's (``valve_modules``), a cloud's valve's and a
+    lever's own (decision 4)."""
+    vmod = valve_modules(src)
+    vid = valve_ids(src)
+    home = {**stock_modules(src), **vmod}
+    home.update({f"cloud:{f}": vmod[vid[f]] for f, p in pipe_rows(src).items() if CLOUD in (*p.sources, *p.sinks)})
+    home.update({lever: src.docs[(lever, "parameter")]["module"] for lever in src.levers})
+    return home
+
+
+def region_problems(src: Sources, view: View, geom: Mapping[str, Sequence[float]]) -> list[str]:
+    """Nodes not wholly inside their module's region, and regions that overlap."""
+    home = map_homes(src)
+    out = []
+    for c in view.cells:
+        if c.id not in home:
+            continue
+        x, y, w, h = geom[c.id][:4]
+        rx, ry, rw, rh = geom[f"region:{home[c.id]}"][:4]
+        if not (rx <= x and ry <= y and x + w <= rx + rw and y + h <= ry + rh):
+            out.append(f"{c.id}: outside region:{home[c.id]}")
+    regions = sorted(c.id for c in view.cells if c.kind == "region")
+    out += [f"{a} overlaps {b}" for a, b in itertools.combinations(regions, 2) if boxes_overlap(geom[a], geom[b])]
+    return out
+
+
+def drawn_through_boxes(view: View, geom: Mapping[str, Sequence[float]], inset: float = 2.0) -> list[tuple[str, str]]:
+    """(link, cell) pairs where a link's drawn path (``link_paths``, with its waypoints) passes through a box it does
+    not connect, each box shrunk by ``inset`` px as in ``through_boxes`` (slice 10e). Module regions are skipped: they
+    hold the arrows."""
+    paths = link_paths(view, geom)
+    out = []
+    for lk in view.links:
+        path = paths[edge_id(lk)]
+        for c in view.cells:
+            if c.id in (lk.source, lk.target) or c.kind == "region":
+                continue
+            x, y, w, h = geom[c.id][:4]
+            x, y, w, h = x + inset, y + inset, w - 2 * inset, h - 2 * inset
+            sides = ((x, y, x + w, y), (x + w, y, x + w, y + h), (x, y + h, x + w, y + h), (x, y, x, y + h))
+            inside = any(x < p[0] < x + w and y < p[1] < y + h for p in path)
+            if inside or any(_cross((*a, *b), s) for a, b in itertools.pairwise(path) for s in sides):
+                out.append((edge_id(lk), c.id))
+    return out
+
+
+PIPE_STYLES: Final = (PIPE_STYLE, PIPE_IN_STYLE, ATTACH_STYLE)
+LEVER_STYLES: Final = (LEVER_STYLE, REGION_ARROW_STYLE)
+
+
+def _samples(path: Sequence[tuple[float, float]], step: float) -> list[tuple[float, float, float, float]]:
+    """Points about ``step`` px apart along a drawn path, each with its segment's unit direction."""
+    out = []
+    for a, b in itertools.pairwise(path):
+        ln = math.dist(a, b)
+        if ln == 0:
+            continue
+        ux, uy = (b[0] - a[0]) / ln, (b[1] - a[1]) / ln
+        n = max(1, math.ceil(ln / step))
+        out += [(a[0] + (b[0] - a[0]) * i / n, a[1] + (b[1] - a[1]) * i / n, ux, uy) for i in range(n + 1)]
+    return out
+
+
+def runs_along(
+    view: View, geom: Mapping[str, Sequence[float]], tol: float = 3.0, run: float = 20.0, step: float = 2.0
+) -> list[str]:
+    """Lever arrows that run along a pipe: ``run`` px or more of the arrow's drawn path within ``tol`` px of a pipe
+    segment and nearly parallel to it. Crossing a pipe is allowed (slice 10e)."""
+    paths = link_paths(view, geom)
+    pipes = [list(itertools.pairwise(paths[edge_id(lk)])) for lk in view.links if lk.style in PIPE_STYLES]
+    out = []
+    for lk in view.links:
+        if lk.style not in LEVER_STYLES:
+            continue
+        for segs in pipes:
+            length = 0.0
+            for x, y, ux, uy in _samples(paths[edge_id(lk)], step):
+                along = any(
+                    math.dist(a, b) > 0
+                    and _point_segment((x, y), a, b) < tol
+                    and abs(ux * (b[0] - a[0]) + uy * (b[1] - a[1])) / math.dist(a, b) > 0.97
+                    for a, b in segs
+                )
+                length = length + step if along else 0.0
+                if length >= run:
+                    break
+            if length >= run:
+                out.append(f"{edge_id(lk)} runs along a pipe")
+                break
+    return out
+
+
+def pipe_crossings(view: View, geom: Mapping[str, Sequence[float]]) -> list[tuple[str, str]]:
+    """Pairs of pipes whose drawn paths cross (pipes that share no cell)."""
+    paths = link_paths(view, geom)
+    pipes = [lk for lk in view.links if lk.style in PIPE_STYLES]
+    return [
+        (edge_id(a), edge_id(b))
+        for a, b in itertools.combinations(pipes, 2)
+        if not {a.source, a.target} & {b.source, b.target}
+        and any(
+            _cross((*p, *q), (*r, *s))
+            for p, q in itertools.pairwise(paths[edge_id(a)])
+            for r, s in itertools.pairwise(paths[edge_id(b)])
+        )
+    ]
+
+
+def label_boxes(view: View, geom: Mapping[str, Sequence[float]]) -> dict[str, list[float]]:
+    """Each labelled link's label box: its text's size (``text_size`` at the link's font, less the padding draw.io
+    does not draw) centred on its label point (``sign_label_points``)."""
+    fonts = {edge_id(lk): (lk.label, _font(lk.style)) for lk in view.links if lk.label}
+    out = {}
+    for e, (x, y) in sign_label_points(view, geom).items():
+        if e in fonts:
+            w, h = text_size(fonts[e][0], fonts[e][1])
+            w, h = w - 12, h - 8
+            out[e] = [x - w / 2, y - h / 2, w, h]
+    return out
+
+
+def map_label_problems(view: View, geom: Mapping[str, Sequence[float]]) -> list[str]:
+    """Region-arrow labels whose text box overlaps another label's or a box (module regions excepted), or hides part
+    of a pipe under its white background (slice 10e). ``labels_crossed`` reports lever arrows through a label."""
+    boxes = sorted(label_boxes(view, geom).items())
+    out = [f"{a} and {b}: labels overlap" for (a, p), (b, q) in itertools.combinations(boxes, 2) if boxes_overlap(p, q)]
+    paths = link_paths(view, geom)
+    pipes = [edge_id(lk) for lk in view.links if lk.style in PIPE_STYLES]
+    for e, p in boxes:
+        out += [f"{e}: label on {c.id}" for c in view.cells if c.kind != "region" and boxes_overlap(p, geom[c.id])]
+        out += [f"{e}: label on the pipe {o}" for o in pipes if _path_meets_box(paths[o], p)]
+    return out
+
+
+def labels_crossed(view: View, geom: Mapping[str, Sequence[float]]) -> list[tuple[str, str]]:
+    """(labelled link, other link) pairs where the other link's drawn path runs through the label's text box: a
+    readability measure for the review, not a gate criterion (slice 10e)."""
+    paths = link_paths(view, geom)
+    return [
+        (e, o)
+        for e, p in sorted(label_boxes(view, geom).items())
+        for o, path in sorted(paths.items())
+        if o != e and _path_meets_box(path, p)
+    ]
+
+
+def _path_meets_box(path: Sequence[tuple[float, float]], box: Sequence[float]) -> bool:
+    """Whether a drawn path enters or crosses a box."""
+    x, y, w, h = box[:4]
+    sides = ((x, y, x + w, y), (x + w, y, x + w, y + h), (x, y + h, x + w, y + h), (x, y, x, y + h))
+    inside = any(x < p[0] < x + w and y < p[1] < y + h for p in path)
+    return inside or any(_cross((*a, *b), s) for a, b in itertools.pairwise(path) for s in sides)
 
 
 # ---- export ---------------------------------------------------------------------------------------------------------

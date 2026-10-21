@@ -2,19 +2,24 @@
  "border": 20,
  "drawio": "29.0.3",
  "guide": {
-  "html": "d5e49e1d3eda1629cd4ed240790d161757951b9d956dabdd09ffae4dd3c4e1b4",
+  "html": "b69c4f25ef6e47c41a4c3d85d910bc7a5c209c4ea27780c41aff21af853ec531",
   "pages": {
-   "dictionary": 42,
-   "errata-title": 64,
-   "module-pages": 12,
-   "panels": 36
+   "dictionary": 43,
+   "errata-title": 65,
+   "model-map": 12,
+   "module-pages": 13,
+   "panels": 37
   },
-  "pdf": "be0055d88fa0109d73b2525b713290f155259f7c1c49dfce6cbf73014de5c1c4"
+  "pdf": "fe3bf051388daabc118dd0071b71c999d945c3f4ebc5fb5b8b22cd7e6f8eabfc"
+ },
+ "map": {
+  "html": "69c3110a6b23ba3c92a0c0e639fbc9cd9f23675827b8aa0606177b70b2d4f342",
+  "pdf": "9f50e6703ba5949533e2a3d2dc24ad5c8b9e4c7022c685a6ff514226c7150481"
  },
  "png_scale": 2,
  "reference": {
-  "html": "023b4e25a7745d84ca7c1910e654ca9143f1f9a2878215748fbe25c412552256",
-  "pdf": "7d39c114d8e6b0bf21188cb268e269c6fb5ba4bf28e543d0e5960210c25ec9dd"
+  "html": "98e24c1fe790a22a41ad76f865e83d99450f94470ca34e2d0b03dd496f9def52",
+  "pdf": "d5716135ff631b0e54633324a214383955cf41c9100853672d4a9d5c74d90083"
  },
  "views": {
   "article-a1": {
@@ -41,6 +46,11 @@
    "png": "cc9c7e84fe6db2aa1ba932d5b8149eee548b16376594db593e2bf078b7dddc9c",
    "source": "cc9c8ce0bcce679c79d98d65cf8061bb4e126e2c560720bd68888f7b973ee6f5",
    "svg": "5c712fc5e6a227002009c7d35c5969ad6b9da8261ccadcaeae8a52c635b02a49"
+  },
+  "model-map": {
+   "png": "558c804a60d8d4795735896bb6af167808cea699bb47361b1966d29873570492",
+   "source": "048030d6312e1c259a2b3bf08bd1e3e488a3980f1bb3df47940d757ddd5acefd",
+   "svg": "713ac5c2171ad80b34df2d103de2e5810d8e3fb10268f2f3bde719c5fe86beae"
   },
   "module-capability-adoption": {
    "png": "d894410d5f09d2044237e8e6d146ec10fb1749c6989055444332770fff785aee",
@@ -78,9 +88,9 @@
    "svg": "e1e63526dc7877c0a9c332e88ad07273c8135b30cab64467cd782b1c76985e7a"
   },
   "module-labour-market-a": {
-   "png": "373e76209d7f4268a9dd5bea50f297782c107ef76e85a38ca432482c24bfc22c",
-   "source": "dc5275a21c5f4c7eb84b3829524c0e544d10cf64dd6915b9b06d7a88c5527f8a",
-   "svg": "5216b9acc786292bcc97a5d80a860d9c00ae13514b855d46e63e95fea7a8f613"
+   "png": "d60af3ccdca0e5cfdd8f8561f6ebceeca6ea2406ada73467aab002913722b85e",
+   "source": "f01e595dd7d8c6a3b768d4378d4e7eff0eab1f2075b6fe75ab351c78bfb7c610",
+   "svg": "87b9388e99787c4f38d59c7dbdee853d2308fb7a81927624fdd7adac96f22375"
   },
   "module-labour-market-b": {
    "png": "ca1291b6e3624653ac8ce1b036f0e22950695c05eb31cfd0da20723c5b56e185",

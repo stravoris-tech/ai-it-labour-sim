@@ -93,6 +93,23 @@ The 31 levers of `docs/model/inventory.csv` (its `lever` column begins with "yes
 
 **Stress-test input (not a lever).** `PriceShock` Price shock (fraction), per vendor, see inventory.csv: phase9 Base 0 for every vendor. `STRESS_SCENARIOS` sets it: 'Fast AI + OIT price shock' sets `PriceShock_OIT` 0.2.
 
+### Where the wide levers act
+
+The model map (`docs/model-map.pdf`) draws a lever that reaches more than 4 stocks and flows with one dashed arrow to each other module it acts on, labelled with its count there, and with "(acts on N in this module)" on its label for its own module. These are their targets: the first stocks and flows each lever reaches through auxiliaries in `docs/model/edges.csv`, by module (`lever_targets` in `tools/model_diagrams.py`). A valve is named by its flow; `flow:<stock>` is a stock's goal-seeking or coflow valve.
+
+| Lever | Targets | Where it acts |
+| --- | --- | --- |
+| `DemandGrowthLate` | 5 | Client demand and consumer AI (2): `flow:SeatsB`, `flow:SpendRatio`; Work and productivity (1): `Demand`; Labour market (2): `Enrol`, `hires` |
+| `g` | 22 | Delivery AI adoption (1): `AdoptE`; Client demand and consumer AI (7): `cons.AdoptC`, `cons.NewApps`, `cons.Retire`, `flow:CostPerc`, `flow:LOB`, `flow:SeatsB`, `flow:SpendRatio`; Work and productivity (4): `Aband`, `Comp`, `flow:ClientP`, `flow:PerceivedP`; Sourcing choice (2): `WS0`, `flow:SrcPerc`; Vendor finance and contracts (8): `VB.Sign`, `flow:Disc`, `flow:ECost`, `flow:NewP`, `flow:Overhead`, `flow:ShareRef`, `flow:VMarg`, `flow:Viab` |
+| `Verif` | 18 | Delivery AI adoption (1): `AdoptE`; Client demand and consumer AI (3): `flow:CostPerc`, `flow:SeatsB`, `flow:SpendRatio`; Work and productivity (4): `Aband`, `Comp`, `flow:ClientP`, `flow:PerceivedP`; Sourcing choice (2): `WS0`, `flow:SrcPerc`; Vendor finance and contracts (8): `VB.Sign`, `flow:Disc`, `flow:ECost`, `flow:NewP`, `flow:Overhead`, `flow:ShareRef`, `flow:VMarg`, `flow:Viab` |
+| `VerifDecline` | 18 | Delivery AI adoption (1): `AdoptE`; Client demand and consumer AI (3): `flow:CostPerc`, `flow:SeatsB`, `flow:SpendRatio`; Work and productivity (4): `Aband`, `Comp`, `flow:ClientP`, `flow:PerceivedP`; Sourcing choice (2): `WS0`, `flow:SrcPerc`; Vendor finance and contracts (8): `VB.Sign`, `flow:Disc`, `flow:ECost`, `flow:NewP`, `flow:Overhead`, `flow:ShareRef`, `flow:VMarg`, `flow:Viab` |
+| `AICostDecline` | 9 | Delivery AI adoption (1): `AdoptE`; Client demand and consumer AI (3): `cons.AdoptC`, `flow:CostPerc`, `flow:SpendRatio`; Sourcing choice (1): `flow:SrcPerc`; Vendor finance and contracts (4): `VB.Sign`, `flow:ECost`, `flow:VMarg`, `flow:Viab` |
+| `AIShockEnd` | 9 | Delivery AI adoption (1): `AdoptE`; Client demand and consumer AI (3): `cons.AdoptC`, `flow:CostPerc`, `flow:SpendRatio`; Sourcing choice (1): `flow:SrcPerc`; Vendor finance and contracts (4): `VB.Sign`, `flow:ECost`, `flow:VMarg`, `flow:Viab` |
+| `AIShockMult` | 9 | Delivery AI adoption (1): `AdoptE`; Client demand and consumer AI (3): `cons.AdoptC`, `flow:CostPerc`, `flow:SpendRatio`; Sourcing choice (1): `flow:SrcPerc`; Vendor finance and contracts (4): `VB.Sign`, `flow:ECost`, `flow:VMarg`, `flow:Viab` |
+| `AIShockStart` | 9 | Delivery AI adoption (1): `AdoptE`; Client demand and consumer AI (3): `cons.AdoptC`, `flow:CostPerc`, `flow:SpendRatio`; Sourcing choice (1): `flow:SrcPerc`; Vendor finance and contracts (4): `VB.Sign`, `flow:ECost`, `flow:VMarg`, `flow:Viab` |
+| `R6Theta` | 5 | Labour market (3): `cancel`, `fl.layoffs`, `fl.openings`; Sourcing choice (2): `flow:C4Hab`, `flow:SrcPerc` |
+| `aL_max` | 5 | Client demand and consumer AI (5): `cons.AdoptC`, `cons.NewApps`, `cons.Retire`, `flow:LOB`, `flow:SpendRatio` |
+
 ## 4. Main outputs
 
 18 outputs from `tools/guide_outputs.csv`, with names, labels and units from `src/aisim/data/model_docs.csv`. A name with a dimension in braces gives every member, labelled as in the specification. Values are phase9 Base: one deterministic run, recorded every step, rounded to 3 significant figures. Shares and rates are in percent. Headcounts are in model units, which are proportions, not national counts: compare changes and shares, not absolute levels (specification 07, "Model units are proportions, not national counts"). Work is in BFY, a unit of IT work: one person-year of 2024 delivery (`src/aisim/scalar/capability.py:77-81`, `src/aisim/scalar/work.py:70`; `tools/model_docs.py:972`). Money is in real USD a year.
@@ -120,6 +137,7 @@ The 31 levers of `docs/model/inventory.csv` (its `lever` column begins with "yes
 
 ## 5. Where to look next
 
+- **Model map:** every stock, flow and lever of the model on one page, grouped by module, with the pipes the integration code fills and drains and each lever's first targets (`docs/model-map.pdf`, `docs/model/diagrams/`).
 - **Module pages:** the stock-and-flow diagram of each of the eight engine modules, on twelve pages, each with its item list (`docs/model/diagrams/`).
 - **Feedback loops:** five causal-loop panels with their polarity, and the loop table (`docs/model-reference.md`, `docs/model/loops.csv`).
 - **Article diagrams:** five small diagrams for readers outside the project, each with its story (`docs/model-reference.md`); they are not in the PDF.

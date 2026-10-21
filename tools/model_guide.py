@@ -10,7 +10,9 @@ data, never edited by hand:
   ``phase9`` Base values measured at every step (dt 1/16) through the public API and rounded to 3 significant
   figures, so that platform floating-point differences cannot change the page;
 - the labels of the dimension values from the specification's dimension table
-  (``reference/prototype/spec/00_model_spec.md``).
+  (``reference/prototype/spec/00_model_spec.md``);
+- the targets of the wide levers (slice 10e) from ``tools/model_diagrams.py``'s ``lever_targets``, the computation
+  the model map draws.
 
 It carries no build date and no commit hash, so two generations are byte-identical. ``tools/model_pdf.py`` prints it
 as ``docs/model-guide.pdf`` and as a section of ``docs/model-reference.pdf``.
@@ -37,6 +39,7 @@ from aisim.scenarios import SCENARIOS, STRESS_SCENARIOS, tornado_levers
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from tools import model_diagrams as DG
 from tools import model_docs as MD
 
 ROOT: Final = Path(__file__).resolve().parent.parent
@@ -406,6 +409,51 @@ def levers_section(root: Path) -> list[str]:
         "",
         *stress,
         "",
+        *wide_levers_section(root),
+    ]
+
+
+WIDE_TITLE: Final = "Where the wide levers act"
+WIDE_HEAD: Final = ("Lever", "Targets", "Where it acts")
+
+
+def wide_levers(root: Path) -> list[tuple[str, int, list[tuple[str, list[str]]]]]:
+    """The levers that reach more than ``DG.WIDE`` stocks and flows, in inventory order: each with its target count
+    and its targets by module (``model_modules.csv`` order), from ``DG.lever_targets`` and ``DG.target_modules``."""
+    src = DG.read_sources(root)
+    targets = DG.lever_targets(src)
+    mods = DG.target_modules(src)
+    out = []
+    for r in lever_rows(root):
+        found = targets[r["name"]]
+        if len(found) <= DG.WIDE:
+            continue
+        by = [(m["module"], sorted(t for t in found if mods[t] == m["module"])) for m in src.modules]
+        out.append((r["name"], len(found), [(m, ts) for m, ts in by if ts]))
+    return out
+
+
+def wide_levers_section(root: Path) -> list[str]:
+    names = {m["module"]: m["display_name"] for m in DG.read_sources(root).modules}
+    rows = [
+        [
+            f"`{name}`",
+            str(n),
+            "; ".join(f"{names[m]} ({len(ts)}): " + ", ".join(f"`{t}`" for t in ts) for m, ts in by),
+        ]
+        for name, n, by in wide_levers(root)
+    ]
+    return [
+        f"### {WIDE_TITLE}",
+        "",
+        f"The model map (`docs/model-map.pdf`) draws a lever that reaches more than {DG.WIDE} stocks and flows with "
+        'one dashed arrow to each other module it acts on, labelled with its count there, and with "(acts on N in this '
+        'module)" on its label for its own module. These are their targets: the first stocks and flows each lever '
+        "reaches through auxiliaries in `docs/model/edges.csv`, by module (`lever_targets` in "
+        "`tools/model_diagrams.py`). A valve is named by its flow; `flow:<stock>` is a stock's goal-seeking or "
+        "coflow valve.",
+        "",
+        *_table(WIDE_HEAD, rows),
     ]
 
 
@@ -462,6 +510,11 @@ def outputs_section(root: Path) -> list[str]:
 
 
 WHERE_NEXT: Final = (
+    (
+        "Model map",
+        "every stock, flow and lever of the model on one page, grouped by module, with the pipes the integration "
+        "code fills and drains and each lever's first targets (`docs/model-map.pdf`, `docs/model/diagrams/`).",
+    ),
     (
         "Module pages",
         "the stock-and-flow diagram of each of the eight engine modules, on twelve pages, each with its item list "
@@ -534,6 +587,39 @@ def lever_problems(md: str, levers: Sequence[str]) -> list[str]:
     names = [m.group(1) for r in section_table(md, SECTIONS[2]) if (m := CODE.match(r[0]))]
     bad = [f"lever {n}: {names.count(n)} rows" for n in levers if names.count(n) != 1]
     return bad + [f"not a lever: {n}" for n in sorted(set(names) - set(levers))]
+
+
+def wide_lever_problems(md: str, root: Path = ROOT) -> list[str]:
+    """The "Where the wide levers act" table against ``DG.lever_targets``: every wide lever once, with its count and
+    exactly its targets, each under its module; no other row."""
+    lines = md.split("\n")
+    start = lines.index(f"### {WIDE_TITLE}")
+    rows = []
+    for ln in lines[start + 1 :]:
+        if ln.startswith("#"):
+            break
+        if ln.startswith("| ") and not ln.startswith("| ---"):
+            rows.append([c.strip() for c in ln.strip().strip("|").split("|")])
+    names = {m["module"]: m["display_name"] for m in DG.read_sources(root).modules}
+    got = {CODE.sub(r"\1", r[0]): (r[1], r[2]) for r in rows[1:]}
+    bad = []
+    want = wide_levers(root)
+    for name, n, by in want:
+        if name not in got:
+            bad.append(f"wide lever {name}: no row")
+            continue
+        count, where = got[name]
+        if count != str(n):
+            bad.append(f"wide lever {name}: count {count} against {n}")
+        parts = dict(re.findall(r"(?:^|; )([^;(]+) \((\d+)\): ", where))
+        found = {
+            label: sorted(CODE.findall(text)) for label, text in re.findall(r"(?:^|; )([^;(]+) \(\d+\): ([^;]+)", where)
+        }
+        expect = {names[m]: ts for m, ts in by}
+        if found != expect or {k: int(v) for k, v in parts.items()} != {k: len(v) for k, v in expect.items()}:
+            bad.append(f"wide lever {name}: targets {found} against {expect}")
+    bad += [f"not a wide lever: {name}" for name in got if name not in {w[0] for w in want}]
+    return bad
 
 
 def scenario_problems(md: str, sets: Mapping[str, Mapping[str, float]], levers: set[str]) -> list[str]:
