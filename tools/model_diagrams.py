@@ -1043,7 +1043,12 @@ MAP_CAPTIONS: Final = (
     "Left out: the auxiliaries, the parameters that are not levers, and the information links between stocks. The"
     " module pages and the causal-loop panels show them (docs/model-reference.pdf, docs/model/diagrams/).",
     "Pipes: tools/flow_pipes.csv, each cited to the line of the integration code that fills or drains the stock.",
+    "Sourcing choice: In-house, GCC and vendor work are shares of one total: work released by turnover and contract"
+    " expiry is re-sourced among the three. The clouds on these flows stand for that common pool.",
 )
+"""The map's captions. The third is the sourcing note of 10e Addendum A (operator ruling): the three shares conserve
+together (``IHW + GCCW + VW``, slice 10e R4). It belongs in the sourcing region, but no spot there is clear of every
+box, drawn path and label, so it sits in the caption block, as the ruling allows."""
 
 
 @dataclass(frozen=True)

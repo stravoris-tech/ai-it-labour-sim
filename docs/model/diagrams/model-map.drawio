@@ -1139,6 +1139,9 @@
         <mxCell id="caption:2" value="Pipes: tools/flow_pipes.csv, each cited to the line of the integration code that fills or drains the stock." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=12;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="820" y="1450" width="763" height="27" as="geometry" />
         </mxCell>
+        <mxCell id="caption:3" value="Sourcing choice: In-house, GCC and vendor work are shares of one total: work released by turnover and contract&#10;expiry is re-sourced among the three. The clouds on these flows stand for that common pool." style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=12;strokeColor=none;fillColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="820" y="1490" width="784" height="42" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>

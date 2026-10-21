@@ -530,6 +530,19 @@ def test_the_map_holds_every_stock_valve_lever_and_cloud_once(src: D.Sources, vi
     assert sorted(f for c in cells if c.kind == "valve" for f in c.items) == flows
 
 
+SOURCING_NOTE = (
+    "In-house, GCC and vendor work are shares of one total: work released by turnover and contract expiry is "
+    "re-sourced among the three. The clouds on these flows stand for that common pool."
+)
+
+
+def test_the_map_carries_the_sourcing_note() -> None:
+    """The operator's sourcing note (10e Addendum A) is on the map word for word, in the caption block, as its ruling
+    allows where no spot inside the sourcing region is clear."""
+    captions = [" ".join(c.value.split("\n")) for c in _map_cells(ROOT) if c.id.startswith("caption:")]
+    assert [c for c in captions if c.endswith(SOURCING_NOTE)] == [f"Sourcing choice: {SOURCING_NOTE}"]
+
+
 def test_the_map_contents_check_fails_on_planted_cells(tmp_path: Path, src: D.Sources) -> None:
     p = tmp_path / "model-map.drawio"
     shutil.copyfile(D.drawio_path(ROOT, MAP), p)
