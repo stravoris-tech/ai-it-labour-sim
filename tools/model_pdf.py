@@ -7,13 +7,20 @@ replaced by fixed values of the same byte length (``pin()``), so two prints are 
 (``docs/model/diagrams/MANIFEST.json``, key ``reference``) records the SHA-256 of the HTML and of the pinned PDF; CI
 regenerates the HTML and checks both hashes without Edge.
 
-Order (recon 10b E2): title page, contents, introduction, overview, the module pages each with its item list, the
-causal-loop panels and the loop table, the data dictionary (parameters and tables in a compact layout), the spec
-errata, and an appendix with the per-link loop table and the name clashes.
+Order (recon 10b E2): title page, contents, introduction, the model guide (slice 10d), overview, the module pages
+each with its item list, the causal-loop panels and the loop table, the data dictionary (parameters and tables in a
+compact layout), the spec errata, and an appendix with the per-link loop table and the name clashes.
 
-Usage: ``uv run --frozen python tools/model_pdf.py --html`` (writes ``docs/_build/model-reference.html``), ``--pdf``
-(writes the HTML, prints it with Edge, pins it, writes ``docs/model-reference.pdf`` and the manifest's hashes; local
-only) or ``--check`` (exit 1 if the HTML or the committed PDF differs from the manifest).
+The model guide (slice 10d) is rendered from the committed ``docs/model-guide.md`` (``tools/model_guide.py`` writes
+it), so this tool still runs no model code. It prints twice: as a section of the reference and on its own as
+``docs/model-guide.pdf``. Its "Where to look next" lines carry the reference PDF's page numbers. They are read from the
+printed PDF's named destinations (``dest_pages()``), reprinted until they settle, and stored in the manifest (key
+``guide``, with the guide's HTML and PDF hashes), so CI regenerates both HTMLs without Edge.
+
+Usage: ``uv run --frozen python tools/model_pdf.py --html`` (writes ``docs/_build/model-reference.html`` and
+``docs/_build/model-guide.html``), ``--pdf`` (writes the HTML, prints it with Edge, pins it, writes
+``docs/model-reference.pdf``, ``docs/model-guide.pdf`` and the manifest's hashes and pages; local only) or ``--check``
+(exit 1 if an HTML or a committed PDF differs from the manifest, or the stored pages from the reference PDF's).
 """
 
 from __future__ import annotations
@@ -43,6 +50,10 @@ PDF_OUT: Final = Path("docs/model-reference.pdf")
 INVENTORY: Final = DG.MODEL / "inventory.csv"
 ERRATA: Final = Path("docs/spec-errata.md")
 STATE_PY: Final = Path("src/aisim/state.py")
+GUIDE_MD: Final = Path("docs/model-guide.md")
+GUIDE_OUTPUTS: Final = Path("tools/guide_outputs.csv")
+GUIDE_HTML_OUT: Final = Path("docs/_build/model-guide.html")
+GUIDE_PDF_OUT: Final = Path("docs/model-guide.pdf")
 EDGE_EXE: Final = Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
 PAGE_W_MM: Final = 297.0
@@ -67,6 +78,30 @@ SECTION_TITLES: Final = {
     "output": "Outputs",
 }
 LOOP_RULING: Final = re.compile(r"\bE\d+\b")
+GUIDE_MIN_PT: Final = 8.0
+"""The guide's smallest text in print: its tables, code and code blocks (slice 10d: 8 pt or larger at A4)."""
+GUIDE_WIDTHS: Final[Mapping[tuple[str, ...], tuple[float, ...]]] = {
+    ("Scenario", "What it changes", "What it represents"): (17, 41, 42),
+    (
+        "Lever",
+        "What it is",
+        "Units",
+        "Base value",
+        "Scenarios that move it",
+        "Sensitivity range (tornado_levers)",
+        "At year Y",
+    ): (13, 30, 8, 11, 15, 13, 10),
+    ("Output", "Units", "What it tells you", "phase9 Base 2024", "phase9 Base 2040"): (19, 8, 23, 25, 25),
+}
+"""The guide's tables by header row: their column widths (percent). A guide table without an entry raises."""
+GUIDE_PAGES: Final[Mapping[str, tuple[str, str]]] = {
+    "Module pages": ("module-pages", "panels"),
+    "Feedback loops": ("panels", "dictionary"),
+    "Data dictionary": ("dictionary", "errata-title"),
+}
+"""The guide's "Where to look next" lines that point into the reference PDF: the anchor of the part's first page and
+of the next part's, whose page less one is the part's last."""
+PAGE_ANCHORS: Final = tuple(dict.fromkeys(a for pair in GUIDE_PAGES.values() for a in pair))
 
 CSS: Final = f"""@page {{ size: A4 landscape; margin: {MARGIN_MM:g}mm; }}
 html {{ font-family: Helvetica, Arial, sans-serif; font-size: 8pt; color: #1A1A1A; }}
@@ -98,6 +133,11 @@ nav ol {{ margin: 0; }}
 nav li {{ margin: 0.4mm 0; }}
 dl.marks dt {{ font-weight: bold; margin-top: 1.5mm; }}
 dl.marks dd {{ margin-left: 6mm; }}
+section.guide table, section.guide code, section.guide pre {{ font-size: {GUIDE_MIN_PT:g}pt; }}
+section.guide pre {{ background: #F4F4F4; padding: 1.5mm 2.5mm; margin: 1mm 0 3mm; white-space: pre-wrap;
+  break-inside: avoid; }}
+section.guide p.sub {{ font-size: 10pt; margin: 0 0 3mm; }}
+section.guide ul {{ break-inside: avoid; }}
 """
 
 
@@ -147,6 +187,8 @@ def inputs(root: Path = ROOT) -> list[Path]:
         root / DG.MODEL / "loop_summary.csv",
         root / DG.PAGES_CSV,
         root / ERRATA,
+        root / GUIDE_MD,
+        root / GUIDE_OUTPUTS,
     ]
     return out + [svg_path(root, v) for v in DG.VIEWS if not v.startswith("article-")]
 
@@ -300,7 +342,8 @@ def introduction(src: DG.Sources) -> str:
         '<section id="intro">\n<h1>Introduction</h1>\n'
         "<p>This is the model reference of <code>ai-it-labour-sim</code>, a System Dynamics model of AI's impact on "
         "IT employment, contract mix and vendor viability. It gives scenario projections, not forecasts: read every "
-        'value as "under these assumptions" (README). It states no model results; the README and the analyses do.</p>\n'
+        'value as "under these assumptions" (README). Its only model results are the Base values of the model guide; '
+        "the README and the analyses state the rest.</p>\n"
         f"<p>The model has {len(src.modules)} engine modules. The overview shows how they feed each other; one or more "
         "module pages show each module's stocks, flows, auxiliaries and levers as a stock-and-flow diagram, each "
         "followed by its item list; five causal-loop panels show the feedback loops with their polarity; the data "
@@ -450,16 +493,21 @@ def slug(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
 
 
-def errata(root: Path) -> tuple[str, list[tuple[str, str]]]:
-    """``docs/spec-errata.md`` as HTML. Only its own constructs are accepted (headings, paragraphs, bullet lists with
-    indented continuation lines, tables, code spans and bold); any other line raises, so a new construct is never
-    dropped silently. Returns the HTML and the (anchor, title) of each module heading."""
-    lines = (root / ERRATA).read_text(encoding="utf-8").split("\n")
-    out: list[str] = ['<section id="errata">\n']
+def markdown(
+    path: Path, text: str, prefix: str, widths: Mapping[tuple[str, ...], Sequence[float]] | None = None
+) -> tuple[list[str], list[tuple[str, str]]]:
+    """A committed markdown file of this repo's own constructs as HTML pieces: headings, paragraphs, bullet lists with
+    indented continuation lines, tables, fenced code blocks, code spans and bold. Any other line raises, so a new
+    construct is never dropped silently. A table takes its column widths from ``widths`` by header row, or equal
+    widths if ``widths`` is None (with ``widths`` given, an unknown header raises). Returns the pieces and the
+    (anchor, title) of each ``##`` heading, anchored ``<prefix><slug>``."""
+    lines = text.split("\n")
+    out: list[str] = []
     heads: list[tuple[str, str]] = []
     para: list[str] = []
     items: list[list[str]] = []
     rows: list[list[str]] = []
+    block: list[str] | None = None
 
     def flush() -> None:
         if para:
@@ -469,18 +517,34 @@ def errata(root: Path) -> tuple[str, list[tuple[str, str]]]:
             out.append("<ul>" + "".join(f"<li>{inline(' '.join(x))}</li>" for x in items) + "</ul>\n")
             items.clear()
         if rows:
-            out.append(table(rows[0], [100 / len(rows[0])] * len(rows[0]), [[inline(c) for c in r] for r in rows[1:]]))
+            head = tuple(rows[0])
+            if widths is None:
+                w: Sequence[float] = [100 / len(head)] * len(head)
+            elif head in widths:
+                w = widths[head]
+            else:
+                raise ValueError(f"{path.as_posix()}: no column widths for the table {head!r}")
+            out.append(table(rows[0], w, [[inline(c) for c in r] for r in rows[1:]]))
             rows.clear()
 
     for ln in lines:
-        if not ln.strip():
+        if block is not None:
+            if ln == "```":
+                out.append(f"<pre><code>{esc(chr(10).join(block))}</code></pre>\n")
+                block = None
+            else:
+                block.append(ln)
+        elif ln.startswith("```"):
+            flush()
+            block = []
+        elif not ln.strip():
             flush()
         elif ln.startswith("# "):
             flush()
             out.append(f"<h1>{inline(ln[2:])}</h1>\n")
         elif ln.startswith("## "):
             flush()
-            anchor = f"errata-{slug(ln[3:])}"
+            anchor = f"{prefix}{slug(ln[3:])}"
             heads.append((anchor, ln[3:]))
             out.append(f'<h2 id="{anchor}">{inline(ln[3:])}</h2>\n')
         elif ln.startswith("### "):
@@ -503,14 +567,51 @@ def errata(root: Path) -> tuple[str, list[tuple[str, str]]]:
                 flush()
             para.append(ln.strip())
         else:
-            raise ValueError(f"{ERRATA.as_posix()}: a line this renderer does not know: {ln!r}")
+            raise ValueError(f"{path.as_posix()}: a line this renderer does not know: {ln!r}")
+    if block is not None:
+        raise ValueError(f"{path.as_posix()}: an unclosed code block")
     flush()
-    out.append("</section>\n")
-    first = out[1]
-    if not first.startswith("<h1>"):
-        raise ValueError(f"{ERRATA.as_posix()}: no title")
-    out[1] = first.replace("<h1>", '<h1 id="errata-title">', 1)
-    return "".join(out), heads
+    if not out or not out[0].startswith("<h1>"):
+        raise ValueError(f"{path.as_posix()}: no title")
+    return out, heads
+
+
+def errata(root: Path) -> tuple[str, list[tuple[str, str]]]:
+    """``docs/spec-errata.md`` as HTML (``markdown()``, equal column widths). Returns the HTML and the (anchor, title)
+    of each module heading."""
+    out, heads = markdown(ERRATA, (root / ERRATA).read_text(encoding="utf-8"), "errata-")
+    out[0] = out[0].replace("<h1>", '<h1 id="errata-title">', 1)
+    return '<section id="errata">\n' + "".join(out) + "</section>\n", heads
+
+
+def page_range(pages: Mapping[str, int], first: str, after: str) -> str:
+    """The pages of a part of the reference PDF: from its first anchor's page to the page before the next part's."""
+    a, b = pages[first], pages[after] - 1
+    return f"page {a}" if a >= b else f"pages {a}-{b}"
+
+
+def guide_section(root: Path, pages: Mapping[str, int], standalone: bool) -> tuple[str, list[tuple[str, str]]]:
+    """``docs/model-guide.md`` as HTML (``markdown()`` with ``GUIDE_WIDTHS``), in ``<section class="guide">``. The
+    "Where to look next" lines of ``GUIDE_PAGES`` gain the reference PDF's pages: linked in the reference, as text in
+    the standalone guide, which also carries a subtitle with the version. Returns the HTML and its (anchor, title)
+    headings."""
+    out, heads = markdown(GUIDE_MD, (root / GUIDE_MD).read_text(encoding="utf-8"), "guide-", GUIDE_WIDTHS)
+    sub = ""
+    if standalone:
+        sub = f'<p class="sub">ai-it-labour-sim {esc(version(root))}</p>\n'
+    out[0] = out[0].replace("<h1>", '<h1 id="guide">', 1) + sub
+    text = "".join(out)
+    for title, (first, after) in GUIDE_PAGES.items():
+        start = text.find(f"<li><strong>{esc(title)}:</strong>")
+        if start < 0:
+            raise ValueError(f"{GUIDE_MD.as_posix()}: no 'Where to look next' line {title!r}")
+        end = text.index("</li>", start)
+        span = page_range(pages, first, after)
+        add = (
+            f' In this PDF: <a href="#{first}">{span}</a>.' if not standalone else f" In {PDF_OUT.as_posix()}: {span}."
+        )
+        text = text[:end] + add + text[end:]
+    return f'<section class="guide" id="guide-part">\n{text}</section>\n', heads
 
 
 def appendix(src: DG.Sources, inv_rows: Sequence[Mapping[str, str]]) -> str:
@@ -552,14 +653,40 @@ def appendix(src: DG.Sources, inv_rows: Sequence[Mapping[str, str]]) -> str:
     )
 
 
-def build_html(root: Path = ROOT) -> str:
+def stored_pages(root: Path) -> dict[str, int]:
+    """The reference PDF's pages of ``PAGE_ANCHORS`` as the manifest stores them (key ``guide``); 0 for each anchor
+    before the first print."""
+    guide = manifest(root).get("guide", {})
+    pages = guide.get("pages", {}) if isinstance(guide, dict) else {}
+    return {a: int(pages.get(a, 0)) for a in PAGE_ANCHORS}
+
+
+def _document(title: str, body: str) -> str:
+    return (
+        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+        f"<title>{esc(title)}</title>\n<style>\n{CSS}</style>\n</head>\n<body>\n{body}</body>\n</html>\n"
+    )
+
+
+def build_guide_html(root: Path = ROOT, pages: Mapping[str, int] | None = None) -> str:
+    """The standalone model guide: the guide section alone, with the reference PDF's pages (the manifest's by
+    default)."""
+    html_, _ = guide_section(root, stored_pages(root) if pages is None else pages, standalone=True)
+    return _document(f"ai-it-labour-sim model guide {version(root)}", html_)
+
+
+def build_html(root: Path = ROOT, pages: Mapping[str, int] | None = None) -> str:
+    """The model reference, with its own pages in the guide's "Where to look next" lines (the manifest's by
+    default)."""
     src = DG.read_sources(root)
     inv_rows = read_csv(root / INVENTORY)
     inv = {(r["name"], r["kind"]): r for r in inv_rows}
     model = default_model(root)
     errata_html, errata_heads = errata(root)
+    guide_html, guide_heads = guide_section(root, stored_pages(root) if pages is None else pages, standalone=False)
     entries: list[tuple[str, str, Sequence[tuple[str, str]]]] = [
         ("intro", "Introduction", ()),
+        ("guide", "Model guide", [(a, re.sub(r"^\d+\. ", "", t)) for a, t in guide_heads]),
         ("overview", "Overview", (("modules", "The modules"),)),
         ("module-pages", "Module pages", [(n, s.title) for n, s in DG.MODULE_VIEWS.items()]),
         ("panels", "Feedback loops", [*((v, s.title) for v, s in DG.PANEL_VIEWS.items()), ("loops", "The loops")]),
@@ -571,6 +698,7 @@ def build_html(root: Path = ROOT) -> str:
         title_page(root)
         + contents(entries)
         + introduction(src)
+        + guide_html
         + overview(root, src)
         + module_pages(root, src, inv)
         + panels(root, src)
@@ -578,11 +706,7 @@ def build_html(root: Path = ROOT) -> str:
         + errata_html
         + appendix(src, inv_rows)
     )
-    return (
-        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
-        f"<title>ai-it-labour-sim model reference {esc(version(root))}</title>\n<style>\n{CSS}</style>\n</head>\n"
-        f"<body>\n{body}</body>\n</html>\n"
-    )
+    return _document(f"ai-it-labour-sim model reference {version(root)}", body)
 
 
 # ---- checks ---------------------------------------------------------------------------------------------------------
@@ -619,14 +743,69 @@ def reference_hashes(root: Path) -> dict[str, str]:
     return {str(k): str(v) for k, v in ref.items()}
 
 
+def guide_hashes(root: Path) -> dict[str, str]:
+    """The guide's HTML and PDF hashes as the manifest stores them (key ``guide``)."""
+    guide = manifest(root).get("guide", {})
+    if not isinstance(guide, dict):
+        return {}
+    return {k: str(guide[k]) for k in ("html", "pdf") if k in guide}
+
+
+DEST: Final = re.compile(rb"/([^\s/\[\]<>()]+) \[(\d+) 0 R /XYZ")
+
+
+def _pdf_object(pdf: bytes, num: int) -> bytes:
+    start = pdf.index(b"\n%d 0 obj" % num)
+    return pdf[start : pdf.index(b"endobj", start)]
+
+
+def dest_pages(pdf: bytes) -> dict[str, int]:
+    """Each named destination of an Edge PDF (an HTML anchor that a link targets) and its 1-based page: the catalog's
+    ``/Dests`` dictionary against the page order of its ``/Pages`` tree, read without a PDF library."""
+    cat = re.search(rb"/Type /Catalog\s*/Pages (\d+) 0 R\s*/Dests (\d+) 0 R", pdf)
+    if cat is None:
+        raise ValueError("dest_pages: no catalog with /Pages and /Dests")
+
+    def leaves(num: int) -> list[int]:
+        obj = _pdf_object(pdf, num)
+        if not re.search(rb"/Type /Pages\b", obj):
+            return [num]
+        kids = re.search(rb"/Kids \[([^\]]*)\]", obj)
+        if kids is None:
+            raise ValueError(f"dest_pages: page tree node {num} has no /Kids")
+        return [p for k in re.findall(rb"(\d+) 0 R", kids.group(1)) for p in leaves(int(k))]
+
+    order = {num: i + 1 for i, num in enumerate(leaves(int(cat.group(1))))}
+    dests = _pdf_object(pdf, int(cat.group(2)))
+    return {m.group(1).decode("ascii"): order[int(m.group(2))] for m in DEST.finditer(dests)}
+
+
+def page_problems(pages: Mapping[str, int], pdf: bytes) -> list[str]:
+    """Anchors of ``PAGE_ANCHORS`` whose stored page differs from the PDF's."""
+    found = dest_pages(pdf)
+    return [
+        f"{a}: stored page {pages.get(a)}, PDF page {found.get(a)}"
+        for a in PAGE_ANCHORS
+        if pages.get(a) != found.get(a)
+    ]
+
+
 def check(root: Path = ROOT) -> list[str]:
     ref = reference_hashes(root)
+    guide = guide_hashes(root)
     bad = []
     if sha256_bytes(build_html(root).encode("utf-8")) != ref.get("html"):
         bad.append(f"{HTML_OUT.as_posix()}: differs from the manifest's hash (the PDF needs a new print)")
     pdf = root / PDF_OUT
     if not pdf.exists() or sha256_bytes(pdf.read_bytes()) != ref.get("pdf"):
         bad.append(f"{PDF_OUT.as_posix()}: missing or differs from the manifest's hash")
+    else:
+        bad += [f"{PDF_OUT.as_posix()}: {p}" for p in page_problems(stored_pages(root), pdf.read_bytes())]
+    if sha256_bytes(build_guide_html(root).encode("utf-8")) != guide.get("html"):
+        bad.append(f"{GUIDE_HTML_OUT.as_posix()}: differs from the manifest's hash (the PDF needs a new print)")
+    gpdf = root / GUIDE_PDF_OUT
+    if not gpdf.exists() or sha256_bytes(gpdf.read_bytes()) != guide.get("pdf"):
+        bad.append(f"{GUIDE_PDF_OUT.as_posix()}: missing or differs from the manifest's hash")
     return bad
 
 
@@ -681,41 +860,69 @@ def edge_print(html_file: Path, pdf_file: Path) -> None:
         raise RuntimeError(f"Edge wrote no {pdf_file}")
 
 
-def write_html(root: Path = ROOT, out_root: Path | None = None) -> Path:
-    out = (root if out_root is None else out_root) / HTML_OUT
-    out.parent.mkdir(parents=True, exist_ok=True)
-    with out.open("w", encoding="utf-8", newline="") as f:
-        f.write(build_html(root))
-    return out
+def _write(path: Path, text: str) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as f:
+        f.write(text)
+    return path
 
 
-def write_pdf(root: Path = ROOT) -> dict[str, str]:
-    """Write the HTML, print it, pin the PDF and record both hashes in the manifest (local only)."""
-    html_file = write_html(root)
+def write_html(root: Path = ROOT, out_root: Path | None = None, pages: Mapping[str, int] | None = None) -> Path:
+    return _write((root if out_root is None else out_root) / HTML_OUT, build_html(root, pages))
+
+
+def write_guide_html(root: Path = ROOT, out_root: Path | None = None, pages: Mapping[str, int] | None = None) -> Path:
+    return _write((root if out_root is None else out_root) / GUIDE_HTML_OUT, build_guide_html(root, pages))
+
+
+def _print(root: Path, html_file: Path, name: str) -> tuple[str, bytes]:
+    """Print an HTML file with Edge and pin it: the HTML's hash and the pinned PDF."""
     html_sha = sha256_bytes(html_file.read_bytes())
-    raw = root / HTML_OUT.parent / "model-reference.raw.pdf"
+    raw = root / HTML_OUT.parent / f"{name}.raw.pdf"
     edge_print(html_file, raw)
-    pdf = pin(raw.read_bytes(), html_sha)
+    return html_sha, pin(raw.read_bytes(), html_sha)
+
+
+MAX_PRINTS: Final = 3
+
+
+def write_pdf(root: Path = ROOT) -> dict[str, object]:
+    """Print the reference until the guide's page numbers equal its own (at most ``MAX_PRINTS`` prints), then the
+    standalone guide with the same pages; pin both PDFs and record their hashes and the pages in the manifest (local
+    only)."""
+    pages = stored_pages(root)
+    for _ in range(MAX_PRINTS):
+        html_sha, pdf = _print(root, write_html(root, pages=pages), "model-reference")
+        found = {a: dest_pages(pdf)[a] for a in PAGE_ANCHORS}
+        if found == pages:
+            break
+        pages = found
+    else:
+        raise RuntimeError(f"the reference's page numbers did not settle in {MAX_PRINTS} prints")
+    guide_sha, guide_pdf = _print(root, write_guide_html(root, pages=pages), "model-guide")
     (root / PDF_OUT).write_bytes(pdf)
+    (root / GUIDE_PDF_OUT).write_bytes(guide_pdf)
     man = manifest(root)
     man["reference"] = {"html": html_sha, "pdf": sha256_bytes(pdf)}
+    man["guide"] = {"html": guide_sha, "pdf": sha256_bytes(guide_pdf), "pages": pages}
     with (root / DG.MANIFEST).open("w", encoding="utf-8", newline="") as f:
         f.write(json.dumps(man, indent=1, sort_keys=True) + "\n")
-    return {"html": html_sha, "pdf": sha256_bytes(pdf)}
+    return {"reference": man["reference"], "guide": man["guide"]}
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else None)
     g = ap.add_mutually_exclusive_group(required=True)
-    g.add_argument("--html", action="store_true", help="write docs/_build/model-reference.html")
-    g.add_argument("--pdf", action="store_true", help="write the HTML, print it with Edge, pin it, update the manifest")
-    g.add_argument("--check", action="store_true", help="exit 1 if the HTML or the PDF differs from the manifest")
+    g.add_argument("--html", action="store_true", help="write the reference's and the guide's HTML to docs/_build/")
+    g.add_argument("--pdf", action="store_true", help="write the HTML, print both PDFs with Edge, update the manifest")
+    g.add_argument("--check", action="store_true", help="exit 1 if an HTML or a PDF differs from the manifest")
     ap.add_argument("--root", type=Path, default=ROOT, help="repository root (default: this repository)")
     a = ap.parse_args(argv)
     if a.html:
-        print("wrote", write_html(a.root).relative_to(a.root).as_posix())
+        for p in (write_html(a.root), write_guide_html(a.root)):
+            print("wrote", p.relative_to(a.root).as_posix())
     elif a.pdf:
-        print(PDF_OUT.as_posix(), write_pdf(a.root))
+        print(PDF_OUT.as_posix(), GUIDE_PDF_OUT.as_posix(), write_pdf(a.root))
     else:
         bad = check(a.root)
         for b in bad:
@@ -723,7 +930,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         if bad:
             print("rebuild with: uv run --frozen python tools/model_pdf.py --pdf (locally, with Edge)")
             return 1
-        print("model reference: the HTML and the PDF match the manifest")
+        print("model reference and model guide: the HTML and the PDFs match the manifest")
     return 0
 
 

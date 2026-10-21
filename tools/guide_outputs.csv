@@ -1,0 +1,19 @@
+name,why,status
+HeadTotal,Total IT employment across every employer and both regions,drafted
+VendorHead,Staff of the three vendor types together,drafted
+Head_{employer},"Who employs IT staff: clients' in-house teams, their captive centres (GCCs) and each vendor type",drafted
+WorkShare_{employer},Each employer's share of all IT work; the GCC share shows the shift from vendors to GCCs,drafted
+OnshoreTotal,"IT headcount onshore, visa holders included",drafted
+IndiaTotal,"IT headcount in India: with OnshoreTotal, the onshore and offshore mix",drafted
+RevenueTot,Vendor revenue in real terms,drafted
+Margin_{vendor},"Each vendor type's margin, the signal behind its viability and distress",drafted
+AvgIdx_{vendor},The price index of each vendor type's in-force contract book: how far prices fall,drafted
+EffortShare_revenue_weighted,The effort-billed share of vendor contract books: the shift away from billing by effort,drafted
+Unemp_{region},The IT unemployment rate in each regional labour pool,drafted
+JuniorHiringRatio,Junior hiring relative to 2024: the entry pipeline into IT,drafted
+A_mean,The share of delivery work done with AI,drafted
+AC_mean,The share of clients' own consumers using AI,drafted
+Demand,Total IT work that clients demand a year,drafted
+Budget,"Clients' total IT budget, a cap on committed spend: above it, new work is approved less often",drafted
+Committed,"Clients' committed IT spend: services plus software seats, AI credits and cloud",drafted
+ServicesSpend,"Clients' spend on IT services (in-house and GCC labour, vendor fees); with seats, AI credits and cloud it makes up Committed, and the rest of Budget is headroom the model does not spend or record",drafted
