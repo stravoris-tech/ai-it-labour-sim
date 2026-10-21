@@ -185,7 +185,7 @@ def test_tables_are_baseline_data_and_not_levers(inv: M.Inventory) -> None:
 def test_errata_spec_lines_exist() -> None:
     text = (ROOT / "docs" / "spec-errata.md").read_text(encoding="utf-8")
     entries = re.findall(r"^### (E\d+):", text, flags=re.M)
-    assert sorted(entries, key=lambda e: int(e[1:])) == [f"E{i}" for i in range(1, 36)]
+    assert sorted(entries, key=lambda e: int(e[1:])) == [f"E{i}" for i in range(1, 37)]
     cites = SPEC_CITE.findall(text)
     assert len(cites) >= 33
     for path, a, b in cites:

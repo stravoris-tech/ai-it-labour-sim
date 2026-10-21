@@ -95,7 +95,7 @@ The 31 levers of `docs/model/inventory.csv` (its `lever` column begins with "yes
 
 ## 4. Main outputs
 
-18 outputs from `tools/guide_outputs.csv`, with names, labels and units from `src/aisim/data/model_docs.csv`. A name with a dimension in braces gives every member, labelled as in the specification. Values are phase9 Base: one deterministic run, recorded every step, rounded to 3 significant figures. Shares and rates are in percent. Headcounts are in model units, which are proportions, not national counts: compare changes and shares, not absolute levels (specification 07, "Model units are proportions, not national counts"). Work is in BFY, the baseline FTE-year: one person-year of effort at pre-AI productivity (specification 00). Money is in real USD a year.
+18 outputs from `tools/guide_outputs.csv`, with names, labels and units from `src/aisim/data/model_docs.csv`. A name with a dimension in braces gives every member, labelled as in the specification. Values are phase9 Base: one deterministic run, recorded every step, rounded to 3 significant figures. Shares and rates are in percent. Headcounts are in model units, which are proportions, not national counts: compare changes and shares, not absolute levels (specification 07, "Model units are proportions, not national counts"). Work is in BFY, a unit of IT work: one person-year of 2024 delivery (`src/aisim/scalar/capability.py:77-81`, `src/aisim/scalar/work.py:70`; `tools/model_docs.py:972`). Money is in real USD a year.
 
 | Output | Units | What it tells you | phase9 Base 2024 | phase9 Base 2040 |
 | --- | --- | --- | --- | --- |

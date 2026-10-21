@@ -453,8 +453,9 @@ def outputs_section(root: Path) -> list[str]:
         f"specification. Values are {MODEL} Base: one deterministic run, recorded every step, rounded to 3 significant "
         "figures. Shares and rates are in percent. Headcounts are in model units, which are proportions, not "
         "national counts: compare changes and shares, not absolute levels (specification 07, "
-        '"Model units are proportions, not national counts"). Work is in BFY, the baseline FTE-year: one '
-        "person-year of effort at pre-AI productivity (specification 00). Money is in real USD a year.",
+        '"Model units are proportions, not national counts"). Work is in BFY, a unit of IT work: one '
+        "person-year of 2024 delivery (`src/aisim/scalar/capability.py:77-81`, `src/aisim/scalar/work.py:70`; "
+        "`tools/model_docs.py:972`). Money is in real USD a year.",
         "",
         *_table(["Output", "Units", "What it tells you", f"{MODEL} Base 2024", f"{MODEL} Base 2040"], rows),
     ]
