@@ -256,3 +256,12 @@ def test_complete_pdf_tells_a_whole_pdf_from_a_cut_one(tmp_path: Path) -> None:
     p.write_bytes(whole[: len(whole) // 2])
     assert not P.complete_pdf(p)
     assert not P.complete_pdf(tmp_path / "missing.pdf")
+
+
+def test_the_standalone_map_points_to_the_reference_for_the_module_pages(html: str) -> None:
+    """The standalone map PDF has no pages after the map, so its caption names the reference; the reference keeps
+    "after it" (10e Addendum B)."""
+    standalone = P.build_map_html(ROOT)
+    assert "the module pages in docs/model-reference.pdf show" in standalone
+    assert "the module pages after it" not in standalone
+    assert "the module pages after it show" in html

@@ -279,13 +279,17 @@
           <mxGeometry x="1027.5" y="291" width="24" height="22" as="geometry" />
         </mxCell>
         <mxCell id="Src.Contested" value="Contested work" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="1047" y="350" width="24" height="22" as="geometry" />
+          <mxGeometry x="1047" y="350" width="24" height="22" as="geometry">
+            <mxPoint x="-38" y="2" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="Src.GCCTurn" value="GCC work review" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="968.5" y="409" width="24" height="22" as="geometry" />
         </mxCell>
         <mxCell id="Src.IHTurn" value="In-house work&#10;review" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="1126.5" y="420" width="24" height="22" as="geometry" />
+          <mxGeometry x="1126.5" y="420" width="24" height="22" as="geometry">
+            <mxPoint x="10" y="12" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="Src.VExp" value="Vendor work expiry" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="1184" y="311" width="24" height="22" as="geometry" />

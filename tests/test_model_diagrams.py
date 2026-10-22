@@ -257,6 +257,7 @@ def test_no_box_overlaps_another_and_every_label_fits(views: dict[str, D.View]) 
         geom = D.read_sidecar(ROOT, name)
         assert D.overlaps(v, geom) == [], name
         assert D.too_small(v, geom) == [], name
+        assert D.valve_label_problems(v, geom) == [], name  # 10e Addendum B: a valve label on no box
 
 
 def test_overlap_check_detects_a_planted_overlap(views: dict[str, D.View]) -> None:
@@ -473,11 +474,21 @@ def test_the_valve_check_fails_on_planted_cells(tmp_path: Path) -> None:
 # ---- 10e: arrows through boxes on their drawn paths, every view -----------------------------------------------------
 
 
+LATER_THROUGH_BOX = {"model-map": [("e:promo>H", "label:promo")]}
+"""Accepted as a Later item (operator ruling, 10e Addendum B): the Promotions valve's attachment to Headcount runs
+under its own label; no label offset clears it without breaking another criterion. The test fails if it is cleared or
+if any other hit appears, so this list cannot grow silently."""
+LATER_ARROWHEADS = {"e:RegScenario>Demand"}
+"""Accepted as a Later item (operator ruling, 10e Addendum B): Regulation scenario's arrowhead sits on the IT work
+demand pipe; no bend or lever move clears it without breaking another criterion."""
+
+
 def test_no_drawn_arrow_passes_through_a_box(views: dict[str, D.View]) -> None:
-    """No link's drawn path (``link_paths``, with its two-way waypoints) crosses a box it does not connect, in any
-    view, with ``through_boxes``'s 2 px inset (slice 10e, step 5)."""
+    """No link's drawn path (``link_paths``: what draw.io draws, a valve being its shape) crosses a drawn cell it does
+    not connect or a valve label, in any view, with ``through_boxes``'s 2 px inset (slice 10e, step 5; 10e Addendum
+    B). The one accepted Later item is listed in ``LATER_THROUGH_BOX``."""
     found = {name: D.drawn_through_boxes(v, D.read_sidecar(ROOT, name)) for name, v in views.items()}
-    assert {k: v for k, v in found.items() if v} == {}
+    assert {k: v for k, v in found.items() if v} == LATER_THROUGH_BOX
 
 
 def test_the_drawn_path_check_fails_on_a_planted_box(tmp_path: Path) -> None:
@@ -585,7 +596,7 @@ def test_the_pipe_checks_fail_on_planted_rows(tmp_path: Path) -> None:
     assert any(x.startswith("Comp: its term in BL") for x in D.cite_problems(tmp_path, src))
     p.write_bytes(clean.replace(row, "\nComp,BL,cloud,,src/aisim/scalar/integrate.py:38 (BL)\n").encode("utf-8"))
     src = D.read_sources(tmp_path)  # a wrong cite line
-    assert "Comp: src/aisim/scalar/integrate.py:(38,) does not name 'Comp'" in D.cite_problems(tmp_path, src)
+    assert "Comp: src/aisim/scalar/integrate.py:38 names neither ['Comp']" in D.cite_problems(tmp_path, src)
     p.write_bytes(clean.replace(row, "\n").encode("utf-8"))  # a missing row
     with pytest.raises(ValueError, match="Comp: no row"):
         D.pipe_rows(D.read_sources(tmp_path))
@@ -663,6 +674,8 @@ def test_no_lever_arrow_runs_along_a_pipe_and_no_label_clashes(views: dict[str, 
     geom = D.read_sidecar(ROOT, MAP)
     assert D.runs_along(views[MAP], geom) == []
     assert D.map_label_problems(views[MAP], geom) == []
+    heads = {x.split(": arrowhead")[0] for x in D.arrowheads_on_pipes(views[MAP], geom)}  # 10e Addendum B
+    assert heads == LATER_ARROWHEADS
 
 
 def test_the_run_along_and_label_checks_fail_on_planted_geometry(views: dict[str, D.View]) -> None:
@@ -728,3 +741,119 @@ def test_within_headcount_valves_conserve() -> None:
     for a, b in pairs:
         assert worst(a, b) < 1e-12, (a, b)
     assert worst("promo", "fl.quits") > 1e-3
+
+
+# ---- 10e Addendum B: the drawn geometry -----------------------------------------------------------------------------
+
+
+def _write_geom(root: Path, name: str, geom: dict[str, list[float]]) -> D.View:
+    D.write_sidecar(root, name, geom)
+    return D.build_views(root)[name]
+
+
+def test_the_strict_cite_check_fails_on_a_two_line_cite(tmp_path: Path) -> None:
+    """Every cited line must name the flow or a local alias of it, and one inside the stock's update must (10e
+    Addendum B): ``promo``'s Headcount cite with line 67 (``x_["onboard"]``) for line 68 fails."""
+    _copy_inputs(tmp_path)
+    (tmp_path / SCALAR).mkdir(parents=True)
+    for name in ("integrate.py", "loops.py"):
+        shutil.copyfile(ROOT / SCALAR / name, tmp_path / SCALAR / name)
+    p = tmp_path / D.PIPES_CSV
+    clean = p.read_bytes().decode("utf-8")
+    assert D.cite_problems(tmp_path, D.read_sources(tmp_path)) == []
+    good = "src/aisim/scalar/integrate.py:61,68 (H)"
+    assert clean.count(good) == 1
+    p.write_bytes(clean.replace(good, "src/aisim/scalar/integrate.py:61,67 (H)").encode("utf-8"))
+    found = D.cite_problems(tmp_path, D.read_sources(tmp_path))
+    assert "promo: src/aisim/scalar/integrate.py:67 names neither ['promo', 'promo_in']" in found
+    assert "promo: no line of src/aisim/scalar/integrate.py:61,67 inside H's update names 'promo'" in found
+
+
+def test_the_drawn_geometry_matches_the_exported_svg(views: dict[str, D.View]) -> None:
+    """``drawn_cells``, ``drawn_labels`` and ``label_boxes`` are what draw.io draws: each valve's shape, each valve
+    label's white rectangle and each link label's rectangle within 2 px of the committed SVG, on the map and every
+    module page (10e Addendum B)."""
+    names = [MAP, *D.MODULE_VIEWS]
+    found = {
+        n: D.svg_drawn_problems(views[n], D.read_sidecar(ROOT, n), D.export_paths(ROOT, n)["svg"].read_text("utf-8"))
+        for n in names
+    }
+    assert {k: x for k, x in found.items() if x} == {}
+
+
+def test_the_svg_geometry_check_fails_on_a_moved_label(tmp_path: Path, views: dict[str, D.View]) -> None:
+    p = tmp_path / "module-labour-market-a.svg"
+    shutil.copyfile(D.export_paths(ROOT, "module-labour-market-a")["svg"], p)
+    v, geom = views["module-labour-market-a"], D.read_sidecar(ROOT, "module-labour-market-a")
+    clean = p.read_text(encoding="utf-8")
+    assert D.svg_drawn_problems(v, geom, clean) == []
+    i = clean.index('<g data-cell-id="pool.seek_exit">')
+    m = D.SVG_RECT.search(clean, i)
+    assert m is not None
+    moved = clean[: m.start(1)] + f"{float(m.group(1)) + 5:g}" + clean[m.end(1) :]  # the label drawn 5 px right
+    found = D.svg_drawn_problems(v, geom, moved)
+    assert len(found) == 1 and found[0].startswith("label:pool.seek_exit: "), found
+
+
+def test_a_pipe_may_not_cross_its_own_valve_label_but_an_input_may(tmp_path: Path) -> None:
+    """The own-label rule (operator ruling on the 10e Addendum B stop): a pipe under its own valve's label is a hit;
+    an input or lever arrow through the label of the valve it points at is not."""
+    _copy_inputs(tmp_path)
+    geom = D.read_sidecar(tmp_path, MAP)
+    v = _write_geom(tmp_path, MAP, geom)
+    assert D.drawn_through_boxes(v, geom) == LATER_THROUGH_BOX[MAP]  # clean but for the accepted Later item
+    piped = dict(geom)
+    piped.pop(D.label_offset_id("flow:PUL"), None)  # its label back under its hourglass
+    label = D.drawn_labels(v, piped)["flow:PUL"]
+    cloud = geom["cloud:flow:PUL"]
+    piped["cloud:flow:PUL"] = [label[0] + label[2] / 2 - cloud[2] / 2, label[1] + label[3] + 30, *cloud[2:]]
+    v = _write_geom(tmp_path, MAP, piped)  # the cloud right below the label: its pipe runs up through it
+    assert ("e:cloud:flow:PUL>flow:PUL", "label:flow:PUL") in D.drawn_through_boxes(v, D.read_sidecar(tmp_path, MAP))
+    label = D.drawn_labels(v, geom)["Enrol"]
+    lever = geom["EnrolSensitivity"]
+    arrowed = dict(geom)
+    arrowed["EnrolSensitivity"] = [label[0] + label[2] / 2 - lever[2] / 2, label[1] + label[3] + 30, *lever[2:]]
+    v = _write_geom(tmp_path, MAP, arrowed)  # the lever right below its target's label: its arrow runs up through it
+    hits = D.drawn_through_boxes(v, D.read_sidecar(tmp_path, MAP))
+    paths = D.link_paths(v, D.read_sidecar(tmp_path, MAP))
+    assert D._path_meets_box(paths["e:EnrolSensitivity>Enrol"], D.drawn_labels(v, arrowed)["Enrol"])
+    assert ("e:EnrolSensitivity>Enrol", "label:Enrol") not in hits
+
+
+def test_the_arrowhead_check_fails_on_a_planted_arrowhead(tmp_path: Path) -> None:
+    """A lever arrow arriving where a pipe enters its valve puts its arrowhead on the pipe (10e Addendum B)."""
+    _copy_inputs(tmp_path)
+    geom = D.read_sidecar(tmp_path, MAP)
+    v = _write_geom(tmp_path, MAP, geom)
+    assert {x.split(": arrowhead")[0] for x in D.arrowheads_on_pipes(v, geom)} == LATER_ARROWHEADS
+    cloud, lever = geom["cloud:flow:SrcPerc"], geom["kR7"]
+    planted = dict(geom)
+    planted.pop("w:kR7>flow:SrcPerc", None)  # a straight arrow, without its bend
+    shape = D.drawn_cells(v, geom)["flow:SrcPerc"]
+    cy = shape[1] + shape[3] / 2
+    planted["kR7"] = [cloud[0] - lever[2] - 60, cy - lever[3] / 2, *lever[2:]]  # left of the cloud, on the pipe's line
+    v = _write_geom(tmp_path, MAP, planted)
+    found = D.arrowheads_on_pipes(v, D.read_sidecar(tmp_path, MAP))
+    assert any(x.startswith("e:kR7>flow:SrcPerc: arrowhead") for x in found), found
+
+
+def test_the_valve_label_check_fails_on_a_planted_offset(tmp_path: Path) -> None:
+    """An offset valve label may not cover a box, its own valve's shape included (10e Addendum B)."""
+    _copy_inputs(tmp_path)
+    geom = D.read_sidecar(tmp_path, "module-work")
+    v = _write_geom(tmp_path, "module-work", geom)
+    assert D.valve_label_problems(v, geom) == []
+    planted = dict(geom)
+    planted[D.label_offset_id("Comp")] = [0.0, -float(D.VALVE_H + D.LABEL_GAP)]  # the label up onto its own shape
+    v = _write_geom(tmp_path, "module-work", planted)
+    assert "label:Comp: on Comp" in D.valve_label_problems(v, D.read_sidecar(tmp_path, "module-work"))
+
+
+def test_the_within_headcount_valves_carry_their_flow_labels(views: dict[str, D.View]) -> None:
+    """Each within-Headcount valve reads as its flow's label with its note in brackets (10e Addendum B, Part 3.1)."""
+    labels = {c.id: " ".join(c.label.split("\n")) for c in views[MAP].cells if c.id in D.WITHIN}
+    assert labels == {
+        "conv": "Visa conversions (within Headcount: visa to local)",
+        "promo": "Promotions (within Headcount: junior to senior)",
+        "sw.in": "Switches in (within Headcount: between employers)",
+    }

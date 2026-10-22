@@ -99,7 +99,11 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:BudgetShockStart&gt;flow:SpendRatio" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="BudgetShockStart" target="flow:SpendRatio">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1659.5" y="175" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="e:Comp&gt;cloud:Comp" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="Comp" target="cloud:Comp">
           <mxGeometry relative="1" as="geometry" />
@@ -150,19 +154,35 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:JevonsEps&gt;Demand" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="JevonsEps" target="Demand">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="244" y="131" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="e:JuniorCut&gt;cancel" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="JuniorCut" target="cancel">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:JuniorCut&gt;fl.layoffs" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="JuniorCut" target="fl.layoffs">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="917.5" y="1089" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="e:JuniorCut&gt;fl.openings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="JuniorCut" target="fl.openings">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="866" y="463.9" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="e:JuniorCut&gt;flow:SrcPerc" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="JuniorCut" target="flow:SrcPerc">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1988" y="515" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="e:Leg&gt;VF.ExpLeg" value="" style="html=0;endArrow=none;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="Leg" target="VF.ExpLeg">
           <mxGeometry relative="1" as="geometry" />
@@ -210,7 +230,11 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:R10rc&gt;flow:VMarg" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="R10rc" target="flow:VMarg">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2190.5" y="1139" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="e:R10rc&gt;flow:Viab" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="R10rc" target="flow:Viab">
           <mxGeometry relative="1" as="geometry" />
@@ -228,7 +252,11 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:R6e&gt;fl.layoffs" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="R6e" target="fl.layoffs">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="929.5" y="1089" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="e:R6e&gt;fl.openings" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="R6e" target="fl.openings">
           <mxGeometry relative="1" as="geometry" />
@@ -261,7 +289,11 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:SrcCostSens&gt;flow:SrcPerc" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="SrcCostSens" target="flow:SrcPerc">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2000" y="515" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="e:TMBrake&gt;AdoptE" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="TMBrake" target="AdoptE">
           <mxGeometry relative="1" as="geometry" />
@@ -291,7 +323,11 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:VTEnd&gt;flow:TightPerc" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="VTEnd" target="flow:TightPerc">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="996" y="69" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="e:VTEnd&gt;hires" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="VTEnd" target="hires">
           <mxGeometry relative="1" as="geometry" />
@@ -573,7 +609,11 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e:kR7&gt;flow:SrcPerc" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="kR7" target="flow:SrcPerc">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2012" y="515" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="e:kViab&gt;flow:SrcPerc" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#666666;strokeWidth=1;dashed=1;dashPattern=6 4;" edge="1" parent="1" source="kViab" target="flow:SrcPerc">
           <mxGeometry relative="1" as="geometry" />
@@ -693,7 +733,7 @@
           <mxGeometry x="118" y="944" width="95" height="42" as="geometry" />
         </mxCell>
         <mxCell id="GCCAppealKeep" value="GCC appeal kept" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
-          <mxGeometry x="1806" y="330" width="123" height="27" as="geometry" />
+          <mxGeometry x="1798" y="338" width="123" height="27" as="geometry" />
         </mxCell>
         <mxCell id="GCCW" value="GCC work share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
           <mxGeometry x="2312" y="634" width="116" height="27" as="geometry" />
@@ -708,7 +748,7 @@
           <mxGeometry x="2316" y="496" width="109" height="42" as="geometry" />
         </mxCell>
         <mxCell id="JevonsEps" value="Jevons elasticity" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
-          <mxGeometry x="1326" y="258" width="137" height="27" as="geometry" />
+          <mxGeometry x="1326" y="230" width="137" height="27" as="geometry" />
         </mxCell>
         <mxCell id="JuniorCut" value="Junior hiring cut" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
           <mxGeometry x="1108" y="366" width="137" height="27" as="geometry" />
@@ -765,7 +805,7 @@
           <mxGeometry x="1766" y="1082" width="130" height="42" as="geometry" />
         </mxCell>
         <mxCell id="R4a" value="Onshore skill&#10;erosion" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
-          <mxGeometry x="660" y="1156" width="109" height="42" as="geometry" />
+          <mxGeometry x="654" y="1150" width="109" height="42" as="geometry" />
         </mxCell>
         <mxCell id="R6Theta" value="Viability stress&#10;threshold" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
           <mxGeometry x="2548" y="1054" width="130" height="42" as="geometry" />
@@ -774,7 +814,7 @@
           <mxGeometry x="1066" y="290" width="109" height="42" as="geometry" />
         </mxCell>
         <mxCell id="RegScenario" value="Regulation&#10;scenario" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
-          <mxGeometry x="1982" y="290" width="88" height="42" as="geometry" />
+          <mxGeometry x="1970" y="332" width="88" height="42" as="geometry" />
         </mxCell>
         <mxCell id="Retired" value="Retired" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
           <mxGeometry x="896" y="1190" width="67" height="27" as="geometry" />
@@ -834,13 +874,13 @@
           <mxGeometry x="2272" y="1078" width="109" height="42" as="geometry" />
         </mxCell>
         <mxCell id="VTEnd" value="End visa tightness" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
-          <mxGeometry x="788" y="148" width="144" height="27" as="geometry" />
+          <mxGeometry x="788" y="118" width="144" height="27" as="geometry" />
         </mxCell>
         <mxCell id="VTRampEnd" value="Visa ramp end" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
           <mxGeometry x="804" y="314" width="109" height="27" as="geometry" />
         </mxCell>
         <mxCell id="VTRampStart" value="Visa ramp start" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
-          <mxGeometry x="934" y="266" width="123" height="27" as="geometry" />
+          <mxGeometry x="940" y="272" width="123" height="27" as="geometry" />
         </mxCell>
         <mxCell id="VW" value="Vendor work share" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
           <mxGeometry x="2302" y="734" width="137" height="27" as="geometry" />
@@ -864,7 +904,9 @@
           <mxGeometry x="2174" y="118" width="144" height="72" as="geometry" />
         </mxCell>
         <mxCell id="cancel" value="Vacancy&#10;cancellations" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="858.5" y="548" width="24" height="22" as="geometry" />
+          <mxGeometry x="858.5" y="548" width="24" height="22" as="geometry">
+            <mxPoint x="8" y="11" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="cloud:Aband" value="" style="html=0;fontFamily=Helvetica;fontSize=12;shape=cloud;fillColor=#FFFFFF;strokeColor=#7A7A7A;strokeWidth=1.2;" vertex="1" parent="1">
           <mxGeometry x="662" y="186" width="34" height="22" as="geometry" />
@@ -981,7 +1023,7 @@
           <mxGeometry x="1898" y="464" width="34" height="22" as="geometry" />
         </mxCell>
         <mxCell id="cloud:flow:TightPerc" value="" style="html=0;fontFamily=Helvetica;fontSize=12;shape=cloud;fillColor=#FFFFFF;strokeColor=#7A7A7A;strokeWidth=1.2;" vertex="1" parent="1">
-          <mxGeometry x="910" y="118" width="34" height="22" as="geometry" />
+          <mxGeometry x="902" y="146" width="34" height="22" as="geometry" />
         </mxCell>
         <mxCell id="cloud:flow:VMarg" value="" style="html=0;fontFamily=Helvetica;fontSize=12;shape=cloud;fillColor=#FFFFFF;strokeColor=#7A7A7A;strokeWidth=1.2;" vertex="1" parent="1">
           <mxGeometry x="2088" y="1088" width="34" height="22" as="geometry" />
@@ -1001,23 +1043,31 @@
         <mxCell id="cons.Retire" value="Application&#10;retirements" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#BFE7DC;strokeColor=#009E73;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="2553.5" y="200" width="24" height="22" as="geometry" />
         </mxCell>
-        <mxCell id="conv" value="within Headcount:&#10;visa to local" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="1076.5" y="788" width="24" height="22" as="geometry" />
+        <mxCell id="conv" value="Visa conversions&#10;(within Headcount:&#10;visa to local)" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="1076.5" y="788" width="24" height="22" as="geometry">
+            <mxPoint x="2" y="8" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="expiry" value="Visa expiries" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="756.5" y="892" width="24" height="22" as="geometry" />
         </mxCell>
         <mxCell id="ext" value="External entry" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="486" y="822" width="24" height="22" as="geometry" />
+          <mxGeometry x="486" y="822" width="24" height="22" as="geometry">
+            <mxPoint x="-4" y="5" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="fl.layoffs" value="Layoffs" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="905.5" y="1038" width="24" height="22" as="geometry" />
         </mxCell>
         <mxCell id="fl.leave" value="Leaving IT" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="864" y="924" width="24" height="22" as="geometry" />
+          <mxGeometry x="864" y="924" width="24" height="22" as="geometry">
+            <mxPoint x="2" y="2" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="fl.onboard" value="Onboarding&#10;completions" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="807.5" y="820" width="24" height="22" as="geometry" />
+          <mxGeometry x="807.5" y="820" width="24" height="22" as="geometry">
+            <mxPoint x="-1" y="2" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="fl.openings" value="Vacancy openings" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="579" y="620" width="24" height="22" as="geometry" />
@@ -1026,7 +1076,9 @@
           <mxGeometry x="666.5" y="858" width="24" height="22" as="geometry" />
         </mxCell>
         <mxCell id="fl.retire" value="Retirements" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="987.5" y="1132" width="24" height="22" as="geometry" />
+          <mxGeometry x="987.5" y="1132" width="24" height="22" as="geometry">
+            <mxPoint x="2" y="5" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="flow:C4Hab" value="Habituation&#10;adjustment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#E1C8D4;strokeColor=#882255;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="1995.5" y="682" width="24" height="22" as="geometry" />
@@ -1062,7 +1114,9 @@
           <mxGeometry x="2260" y="980" width="24" height="22" as="geometry" />
         </mxCell>
         <mxCell id="flow:PUL" value="Student perception&#10;change" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="196" y="1092" width="24" height="22" as="geometry" />
+          <mxGeometry x="196" y="1092" width="24" height="22" as="geometry">
+            <mxPoint x="0" y="-68" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="flow:PUS" value="Worker perception&#10;change" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="182.5" y="688" width="24" height="22" as="geometry" />
@@ -1098,7 +1152,9 @@
           <mxGeometry x="1430" y="542" width="137" height="42" as="geometry" />
         </mxCell>
         <mxCell id="hires" value="Hires" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="616.5" y="796" width="24" height="22" as="geometry" />
+          <mxGeometry x="616.5" y="796" width="24" height="22" as="geometry">
+            <mxPoint x="5" y="5" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="kR7" value="GCC scale learning&#10;strength" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#555555;" vertex="1" parent="1">
           <mxGeometry x="2092" y="508" width="144" height="42" as="geometry" />
@@ -1107,10 +1163,14 @@
           <mxGeometry x="1912" y="618" width="109" height="42" as="geometry" />
         </mxCell>
         <mxCell id="pool.rec_retire" value="Recovering&#10;retirements" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="827.5" y="1140" width="24" height="22" as="geometry" />
+          <mxGeometry x="827.5" y="1140" width="24" height="22" as="geometry">
+            <mxPoint x="-1" y="-1" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="pool.rec_to_left" value="Recovered, left&#10;field" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="789.5" y="1018" width="24" height="22" as="geometry" />
+          <mxGeometry x="789.5" y="1018" width="24" height="22" as="geometry">
+            <mxPoint x="59.4" y="-23" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="pool.rec_to_seek" value="Recovered to&#10;seeking" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="633" y="1038" width="24" height="22" as="geometry" />
@@ -1121,11 +1181,13 @@
         <mxCell id="pool.seek_retire" value="Seeker retirements" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="566" y="1176" width="24" height="22" as="geometry" />
         </mxCell>
-        <mxCell id="promo" value="within Headcount:&#10;junior to senior" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+        <mxCell id="promo" value="Promotions (within&#10;Headcount: junior&#10;to senior)" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="906.5" y="630" width="24" height="22" as="geometry" />
         </mxCell>
-        <mxCell id="sw.in" value="within Headcount:&#10;between employers" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="838.5" y="706" width="24" height="22" as="geometry" />
+        <mxCell id="sw.in" value="Switches in&#10;(within Headcount:&#10;between employers)" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="862.5" y="712" width="24" height="22" as="geometry">
+            <mxPoint x="-70" y="-24" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="title" value="The model map: every stock, flow and lever, by module" style="html=0;fontFamily=Helvetica;fontSize=12;text;align=left;verticalAlign=top;fontSize=20;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="20" y="14" width="676" height="37" as="geometry" />

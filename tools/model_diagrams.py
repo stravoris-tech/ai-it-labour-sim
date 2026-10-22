@@ -991,12 +991,13 @@ INTEGRATION: Final[Mapping[Path, str]] = {
 }
 """The functions that update the stocks (``integrate`` calls ``loops.post`` last); the cites point into them."""
 WITHIN: Final[Mapping[str, tuple[tuple[str, ...], str]]] = {
-    "conv": (("conv",), "within Headcount:\nvisa to local"),
-    "promo": (("promo", "fl.promo_out"), "within Headcount:\njunior to senior"),
-    "sw.in": (("sw.in", "sw.out"), "within Headcount:\nbetween employers"),
+    "conv": (("conv",), "within Headcount: visa to local"),
+    "promo": (("promo", "fl.promo_out"), "within Headcount: junior to senior"),
+    "sw.in": (("sw.in", "sw.out"), "within Headcount: between employers"),
 }
 """Flows that move staff between members of Headcount (``from`` = ``to`` = ``H``), each group drawn as one valve
-attached to Headcount, with its label (operator rulings, slice 10e). A group's flows are equal in total at every step:
+attached to Headcount, labelled with its flow's label and its note in brackets (operator rulings, slice 10e and
+10e Addendum B: "Promotions (within Headcount: junior to senior)"). A group's flows are equal in total at every step:
 ``fl.promo_out`` is the next level's ``promo`` (``labour_market.py:204``) and each switch is one employer's ``in`` and
 another's ``out`` (``labour_market.py:157-163``); ``test_within_headcount_valves_conserve`` checks it on a run."""
 WIDE: Final = 4
@@ -1165,17 +1166,28 @@ class Update:
     terms: tuple[tuple[int, frozenset[str]], ...]
 
 
+def _function(root: Path, path: Path) -> ast.FunctionDef:
+    tree = ast.parse((root / path).read_text(encoding="utf-8"))
+    return next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == INTEGRATION[path])
+
+
+def local_aliases(root: Path, path: Path) -> dict[str, set[str]]:
+    """The single-name assignments of an integration function, each with the names its value uses
+    (``promo_in = promo[u][l]`` gives ``promo_in``: ``promo``, ``u``, ``l``)."""
+    alias: dict[str, set[str]] = {}
+    for n in ast.walk(_function(root, path)):
+        if isinstance(n, ast.Assign) and len(n.targets) == 1 and isinstance(n.targets[0], ast.Name):
+            alias[n.targets[0].id] = _named(n.value)
+    return alias
+
+
 def stock_updates(root: Path = ROOT) -> list[Update]:
     """Every ``st["<stock>"]... += ...`` in ``INTEGRATION``'s functions, with each name a term uses expanded through
     the function's single-name assignments (``promo_in = promo[u][l]``)."""
     out = []
-    for path, fn in INTEGRATION.items():
-        tree = ast.parse((root / path).read_text(encoding="utf-8"))
-        func = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == fn)
-        alias: dict[str, set[str]] = {}
-        for n in ast.walk(func):
-            if isinstance(n, ast.Assign) and len(n.targets) == 1 and isinstance(n.targets[0], ast.Name):
-                alias[n.targets[0].id] = _named(n.value)
+    for path in INTEGRATION:
+        func = _function(root, path)
+        alias = local_aliases(root, path)
         for n in ast.walk(func):
             if not (isinstance(n, ast.AugAssign) and isinstance(n.op, ast.Add)):
                 continue
@@ -1205,12 +1217,14 @@ def _line_names(text: str) -> set[str]:
 
 
 def cite_problems(root: Path, src: Sources) -> list[str]:
-    """Cites that do not show their flow at work: each cite's lines must name the flow's identifier (``code_name``),
-    one of them must lie in an update of the cited stock, and the flow's term there must carry the table's direction
-    (added for ``to``, subtracted for ``from`` and ``also_drains``; either for a flow within one stock). A goal-seeking
-    or coflow flow ``flow:<stock>`` is its stock's whole update."""
+    """Cites that do not show their flow at work (strict, 10e Addendum B): every cited line must name the flow's
+    identifier (``code_name``) or a local alias of it (``local_aliases``); one cited line inside an update of the
+    cited stock must name it; and the flow's term there must carry the table's direction (added for ``to``,
+    subtracted for ``from`` and ``also_drains``; either for a flow within one stock). A goal-seeking or coflow flow
+    ``flow:<stock>`` is its stock's whole update."""
     updates = stock_updates(root)
     lines: dict[str, list[str]] = {}
+    aliases: dict[str, dict[str, set[str]]] = {}
     out = []
     for f, p in pipe_rows(src).items():
         name = code_name(f)
@@ -1219,8 +1233,14 @@ def cite_problems(root: Path, src: Sources) -> list[str]:
                 out.append(f"{f}: {path} is not integration code")
                 continue
             text = lines.setdefault(path, (root / path).read_text(encoding="utf-8").split("\n"))
-            if not any(name in _line_names(text[n - 1]) for n in nums if 0 < n <= len(text)):
-                out.append(f"{f}: {path}:{nums} does not name {name!r}")
+            alias = aliases.setdefault(path, local_aliases(root, Path(path)))
+            ok = {name} | {a for a, used in alias.items() if name in used}
+            named = [n for n in nums if 0 < n <= len(text) and _line_names(text[n - 1]) & ok]
+            out += [f"{f}: {path}:{n} names neither {sorted(ok)}" for n in nums if n not in named]
+            if not any(
+                u.path == Path(path) and u.stock == stock and u.first <= n <= u.last for u in updates for n in named
+            ):
+                out.append(f"{f}: no line of {path}:{','.join(map(str, nums))} inside {stock}'s update names {name!r}")
             ups = [
                 u
                 for u in updates
@@ -1381,7 +1401,8 @@ def model_map(src: Sources, view: str) -> View:
         cells.append(Cell(s, lab, node_style("stock", mods[smod[s]]["colour"]), "node", (s,)))
     for v in sorted(set(vid.values())):
         flows = WITHIN[v][0] if v in WITHIN else (v,)
-        lab = WITHIN[v][1] if v in WITHIN else wrap(src.docs[(v, "flow")]["label"], hyphens=False)
+        lab = src.docs[(v, "flow")]["label"] + (f" ({WITHIN[v][1]})" if v in WITHIN else "")
+        lab = wrap(lab, hyphens=False)
         cells.append(Cell(v, lab, valve_style(mods[vmod[v]]["colour"]), "valve", flows))
     for f, p in rows.items():
         if CLOUD in (*p.sources, *p.sinks):
@@ -1583,10 +1604,20 @@ def edge_id(lk: Link) -> str:
     return f"e:{lk.source}>{lk.target}"
 
 
-def orphans(view: View, geom: Mapping[str, Sequence[float]]) -> list[str]:
-    """Sidecar ids that are neither a cell nor a link of the view (a link's entry places its sign label, its ``w:``
-    entry its bends)."""
+def label_offset_id(cid: str) -> str:
+    return f"l:{cid}"
+
+
+def sidecar_ids(view: View) -> set[str]:
+    """The ids a view's sidecar may hold: its cells; each link's ``e:`` entry (its sign label) and ``w:`` entry (its
+    bends); each valve's ``l:`` entry (its label's offset, 10e Addendum B)."""
     ids = {c.id for c in view.cells} | {edge_id(lk) for lk in view.links} | {waypoint_id(lk) for lk in view.links}
+    return ids | {label_offset_id(c.id) for c in view.cells if c.kind == "valve"}
+
+
+def orphans(view: View, geom: Mapping[str, Sequence[float]]) -> list[str]:
+    """Sidecar ids that are not among the view's ``sidecar_ids``."""
+    ids = sidecar_ids(view)
     return sorted(k for k in geom if k not in ids)
 
 
@@ -1612,7 +1643,7 @@ def place_free(view: View, geom: Geometry, ids: Sequence[str]) -> Geometry:
 
 def view_geometry(root: Path, view: View) -> Geometry:
     """The sidecar's positions for the view's cells, with any unplaced cell in the free column."""
-    ids = {c.id for c in view.cells} | {edge_id(lk) for lk in view.links} | {waypoint_id(lk) for lk in view.links}
+    ids = sidecar_ids(view)
     geom = {k: v for k, v in read_sidecar(root, view.name).items() if k in ids}
     return place_free(view, geom, unplaced(view, geom))
 
@@ -1878,7 +1909,12 @@ def _vertex(root: ET.Element, cell: Cell, geom: Mapping[str, Sequence[float]]) -
     x, y, w, h = geom[cell.id]
     if cell.kind == "valve":  # the shape at the top of its box, the label drawn below it
         x, y, w, h = x + w / 2 - VALVE_W / 2, y, VALVE_W, VALVE_H
-    ET.SubElement(c, "mxGeometry", {"x": _num(x), "y": _num(y), "width": _num(w), "height": _num(h), "as": "geometry"})
+    g = ET.SubElement(
+        c, "mxGeometry", {"x": _num(x), "y": _num(y), "width": _num(w), "height": _num(h), "as": "geometry"}
+    )
+    off = geom.get(label_offset_id(cell.id))
+    if off:  # the label moved by the sidecar's offset (10e Addendum B)
+        ET.SubElement(g, "mxPoint", {"x": _num(off[0]), "y": _num(off[1]), "as": "offset"})
 
 
 def render(view: View, geom: Mapping[str, Sequence[float]]) -> bytes:
@@ -2088,12 +2124,86 @@ def waypoints(view: View, geom: Mapping[str, Sequence[float]], lk: Link) -> list
     return []
 
 
+HELVETICA: Final[Mapping[str, int]] = dict(
+    zip(
+        " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~",
+        (
+            278, 278, 355, 556, 556, 889, 667, 191, 333, 333, 389, 584, 278, 333, 278, 278,
+            556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 278, 278, 584, 584, 584, 556,
+            1015, 667, 667, 722, 722, 667, 611, 778, 722, 278, 500, 667, 556, 833, 722, 778,
+            667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611, 278, 278, 278, 469, 556,
+            333, 556, 556, 500, 556, 556, 278, 556, 556, 222, 222, 500, 222, 833, 556, 556,
+            556, 556, 333, 500, 278, 556, 500, 722, 500, 500, 500, 334, 260, 334, 584,
+        ),
+        strict=True,
+    )
+)  # fmt: skip
+"""Helvetica's character widths in thousandths of an em (Adobe's AFM; Arial matches them), for the label boxes."""
+LABEL_GAP: Final = 8.0
+"""A valve's label box starts this many px below its shape (draw.io's bottom label position, measured on the SVGs)."""
+
+
+def text_px(line: str, font: float) -> float:
+    """A line's width in Helvetica at ``font`` px."""
+    return sum(HELVETICA.get(ch, 556) for ch in line) * font / 1000
+
+
+def text_box(label: str, cx: float, top: float, font: float) -> list[float]:
+    """The box draw.io draws behind a label (its white background): the widest line plus 2 px, 1.2 lines per font
+    px plus 1 px, centred on ``cx`` from ``top``."""
+    lines = label.split("\n")
+    w = max(text_px(x, font) for x in lines) + 2
+    return [cx - w / 2, top, w, float(round(len(lines) * font * 1.2 + 1))]
+
+
+def drawn_cells(view: View, geom: Mapping[str, Sequence[float]]) -> dict[str, list[float]]:
+    """Each cell's box as draw.io draws it (10e Addendum B): a valve is its 24 x 22 shape at the top centre of its
+    sidecar box, as ``render`` writes it, and edges end on that shape; every other cell is its sidecar box."""
+    out = {}
+    for c in view.cells:
+        x, y, w, h = geom[c.id][:4]
+        out[c.id] = [x + w / 2 - VALVE_W / 2, y, VALVE_W, VALVE_H] if c.kind == "valve" else [x, y, w, h]
+    return out
+
+
+def drawn_labels(view: View, geom: Mapping[str, Sequence[float]]) -> dict[str, list[float]]:
+    """The labels draw.io draws outside their cell, each as the box of its white background: every valve's, centred
+    ``LABEL_GAP`` px below its shape, moved by its ``l:`` offset if the sidecar has one (10e Addendum B)."""
+    out = {}
+    for c in view.cells:
+        if c.kind == "valve":
+            x, y, w, _ = geom[c.id][:4]
+            dx, dy = (geom.get(label_offset_id(c.id)) or [0.0, 0.0])[:2]
+            out[c.id] = text_box(c.label, x + w / 2 + dx, y + VALVE_H + LABEL_GAP + dy, _font(c.style))
+    return out
+
+
+def valve_label_problems(view: View, geom: Mapping[str, Sequence[float]]) -> list[str]:
+    """Valve labels whose box (``drawn_labels``) overlaps a drawn cell, its own valve's shape included, or another
+    valve's label: an offset label must not hide a box (10e Addendum B). Regions are skipped."""
+    cells = drawn_cells(view, geom)
+    labels = drawn_labels(view, geom)
+    out = [
+        f"label:{v}: on {c.id}"
+        for v, box in sorted(labels.items())
+        for c in view.cells
+        if c.kind != "region" and boxes_overlap(box, cells[c.id])
+    ]
+    out += [
+        f"label:{a}: on label:{b}"
+        for (a, p), (b, q) in itertools.combinations(sorted(labels.items()), 2)
+        if boxes_overlap(p, q)
+    ]
+    return out
+
+
 def link_paths(view: View, geom: Mapping[str, Sequence[float]]) -> dict[str, list[tuple[float, float]]]:
-    """Each link's drawn path: from the source box's edge through its waypoints (``waypoints``) to the target box's
-    edge."""
+    """Each link's drawn path, as draw.io draws it: from the source's drawn cell (``drawn_cells``: a valve's shape) to
+    the target's, through its waypoints (``waypoints``, from the sidecar as ``render`` writes them)."""
+    cells = drawn_cells(view, geom)
     out = {}
     for lk in view.links:
-        a, b = geom[lk.source], geom[lk.target]
+        a, b = cells[lk.source], cells[lk.target]
         ca, cb = (a[0] + a[2] / 2, a[1] + a[3] / 2), (b[0] + b[2] / 2, b[1] + b[3] / 2)
         mid = waypoints(view, geom, lk)
         out[edge_id(lk)] = [_exit(a, (mid or [cb])[0]), *mid, _exit(b, (mid or [ca])[-1])]
@@ -2323,6 +2433,59 @@ def valve_problems(src: Sources, cells: Sequence[DrawnCell]) -> list[str]:
     return out
 
 
+# ---- the drawn geometry against an exported SVG (10e Addendum B) ----------------------------------------------------
+
+SVG_CELL: Final = re.compile(r'<g data-cell-id="([^"]+)">')
+SVG_RECT: Final = re.compile(
+    r'<rect fill="#FFFFFF" stroke="none" x="([0-9.-]+)" y="([0-9.-]+)" width="([0-9.]+)" height="([0-9.]+)"'
+)
+SVG_NUM: Final = re.compile(r"-?[0-9]+(?:\.[0-9]+)?")
+
+
+def svg_cells(svg: str) -> dict[str, str]:
+    """Each ``data-cell-id`` group of a draw.io SVG export, up to the next one (ids unescaped)."""
+    starts = [(m.start(), m.group(1).replace("&gt;", ">").replace("&amp;", "&")) for m in SVG_CELL.finditer(svg)]
+    return {cid: svg[i:j] for (i, cid), (j, _) in zip(starts, [*starts[1:], (len(svg), "")], strict=True)}
+
+
+def svg_drawn_problems(view: View, geom: Mapping[str, Sequence[float]], svg: str, tol: float = 2.0) -> list[str]:
+    """The drawn geometry (``drawn_cells``, ``drawn_labels``, ``label_boxes``) against a draw.io SVG export of the
+    view: each valve's shape (its path's bounding box), each valve label's white rectangle and each link label's
+    rectangle must lie within ``tol`` px, after the export's translation (the valve shapes' median offset)."""
+    groups = svg_cells(svg)
+    cells = drawn_cells(view, geom)
+    valves = [c.id for c in view.cells if c.kind == "valve"]
+
+    def shape(cid: str) -> list[float]:
+        d = re.search(r'<path d="([^"]+)"', groups[cid])
+        nums = [float(x) for x in SVG_NUM.findall(d.group(1))] if d else [0.0, 0.0]
+        xs, ys = nums[0::2], nums[1::2]
+        return [min(xs), min(ys), max(xs) - min(xs), max(ys) - min(ys)]
+
+    def rects(cid: str) -> list[list[float]]:
+        return [[float(m.group(i)) for i in range(1, 5)] for m in SVG_RECT.finditer(groups.get(cid, ""))]
+
+    if not valves:
+        return []
+    offs = sorted((shape(v)[0] - cells[v][0], shape(v)[1] - cells[v][1]) for v in valves)
+    dx = sorted(o[0] for o in offs)[len(offs) // 2]
+    dy = sorted(o[1] for o in offs)[len(offs) // 2]
+
+    def far(a: Sequence[float], b: Sequence[float]) -> float:
+        return max(abs(a[0] - b[0] - dx), abs(a[1] - b[1] - dy), abs(a[2] - b[2]), abs(a[3] - b[3]))
+
+    out = [f"{v}: shape {far(shape(v), cells[v]):.1f} px off" for v in valves if far(shape(v), cells[v]) > tol]
+    for v, box in drawn_labels(view, geom).items():
+        got = rects(v)
+        if not got or far(got[0], box) > tol:
+            out.append(f"label:{v}: {far(got[0], box) if got else math.inf:.1f} px off")
+    for e, box in label_boxes(view, geom).items():
+        got = rects(e)
+        if not got or min(far(r, box) for r in got) > tol:
+            out.append(f"{e}: label {min((far(r, box) for r in got), default=math.inf):.1f} px off")
+    return out
+
+
 # ---- map checks, on the committed .drawio file and sidecar (slice 10e) ----------------------------------------------
 
 
@@ -2436,27 +2599,49 @@ def region_problems(src: Sources, view: View, geom: Mapping[str, Sequence[float]
 
 
 def drawn_through_boxes(view: View, geom: Mapping[str, Sequence[float]], inset: float = 2.0) -> list[tuple[str, str]]:
-    """(link, cell) pairs where a link's drawn path (``link_paths``, with its waypoints) passes through a box it does
-    not connect, each box shrunk by ``inset`` px as in ``through_boxes`` (slice 10e). Module regions are skipped: they
-    hold the arrows."""
+    """(link, box) pairs where a link's drawn path (``link_paths``) passes through a box, each shrunk by ``inset`` px
+    as in ``through_boxes`` (slice 10e). The boxes are what draw.io draws (10e Addendum B): every cell the link does
+    not connect (``drawn_cells``: a valve is its shape) and every valve label (``drawn_labels``, ids
+    ``label:<valve>``). A pipe may not pass through its own valve's label either, since it would look broken there;
+    an input or lever arrow may cross the label of the valve it points at (operator ruling on the stop). Module
+    regions are skipped: they hold the arrows."""
     paths = link_paths(view, geom)
+    cells = drawn_cells(view, geom)
+    boxes = [(c.id, cells[c.id]) for c in view.cells if c.kind != "region"]
+    boxes += [(f"label:{v}", b) for v, b in drawn_labels(view, geom).items()]
     out = []
     for lk in view.links:
         path = paths[edge_id(lk)]
-        for c in view.cells:
-            if c.id in (lk.source, lk.target) or c.kind == "region":
+        ends = {lk.source, lk.target}
+        if lk.style not in PIPE_STYLES:  # an input or lever arrow may cross the label of the valve it points at
+            ends.add(f"label:{lk.target}")
+        for cid, box in boxes:
+            if cid in ends:
                 continue
-            x, y, w, h = geom[c.id][:4]
-            x, y, w, h = x + inset, y + inset, w - 2 * inset, h - 2 * inset
-            sides = ((x, y, x + w, y), (x + w, y, x + w, y + h), (x, y + h, x + w, y + h), (x, y, x, y + h))
-            inside = any(x < p[0] < x + w and y < p[1] < y + h for p in path)
-            if inside or any(_cross((*a, *b), s) for a, b in itertools.pairwise(path) for s in sides):
-                out.append((edge_id(lk), c.id))
+            if _path_meets_box(path, [box[0] + inset, box[1] + inset, box[2] - 2 * inset, box[3] - 2 * inset]):
+                out.append((edge_id(lk), cid))
     return out
 
 
 PIPE_STYLES: Final = (PIPE_STYLE, PIPE_IN_STYLE, ATTACH_STYLE)
 LEVER_STYLES: Final = (LEVER_STYLE, REGION_ARROW_STYLE)
+
+
+def arrowheads_on_pipes(view: View, geom: Mapping[str, Sequence[float]], tol: float = 6.0) -> list[str]:
+    """Lever arrows whose arrowhead (the end of the drawn path) lies within ``tol`` px of a pipe's drawn path, so that
+    the pipe would read as arrowed (10e Addendum B: the IT work demand pipe read as two-headed)."""
+    paths = link_paths(view, geom)
+    pipes = [(edge_id(lk), paths[edge_id(lk)]) for lk in view.links if lk.style in PIPE_STYLES]
+    out = []
+    for lk in view.links:
+        if lk.style not in LEVER_STYLES:
+            continue
+        tip = paths[edge_id(lk)][-1]
+        for pid, path in pipes:
+            d = min(_point_segment(tip, a, b) for a, b in itertools.pairwise(path))
+            if d < tol:
+                out.append(f"{edge_id(lk)}: arrowhead {d:.1f} px from the pipe {pid}")
+    return out
 
 
 def _samples(path: Sequence[tuple[float, float]], step: float) -> list[tuple[float, float, float, float]]:
@@ -2483,7 +2668,32 @@ def runs_along(
     for lk in view.links:
         if lk.style not in LEVER_STYLES:
             continue
-        for segs in pipes:
+        path = paths[edge_id(lk)]
+        lx0, ly0, lx1, ly1 = (
+            min(p[0] for p in path),
+            min(p[1] for p in path),
+            max(p[0] for p in path),
+            max(p[1] for p in path),
+        )
+        dirs = [
+            ((b[0] - a[0]) / math.dist(a, b), (b[1] - a[1]) / math.dist(a, b))
+            for a, b in itertools.pairwise(path)
+            if a != b
+        ]
+        for all_segs in pipes:
+            # only a pipe segment near the arrow's extent and nearly parallel to one of its segments can count
+            segs = [
+                (a, b)
+                for a, b in all_segs
+                if a != b
+                and min(a[0], b[0]) - tol <= lx1
+                and lx0 <= max(a[0], b[0]) + tol
+                and min(a[1], b[1]) - tol <= ly1
+                and ly0 <= max(a[1], b[1]) + tol
+                and any(abs(ux * (b[0] - a[0]) + uy * (b[1] - a[1])) / math.dist(a, b) > 0.97 for ux, uy in dirs)
+            ]
+            if not segs:
+                continue
             length = 0.0
             for x, y, ux, uy in _samples(paths[edge_id(lk)], step):
                 along = any(
@@ -2518,27 +2728,30 @@ def pipe_crossings(view: View, geom: Mapping[str, Sequence[float]]) -> list[tupl
 
 
 def label_boxes(view: View, geom: Mapping[str, Sequence[float]]) -> dict[str, list[float]]:
-    """Each labelled link's label box: its text's size (``text_size`` at the link's font, less the padding draw.io
-    does not draw) centred on its label point (``sign_label_points``)."""
+    """Each labelled link's label box as draw.io draws it (``text_box``: its white background), centred on its label
+    point (``sign_label_points``, on the drawn path; 10e Addendum B)."""
     fonts = {edge_id(lk): (lk.label, _font(lk.style)) for lk in view.links if lk.label}
     out = {}
     for e, (x, y) in sign_label_points(view, geom).items():
         if e in fonts:
-            w, h = text_size(fonts[e][0], fonts[e][1])
-            w, h = w - 12, h - 8
-            out[e] = [x - w / 2, y - h / 2, w, h]
+            box = text_box(fonts[e][0], x, y, fonts[e][1])
+            out[e] = [box[0], y - box[3] / 2, box[2], box[3]]
     return out
 
 
 def map_label_problems(view: View, geom: Mapping[str, Sequence[float]]) -> list[str]:
-    """Region-arrow labels whose text box overlaps another label's or a box (module regions excepted), or hides part
-    of a pipe under its white background (slice 10e). ``labels_crossed`` reports lever arrows through a label."""
+    """Region-arrow labels whose text box overlaps another label's, a drawn cell (module regions excepted) or a valve's
+    label, or hides part of a pipe under its white background (slice 10e; drawn geometry, 10e Addendum B).
+    ``labels_crossed`` reports lever arrows through a label."""
     boxes = sorted(label_boxes(view, geom).items())
     out = [f"{a} and {b}: labels overlap" for (a, p), (b, q) in itertools.combinations(boxes, 2) if boxes_overlap(p, q)]
     paths = link_paths(view, geom)
     pipes = [edge_id(lk) for lk in view.links if lk.style in PIPE_STYLES]
+    cells = drawn_cells(view, geom)
+    others = [(c.id, cells[c.id]) for c in view.cells if c.kind != "region"]
+    others += [(f"label:{v}", b) for v, b in drawn_labels(view, geom).items()]
     for e, p in boxes:
-        out += [f"{e}: label on {c.id}" for c in view.cells if c.kind != "region" and boxes_overlap(p, geom[c.id])]
+        out += [f"{e}: label on {cid}" for cid, box in others if boxes_overlap(p, box)]
         out += [f"{e}: label on the pipe {o}" for o in pipes if _path_meets_box(paths[o], p)]
     return out
 

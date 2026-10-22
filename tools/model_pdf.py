@@ -402,14 +402,20 @@ MAP_CAPTION: Final = (
     "cited to the integration code) and each lever's first stocks and flows (docs/model/edges.csv). The legend on "
     "the map explains its marks; the module pages after it show the auxiliaries and information links it leaves out."
 )
+MAP_CAPTION_STANDALONE: Final = MAP_CAPTION.replace(
+    "the module pages after it", "the module pages in docs/model-reference.pdf"
+)
+"""The standalone map PDF has no pages after the map, so its caption names the reference (10e Addendum B)."""
 
 
-def map_section(root: Path) -> str:
-    """The model map on its own A2 landscape page (slice 10e), with its heading and caption."""
+def map_section(root: Path, standalone: bool = False) -> str:
+    """The model map on its own A2 landscape page (slice 10e), with its heading and caption; ``standalone`` for
+    ``docs/model-map.pdf``."""
     svg = inline_svg(svg_path(root, DG.MAP_VIEWS[0]), "map")
+    caption = MAP_CAPTION_STANDALONE if standalone else MAP_CAPTION
     return (
         f'<section class="figure map" id="model-map-part">\n<h1 id="model-map">Model map</h1>\n{svg}\n'
-        f'<p class="caption">{esc(MAP_CAPTION)}</p></section>\n'
+        f'<p class="caption">{esc(caption)}</p></section>\n'
     )
 
 
@@ -716,7 +722,7 @@ def build_guide_html(root: Path = ROOT, pages: Mapping[str, int] | None = None) 
 
 def build_map_html(root: Path = ROOT) -> str:
     """The standalone model map: its A2 page alone."""
-    return _document(f"ai-it-labour-sim model map {version(root)}", map_section(root))
+    return _document(f"ai-it-labour-sim model map {version(root)}", map_section(root, standalone=True))
 
 
 def build_html(root: Path = ROOT, pages: Mapping[str, int] | None = None) -> str:

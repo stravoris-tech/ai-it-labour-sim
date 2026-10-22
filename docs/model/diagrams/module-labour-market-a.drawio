@@ -41,7 +41,7 @@
         <mxCell id="e:PUL&gt;flow:PUL" value="" style="html=0;endArrow=classic;endSize=6;rounded=0;strokeColor=#555555;strokeWidth=1;" edge="1" parent="1" source="PUL" target="flow:PUL">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="225.4" y="582.6" />
+              <mxPoint x="222.2" y="589.8" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -136,7 +136,7 @@
         <mxCell id="e:flow:PUL&gt;PUL" value="" style="html=0;endArrow=block;endSize=6;rounded=0;strokeColor=#7A7A7A;strokeWidth=3;" edge="1" parent="1" source="flow:PUL" target="PUL">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="229.1" y="614.4" />
+              <mxPoint x="228.3" y="621.2" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -240,7 +240,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Dur0" value="2024 seeker spell" style="html=0;fontFamily=Helvetica;fontSize=12;rounded=0;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=2;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="247" y="340" width="137" height="27" as="geometry" />
+          <mxGeometry x="247" y="338" width="137" height="27" as="geometry" />
         </mxCell>
         <mxCell id="Enrol" value="Enrolment" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="205.5" y="134" width="24" height="22" as="geometry" />
@@ -252,7 +252,9 @@
           <mxGeometry x="228" y="79" width="95" height="42" as="geometry" />
         </mxCell>
         <mxCell id="Grad" value="Graduation" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="460" y="134" width="24" height="22" as="geometry" />
+          <mxGeometry x="460" y="134" width="24" height="22" as="geometry">
+            <mxPoint x="-14" y="8" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="LeaveEffect" value="Leave effect" style="html=0;fontFamily=Helvetica;fontSize=12;text;strokeColor=none;fillColor=none;fontStyle=1;fontColor=#CC79A7;" vertex="1" parent="1">
           <mxGeometry x="1006" y="282" width="108" height="27" as="geometry" />
@@ -300,7 +302,7 @@
           <mxGeometry x="400.5" y="448" width="24" height="22" as="geometry" />
         </mxCell>
         <mxCell id="flow:PUL" value="Student perception&#10;change" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="127" y="577" width="24" height="22" as="geometry" />
+          <mxGeometry x="123" y="591" width="24" height="22" as="geometry" />
         </mxCell>
         <mxCell id="flow:PUS" value="Worker perception&#10;change" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="832.5" y="362" width="24" height="22" as="geometry" />
@@ -315,16 +317,22 @@
           <mxGeometry x="968.5" y="421" width="24" height="22" as="geometry" />
         </mxCell>
         <mxCell id="pool.rec_to_left" value="Recovered, left&#10;field" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="1204.5" y="244" width="24" height="22" as="geometry" />
+          <mxGeometry x="1204.5" y="244" width="24" height="22" as="geometry">
+            <mxPoint x="32" y="8" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="pool.rec_to_seek" value="Recovered to&#10;seeking" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="1126" y="322" width="24" height="22" as="geometry" />
+          <mxGeometry x="1126" y="322" width="24" height="22" as="geometry">
+            <mxPoint x="-28" y="8" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="pool.seek_exit" value="Seeker exits" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="675" y="232" width="24" height="22" as="geometry" />
         </mxCell>
         <mxCell id="pool.seek_retire" value="Seeker retirements" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="499" y="370" width="24" height="22" as="geometry" />
+          <mxGeometry x="499" y="370" width="24" height="22" as="geometry">
+            <mxPoint x="-32" y="16" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="ref:H" value="Headcount&#10;(labour market b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
           <mxGeometry x="153" y="511" width="127" height="40" as="geometry" />
@@ -336,7 +344,7 @@
           <mxGeometry x="94" y="334" width="127" height="40" as="geometry" />
         </mxCell>
         <mxCell id="ref:expiry" value="Visa expiries&#10;(labour market b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
-          <mxGeometry x="645" y="297" width="127" height="40" as="geometry" />
+          <mxGeometry x="645" y="295" width="127" height="40" as="geometry" />
         </mxCell>
         <mxCell id="ref:fl.layoffs" value="Layoffs&#10;(labour market b)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
           <mxGeometry x="1113" y="472" width="127" height="40" as="geometry" />

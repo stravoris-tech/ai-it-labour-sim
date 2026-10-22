@@ -6,7 +6,7 @@ flow:ClientPRef,cloud,ClientPRef,,src/aisim/scalar/integrate.py:107 (ClientPRef)
 flow:PerceivedP,cloud,PerceivedP,,src/aisim/scalar/integrate.py:104 (PerceivedP)
 cancel,V,cloud,,src/aisim/scalar/integrate.py:64 (V)
 flow:TightPerc,cloud,TightPerc,,src/aisim/scalar/integrate.py:108 (TightPerc)
-promo,H,H,V,"src/aisim/scalar/integrate.py:61,67 (H); src/aisim/scalar/integrate.py:61,64 (V)"
+promo,H,H,V,"src/aisim/scalar/integrate.py:61,68 (H); src/aisim/scalar/integrate.py:61,64 (V)"
 conv,H,H,,"src/aisim/scalar/integrate.py:63,77 (H); src/aisim/scalar/integrate.py:62,70 (H)"
 Enrol,cloud,Pipeline,,src/aisim/scalar/integrate.py:97 (Pipeline)
 expiry,H,U,,"src/aisim/scalar/integrate.py:63,77 (H); src/aisim/scalar/integrate.py:85 (U)"
