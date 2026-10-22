@@ -2,19 +2,24 @@
  "border": 20,
  "drawio": "29.0.3",
  "guide": {
-  "html": "d5e49e1d3eda1629cd4ed240790d161757951b9d956dabdd09ffae4dd3c4e1b4",
+  "html": "b69c4f25ef6e47c41a4c3d85d910bc7a5c209c4ea27780c41aff21af853ec531",
   "pages": {
-   "dictionary": 42,
-   "errata-title": 64,
-   "module-pages": 12,
-   "panels": 36
+   "dictionary": 43,
+   "errata-title": 65,
+   "model-map": 12,
+   "module-pages": 13,
+   "panels": 37
   },
-  "pdf": "be0055d88fa0109d73b2525b713290f155259f7c1c49dfce6cbf73014de5c1c4"
+  "pdf": "fe3bf051388daabc118dd0071b71c999d945c3f4ebc5fb5b8b22cd7e6f8eabfc"
+ },
+ "map": {
+  "html": "8d548f11172673e4fc2add65a01f5df3a0e15b974cd73bbdda5f794565d8228e",
+  "pdf": "3f7162eb5db7aff25a855c3426a8ecbba8c3bac7608133d16acdc3c9b4ddafa6"
  },
  "png_scale": 2,
  "reference": {
-  "html": "023b4e25a7745d84ca7c1910e654ca9143f1f9a2878215748fbe25c412552256",
-  "pdf": "7d39c114d8e6b0bf21188cb268e269c6fb5ba4bf28e543d0e5960210c25ec9dd"
+  "html": "1e9197d16b9d1e741e7e1f67c26cdce1a76b92f0862f97ab730e97017c2313aa",
+  "pdf": "86157d9ebae435556fc5641612b8140ee760d1e2941c45d7fefe6b90b48180de"
  },
  "views": {
   "article-a1": {
@@ -42,15 +47,20 @@
    "source": "cc9c8ce0bcce679c79d98d65cf8061bb4e126e2c560720bd68888f7b973ee6f5",
    "svg": "5c712fc5e6a227002009c7d35c5969ad6b9da8261ccadcaeae8a52c635b02a49"
   },
+  "model-map": {
+   "png": "1ddf12982cd26416c18722b2b4bd19d1cd98a73dd5e622a327fc66e258f2f802",
+   "source": "c22f7b3ecb92f22fd9e4f6747d6f100a53f2aa5c312c86ff413c76a11d270db9",
+   "svg": "4d0785171711dd23a76cf471318bb4b76bcead75e7ab259edbaf043b8027f35b"
+  },
   "module-capability-adoption": {
    "png": "d894410d5f09d2044237e8e6d146ec10fb1749c6989055444332770fff785aee",
    "source": "249e8018173f869da684d12bbb113bb1d29be00bcf769469bfa36011c705bc9d",
    "svg": "b4c9b881d668a865ff941487184570c498e1fa77993696d7b84ef3e060256e04"
   },
   "module-consumer-a": {
-   "png": "413789d0f2b9f4aed3c3efc296e82703b78350f68117ae38f599313377f1ec77",
-   "source": "dc2bbd7fba8779513f8da4d34c01b349a917d4e89707d9a131360e38746da511",
-   "svg": "5fa70dfa1e243202e7f6bdefd4f233b612da3763ecfadbb550ed1f1b00e44447"
+   "png": "8d1d2f872aeb1ecc3d876ac42bf5e59ca977ac9defd202e33d6086e13e62942f",
+   "source": "6da3f4a41340ea0e56526ee97a600fd654daf00e4d64f24aea4097b30c585ecb",
+   "svg": "903b468be4a50796de7dd0fec7c30ab327217ba76e8b95d557ee8992dad0c833"
   },
   "module-consumer-b": {
    "png": "c1cb9ea1fa8b5bf325c553e281ecb088e0f1a833d485d6140d33ab17b942f2ad",
@@ -63,14 +73,14 @@
    "svg": "11e608f982d4b392f02b1427e0a07a4364c89be52bcddc85a2e13a853f3f6608"
   },
   "module-finance-a": {
-   "png": "06d58abd4f03f920ad2cdbdff1697d315da9f932929e660e591b2d5c313f995f",
-   "source": "af3ccfbd978bdfc7787cb587de07bd2c1b334576aba2c2d4b65f553b2f6ac2cf",
-   "svg": "51f7c4fc69e499d331eacb0aced6884f42ff6c63c1e1955c6c64c05591cde751"
+   "png": "7f0f8283d2324b7479c4c666d26848450dbad4bf1cc3442d27cd18e3135bdf68",
+   "source": "f69e33d59522e26a8b7c0fa17430586bdeff35edf279c47970cdcbbb73c0efb8",
+   "svg": "ab0a7447b15ac67a88f20ae138f5cc04da4cc6c52adf6ebc8736dbf94dae5206"
   },
   "module-finance-b": {
-   "png": "c35fb6db4144ebed3fefdc603a01ecefd542f2a2a3b173797651345c1711197e",
-   "source": "c6887076c89bfbb9ef4f071827b4af80bfe8078e8519ad0388784850e18319f0",
-   "svg": "e074b838b21231cda79c45a7b3b4d3c627d2494a222d5f9ffda14ebb017f6102"
+   "png": "7ab93d234ee8bac729025443cac2785a1c1f7d5216bb363d8c9b1f7781434d6f",
+   "source": "2d137c50d12199983b4bbf31a39da75f9f0bd09f3ca6da0b559cb10ad49e852d",
+   "svg": "5b37aa301855945c400604b3751827ec64686250b0c25336927b3994d5a70fbd"
   },
   "module-finance-c": {
    "png": "53c246f6e40707361529dba5d81f553459c7eb75b5a13f22e70ee2607a931683",
@@ -78,19 +88,19 @@
    "svg": "e1e63526dc7877c0a9c332e88ad07273c8135b30cab64467cd782b1c76985e7a"
   },
   "module-labour-market-a": {
-   "png": "373e76209d7f4268a9dd5bea50f297782c107ef76e85a38ca432482c24bfc22c",
-   "source": "dc5275a21c5f4c7eb84b3829524c0e544d10cf64dd6915b9b06d7a88c5527f8a",
-   "svg": "5216b9acc786292bcc97a5d80a860d9c00ae13514b855d46e63e95fea7a8f613"
+   "png": "1fc22ffc310a171850750007cb8521985e3e745a14d1fe98bdbeb8c3b8e415e9",
+   "source": "e614f14a53a7b362bdb78a7eb0f49cb7bec90222561b524aeee41d0e7cf0dbbb",
+   "svg": "ff6fa3b2936f8362f3d1d782202a5f5f4246a67e3e3097f4cabd87d099efe5a2"
   },
   "module-labour-market-b": {
-   "png": "ca1291b6e3624653ac8ce1b036f0e22950695c05eb31cfd0da20723c5b56e185",
-   "source": "32a0d7a02dcb8861bf77d0e12bfbe7dbda6ae4f5ba36909ffa924d76cff3ecdb",
-   "svg": "482381c46f6b1b20cfdcffaece38e61263f1e8d40e10b7d34f9a4d02d4923bdd"
+   "png": "0b44f2836776be7c839d70679a88f15cfd5e3af8db541ff5da740138c18aabc7",
+   "source": "8c78298ff078ccef1a6575ffaf1713c65fbb02e6a9aaa74c4aa8435b3efa450d",
+   "svg": "ea82630d71848116a3aa41e3898da2812fbaf0b15d7eddd6ae546fa676187998"
   },
   "module-sourcing": {
-   "png": "25dd5ce0ef0e4950305b7876028f81a56e5e0f1803e2d3e3e02b703b75dd7191",
-   "source": "456e0ee567777bd5e303d1049cb8f12ee1e3a17534daab86e242b569454f0f11",
-   "svg": "3cf73329ad81a5a06fb4b48429a58d501b982c60b6a7ff1bd3036bf0d0cfb08c"
+   "png": "938f23ec5923b6ad62feac66816dbc9276000aae79e5bb48b39d0573f921e436",
+   "source": "bffd98b880876bf8b1baf8e324cbdf4f15061863ce97be78fd2e008f1acd8a57",
+   "svg": "9574320071d80490e80e7be90b0231811a0edb9c87b733118b1f534c082f44a4"
   },
   "module-work": {
    "png": "4eb3017b9b3ee974fd6fa8e788d712c40b8cc2f9a3e00b0acf4ca0d56b81de02",

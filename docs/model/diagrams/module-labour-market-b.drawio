@@ -310,16 +310,22 @@
           <mxGeometry x="981" y="174" width="78" height="27" as="geometry" />
         </mxCell>
         <mxCell id="conv" value="Visa conversions" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="468" y="116" width="24" height="22" as="geometry" />
+          <mxGeometry x="468" y="116" width="24" height="22" as="geometry">
+            <mxPoint x="0" y="-48" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="expiry" value="Visa expiries" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="508.5" y="409" width="24" height="22" as="geometry" />
+          <mxGeometry x="508.5" y="409" width="24" height="22" as="geometry">
+            <mxPoint x="-4" y="2" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="fl.layoffs" value="Layoffs" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="87.5" y="531" width="24" height="22" as="geometry" />
         </mxCell>
         <mxCell id="fl.onboard" value="Onboarding&#10;completions" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="627.5" y="229" width="24" height="22" as="geometry" />
+          <mxGeometry x="627.5" y="229" width="24" height="22" as="geometry">
+            <mxPoint x="-28" y="0" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="fl.openings" value="Vacancy openings" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="348" y="360" width="24" height="22" as="geometry" />
@@ -349,7 +355,9 @@
           <mxGeometry x="50" y="413" width="101" height="40" as="geometry" />
         </mxCell>
         <mxCell id="hires" value="Hires" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="1088.5" y="214" width="24" height="22" as="geometry" />
+          <mxGeometry x="1088.5" y="214" width="24" height="22" as="geometry">
+            <mxPoint x="6" y="4" as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="ref:U" value="Job seekers&#10;(labour market a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
           <mxGeometry x="1096" y="144" width="127" height="40" as="geometry" />
@@ -361,7 +369,7 @@
           <mxGeometry x="276" y="169" width="127" height="40" as="geometry" />
         </mxCell>
         <mxCell id="ref:fl.retire" value="Retirements&#10;(labour market a)" style="html=0;fontFamily=Helvetica;fontSize=12;text;rounded=1;dashed=1;strokeColor=#A0A0A0;fillColor=none;fontSize=11;fontColor=#808080;" vertex="1" parent="1">
-          <mxGeometry x="216" y="437" width="127" height="40" as="geometry" />
+          <mxGeometry x="216" y="433" width="127" height="40" as="geometry" />
         </mxCell>
         <mxCell id="sw.in" value="Switches in" style="html=0;fontFamily=Helvetica;fontSize=12;shape=mxgraph.flowchart.collate;fillColor=#F2DEE9;strokeColor=#CC79A7;strokeWidth=1.5;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;align=center;fontColor=#1A1A1A;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="907.5" y="482" width="24" height="22" as="geometry" />

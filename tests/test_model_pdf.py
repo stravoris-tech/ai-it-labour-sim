@@ -173,7 +173,7 @@ def test_the_guide_prints_at_8_pt_or_larger(html: str) -> None:
     assert P.GUIDE_MIN_PT >= 8
     assert f"section.guide table, section.guide code, section.guide pre {{ font-size: {P.GUIDE_MIN_PT:g}pt; }}" in P.CSS
     part = _guide_part(html)
-    assert part.count("<table") == 3 and 'class="small"' not in part
+    assert part.count("<table") == 4 and 'class="small"' not in part  # slice 10e added "Where the wide levers act"
 
 
 def test_the_small_print_check_fails_on_a_planted_small_table(tmp_path: Path, html: str) -> None:
@@ -189,3 +189,79 @@ def test_the_guide_appears_after_the_introduction_with_its_contents_entries(html
     contents = html[html.index('<nav id="contents">') : html.index("</nav>")]
     assert contents.index('href="#intro"') < contents.index('href="#guide"') < contents.index('href="#overview"')
     assert '<a href="#guide-3-levers">Levers</a>' in contents
+
+
+# ---- the model map (slice 10e) --------------------------------------------------------------------------------------
+
+
+def test_the_map_html_regenerates_byte_for_byte_and_matches_the_manifest(tmp_path: Path) -> None:
+    first = P.write_map_html(ROOT, tmp_path / "a").read_bytes()
+    second = P.write_map_html(ROOT, tmp_path / "b").read_bytes()
+    assert first == second == P.build_map_html(ROOT).encode("utf-8")
+    assert hashlib.sha256(first).hexdigest() == P.map_hashes(ROOT)["html"]
+
+
+def test_the_committed_map_pdf_matches_the_manifest() -> None:
+    pdf = (ROOT / P.MAP_PDF_OUT).read_bytes()
+    assert pdf.startswith(b"%PDF-") and P.complete_pdf(ROOT / P.MAP_PDF_OUT)
+    assert hashlib.sha256(pdf).hexdigest() == P.map_hashes(ROOT)["pdf"]
+
+
+def test_the_map_prints_at_7_pt_or_larger_on_a2() -> None:
+    """The model map fits its A2 landscape figure with its smallest label, link labels included, at 7 pt or more
+    (slice 10e, step 4.5)."""
+    v = D.build_views(ROOT)[D.MAP_VIEWS[0]]
+    w, h = P.svg_size(P.svg_path(ROOT, v.name))
+    pt = D.min_font_px(v) * P.print_pt_per_px(w, h, P.MAP_FIG_H_MM, P.MAP_FIG_W_MM)
+    assert P.MAP_MIN_LABEL_PT == 7.0 and pt >= P.MAP_MIN_LABEL_PT, pt
+    assert (P.MAP_PAGE_W_MM, P.MAP_PAGE_H_MM) == (594.0, 420.0)
+
+
+def test_the_map_print_size_check_fails_on_a_planted_wide_map(tmp_path: Path) -> None:
+    p = tmp_path / "model-map.svg"
+    shutil.copyfile(P.svg_path(ROOT, D.MAP_VIEWS[0]), p)
+    w, h = P.svg_size(p)
+    assert 12 * P.print_pt_per_px(w, h, P.MAP_FIG_H_MM, P.MAP_FIG_W_MM) >= P.MAP_MIN_LABEL_PT
+    p.write_bytes(
+        p.read_bytes().decode("utf-8").replace(f'width="{w:g}px"', f'width="{w * 1.2:g}px"', 1).encode("utf-8")
+    )
+    w2, h2 = P.svg_size(p)
+    assert w2 == w * 1.2
+    assert 12 * P.print_pt_per_px(w2, h2, P.MAP_FIG_H_MM, P.MAP_FIG_W_MM) < P.MAP_MIN_LABEL_PT
+
+
+def test_the_map_follows_the_overview_on_a_named_a2_page(html: str) -> None:
+    """The reference carries the map after the overview and before the module pages, on the named page ``map`` (A2
+    landscape, in mm), with a contents entry; the standalone map is that page alone."""
+    assert (
+        html.index('<section id="overview-part">') < html.index('id="model-map-part"') < html.index('id="module-pages"')
+    )
+    contents = html[html.index('<nav id="contents">') : html.index("</nav>")]
+    assert (
+        contents.index('href="#overview"')
+        < contents.index('href="#model-map"')
+        < contents.index('href="#module-pages"')
+    )
+    assert "@page map { size: 594mm 420mm; margin: 10mm; }" in P.CSS and "section.map { page: map; }" in P.CSS
+    standalone = P.build_map_html(ROOT)
+    assert standalone.count("<section") == 1 and '<section class="figure map"' in standalone
+
+
+def test_complete_pdf_tells_a_whole_pdf_from_a_cut_one(tmp_path: Path) -> None:
+    """``edge_print``'s timeout path uses a PDF Edge wrote only if it is whole (slice 10e)."""
+    whole = (ROOT / P.MAP_PDF_OUT).read_bytes()
+    p = tmp_path / "x.pdf"
+    p.write_bytes(whole)
+    assert P.complete_pdf(p)
+    p.write_bytes(whole[: len(whole) // 2])
+    assert not P.complete_pdf(p)
+    assert not P.complete_pdf(tmp_path / "missing.pdf")
+
+
+def test_the_standalone_map_points_to_the_reference_for_the_module_pages(html: str) -> None:
+    """The standalone map PDF has no pages after the map, so its caption names the reference; the reference keeps
+    "after it" (10e Addendum B)."""
+    standalone = P.build_map_html(ROOT)
+    assert "the module pages in docs/model-reference.pdf show" in standalone
+    assert "the module pages after it" not in standalone
+    assert "the module pages after it show" in html
